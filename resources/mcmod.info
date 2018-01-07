@@ -1,14 +1,14 @@
 [
 {
-  "modid": "naturalbabyanimals",
-  "name": "Natural Baby Animals",
-  "description": "Animals spawned in the world have 50% to be baby. Like Pocket Edition used to do!",
+  "modid": "mobrandomness",
+  "name": "Mob Properties Randomness",
+  "description": "Randomize mobs speed, attack, equipment and much more",
   "version": "${version}",
   "mcversion": "${mcversion}",
-  "url": "https://minecraft.curseforge.com/projects/natural-baby-animals",
+  "url": "https://minecraft.curseforge.com/projects/mob-randomness",
   "updateUrl": "",
   "authorList": ["Insane96MCP"],
-  "credits": "The Forge and Minecraft forum for help :P",
+  "credits": "The MCForge forum for help :P",
   "logoFile": "",
   "screenshots": [],
   "dependencies": []
