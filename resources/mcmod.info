@@ -1,0 +1,16 @@
+[
+{
+  "modid": "naturalbabyanimals",
+  "name": "Natural Baby Animals",
+  "description": "Animals spawned in the world have 50% to be baby. Like Pocket Edition used to do!",
+  "version": "${version}",
+  "mcversion": "${mcversion}",
+  "url": "https://minecraft.curseforge.com/projects/natural-baby-animals",
+  "updateUrl": "",
+  "authorList": ["Insane96MCP"],
+  "credits": "The Forge and Minecraft forum for help :P",
+  "logoFile": "",
+  "screenshots": [],
+  "dependencies": []
+}
+]
