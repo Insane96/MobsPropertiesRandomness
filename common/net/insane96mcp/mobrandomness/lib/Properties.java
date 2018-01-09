@@ -15,11 +15,17 @@ public class Properties {
 	public static float difficultyMultiplierNormal;
 	public static float difficultyMultiplierHard;
 	
+	public static boolean localDifficultyWise;
+	public static float localDifficultyMultiplier;
+	
 	public static void Init() {
 		difficultyWise = Config.LoadBoolProperty("__general", "affected_by_difficulty", "If true, where applicable, values will be multiplied by the multiplier of the current difficulty", true);
-		difficultyMultiplierEasy = Config.LoadFloatProperty("__general", "difficulty_multiplier_easy", "Multiplier on Easy Difficulty (only works if 'affected_by_difficulty' is true)", 0.5f);
-		difficultyMultiplierNormal = Config.LoadFloatProperty("__general", "difficulty_multiplier_normal", "Multiplier on Normal Difficulty (only works if 'affected_by_difficulty' is true)", 1.0f);
-		difficultyMultiplierHard = Config.LoadFloatProperty("__general", "difficulty_multiplier_hard", "Multiplier on Hard Difficulty (only works if 'affected_by_difficulty' is true)", 2.0f);
+		difficultyMultiplierEasy = Config.LoadFloatProperty("__general", "difficulty_multiplier_easy", "Multiplier on Easy Difficulty (only works if 'affected_by_difficulty' is true). Negative values may have strange effects.", 0.5f);
+		difficultyMultiplierNormal = Config.LoadFloatProperty("__general", "difficulty_multiplier_normal", "Multiplier on Normal Difficulty (only works if 'affected_by_difficulty' is true). Negative values may have strange effects.", 1.0f);
+		difficultyMultiplierHard = Config.LoadFloatProperty("__general", "difficulty_multiplier_hard", "Multiplier on Hard Difficulty (only works if 'affected_by_difficulty' is true). Negative values may have strange effects.", 2.0f);
+		
+		localDifficultyWise = Config.LoadBoolProperty("__general", "local_difficulty_wise", "If true, where applicable, values will be multiplied by the local difficulty", false);
+		localDifficultyMultiplier = Config.LoadFloatProperty("__general", "affected_by_local_difficulty", "Local difficulty will be multiplied by this value before used to multiply the mod's stats (only if 'affected_by_local_difficulty' is true). Negative values may have strange effects.", 1.0f);
 		
 		Stats.Init();
 		Equipment.Init();
