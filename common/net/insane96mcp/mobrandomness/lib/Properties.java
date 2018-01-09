@@ -11,11 +11,15 @@ import net.minecraftforge.event.terraingen.WorldTypeEvent.InitBiomeGens;
 
 public class Properties {
 	public static boolean difficultyWise;
-	public static float difficultyMultiplier;
+	public static float difficultyMultiplierEasy;
+	public static float difficultyMultiplierNormal;
+	public static float difficultyMultiplierHard;
 	
 	public static void Init() {
-		difficultyWise = Config.LoadBoolProperty("__general", "affected_by_difficulty", "If true, min and max value for every mob will be multiplied by (difficulty_multiplier / 2) on easy difficulty, (difficulty_multiplier * 1) on normal difficulty and (difficulty_multiplier * 2) on hard difficulty", true);
-		difficultyMultiplier = Config.LoadFloatProperty("__general", "difficulty_multiplier", "Multiplier based on difficulty (only works if 'affected_by_difficulty' is true)", 1.0f);
+		difficultyWise = Config.LoadBoolProperty("__general", "affected_by_difficulty", "If true, where applicable, values will be multiplied by the multiplier of the current difficulty", true);
+		difficultyMultiplierEasy = Config.LoadFloatProperty("__general", "difficulty_multiplier_easy", "Multiplier on Easy Difficulty (only works if 'affected_by_difficulty' is true)", 0.5f);
+		difficultyMultiplierNormal = Config.LoadFloatProperty("__general", "difficulty_multiplier_normal", "Multiplier on Normal Difficulty (only works if 'affected_by_difficulty' is true)", 1.0f);
+		difficultyMultiplierHard = Config.LoadFloatProperty("__general", "difficulty_multiplier_hard", "Multiplier on Hard Difficulty (only works if 'affected_by_difficulty' is true)", 2.0f);
 		
 		Stats.Init();
 		Equipment.Init();

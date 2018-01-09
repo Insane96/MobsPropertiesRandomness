@@ -35,9 +35,9 @@ public class EntityJoinWorld {
 		
 		float multiplier = 1.0f;
 		if (Properties.difficultyWise)
-			multiplier = world.getDifficulty() == EnumDifficulty.EASY ? Properties.difficultyMultiplier / 2f : 
-				world.getDifficulty() == EnumDifficulty.NORMAL ? Properties.difficultyMultiplier : 
-					world.getDifficulty() == EnumDifficulty.HARD ? Properties.difficultyMultiplier * 2f : 1.0f;
+			multiplier = world.getDifficulty() == EnumDifficulty.EASY ? Properties.difficultyMultiplierEasy : 
+				world.getDifficulty() == EnumDifficulty.NORMAL ? Properties.difficultyMultiplierNormal : 
+					world.getDifficulty() == EnumDifficulty.HARD ? Properties.difficultyMultiplierHard : 1.0f;
 		
 	
 		if (!(entity instanceof EntityLiving)) 
