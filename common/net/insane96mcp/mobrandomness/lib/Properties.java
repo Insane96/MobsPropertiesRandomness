@@ -24,8 +24,8 @@ public class Properties {
 		difficultyMultiplierNormal = Config.LoadFloatProperty("__general", "difficulty_multiplier_normal", "Multiplier on Normal Difficulty (only works if 'affected_by_difficulty' is true). Negative values may have strange effects.", 1.0f);
 		difficultyMultiplierHard = Config.LoadFloatProperty("__general", "difficulty_multiplier_hard", "Multiplier on Hard Difficulty (only works if 'affected_by_difficulty' is true). Negative values may have strange effects.", 2.0f);
 		
-		localDifficultyWise = Config.LoadBoolProperty("__general", "local_difficulty_wise", "If true, where applicable, values will be multiplied by the local difficulty", false);
-		localDifficultyMultiplier = Config.LoadFloatProperty("__general", "affected_by_local_difficulty", "Local difficulty will be multiplied by this value before used to multiply the mod's stats (only if 'affected_by_local_difficulty' is true). Negative values may have strange effects.", 1.0f);
+		localDifficultyWise = Config.LoadBoolProperty("__general", "affected_by_local_difficulty", "If true, where applicable, values will be multiplied by the local difficulty. Values will float from 0.75–1.5 on Easy, 1.5–4.0 on Normal, and 2.25–6.75 on Hard. That's why the 'local_difficulty_multiplier'. To increase or decrease the \"Regional difficulty\".\nTo know more: https://minecraft.gamepedia.com/Difficulty#Regional_difficulty", false);
+		localDifficultyMultiplier = Config.LoadFloatProperty("__general", "local_difficulty_multiplier", "Local difficulty will be multiplied by this value before used to multiply the mod's stats (only if 'affected_by_local_difficulty' is true). Negative values may have strange effects.", 1.0f);
 		
 		Stats.Init();
 		Equipment.Init();
@@ -43,16 +43,20 @@ public class Properties {
 		public static String[] followRange;
 		public static String[] attackDamage;
 		
+		public static String[] potionEffects;
+		
 		public static void Init() {
-			valuesAsPercentage = Config.LoadBoolProperty("_stats", "values_as_percentage", "If true, values in '_stats' will be percentages and not actual values. It is highly recommended to have tset to 'true'", true);
+			valuesAsPercentage = Config.LoadBoolProperty("_stats", "_values_as_percentage", "If true, values in '_stats' will be percentages and not actual values. It is highly recommended to have this set to 'true'", true);
 			
-			health = Config.LoadStringListProperty("_stats", "modifier_health", "Write here, for each line, every mob that must have modified health.\nFormat is mob,min_health_increase,max_health_increase.\nE.g. 'minecraft:zombie,15.0,50.0' will make zombies have from 15% to 50% (multiplied by 'difficulty_multiplier' if active) more health, if 'values_as_percentage' is true, or from 15 to 50 more health if is false", new String[] {""});
+			health = Config.LoadStringListProperty("_stats", "modifier_health", "Write here, for each line, every mob that must have modified health.\nFormat is 'mob,min_health_increase,max_health_increase'.\nE.g. 'minecraft:zombie,15.0,50.0' will make zombies have from 15% to 50% (multiplied by difficulty multiplier) more health, if 'values_as_percentage' is true, or from 15 to 50 more health if is false", new String[] {""});
 			
-			movementSpeed = Config.LoadStringListProperty("_stats", "modifier_movement_speed", "Write here, for each line, every mob that must have modified movement_speed. (It's highly recommended to have 'values_as_percentage' on true for this one)\nFormat is mob,min_movement_speed_increase,max_movement_speed_increase.\nE.g. 'minecraft:zombie,15.0,50.0' will make zombies have from 15% to 50% (multiplied by 'difficulty_multiplier' if active) more speed, if 'values_as_percentage' is true, or from 15 to 50 more speed if is false", new String[] {""});
+			movementSpeed = Config.LoadStringListProperty("_stats", "modifier_movement_speed", "Write here, for each line, every mob that must have modified movement_speed. (It's highly recommended to have 'values_as_percentage' on true for this one)\nFormat is 'mob,min_movement_speed_increase,max_movement_speed_increase'.\nE.g. 'minecraft:zombie,15.0,50.0' will make zombies have from 15% to 50% (multiplied by difficulty multiplier) more speed, if 'values_as_percentage' is true, or from 15 to 50 more speed if is false", new String[] {""});
 			
-			followRange = Config.LoadStringListProperty("_stats", "modifier_follow_range", "Write here, for each line, every mob that must have modified follow range (doesn't work with passive mobs).\nFormat is mob,min_follow_range_increase,max_follow_range_increase.\nE.g. 'minecraft:zombie,15.0,50.0' will make zombies have from 15% to 50% (multiplied by 'difficulty_multiplier' if active) more follow range, if 'values_as_percentage' is true, or from 15 to 50 more follow range if is false", new String[] {""});
+			followRange = Config.LoadStringListProperty("_stats", "modifier_follow_range", "Write here, for each line, every mob that must have modified follow range (doesn't work with passive mobs).\nFormat is 'mob,min_follow_range_increase,max_follow_range_increase'.\nE.g. 'minecraft:zombie,15.0,50.0' will make zombies have from 15% to 50% (multiplied by difficulty multiplier) more follow range, if 'values_as_percentage' is true, or from 15 to 50 more follow range if is false", new String[] {""});
 			
-			attackDamage = Config.LoadStringListProperty("_stats", "modifier_attack_damage", "Write here, for each line, every mob that must have modified attack damage (doesn't work with passive mobs).\nFormat is mob,min_attack_damage_increase,max_attack_damage_increase.\nE.g. 'minecraft:zombie,15.0,50.0' will make zombies deal from 15% to 50% (multiplied by 'difficulty_multiplier' if active) more damage, if 'values_as_percentage' is true, or from 15 to 50 more damage if is false", new String[] {""});
+			attackDamage = Config.LoadStringListProperty("_stats", "modifier_attack_damage", "Write here, for each line, every mob that must have modified attack damage (doesn't work with passive mobs).\nFormat is 'mob,min_attack_damage_increase,max_attack_damage_increase'.\nE.g. 'minecraft:zombie,15.0,50.0' will make zombies deal from 15% to 50% (multiplied by difficulty multiplier) more damage, if 'values_as_percentage' is true, or from 15 to 50 more damage if is false.\n", new String[] {""});
+			
+			potionEffects = Config.LoadStringListProperty("_stats", "potion_effects", "Write here, for each line, every mob that can have potion effects applied.\nFormat is 'mob,chance,potion_id,min_amplifier,max_amplifier,ambient_particles,show_particles'.\nE.g. 'minecraft:zombie,15.0,minecraft:jump_boost,0,3,true,false' will make zombies have 15% chance (multiplied by the difficulty multiplier) to have applied the jump boost effect from level 1 (0) to level 4 (3) and make particles be sightly transparent like beacon effects.\nMore than a potion effect can be added on the same mob type, just put it in a new line.", new String[] {"minecraft:zombie,15.0,minecraft:jump_boost,0,3,true,false"});
 		}
 	}
 	

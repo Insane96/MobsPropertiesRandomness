@@ -7,19 +7,18 @@ import net.insane96mcp.mobrandomness.events.mobs.EventEntity;
 import net.insane96mcp.mobrandomness.events.mobs.EventGhast;
 import net.insane96mcp.mobrandomness.events.mobs.EventSkeleton;
 import net.insane96mcp.mobrandomness.lib.Properties;
-import net.insane96mcp.mobrandomness.lib.Properties.Creeper;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLiving;
-import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.SharedMonsterAttributes;
-import net.minecraft.entity.monster.EntitySkeleton;
 import net.minecraft.inventory.EntityEquipmentSlot;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.world.EnumDifficulty;
 import net.minecraft.world.World;
 import net.minecraftforge.event.entity.EntityJoinWorldEvent;
-import net.minecraftforge.event.entity.living.LivingEvent;
+import net.minecraftforge.event.terraingen.DecorateBiomeEvent;
+import net.minecraftforge.event.terraingen.DecorateBiomeEvent.Decorate.EventType;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
+import net.minecraftforge.fml.common.eventhandler.Event.Result;
 
 public class EntityJoinWorld { 
 	
@@ -67,6 +66,8 @@ public class EntityJoinWorld {
 		EventEntity.Equipment(living, EntityEquipmentSlot.CHEST, Properties.Equipment.chestplateEquipment, multiplier, random);
 		EventEntity.Equipment(living, EntityEquipmentSlot.LEGS, Properties.Equipment.leggingsEquipment, multiplier, random);
 		EventEntity.Equipment(living, EntityEquipmentSlot.FEET, Properties.Equipment.bootsEquipment, multiplier, random);
+		
+		EventEntity.PotionEffects(living, Properties.Stats.potionEffects, random);
 		
 		EventCreeper.Fuse(living, random);
 		EventCreeper.ExplosionRadius(living, random);

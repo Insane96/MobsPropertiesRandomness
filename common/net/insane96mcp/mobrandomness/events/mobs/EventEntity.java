@@ -1,7 +1,12 @@
 package net.insane96mcp.mobrandomness.events.mobs;
 
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
 import java.util.Random;
 
+import net.insane96mcp.mobrandomness.events.mobs.utils.MobPotionEffect;
+import net.insane96mcp.mobrandomness.events.mobs.utils.MobPotionEffect.RNGPotionEffect;
 import net.insane96mcp.mobrandomness.lib.Properties;
 import net.minecraft.entity.EntityList;
 import net.minecraft.entity.EntityLiving;
@@ -9,6 +14,8 @@ import net.minecraft.entity.ai.attributes.IAttribute;
 import net.minecraft.inventory.EntityEquipmentSlot;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
+import net.minecraft.potion.Potion;
+import net.minecraft.potion.PotionEffect;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.MathHelper;
 
@@ -75,5 +82,58 @@ public class EventEntity {
 			}
 		}
 	}
+	
+	private static List<MobPotionEffect> mobPotionEffects = new ArrayList<MobPotionEffect>();
+	
+	private static void LoadPotionEffects(String[] potionEffects) {		
+		if (potionEffects.length == 0)
+			return;
+		
+		for (String potionEffect : potionEffects) {
+			String mobName = potionEffect.split(",")[0];
+			float chance = Float.parseFloat(potionEffect.split(",")[1]);
+			String id = potionEffect.split(",")[2];
+			int minAmplifier = Integer.parseInt(potionEffect.split(",")[3]);
+			int maxAmplifier = Integer.parseInt(potionEffect.split(",")[4]);
+			boolean ambientParticles = Boolean.parseBoolean(potionEffect.split(",")[5]);
+			boolean showParticles = Boolean.parseBoolean(potionEffect.split(",")[6]);
+			
+			boolean found = false;
+			for (MobPotionEffect mobPotionEffect : mobPotionEffects) {
+				if (mobName.equals(mobPotionEffect.mobName)) {
+					mobPotionEffect.AddPotionEffect(chance, id, minAmplifier, maxAmplifier, showParticles, ambientParticles);
+					found = true;
+					break;
+				}
+			}
+			if (!found) {
+				MobPotionEffect newMobPotionEffect = new MobPotionEffect(mobName);
+				newMobPotionEffect.AddPotionEffect(chance, id, minAmplifier, maxAmplifier, showParticles, ambientParticles);
+				mobPotionEffects.add(newMobPotionEffect);
+			}
+		}
+	}
 
+	public static void PotionEffects(EntityLiving living, String[] potionEffects, Random random) {
+		if (potionEffects.length == 0)
+			return;
+		
+		if (mobPotionEffects.isEmpty())
+			LoadPotionEffects(potionEffects);
+		
+		ResourceLocation mobResourceLocation;
+		for (MobPotionEffect mobPotionEffect : mobPotionEffects) {
+			mobResourceLocation = new ResourceLocation(mobPotionEffect.mobName);
+			if (EntityList.isMatchingName(living, mobResourceLocation)) {
+				for (RNGPotionEffect rngPotionEffect : mobPotionEffect.potionEffects) {
+					if (random.nextFloat() > rngPotionEffect.chance / 100f)
+						continue;
+					Potion potion = Potion.getPotionFromResourceLocation(rngPotionEffect.id);
+					PotionEffect potionEffect = new PotionEffect(potion, 100000, MathHelper.getInt(random, rngPotionEffect.minAmplifier, rngPotionEffect.maxAmplifier - 1), rngPotionEffect.ambientParticles, rngPotionEffect.showParticles);
+					living.addPotionEffect(potionEffect);
+				}
+				break;
+			}
+		}
+	}
 }
