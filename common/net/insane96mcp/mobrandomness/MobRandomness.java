@@ -16,7 +16,7 @@ public class MobRandomness {
 	
 	public static final String MOD_ID = "mobrandomness";
 	public static final String MOD_NAME = "Mob Properties Randomness";
-	public static final String VERSION = "1.0.0";
+	public static final String VERSION = "1.0.1";
 	public static final String RESOURCE_PREFIX = MOD_ID.toLowerCase() + ":";
 
 	public static Random random = new Random();
