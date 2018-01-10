@@ -8,7 +8,7 @@ import net.minecraft.entity.monster.EntityGhast;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.math.MathHelper;
 
-public class EventGhast {
+public class RNGGhast {
 	public static void ExplosionPower(EntityLiving living, Random random) {
 		if (!(living instanceof EntityGhast))
 			return;

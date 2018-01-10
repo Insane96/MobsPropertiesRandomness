@@ -8,7 +8,7 @@ import net.minecraft.entity.monster.EntityCreeper;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.math.MathHelper;
 
-public class EventCreeper {
+public class RNGCreeper {
 	public static void Fuse(EntityLiving living, Random random) {
 		if (!(living instanceof EntityCreeper))
 			return;

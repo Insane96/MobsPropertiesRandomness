@@ -2,10 +2,12 @@ package net.insane96mcp.mobrandomness.events;
 
 import java.util.Random;
 
-import net.insane96mcp.mobrandomness.events.mobs.EventCreeper;
-import net.insane96mcp.mobrandomness.events.mobs.EventEntity;
-import net.insane96mcp.mobrandomness.events.mobs.EventGhast;
-import net.insane96mcp.mobrandomness.events.mobs.EventSkeleton;
+import com.google.gson.Gson;
+
+import net.insane96mcp.mobrandomness.events.mobs.RNGCreeper;
+import net.insane96mcp.mobrandomness.events.mobs.RNGEntity;
+import net.insane96mcp.mobrandomness.events.mobs.RNGGhast;
+import net.insane96mcp.mobrandomness.events.mobs.RNGSkeleton;
 import net.insane96mcp.mobrandomness.lib.Properties;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLiving;
@@ -15,10 +17,7 @@ import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.world.EnumDifficulty;
 import net.minecraft.world.World;
 import net.minecraftforge.event.entity.EntityJoinWorldEvent;
-import net.minecraftforge.event.terraingen.DecorateBiomeEvent;
-import net.minecraftforge.event.terraingen.DecorateBiomeEvent.Decorate.EventType;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
-import net.minecraftforge.fml.common.eventhandler.Event.Result;
 
 public class EntityJoinWorld { 
 	
@@ -56,27 +55,30 @@ public class EntityJoinWorld {
 		if (isAlreadyChecked == 1)
 			return;
 		
-		EventEntity.Attributes(living, SharedMonsterAttributes.MAX_HEALTH, Properties.Stats.health, multiplier, random);
-		EventEntity.Attributes(living, SharedMonsterAttributes.MOVEMENT_SPEED, Properties.Stats.movementSpeed, multiplier, random);
-		EventEntity.Attributes(living, SharedMonsterAttributes.FOLLOW_RANGE, Properties.Stats.followRange, multiplier, random);
-		EventEntity.Attributes(living, SharedMonsterAttributes.ATTACK_DAMAGE, Properties.Stats.attackDamage, multiplier, random);
+		RNGEntity.Attributes(living, SharedMonsterAttributes.MAX_HEALTH, Properties.Stats.health, multiplier, random);
+		RNGEntity.Attributes(living, SharedMonsterAttributes.MOVEMENT_SPEED, Properties.Stats.movementSpeed, multiplier, random);
+		RNGEntity.Attributes(living, SharedMonsterAttributes.FOLLOW_RANGE, Properties.Stats.followRange, multiplier, random);
+		RNGEntity.Attributes(living, SharedMonsterAttributes.ATTACK_DAMAGE, Properties.Stats.attackDamage, multiplier, random);
 		
-		EventEntity.Equipment(living, EntityEquipmentSlot.MAINHAND, Properties.Equipment.handEquipment, multiplier, random);
-		EventEntity.Equipment(living, EntityEquipmentSlot.HEAD, Properties.Equipment.helmetEquipment, multiplier, random);
-		EventEntity.Equipment(living, EntityEquipmentSlot.CHEST, Properties.Equipment.chestplateEquipment, multiplier, random);
-		EventEntity.Equipment(living, EntityEquipmentSlot.LEGS, Properties.Equipment.leggingsEquipment, multiplier, random);
-		EventEntity.Equipment(living, EntityEquipmentSlot.FEET, Properties.Equipment.bootsEquipment, multiplier, random);
+		RNGEntity.Equipment(living, EntityEquipmentSlot.MAINHAND, Properties.Equipment.handEquipment, multiplier, random);
+		RNGEntity.Equipment(living, EntityEquipmentSlot.HEAD, Properties.Equipment.headEquipment, multiplier, random);
+		RNGEntity.Equipment(living, EntityEquipmentSlot.CHEST, Properties.Equipment.chestEquipment, multiplier, random);
+		RNGEntity.Equipment(living, EntityEquipmentSlot.LEGS, Properties.Equipment.legsEquipment, multiplier, random);
+		RNGEntity.Equipment(living, EntityEquipmentSlot.FEET, Properties.Equipment.feetEquipment, multiplier, random);
 		
-		EventEntity.PotionEffects(living, Properties.Stats.potionEffects, random);
+		RNGEntity.PotionEffects(living, Properties.Stats.potionEffects, random);
 		
-		EventCreeper.Fuse(living, random);
-		EventCreeper.ExplosionRadius(living, random);
-		EventCreeper.Powered(living, multiplier, random);
+		RNGCreeper.Fuse(living, random);
+		RNGCreeper.ExplosionRadius(living, random);
+		RNGCreeper.Powered(living, multiplier, random);
 		
-		EventGhast.ExplosionPower(living, random);
+		RNGGhast.ExplosionPower(living, random);
 		
-		EventSkeleton.TippedArrow(living, multiplier, random);
+		RNGSkeleton.TippedArrow(living, multiplier, random);
 
 		tags.setByte("mobrandomizzation:check", (byte)1);
+	}
+	private class JsonTest{
+		
 	}
 }

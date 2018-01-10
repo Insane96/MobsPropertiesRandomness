@@ -5,6 +5,11 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Random;
 
+import javax.swing.text.html.parser.Entity;
+
+import org.lwjgl.Sys;
+
+import net.insane96mcp.mobrandomness.events.mobs.utils.MobEquipment;
 import net.insane96mcp.mobrandomness.events.mobs.utils.MobPotionEffect;
 import net.insane96mcp.mobrandomness.events.mobs.utils.MobPotionEffect.RNGPotionEffect;
 import net.insane96mcp.mobrandomness.lib.Properties;
@@ -19,36 +24,82 @@ import net.minecraft.potion.PotionEffect;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.MathHelper;
 
-public class EventEntity {
+public class RNGEntity {
 
-	public static void Equipment(EntityLiving living, EntityEquipmentSlot equipmentSlot, String[] equipment, float multiplier, Random random){
-		ResourceLocation mob_name;
+	private static List<MobEquipment> mobEquipments = new ArrayList<MobEquipment>();
+	
+	private static void LoadEquipment(String[] equipments, EntityEquipmentSlot slot) {
+		String[] split;
+		String mobName;
 		float chance;
+	
+		for (String equipment : equipments) {
+			if (equipment.equals(""))
+				continue;
+			
+			try {
+				split = equipment.split(",");
+				mobName = split[0];
+				chance = Float.parseFloat(split[1]);
+			}
+			catch (Exception e) {
+				System.err.println("Failed to parse equipment \"" + equipment + "\": " + e.getMessage());
+				continue;
+			}
+			
+			boolean found = false;
+			for (MobEquipment mobEquipment : mobEquipments) {
+				if (mobName.equals(mobEquipment.mobName)) {
+					for (int i = 2; i < split.length; i++) {
+						String itemName = split[i];
+						mobEquipment.AddEquipment(itemName, chance, slot, null);
+						System.out.println("Added: " + mobEquipment);
+					}
+					found = true;
+					break;
+				}
+			}
+			if (!found) {
+				MobEquipment newMobEquipment = new MobEquipment(mobName);
+				for (int i = 2; i < split.length; i++) {
+					String itemName = split[i];
+					newMobEquipment.AddEquipment(itemName, chance, slot, null);
+					mobEquipments.add(newMobEquipment);
+					System.out.println("Created and added: " + newMobEquipment);
+				}
+				mobEquipments.add(newMobEquipment);
+			}
+			
+			
+		}
+	}
+	
+	public static void Equipment(EntityLiving living, EntityEquipmentSlot equipmentSlot, String[] equipment, float multiplier, Random random){
+		System.out.println("Checking slot: " + equipmentSlot);
 		
 		if (equipment.length == 0)
 			return;
 		
-		for (String mob_modifier : equipment) {
-			String[] split = mob_modifier.split(",");
-			mob_name = new ResourceLocation(split[0]);
-			if (EntityList.isMatchingName(living, mob_name)) {
-				chance = Float.parseFloat(split[1]) * multiplier;
-				
-				if (random.nextFloat() > chance / 100f)
+		mobEquipments = new ArrayList<MobEquipment>();
+		
+		if (mobEquipments.isEmpty()) {
+			LoadEquipment(equipment, EntityEquipmentSlot.HEAD);
+			LoadEquipment(equipment, EntityEquipmentSlot.CHEST);
+			LoadEquipment(equipment, EntityEquipmentSlot.LEGS);
+			LoadEquipment(equipment, EntityEquipmentSlot.FEET);
+			LoadEquipment(equipment, EntityEquipmentSlot.MAINHAND);
+		}
+		
+		ResourceLocation mobResourceLocation;
+		for (MobEquipment mobEquipment : mobEquipments) {
+			mobResourceLocation = new ResourceLocation(mobEquipment.mobName);
+			if (EntityList.isMatchingName(living, mobResourceLocation)) {
+				ItemStack itemStack = mobEquipment.GetRandomItem(random, equipmentSlot);
+				System.out.println("Itemstack: " + itemStack);
+				if (itemStack.equals(ItemStack.EMPTY))
 					break;
-				
-				if (!living.getItemStackFromSlot(equipmentSlot).isEmpty())
-					break;
-				
-				ItemStack[] items = new ItemStack[split.length - 2];
-				
-				for (int i = 2; i < split.length; i++) {
-					items[i - 2] = new ItemStack(Item.REGISTRY.getObject(new ResourceLocation(split[i])));
-				}
-				
-				int item = MathHelper.getInt(random, 0, items.length - 1);
-				
-				living.setItemStackToSlot(equipmentSlot, items[item]);
+
+				living.setItemStackToSlot(equipmentSlot, itemStack);
 				
 				break;
 			}
@@ -86,17 +137,29 @@ public class EventEntity {
 	private static List<MobPotionEffect> mobPotionEffects = new ArrayList<MobPotionEffect>();
 	
 	private static void LoadPotionEffects(String[] potionEffects) {		
-		if (potionEffects.length == 0)
-			return;
+		String mobName;
+		float chance;
+		String id;
+		int minAmplifier;
+		int maxAmplifier;
+		boolean ambientParticles;
+		boolean showParticles;
 		
 		for (String potionEffect : potionEffects) {
-			String mobName = potionEffect.split(",")[0];
-			float chance = Float.parseFloat(potionEffect.split(",")[1]);
-			String id = potionEffect.split(",")[2];
-			int minAmplifier = Integer.parseInt(potionEffect.split(",")[3]);
-			int maxAmplifier = Integer.parseInt(potionEffect.split(",")[4]);
-			boolean ambientParticles = Boolean.parseBoolean(potionEffect.split(",")[5]);
-			boolean showParticles = Boolean.parseBoolean(potionEffect.split(",")[6]);
+			if (potionEffect.equals(""))
+				continue;
+			try {	
+				mobName = potionEffect.split(",")[0];
+				chance = Float.parseFloat(potionEffect.split(",")[1]);
+				id = potionEffect.split(",")[2];
+				minAmplifier = Integer.parseInt(potionEffect.split(",")[3]);
+				maxAmplifier = Integer.parseInt(potionEffect.split(",")[4]);
+				ambientParticles = Boolean.parseBoolean(potionEffect.split(",")[5]);
+				showParticles = Boolean.parseBoolean(potionEffect.split(",")[6]);
+			} catch (Exception e) {
+				System.err.println("Failed to parse potion line \"" + potionEffect + "\": " + e.getMessage());
+				continue;
+			}
 			
 			boolean found = false;
 			for (MobPotionEffect mobPotionEffect : mobPotionEffects) {

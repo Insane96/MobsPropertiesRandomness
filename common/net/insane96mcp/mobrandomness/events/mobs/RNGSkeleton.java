@@ -15,7 +15,7 @@ import net.minecraft.potion.Potion;
 import net.minecraft.util.EnumHand;
 import net.minecraft.util.math.MathHelper;
 
-public class EventSkeleton {
+public class RNGSkeleton {
 	public static void TippedArrow(EntityLiving living, float multiplier, Random random) {
 		if (!(living instanceof EntitySkeleton))
 			return;
