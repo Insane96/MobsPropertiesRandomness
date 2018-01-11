@@ -53,7 +53,6 @@ public class RNGEntity {
 					for (int i = 2; i < split.length; i++) {
 						String itemName = split[i];
 						mobEquipment.AddEquipment(itemName, chance, slot, null);
-						System.out.println("Added: " + mobEquipment);
 					}
 					found = true;
 					break;
@@ -65,7 +64,6 @@ public class RNGEntity {
 					String itemName = split[i];
 					newMobEquipment.AddEquipment(itemName, chance, slot, null);
 					mobEquipments.add(newMobEquipment);
-					System.out.println("Created and added: " + newMobEquipment);
 				}
 				mobEquipments.add(newMobEquipment);
 			}
@@ -75,9 +73,7 @@ public class RNGEntity {
 	}
 	
 	public static void Equipment(EntityLiving living, EntityEquipmentSlot equipmentSlot, String[] equipment, float multiplier, Random random){
-		System.out.println("Checking slot: " + equipmentSlot);
-		
-		if (equipment.length == 0)
+				if (equipment.length == 0)
 			return;
 		
 		mobEquipments = new ArrayList<MobEquipment>();
@@ -114,22 +110,28 @@ public class RNGEntity {
 			return;
 		
 		for (String mob_modifier : stats) {
-			mob_name = new ResourceLocation(mob_modifier.split(",")[0]);
-			if (EntityList.isMatchingName(living, mob_name)) {
-				min_increase = Float.parseFloat(mob_modifier.split(",")[1]) * multiplier;
-				max_increase = Float.parseFloat(mob_modifier.split(",")[2]) * multiplier;
-				
-				double attack_damage = living.getEntityAttribute(attribute).getBaseValue();
-				float increase = MathHelper.nextFloat(random, min_increase, max_increase);
-				
-				if (Properties.Stats.valuesAsPercentage)
-					attack_damage += attack_damage * increase / 100f;
-				else
-					attack_damage += increase;
-				
-				living.getEntityAttribute(attribute).setBaseValue(attack_damage);
-				
-				break;
+			try {
+				mob_name = new ResourceLocation(mob_modifier.split(",")[0]);
+				if (EntityList.isMatchingName(living, mob_name)) {
+					min_increase = Float.parseFloat(mob_modifier.split(",")[1]) * multiplier;
+					max_increase = Float.parseFloat(mob_modifier.split(",")[2]) * multiplier;
+					
+					double attack_damage = living.getEntityAttribute(attribute).getBaseValue();
+					float increase = MathHelper.nextFloat(random, min_increase, max_increase);
+					
+					if (Properties.Stats.valuesAsPercentage)
+						attack_damage += attack_damage * increase / 100f;
+					else
+						attack_damage += increase;
+					
+					living.getEntityAttribute(attribute).setBaseValue(attack_damage);
+					
+					break;
+				}
+			}
+			catch (Exception e) {
+				System.err.println("Failed to parse attribute \"" + mob_modifier + "\": " + e.getMessage());
+				continue;
 			}
 		}
 	}

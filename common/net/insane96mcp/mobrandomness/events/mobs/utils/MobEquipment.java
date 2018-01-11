@@ -51,11 +51,7 @@ public class MobEquipment {
 		case MAINHAND:
 			handEquipment.add(equipment);
 			break;
-
-		default:
-			break;
 		}
-		System.out.println("Added equipment " + equipment + " to " + slot);
 	}
 	
 	public ItemStack GetRandomItem(Random random, EntityEquipmentSlot slot) {

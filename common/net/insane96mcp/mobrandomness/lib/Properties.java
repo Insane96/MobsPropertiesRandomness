@@ -79,8 +79,6 @@ public class Properties {
 			legsEquipment = Config.LoadStringListProperty("_equipment", "legs_list", "Write here, for each line, every mob and the leggings that they can spawn with.\nFormat is mob,chance,item1,item2,etc.\nIf the mob has already a leggings, it will be overwritten\nE.g. 'minecraft:zombie,10.0,minecraft:diamond_leggings,carbonado:carbonado_leggings' will make zombies have 10% chance (increased by difficulty if 'affected_by_difficulty' is true) to spawn with a diamond leggings or a carbonado leggings.", new String[] {});
 			
 			feetEquipment = Config.LoadStringListProperty("_equipment", "feet_list", "Write here, for each line, every mob and the boots that they can spawn with.\nFormat is mob,chance,item1,item2,etc.\nIf the mob has already a boots, it will be overwritten\nE.g. 'minecraft:zombie,10.0,minecraft:diamond_boots,vulcanite:vulcanite_boots' will make zombies have 10% chance (increased by difficulty if 'affected_by_difficulty' is true) to spawn with a diamond boots or a vulcanite boots.", new String[] {});
-			
-			JSONTest = Config.LoadStringListProperty("_equipment", "__jsonTest", "test", new String[] {"{\"mobName\":\"minecraft:zombie\",\"itemsList\":[{\"item\":\"minecraft:diamond\",\"slot\":\"head\"}]}"});
 		}
 	}
 	
