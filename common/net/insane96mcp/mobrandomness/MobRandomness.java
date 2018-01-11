@@ -11,13 +11,14 @@ import net.minecraftforge.fml.common.event.FMLInitializationEvent;
 import net.minecraftforge.fml.common.event.FMLPostInitializationEvent;
 import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
 
-@Mod(modid = MobRandomness.MOD_ID, name = MobRandomness.MOD_NAME, version = MobRandomness.VERSION)
+@Mod(modid = MobRandomness.MOD_ID, name = MobRandomness.MOD_NAME, version = MobRandomness.VERSION, acceptedMinecraftVersions = MobRandomness.MINECRAFT_VERSIONS)
 public class MobRandomness {
 	
-	public static final String MOD_ID = "mobrandomness";
-	public static final String MOD_NAME = "Mob Properties Randomness";
-	public static final String VERSION = "1.0.1";
+	public static final String MOD_ID = "mobspropertiesrandomness";
+	public static final String MOD_NAME = "Mobs Properties Randomness";
+	public static final String VERSION = "1.1.0";
 	public static final String RESOURCE_PREFIX = MOD_ID.toLowerCase() + ":";
+	public static final String MINECRAFT_VERSIONS = "[1.11,1.11.2]";
 
 	public static Random random = new Random();
 	

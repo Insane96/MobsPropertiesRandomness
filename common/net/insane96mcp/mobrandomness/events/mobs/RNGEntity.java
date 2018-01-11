@@ -15,6 +15,7 @@ import net.insane96mcp.mobrandomness.events.mobs.utils.MobPotionEffect.RNGPotion
 import net.insane96mcp.mobrandomness.lib.Properties;
 import net.minecraft.entity.EntityList;
 import net.minecraft.entity.EntityLiving;
+import net.minecraft.entity.SharedMonsterAttributes;
 import net.minecraft.entity.ai.attributes.IAttribute;
 import net.minecraft.inventory.EntityEquipmentSlot;
 import net.minecraft.item.Item;
@@ -109,28 +110,31 @@ public class RNGEntity {
 		if (stats.length == 0)
 			return;
 		
-		for (String mob_modifier : stats) {
+		for (String stat : stats) {
 			try {
-				mob_name = new ResourceLocation(mob_modifier.split(",")[0]);
+				mob_name = new ResourceLocation(stat.split(",")[0]);
 				if (EntityList.isMatchingName(living, mob_name)) {
-					min_increase = Float.parseFloat(mob_modifier.split(",")[1]) * multiplier;
-					max_increase = Float.parseFloat(mob_modifier.split(",")[2]) * multiplier;
+					min_increase = Float.parseFloat(stat.split(",")[1]) * multiplier;
+					max_increase = Float.parseFloat(stat.split(",")[2]) * multiplier;
 					
-					double attack_damage = living.getEntityAttribute(attribute).getBaseValue();
+					double attributeValue = living.getEntityAttribute(attribute).getBaseValue();
 					float increase = MathHelper.nextFloat(random, min_increase, max_increase);
 					
 					if (Properties.Stats.valuesAsPercentage)
-						attack_damage += attack_damage * increase / 100f;
+						attributeValue += attributeValue * increase / 100f;
 					else
-						attack_damage += increase;
+						attributeValue += increase;
 					
-					living.getEntityAttribute(attribute).setBaseValue(attack_damage);
+					living.getEntityAttribute(attribute).setBaseValue(attributeValue);
+					
+					if (attribute.equals(SharedMonsterAttributes.MAX_HEALTH))
+						living.setHealth((float) attributeValue);
 					
 					break;
 				}
 			}
 			catch (Exception e) {
-				System.err.println("Failed to parse attribute \"" + mob_modifier + "\": " + e.getMessage());
+				System.err.println("Failed to parse attribute \"" + stat + "\": " + e.getMessage());
 				continue;
 			}
 		}

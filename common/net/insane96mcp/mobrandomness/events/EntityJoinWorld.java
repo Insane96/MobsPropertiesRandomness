@@ -78,7 +78,4 @@ public class EntityJoinWorld {
 
 		tags.setByte("mobrandomizzation:check", (byte)1);
 	}
-	private class JsonTest{
-		
-	}
 }
