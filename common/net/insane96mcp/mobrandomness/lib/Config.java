@@ -6,14 +6,10 @@ import net.minecraftforge.common.config.Property;
 public class Config {
 
 	public static Configuration config;
-	public static boolean DEBUG = false;
 	
 	public static int LoadIntProperty(String category, String key, String description, int defaultValue) {
 		Property property = Config.config.get(category, key, defaultValue);
 		property.setComment(description + " (default: " + defaultValue + ")");
-		
-		if (DEBUG)
-			System.out.println("Loaded Int " + key + ": " + defaultValue);
 		
 		return property.getInt();
 	}
@@ -21,15 +17,12 @@ public class Config {
 	public static int[] LoadIntListProperty(String category, String key, String description, int[] defaultValue) {
 		Property property = Config.config.get(category, key, defaultValue);
 		description += " (default: [";
-		for (int i = 0; i < property.getIntList().length; i++) {
-			description += property.getIntList()[i];
-			if (i != property.getIntList().length - 1)
+		for (int i = 0; i < defaultValue.length; i++) {
+			description += defaultValue[i];
+			if (i != defaultValue.length - 1)
 				description += ", ";
 		}
 		description += "])";
-		
-		if (DEBUG)
-			System.out.println("Loaded Int[] " + key + ": " + defaultValue);
 		
 		property.setComment(description);
 		
@@ -39,9 +32,6 @@ public class Config {
 	public static double LoadDoubleProperty(String category, String key, String description, double defaultValue) {
 		Property property = Config.config.get(category, key, defaultValue);
 		property.setComment(description + " (default: " + defaultValue + ")");
-
-		if (DEBUG)
-			System.out.println("Loaded Double " + key + ": " + defaultValue);
 		
 		return property.getDouble();
 	}
@@ -54,26 +44,18 @@ public class Config {
 		Property property = Config.config.get(category, key, defaultValue);
 		property.setComment(description + " (default: " + defaultValue + ")");
 		
-		if (DEBUG)
-			System.out.println("Loaded String " + key + ": " + defaultValue);
-		
 		return property.getString();
 	}
 	
 	public static String[] LoadStringListProperty(String category, String key, String description, String[] defaultValue) {
 		Property property = Config.config.get(category, key, defaultValue);
 		description += " (default: [";
-		for (int i = 0; i < property.getStringList().length; i++) {
-			description += property.getStringList()[i];
-			if (i != property.getStringList().length - 1)
+		for (int i = 0; i < defaultValue.length; i++) {
+			description += defaultValue[i];
+			if (i != defaultValue.length - 1)
 				description += ", ";
 		}
 		description += "])";
-
-		if (DEBUG)
-			System.out.println("Loaded String[] " + key + ": " + defaultValue);
-		
-		property.setComment(description);
 		
 		return property.getStringList();
 	}
@@ -81,9 +63,6 @@ public class Config {
 	public static boolean LoadBoolProperty(String category, String key, String description, boolean defaultValue) {
 		Property property = Config.config.get(category, key, defaultValue);
 		property.setComment(description + " (default: " + defaultValue + ")");
-		
-		if (DEBUG)
-			System.out.println("Loaded bool " + key + ": " + defaultValue);
 		
 		return property.getBoolean();
 	}
@@ -98,24 +77,16 @@ public class Config {
 	 */
 	public static void SyncConfig() {
 		try {
-			if (DEBUG)
-				System.out.println("Trying To Load Config");
 			Config.config.load();
-			if (DEBUG)
-				System.out.println("Config Loaded");
 		}
 		catch (Exception e) {
-			System.out.println(e);
+			
 		}
 	}
 	/**
 	 * It's recommended to be called in Mod PostInit after everything
 	 */
 	public static void SaveConfig() {
-		if (DEBUG)
-			System.out.println("Trying To Save Config");
-		Config.config.save();
-		if (DEBUG)
-			System.out.println("Saved Config");
+		if(Config.config.hasChanged()) Config.config.save();
 	}
 }
