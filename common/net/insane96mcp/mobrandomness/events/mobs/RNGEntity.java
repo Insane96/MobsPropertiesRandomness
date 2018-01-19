@@ -90,16 +90,16 @@ public class RNGEntity {
 		ResourceLocation mobResourceLocation;
 		for (MobEquipment mobEquipment : mobEquipments) {
 			mobResourceLocation = new ResourceLocation(mobEquipment.mobName);
-			if (EntityList.isMatchingName(living, mobResourceLocation)) {
-				ItemStack itemStack = mobEquipment.GetRandomItem(random, equipmentSlot);
-				System.out.println("Itemstack: " + itemStack);
-				if (itemStack.equals(ItemStack.EMPTY))
-					break;
-
-				living.setItemStackToSlot(equipmentSlot, itemStack);
+			if (EntityList.isMatchingName(living, mobResourceLocation))
+				continue;
 				
+			ItemStack itemStack = mobEquipment.GetRandomItem(random, equipmentSlot);
+			if (itemStack.equals(ItemStack.EMPTY))
 				break;
-			}
+
+			living.setItemStackToSlot(equipmentSlot, itemStack);
+			
+			break;
 		}
 	}
 	

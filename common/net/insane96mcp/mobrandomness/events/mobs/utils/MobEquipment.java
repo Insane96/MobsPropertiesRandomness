@@ -100,6 +100,8 @@ public class MobEquipment {
 		}
 		
 		public ItemStack GetItemEnchanted(Random random) {
+			if (random.nextFloat() > chance / 100f)
+				return ItemStack.EMPTY;
 			ItemStack itemStack = new ItemStack(Item.getByNameOrId(itemName), 1);
 			if (enchantmentList.isEmpty())
 				return itemStack;
