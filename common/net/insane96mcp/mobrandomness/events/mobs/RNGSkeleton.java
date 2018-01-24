@@ -54,8 +54,6 @@ public class RNGSkeleton {
 		tag.setTag("CustomPotionEffects", customPotions);
 		nbt.setTag("tag", tag);
 		
-		System.out.println(nbt);
-		
 		itemStack.deserializeNBT(nbt);
 		
 		living.setHeldItem(EnumHand.OFF_HAND, itemStack);
