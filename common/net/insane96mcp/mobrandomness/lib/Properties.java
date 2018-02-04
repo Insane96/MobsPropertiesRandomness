@@ -33,6 +33,7 @@ public class Properties {
 		Creeper.Init();
 		Ghast.Init();
 		Skeleton.Init();
+		PigZombie.Init();
 	}
 	
 	public static class Stats {
@@ -119,6 +120,14 @@ public class Properties {
 		public static void Init() {
 			arrowsList = Config.LoadStringListProperty("skeleton", "arrows_list", "Write here, for each line, the potion effect for the tipped arrows that skeletons can spawn with.\nFormat is potion,duration,min_aplifier,max_aplifier.\nE.g. 'minecraft:slowness,10,0,2' will make skeletons have 'arrow_chance' chance to spawn with a slowness tipped arrow", new String[] {});
 			arrowChance = Config.LoadFloatProperty("skeleton", "arrow_chance", "Chance to give a skeleton a tipped arrow. Is affected by difficulty multiplier", 0.0f);
+		}
+	}
+	
+	public static class PigZombie {
+		public static float aggroChance;
+		
+		public static void Init() {
+			aggroChance = Config.LoadFloatProperty("pig_zombie", "aggro_chance", "Chance for a pigman to spawn permanently aggroed. (Actually is not possible to make them permanently aggroed, so in reality they are aggroed for 30 minutes since they spawn). This is affected by difficulty multiplier", 0.0f);
 		}
 	}
 }

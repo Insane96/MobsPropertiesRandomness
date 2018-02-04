@@ -7,6 +7,7 @@ import com.google.gson.Gson;
 import net.insane96mcp.mobrandomness.events.mobs.RNGCreeper;
 import net.insane96mcp.mobrandomness.events.mobs.RNGEntity;
 import net.insane96mcp.mobrandomness.events.mobs.RNGGhast;
+import net.insane96mcp.mobrandomness.events.mobs.RNGPigZombie;
 import net.insane96mcp.mobrandomness.events.mobs.RNGSkeleton;
 import net.insane96mcp.mobrandomness.lib.Properties;
 import net.minecraft.entity.Entity;
@@ -75,6 +76,8 @@ public class EntityJoinWorld {
 		RNGGhast.ExplosionPower(living, random);
 		
 		RNGSkeleton.TippedArrow(living, multiplier, random);
+		
+		RNGPigZombie.Aggro(living, multiplier, random);
 
 		tags.setByte("mobrandomizzation:check", (byte)1);
 	}

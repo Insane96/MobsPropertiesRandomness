@@ -3,6 +3,10 @@ package net.insane96mcp.mobrandomness.events.mobs;
 import java.util.Random;
 
 import net.insane96mcp.mobrandomness.lib.Properties;
+import net.minecraft.client.Minecraft;
+import net.minecraft.client.renderer.GlStateManager;
+import net.minecraft.client.renderer.entity.Render;
+import net.minecraft.client.renderer.entity.RenderCreeper;
 import net.minecraft.entity.EntityLiving;
 import net.minecraft.entity.monster.EntityCreeper;
 import net.minecraft.nbt.NBTTagCompound;

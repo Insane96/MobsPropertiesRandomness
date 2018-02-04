@@ -56,6 +56,7 @@ public class Config {
 				description += ", ";
 		}
 		description += "])";
+		property.setComment(description);
 		
 		return property.getStringList();
 	}
