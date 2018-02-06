@@ -1,14 +1,5 @@
 package net.insane96mcp.mobrandomness.lib;
 
-import java.util.ArrayList;
-import java.util.Set;
-
-import net.minecraft.entity.Entity;
-import net.minecraft.entity.EntityCreature;
-import net.minecraft.entity.EntityList;
-import net.minecraft.util.ResourceLocation;
-import net.minecraftforge.event.terraingen.WorldTypeEvent.InitBiomeGens;
-
 public class Properties {
 	public static boolean difficultyWise;
 	public static float difficultyMultiplierEasy;
@@ -43,6 +34,7 @@ public class Properties {
 		public static String[] movementSpeed;
 		public static String[] followRange;
 		public static String[] attackDamage;
+		public static String[] knockbackResistance;
 		
 		public static String[] potionEffects;
 		
@@ -57,21 +49,24 @@ public class Properties {
 			
 			attackDamage = Config.LoadStringListProperty("_stats", "modifier_attack_damage", "Write here, for each line, every mob that must have modified attack damage (doesn't work with passive mobs).\nFormat is 'mob,min_attack_damage_increase,max_attack_damage_increase'.\nE.g. 'minecraft:zombie,15.0,50.0' will make zombies deal from 15% to 50% (multiplied by difficulty multiplier) more damage, if 'values_as_percentage' is true, or from 15 to 50 more damage if is false.\n", new String[] {});
 			
+			knockbackResistance = Config.LoadStringListProperty("_stats", "modifier_knockback_resistance", "Write here, for each line, every mob that must have modified knockback resistance.\nFormat is 'mob,min_knockback_resistance_increase,max_knockback_resistance_increase'.\nE.g. 'minecraft:zombie,15.0,50.0' will make zombies have from 15% to 50% (multiplied by difficulty multiplier) chance to prevent knockback, if 'values_as_percentage' is true, otherwise from 15 to 50 more knockback resistance if is false.\n", new String[] {});
+			
 			potionEffects = Config.LoadStringListProperty("_stats", "potion_effects", "Write here, for each line, every mob that can have potion effects applied.\nFormat is 'mob,chance,potion_id,min_amplifier,max_amplifier,ambient_particles,show_particles'.\nE.g. 'minecraft:zombie,15.0,minecraft:jump_boost,0,3,true,false' will make zombies have 15% chance (multiplied by the difficulty multiplier) to have applied the jump boost effect from level 1 (0) to level 4 (3) and make particles be sightly transparent like beacon effects.\nMore than a potion effect can be added on the same mob type, just put it in a new line.", new String[] {});
 		}
 	}
 	
 	public static class Equipment {
-	public static String[] handEquipment;
-	public static String[] headEquipment;
-	public static String[] chestEquipment;
-	public static String[] legsEquipment;
-	public static String[] feetEquipment;
-	
-	public static String[] JSONTest;
-	
+		public static String[] handEquipment;
+		public static String[] offHandEquipment;
+		public static String[] headEquipment;
+		public static String[] chestEquipment;
+		public static String[] legsEquipment;
+		public static String[] feetEquipment;
+		
 		public static void Init() {
 			handEquipment = Config.LoadStringListProperty("_equipment", "hand_list", "Write here, for each line, every mob and the items that they can spawn with.\nFormat is mob,chance,item1,item2,etc.\nIf the mob has already an item, it will be overwritten\nE.g. 'minecraft:zombie,10.0,minecraft:stick,minecraft:diamond_sword' will make zombies have 10% chance (increased by difficulty if 'affected_by_difficulty' is true) to carry a stick or a diamond sword.", new String[] {});
+			
+			offHandEquipment = Config.LoadStringListProperty("_equipment", "off_hand_list", "Write here, for each line, every mob and the items that they can spawn with on the off hand.\nFormat is mob,chance,item1,item2,etc.\nIf the mob has already an item, it will be overwritten\nE.g. 'minecraft:zombie,10.0,minecraft:stick,minecraft:diamond_sword' will make zombies have 10% chance (increased by difficulty if 'affected_by_difficulty' is true) to carry a stick or a diamond sword.", new String[] {});
 			
 			headEquipment = Config.LoadStringListProperty("_equipment", "head_list", "Write here, for each line, every mob and the helmets that they can spawn with.\nFormat is mob,chance,item1,item2,etc.\nIf the mob has already an helmet, it will be overwritten\nE.g. 'minecraft:zombie,10.0,minecraft:diamond_helmet,botania:terrasteel_helmet' will make zombies have 10% chance (increased by difficulty if 'affected_by_difficulty' is true) to spawn with a diamond helmet or a terrasteel helmet.", new String[] {});
 			
@@ -118,7 +113,7 @@ public class Properties {
 		public static float arrowChance;
 		
 		public static void Init() {
-			arrowsList = Config.LoadStringListProperty("skeleton", "arrows_list", "Write here, for each line, the potion effect for the tipped arrows that skeletons can spawn with.\nFormat is potion,duration,min_aplifier,max_aplifier.\nE.g. 'minecraft:slowness,10,0,2' will make skeletons have 'arrow_chance' chance to spawn with a slowness tipped arrow", new String[] {});
+			arrowsList = Config.LoadStringListProperty("skeleton", "arrows_list", "Write here, for each line, the potion effect for the tipped arrows that skeletons can spawn with.\nFormat is potion,duration,min_aplifier,max_aplifier.\nE.g. 'minecraft:slowness,10,0,2' will make skeletons have 'arrow_chance' chance to spawn with a slowness tipped arrow.\nOverwrites 'off_hand_equipment'", new String[] {});
 			arrowChance = Config.LoadFloatProperty("skeleton", "arrow_chance", "Chance to give a skeleton a tipped arrow. Is affected by difficulty multiplier", 0.0f);
 		}
 	}

@@ -1,13 +1,8 @@
 package net.insane96mcp.mobrandomness.events.mobs;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Random;
-
-import javax.swing.text.html.parser.Entity;
-
-import org.lwjgl.Sys;
 
 import net.insane96mcp.mobrandomness.events.mobs.utils.MobEquipment;
 import net.insane96mcp.mobrandomness.events.mobs.utils.MobPotionEffect;
@@ -18,7 +13,6 @@ import net.minecraft.entity.EntityLiving;
 import net.minecraft.entity.SharedMonsterAttributes;
 import net.minecraft.entity.ai.attributes.IAttribute;
 import net.minecraft.inventory.EntityEquipmentSlot;
-import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.potion.Potion;
 import net.minecraft.potion.PotionEffect;
@@ -73,18 +67,23 @@ public class RNGEntity {
 		}
 	}
 	
+	private static void LoadAllEquipment(String[] equipment) {
+		LoadEquipment(equipment, EntityEquipmentSlot.HEAD);
+		LoadEquipment(equipment, EntityEquipmentSlot.CHEST);
+		LoadEquipment(equipment, EntityEquipmentSlot.LEGS);
+		LoadEquipment(equipment, EntityEquipmentSlot.FEET);
+		LoadEquipment(equipment, EntityEquipmentSlot.MAINHAND);
+		LoadEquipment(equipment, EntityEquipmentSlot.OFFHAND);
+	}
+	
 	public static void Equipment(EntityLiving living, EntityEquipmentSlot equipmentSlot, String[] equipment, float multiplier, Random random){
-				if (equipment.length == 0)
+		if (equipment.length == 0)
 			return;
 		
 		mobEquipments = new ArrayList<MobEquipment>();
 		
 		if (mobEquipments.isEmpty()) {
-			LoadEquipment(equipment, EntityEquipmentSlot.HEAD);
-			LoadEquipment(equipment, EntityEquipmentSlot.CHEST);
-			LoadEquipment(equipment, EntityEquipmentSlot.LEGS);
-			LoadEquipment(equipment, EntityEquipmentSlot.FEET);
-			LoadEquipment(equipment, EntityEquipmentSlot.MAINHAND);
+			LoadAllEquipment(equipment);
 		}
 		
 		ResourceLocation mobResourceLocation;
@@ -95,7 +94,7 @@ public class RNGEntity {
 				
 			ItemStack itemStack = mobEquipment.GetRandomItem(random, equipmentSlot);
 			if (itemStack.equals(ItemStack.EMPTY))
-				break;
+				continue;
 
 			living.setItemStackToSlot(equipmentSlot, itemStack);
 			

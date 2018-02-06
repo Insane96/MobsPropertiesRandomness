@@ -17,10 +17,11 @@ public class MobEquipment {
 	public List<RNGEquipment> legsEquipment;
 	public List<RNGEquipment> feetEquipment;
 	public List<RNGEquipment> handEquipment;
+	public List<RNGEquipment> offHandEquipment;
 	
 	@Override
 	public String toString() {
-		return String.format("mobName: %s, headEquipmentCount: %d, chestEquipmentCount: %d, legsEquipmentCount: %d, feetEquipmentCount: %d, handEquipmentCount: %d", this.mobName, headEquipment.size(), chestEquipment.size(), legsEquipment.size(), feetEquipment.size(), handEquipment.size());
+		return String.format("mobName: %s, headEquipmentCount: %d, chestEquipmentCount: %d, legsEquipmentCount: %d, feetEquipmentCount: %d, handEquipmentCount: %d, offHandEquipment: %d", this.mobName, headEquipment.size(), chestEquipment.size(), legsEquipment.size(), feetEquipment.size(), handEquipment.size(), offHandEquipment.size());
 	}
 	
 	public MobEquipment(String mobName) {
@@ -30,6 +31,7 @@ public class MobEquipment {
 		legsEquipment = new ArrayList<RNGEquipment>();
 		feetEquipment = new ArrayList<RNGEquipment>();
 		handEquipment = new ArrayList<RNGEquipment>();
+		offHandEquipment = new ArrayList<RNGEquipment>();
 	}
 	
 	public void AddEquipment(String itemName, float chance, EntityEquipmentSlot slot, List<RNGEnchantment> enchantments) {
@@ -50,6 +52,9 @@ public class MobEquipment {
 			break;
 		case MAINHAND:
 			handEquipment.add(equipment);
+			break;
+		case OFFHAND:
+			offHandEquipment.add(equipment);
 			break;
 		}
 	}
@@ -76,6 +81,10 @@ public class MobEquipment {
 			if (handEquipment.size() == 0)
 				break;
 			return handEquipment.get(random.nextInt(handEquipment.size())).GetItemEnchanted(random);
+		case OFFHAND:
+			if (offHandEquipment.size() == 0)
+				break;
+			return offHandEquipment.get(random.nextInt(offHandEquipment.size())).GetItemEnchanted(random);
 		}
 		return ItemStack.EMPTY;
 	}

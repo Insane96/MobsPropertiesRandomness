@@ -60,8 +60,10 @@ public class EntityJoinWorld {
 		RNGEntity.Attributes(living, SharedMonsterAttributes.MOVEMENT_SPEED, Properties.Stats.movementSpeed, multiplier, random);
 		RNGEntity.Attributes(living, SharedMonsterAttributes.FOLLOW_RANGE, Properties.Stats.followRange, multiplier, random);
 		RNGEntity.Attributes(living, SharedMonsterAttributes.ATTACK_DAMAGE, Properties.Stats.attackDamage, multiplier, random);
-		
+		RNGEntity.Attributes(living, SharedMonsterAttributes.KNOCKBACK_RESISTANCE, Properties.Stats.knockbackResistance, multiplier, random);
+
 		RNGEntity.Equipment(living, EntityEquipmentSlot.MAINHAND, Properties.Equipment.handEquipment, multiplier, random);
+		RNGEntity.Equipment(living, EntityEquipmentSlot.OFFHAND, Properties.Equipment.offHandEquipment, multiplier, random);
 		RNGEntity.Equipment(living, EntityEquipmentSlot.HEAD, Properties.Equipment.headEquipment, multiplier, random);
 		RNGEntity.Equipment(living, EntityEquipmentSlot.CHEST, Properties.Equipment.chestEquipment, multiplier, random);
 		RNGEntity.Equipment(living, EntityEquipmentSlot.LEGS, Properties.Equipment.legsEquipment, multiplier, random);
