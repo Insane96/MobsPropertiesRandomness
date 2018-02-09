@@ -4,6 +4,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 
+import com.sun.jna.Library;
+
 import net.insane96mcp.mobrandomness.events.mobs.utils.MobEquipment;
 import net.insane96mcp.mobrandomness.events.mobs.utils.MobPotionEffect;
 import net.insane96mcp.mobrandomness.events.mobs.utils.MobPotionEffect.RNGPotionEffect;
@@ -89,7 +91,7 @@ public class RNGEntity {
 		ResourceLocation mobResourceLocation;
 		for (MobEquipment mobEquipment : mobEquipments) {
 			mobResourceLocation = new ResourceLocation(mobEquipment.mobName);
-			if (EntityList.isMatchingName(living, mobResourceLocation))
+			if (!EntityList.isMatchingName(living, mobResourceLocation))
 				continue;
 				
 			ItemStack itemStack = mobEquipment.GetRandomItem(random, equipmentSlot);
@@ -103,34 +105,35 @@ public class RNGEntity {
 	}
 	
 	public static void Attributes(EntityLiving living, IAttribute attribute, String[] stats, float multiplier, Random random) {
-		ResourceLocation mob_name;
-		float min_increase, max_increase;
+		ResourceLocation mobName;
+		float minIncrease, maxIncrease;
 		
 		if (stats.length == 0)
 			return;
 		
 		for (String stat : stats) {
 			try {
-				mob_name = new ResourceLocation(stat.split(",")[0]);
-				if (EntityList.isMatchingName(living, mob_name)) {
-					min_increase = Float.parseFloat(stat.split(",")[1]) * multiplier;
-					max_increase = Float.parseFloat(stat.split(",")[2]) * multiplier;
-					
-					double attributeValue = living.getEntityAttribute(attribute).getBaseValue();
-					float increase = MathHelper.nextFloat(random, min_increase, max_increase);
-					
-					if (Properties.Stats.valuesAsPercentage)
-						attributeValue += attributeValue * increase / 100f;
-					else
-						attributeValue += increase;
-					
-					living.getEntityAttribute(attribute).setBaseValue(attributeValue);
-					
-					if (attribute.equals(SharedMonsterAttributes.MAX_HEALTH))
-						living.setHealth((float) attributeValue);
-					
-					break;
-				}
+				mobName = new ResourceLocation(stat.split(",")[0]);
+				if (!EntityList.isMatchingName(living, mobName))
+					continue;
+
+				minIncrease = Float.parseFloat(stat.split(",")[1]) * multiplier;
+				maxIncrease = Float.parseFloat(stat.split(",")[2]) * multiplier;
+				
+				double attributeValue = living.getEntityAttribute(attribute).getBaseValue();
+				float increase = MathHelper.nextFloat(random, minIncrease, maxIncrease);
+				
+				if (Properties.Stats.valuesAsPercentage)
+					attributeValue += attributeValue * increase / 100f;
+				else
+					attributeValue += increase;
+				
+				living.getEntityAttribute(attribute).setBaseValue(attributeValue);
+				
+				if (attribute.equals(SharedMonsterAttributes.MAX_HEALTH))
+					living.setHealth((float) attributeValue);
+				
+				break;
 			}
 			catch (Exception e) {
 				System.err.println("Failed to parse attribute \"" + stat + "\": " + e.getMessage());
