@@ -123,10 +123,10 @@ public class RNGEntity {
 				double attributeValue = living.getEntityAttribute(attribute).getBaseValue();
 				float increase = MathHelper.nextFloat(random, minIncrease, maxIncrease);
 				
-				if (Properties.Stats.valuesAsPercentage)
-					attributeValue += attributeValue * increase / 100f;
-				else
+				if (attribute.equals(SharedMonsterAttributes.KNOCKBACK_RESISTANCE) || !Properties.Stats.valuesAsPercentage)
 					attributeValue += increase;
+				else
+					attributeValue += attributeValue * increase / 100f;
 				
 				living.getEntityAttribute(attribute).setBaseValue(attributeValue);
 				
