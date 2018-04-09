@@ -56,6 +56,11 @@ public class EntityJoinWorld {
 		if (isAlreadyChecked == 1)
 			return;
 		
+		boolean shouldNotBeProcessed = tags.getBoolean("mobsrandomizzation:preventProcessing");
+		
+		if (shouldNotBeProcessed)
+			return;
+		
 		RNGEntity.Attributes(living, SharedMonsterAttributes.MAX_HEALTH, Properties.Stats.health, multiplier, random);
 		RNGEntity.Attributes(living, SharedMonsterAttributes.MOVEMENT_SPEED, Properties.Stats.movementSpeed, multiplier, random);
 		RNGEntity.Attributes(living, SharedMonsterAttributes.FOLLOW_RANGE, Properties.Stats.followRange, multiplier, random);
