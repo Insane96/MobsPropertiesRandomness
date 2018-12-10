@@ -1,7 +1,28 @@
 package net.insane96mcp.mobrandomness.lib;
 
+import net.insane96mcp.mobrandomness.MobsPropertiesRandomness;
+import net.minecraftforge.common.config.Config;
+import net.minecraftforge.common.config.Config.Comment;
+import net.minecraftforge.common.config.Config.Name;
+import net.minecraftforge.common.config.Config.Type;
+import net.minecraftforge.common.config.ConfigManager;
+import net.minecraftforge.fml.client.event.ConfigChangedEvent.OnConfigChangedEvent;
+import net.minecraftforge.fml.common.Mod;
+import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
+
+@Config(modid = MobsPropertiesRandomness.MOD_ID, name = MobsPropertiesRandomness.MOD_ID + "/MobsPropertiesRandomness", category = "")
 public class Properties {
-	public static boolean difficultyWise;
+
+	@Name("Config")
+	public static final ConfigOptions config = new ConfigOptions();
+	
+	public static class ConfigOptions {
+		@Name("Debug")
+		@Comment("Enabled debug info in log file, useful when configuring the mod by adding and modifying JSONs. It is recommended to disable this on release")
+		public static boolean debug = true;
+	}
+	
+	/*public static boolean difficultyWise;
 	public static float difficultyMultiplierEasy;
 	public static float difficultyMultiplierNormal;
 	public static float difficultyMultiplierHard;
@@ -124,5 +145,18 @@ public class Properties {
 		public static void Init() {
 			aggroChance = Config.LoadFloatProperty("pig_zombie", "aggro_chance", "Chance for a pigman to spawn permanently aggroed. (Actually is not possible to make them permanently aggroed, so in reality they are aggroed for 30 minutes since they spawn). This is affected by difficulty multiplier", 0.0f);
 		}
+	}*/
+	
+	
+	@Mod.EventBusSubscriber(modid = MobsPropertiesRandomness.MOD_ID)
+	private static class EventHandler{
+		@SubscribeEvent
+	    public static void onConfigChangedEvent(OnConfigChangedEvent event)
+	    {
+	        if (event.getModID().equals(MobsPropertiesRandomness.MOD_ID))
+	        {
+	            ConfigManager.sync(MobsPropertiesRandomness.MOD_ID, Type.INSTANCE);
+	        }
+	    }
 	}
 }

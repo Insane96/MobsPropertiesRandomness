@@ -1,11 +1,11 @@
 [
 {
-  "modid": "mobrandomness",
+  "modid": "mobspropertiesrandomness",
   "name": "Mob Properties Randomness",
-  "description": "Randomize mobs speed, attack, equipment and much more",
+  "description": "Randomize mobs Attributes, Equipment and Potion Effects on spawn",
   "version": "${version}",
   "mcversion": "${mcversion}",
-  "url": "https://minecraft.curseforge.com/projects/mob-randomness",
+  "url": "https://minecraft.curseforge.com/projects/mobs-properties-randomness",
   "updateUrl": "",
   "authorList": ["Insane96MCP"],
   "credits": "The MCForge forum for help :P",
