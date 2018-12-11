@@ -11,7 +11,7 @@ public class ReloadJson extends CommandBase {
 
 	@Override
 	public String getName() {
-		return "reloadjson";
+		return "mpr:reloadjson";
 	}
 
 	@Override

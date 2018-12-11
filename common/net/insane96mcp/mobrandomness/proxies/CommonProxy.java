@@ -1,5 +1,8 @@
 package net.insane96mcp.mobrandomness.proxies;
 
+import java.io.File;
+
+import net.insane96mcp.mobrandomness.MobsPropertiesRandomness;
 import net.insane96mcp.mobrandomness.events.EntityJoinWorld;
 import net.insane96mcp.mobrandomness.json.Mob;
 import net.minecraftforge.common.MinecraftForge;
@@ -17,6 +20,9 @@ public class CommonProxy {
 	}
 	
 	public void PostInit(FMLPostInitializationEvent event) {
+		File jsonFolder = new File(MobsPropertiesRandomness.configPath + "json");
+		if (!jsonFolder.exists())
+			jsonFolder.mkdir();
 		Mob.LoadJsons();
 	}
 }

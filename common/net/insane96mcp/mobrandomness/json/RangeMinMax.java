@@ -29,7 +29,7 @@ public class RangeMinMax {
 	
 	public void Validate(final File file){
 		if (max < min) {
-			MobsPropertiesRandomness.Debug("Min is greater than max, max now will be equal to min");
+			MobsPropertiesRandomness.Debug("[Float] Min is greater than max, max now will be equal to min");
 			max = min;
 		}
 	}

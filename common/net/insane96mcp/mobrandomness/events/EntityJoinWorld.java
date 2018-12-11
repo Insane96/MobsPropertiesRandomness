@@ -3,9 +3,12 @@ package net.insane96mcp.mobrandomness.events;
 import java.util.Random;
 import java.util.UUID;
 
+import net.insane96mcp.mobrandomness.MobsPropertiesRandomness;
 import net.insane96mcp.mobrandomness.json.Attribute;
 import net.insane96mcp.mobrandomness.json.Mob;
 import net.insane96mcp.mobrandomness.json.PotionEffect;
+import net.insane96mcp.mobrandomness.json.mobs.Creeper;
+import net.insane96mcp.mobrandomness.json.mobs.Ghast;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityList;
 import net.minecraft.entity.EntityLiving;
@@ -37,74 +40,32 @@ public class EntityJoinWorld {
 		EntityLiving entityLiving = (EntityLiving)entity;
 		
 		NBTTagCompound tags = entityLiving.getEntityData();
-		byte isAlreadyChecked = tags.getByte("mobrandomizzation:check");
+		byte isAlreadyChecked = tags.getByte(MobsPropertiesRandomness.RESOURCE_PREFIX + "checked");
 
 		if (isAlreadyChecked == 1)
 			return;
 		
-		boolean shouldNotBeProcessed = tags.getBoolean("mobsrandomizzation:preventProcessing");
+		boolean shouldNotBeProcessed = tags.getBoolean(MobsPropertiesRandomness.RESOURCE_PREFIX + "prevent_processing");
 		
 		if (shouldNotBeProcessed)
 			return;
-
+		
 		ApplyPotionEffects(entity, world, random);
 		ApplyModifiers(entity, world, random);
 		
-		tags.setByte("mobrandomizzation:check", (byte)1);
+		Creeper.Apply(entity, world, random);
+		Ghast.Apply(entityLiving, world, random);
 		
-		/*float multiplier = 1.0f;
-		if (Properties.difficultyWise)
-			multiplier = world.getDifficulty() == EnumDifficulty.EASY ? Properties.difficultyMultiplierEasy : 
-				world.getDifficulty() == EnumDifficulty.NORMAL ? Properties.difficultyMultiplierNormal : 
-				world.getDifficulty() == EnumDifficulty.HARD ? Properties.difficultyMultiplierHard : 1.0f;
+		tags.setByte(MobsPropertiesRandomness.RESOURCE_PREFIX + "checked", (byte)1);
 		
-		float localMultiplier = 1.0f;
-		if (Properties.localDifficultyWise)
-			localMultiplier = world.getDifficultyForLocation(entity.getPosition()).getAdditionalDifficulty() * Properties.localDifficultyMultiplier;
-		
-		multiplier *= localMultiplier;
-		
-	
-		if (!(entity instanceof EntityLiving)) 
-			return;
-		
-		EntityLiving living = (EntityLiving)entity;
-		
-		NBTTagCompound tags = living.getEntityData();
-		byte isAlreadyChecked = tags.getByte("mobrandomizzation:check");
-
-		if (isAlreadyChecked == 1)
-			return;
-		
-		boolean shouldNotBeProcessed = tags.getBoolean("mobsrandomizzation:preventProcessing");
-		
-		if (shouldNotBeProcessed)
-			return;
-		
-		RNGEntity.Attributes(living, SharedMonsterAttributes.MAX_HEALTH, Properties.Stats.health, multiplier, random);
-		RNGEntity.Attributes(living, SharedMonsterAttributes.MOVEMENT_SPEED, Properties.Stats.movementSpeed, multiplier, random);
-		RNGEntity.Attributes(living, SharedMonsterAttributes.FOLLOW_RANGE, Properties.Stats.followRange, multiplier, random);
-		RNGEntity.Attributes(living, SharedMonsterAttributes.ATTACK_DAMAGE, Properties.Stats.attackDamage, multiplier, random);
-		RNGEntity.Attributes(living, SharedMonsterAttributes.KNOCKBACK_RESISTANCE, Properties.Stats.knockbackResistance, multiplier, random);
-
-		RNGEntity.Equipment(living, EntityEquipmentSlot.MAINHAND, Properties.Equipment.handEquipment, multiplier, random);
+		/*RNGEntity.Equipment(living, EntityEquipmentSlot.MAINHAND, Properties.Equipment.handEquipment, multiplier, random);
 		RNGEntity.Equipment(living, EntityEquipmentSlot.OFFHAND, Properties.Equipment.offHandEquipment, multiplier, random);
 		RNGEntity.Equipment(living, EntityEquipmentSlot.HEAD, Properties.Equipment.headEquipment, multiplier, random);
 		RNGEntity.Equipment(living, EntityEquipmentSlot.CHEST, Properties.Equipment.chestEquipment, multiplier, random);
 		RNGEntity.Equipment(living, EntityEquipmentSlot.LEGS, Properties.Equipment.legsEquipment, multiplier, random);
 		RNGEntity.Equipment(living, EntityEquipmentSlot.FEET, Properties.Equipment.feetEquipment, multiplier, random);
 		
-		RNGEntity.PotionEffects(living, Properties.Stats.potionEffects, random);
-		
-		RNGCreeper.Fuse(living, random);
-		RNGCreeper.ExplosionRadius(living, random);
-		RNGCreeper.Powered(living, multiplier, random);
-		
-		RNGGhast.ExplosionPower(living, random);
-		
 		RNGSkeleton.TippedArrow(living, multiplier, random);
-		
-		RNGPigZombie.Aggro(living, multiplier, random);
 
 		*/
 	}
@@ -178,7 +139,7 @@ public class EntityJoinWorld {
 		for (Mob mob : Mob.mobs) {
 			if (EntityList.isMatchingName(entityLiving, new ResourceLocation(mob.id))) {
 				for (PotionEffect potionEffect : mob.potionEffects) {
-					if (potionEffect.chance > 0.0f && random.nextFloat() > potionEffect.chance / 100f)
+					if (potionEffect.chance == 0.0f || potionEffect.chance / 100f < random.nextFloat())
 						continue;
 					
 					float chance = potionEffect.chanceWithDifficulty.chance;
@@ -198,8 +159,8 @@ public class EntityJoinWorld {
 					if (random.nextFloat() > chance / 100f)
 						continue;
 
-					int minAmplifier = (int)potionEffect.amplifier.min;
-					int maxAmplifier = (int)potionEffect.amplifier.max;
+					int minAmplifier = (int) potionEffect.amplifier.min;
+					int maxAmplifier = (int) potionEffect.amplifier.max;
 					
 					Potion potion = Potion.getPotionFromResourceLocation(potionEffect.id);
 					net.minecraft.potion.PotionEffect effect = new net.minecraft.potion.PotionEffect(potion, 100000, MathHelper.getInt(random, minAmplifier, maxAmplifier), potionEffect.ambient, !potionEffect.hideParticles);

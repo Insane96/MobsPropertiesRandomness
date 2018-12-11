@@ -9,7 +9,7 @@ import net.insane96mcp.mobrandomness.MobsPropertiesRandomness;
 public class PotionEffect {
 	public String id;
 	public RangeMinMax amplifier;
-	
+
 	public float chance;
 	@SerializedName("chance_with_difficulty")
 	public ChanceWithDifficulty chanceWithDifficulty;

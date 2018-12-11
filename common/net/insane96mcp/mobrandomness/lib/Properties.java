@@ -19,7 +19,7 @@ public class Properties {
 	public static class ConfigOptions {
 		@Name("Debug")
 		@Comment("Enabled debug info in log file, useful when configuring the mod by adding and modifying JSONs. It is recommended to disable this on release")
-		public static boolean debug = true;
+		public boolean debug = true;
 	}
 	
 	/*public static boolean difficultyWise;
