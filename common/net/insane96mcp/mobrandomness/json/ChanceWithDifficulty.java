@@ -5,6 +5,7 @@ import java.io.File;
 import com.google.gson.annotations.SerializedName;
 
 import net.insane96mcp.mobrandomness.MobsPropertiesRandomness;
+import net.insane96mcp.mobrandomness.exceptions.InvalidJsonException;
 
 public class ChanceWithDifficulty {
 	public float chance;

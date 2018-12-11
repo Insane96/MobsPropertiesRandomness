@@ -9,6 +9,7 @@ import com.google.gson.Gson;
 import com.google.gson.annotations.SerializedName;
 
 import net.insane96mcp.mobrandomness.MobsPropertiesRandomness;
+import net.insane96mcp.mobrandomness.exceptions.InvalidJsonException;
 import net.insane96mcp.mobrandomness.json.mobs.Creeper;
 import net.insane96mcp.mobrandomness.json.mobs.Ghast;
 

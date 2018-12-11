@@ -1,4 +1,4 @@
-package net.insane96mcp.mobrandomness.json;
+package net.insane96mcp.mobrandomness.exceptions;
 
 import java.io.File;
 

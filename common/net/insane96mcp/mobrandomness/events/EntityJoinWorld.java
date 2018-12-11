@@ -109,14 +109,20 @@ public class EntityJoinWorld {
 						max *= attribute.difficulty.multiplier;
 					}
 					
+					IAttributeInstance attributeInstance = entityLiving.getAttributeMap().getAttributeInstanceByName(attribute.id);
+					
+					
 					float amount = MathHelper.nextFloat(random, min, max);
-					if (!attribute.isFlat) {
+					
+					if (attribute.isFlat) {
+						amount -= attributeInstance.getAttributeValue();
+					}
+					else {
 						amount /= 100f;
 						amount += 1f;
 					}
-
+					
 					AttributeModifier modifier = new AttributeModifier(UUID.randomUUID(),"mobspropertiesrandomness:" + attribute.id, amount, attribute.isFlat ? 0 : 1);
-					IAttributeInstance attributeInstance = entityLiving.getAttributeMap().getAttributeInstanceByName(attribute.id);
 					attributeInstance.applyModifier(modifier);
 					
 					//Health Fix

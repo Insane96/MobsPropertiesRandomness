@@ -6,8 +6,8 @@ import java.util.Random;
 import com.google.gson.annotations.SerializedName;
 
 import net.insane96mcp.mobrandomness.MobsPropertiesRandomness;
+import net.insane96mcp.mobrandomness.exceptions.InvalidJsonException;
 import net.insane96mcp.mobrandomness.json.ChanceWithDifficulty;
-import net.insane96mcp.mobrandomness.json.InvalidJsonException;
 import net.insane96mcp.mobrandomness.json.Mob;
 import net.insane96mcp.mobrandomness.json.RangeMinMax;
 import net.minecraft.entity.Entity;
