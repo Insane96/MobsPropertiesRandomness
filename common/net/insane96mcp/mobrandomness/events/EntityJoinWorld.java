@@ -66,7 +66,6 @@ public class EntityJoinWorld {
 		RNGEntity.Equipment(living, EntityEquipmentSlot.FEET, Properties.Equipment.feetEquipment, multiplier, random);
 		
 		RNGSkeleton.TippedArrow(living, multiplier, random);
-
 		*/
 	}
 	
