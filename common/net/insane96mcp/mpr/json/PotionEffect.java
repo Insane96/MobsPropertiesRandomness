@@ -8,6 +8,7 @@ import net.insane96mcp.mpr.MobsPropertiesRandomness;
 import net.insane96mcp.mpr.exceptions.InvalidJsonException;
 import net.insane96mcp.mpr.json.utils.Chance;
 import net.insane96mcp.mpr.json.utils.RangeMinMax;
+import net.minecraft.potion.Potion;
 
 public class PotionEffect {
 	public String id;
@@ -28,6 +29,8 @@ public class PotionEffect {
 		//Potion Id
 		if (id == null)
 			throw new InvalidJsonException("Missing Potion Effect Id for " + this.toString(), file);
+		else if (Potion.getPotionFromResourceLocation(id) == null)
+			MobsPropertiesRandomness.Warning("Failed to find Potion with " + id);
 		
 		//Amplifier
 		if (amplifier == null) {

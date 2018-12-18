@@ -69,15 +69,7 @@ public class EntityJoinWorld {
 		
 		tags.setByte(MobsPropertiesRandomness.RESOURCE_PREFIX + "checked", (byte)1);
 		
-		/*RNGEntity.Equipment(living, EntityEquipmentSlot.MAINHAND, Properties.Equipment.handEquipment, multiplier, random);
-		RNGEntity.Equipment(living, EntityEquipmentSlot.OFFHAND, Properties.Equipment.offHandEquipment, multiplier, random);
-		RNGEntity.Equipment(living, EntityEquipmentSlot.HEAD, Properties.Equipment.headEquipment, multiplier, random);
-		RNGEntity.Equipment(living, EntityEquipmentSlot.CHEST, Properties.Equipment.chestEquipment, multiplier, random);
-		RNGEntity.Equipment(living, EntityEquipmentSlot.LEGS, Properties.Equipment.legsEquipment, multiplier, random);
-		RNGEntity.Equipment(living, EntityEquipmentSlot.FEET, Properties.Equipment.feetEquipment, multiplier, random);
-		
-		RNGSkeleton.TippedArrow(living, multiplier, random);
-		*/
+		//RNGSkeleton.TippedArrow(living, multiplier, random);
 	}
 	
 	private static void ApplyModifiers(EntityLiving entity, World world, Random random) {
@@ -115,7 +107,10 @@ public class EntityJoinWorld {
 					}
 					
 					IAttributeInstance attributeInstance = entity.getAttributeMap().getAttributeInstanceByName(attribute.id);
-					
+					if (attributeInstance == null) {
+						MobsPropertiesRandomness.Warning("Attribute " + attribute.id + " not found for the entity, skipping the attribute");
+						continue;
+					}
 					
 					float amount = MathHelper.nextFloat(random, min, max);
 					
