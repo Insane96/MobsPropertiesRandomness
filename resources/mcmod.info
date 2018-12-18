@@ -1,6 +1,6 @@
 [
 {
-  "modid": "mobspropertiesrandomness",
+  "modid": "mpr",
   "name": "Mob Properties Randomness",
   "description": "Randomize mobs Attributes, Equipment and Potion Effects on spawn",
   "version": "${version}",

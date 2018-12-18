@@ -1,8 +1,8 @@
-package net.insane96mcp.mobrandomness.json.utils;
+package net.insane96mcp.mpr.json.utils;
 
 import java.io.File;
 
-import net.insane96mcp.mobrandomness.MobsPropertiesRandomness;
+import net.insane96mcp.mpr.MobsPropertiesRandomness;
 
 public class RangeMinMax {
 	public float min;

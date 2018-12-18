@@ -1,11 +1,11 @@
-package net.insane96mcp.mobrandomness.json.utils;
+package net.insane96mcp.mpr.json.utils;
 
 import java.io.File;
 
 import com.google.gson.annotations.SerializedName;
 
-import net.insane96mcp.mobrandomness.MobsPropertiesRandomness;
-import net.insane96mcp.mobrandomness.exceptions.InvalidJsonException;
+import net.insane96mcp.mpr.MobsPropertiesRandomness;
+import net.insane96mcp.mpr.exceptions.InvalidJsonException;
 
 public class Chance {
 	public float amount;

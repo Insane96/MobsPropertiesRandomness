@@ -1,14 +1,14 @@
-package net.insane96mcp.mobrandomness.json.mobs;
+package net.insane96mcp.mpr.json.mobs;
 
 import java.io.File;
 import java.util.Random;
 
 import com.google.gson.annotations.SerializedName;
 
-import net.insane96mcp.mobrandomness.exceptions.InvalidJsonException;
-import net.insane96mcp.mobrandomness.json.Mob;
-import net.insane96mcp.mobrandomness.json.utils.Chance;
-import net.insane96mcp.mobrandomness.json.utils.RangeMinMax;
+import net.insane96mcp.mpr.exceptions.InvalidJsonException;
+import net.insane96mcp.mpr.json.Mob;
+import net.insane96mcp.mpr.json.utils.Chance;
+import net.insane96mcp.mpr.json.utils.RangeMinMax;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityList;
 import net.minecraft.entity.monster.EntityCreeper;

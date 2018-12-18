@@ -1,0 +1,3 @@
+mpr:reload_json=Reloading JSON files in 'json' folder
+mpr:json_reload_error=Something went wrong while reloading JSONs. Please check the log for more infos
+mpr:json_count=Successfully reloaded %d JSONs

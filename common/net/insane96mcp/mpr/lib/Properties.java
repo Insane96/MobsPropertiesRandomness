@@ -1,6 +1,6 @@
-package net.insane96mcp.mobrandomness.lib;
+package net.insane96mcp.mpr.lib;
 
-import net.insane96mcp.mobrandomness.MobsPropertiesRandomness;
+import net.insane96mcp.mpr.MobsPropertiesRandomness;
 import net.minecraftforge.common.config.Config;
 import net.minecraftforge.common.config.Config.Comment;
 import net.minecraftforge.common.config.Config.Name;

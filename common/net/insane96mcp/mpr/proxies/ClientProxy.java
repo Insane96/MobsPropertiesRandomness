@@ -1,4 +1,4 @@
-package net.insane96mcp.mobrandomness.proxies;
+package net.insane96mcp.mpr.proxies;
 
 import net.minecraftforge.fml.common.event.FMLInitializationEvent;
 import net.minecraftforge.fml.common.event.FMLPostInitializationEvent;

@@ -1,6 +1,7 @@
-package net.insane96mcp.mobrandomness.commands;
+package net.insane96mcp.mpr.commands;
 
-import net.insane96mcp.mobrandomness.json.Mob;
+import net.insane96mcp.mpr.MobsPropertiesRandomness;
+import net.insane96mcp.mpr.json.Mob;
 import net.minecraft.command.CommandBase;
 import net.minecraft.command.CommandException;
 import net.minecraft.command.ICommandSender;
@@ -11,7 +12,7 @@ public class ReloadJson extends CommandBase {
 
 	@Override
 	public String getName() {
-		return "mpr:reloadjson";
+		return MobsPropertiesRandomness.RESOURCE_PREFIX + "reloadjson";
 	}
 
 	@Override
@@ -26,11 +27,11 @@ public class ReloadJson extends CommandBase {
 
 	@Override
 	public void execute(MinecraftServer server, ICommandSender sender, String[] args) throws CommandException {
-		sender.sendMessage(new TextComponentTranslation("mobspropertiesrandomness.reload_json"));
+		sender.sendMessage(new TextComponentTranslation(MobsPropertiesRandomness.RESOURCE_PREFIX + "reload_json"));
 		if (!Mob.LoadJsons()) {
-			sender.sendMessage(new TextComponentTranslation("mobspropertiesrandomness.json_reload_error"));
+			sender.sendMessage(new TextComponentTranslation(MobsPropertiesRandomness.RESOURCE_PREFIX + "json_reload_error"));
 		}
-		sender.sendMessage(new TextComponentTranslation("mobspropertiesrandomness.json_count", String.valueOf(Mob.mobs.size())));
+		sender.sendMessage(new TextComponentTranslation(MobsPropertiesRandomness.RESOURCE_PREFIX + "json_count", String.valueOf(Mob.mobs.size())));
 	}
 
 }

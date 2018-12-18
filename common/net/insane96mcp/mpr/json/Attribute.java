@@ -1,13 +1,13 @@
-package net.insane96mcp.mobrandomness.json;
+package net.insane96mcp.mpr.json;
 
 import java.io.File;
 
 import com.google.gson.annotations.SerializedName;
 
-import net.insane96mcp.mobrandomness.MobsPropertiesRandomness;
-import net.insane96mcp.mobrandomness.exceptions.InvalidJsonException;
-import net.insane96mcp.mobrandomness.json.utils.Difficulty;
-import net.insane96mcp.mobrandomness.json.utils.RangeMinMax;
+import net.insane96mcp.mpr.MobsPropertiesRandomness;
+import net.insane96mcp.mpr.exceptions.InvalidJsonException;
+import net.insane96mcp.mpr.json.utils.Difficulty;
+import net.insane96mcp.mpr.json.utils.RangeMinMax;
 
 public class Attribute {
 	public String id;

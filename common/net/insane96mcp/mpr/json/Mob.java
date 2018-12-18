@@ -1,4 +1,4 @@
-package net.insane96mcp.mobrandomness.json;
+package net.insane96mcp.mpr.json;
 
 import java.io.File;
 import java.io.FileReader;
@@ -8,10 +8,10 @@ import java.util.List;
 import com.google.gson.Gson;
 import com.google.gson.annotations.SerializedName;
 
-import net.insane96mcp.mobrandomness.MobsPropertiesRandomness;
-import net.insane96mcp.mobrandomness.exceptions.InvalidJsonException;
-import net.insane96mcp.mobrandomness.json.mobs.Creeper;
-import net.insane96mcp.mobrandomness.json.mobs.Ghast;
+import net.insane96mcp.mpr.MobsPropertiesRandomness;
+import net.insane96mcp.mpr.exceptions.InvalidJsonException;
+import net.insane96mcp.mpr.json.mobs.Creeper;
+import net.insane96mcp.mpr.json.mobs.Ghast;
 
 public class Mob {
 	public static List<Mob> mobs = new ArrayList<Mob>();
@@ -33,6 +33,13 @@ public class Mob {
 	}
 	
 	public static boolean LoadJsons() {
+		//check if json folder exist, if not, create it
+		File jsonFolder = new File(MobsPropertiesRandomness.configPath + "json");
+		if (!jsonFolder.exists()) {
+			jsonFolder.mkdir();
+			return true;
+		}
+		
 		//Empty the list with the loaded jsons
 		mobs.clear();
 		

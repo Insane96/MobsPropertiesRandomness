@@ -1,12 +1,12 @@
-package net.insane96mcp.mobrandomness;
+package net.insane96mcp.mpr;
 
 import java.util.Random;
 
 import org.apache.logging.log4j.Logger;
 
-import net.insane96mcp.mobrandomness.commands.ReloadJson;
-import net.insane96mcp.mobrandomness.lib.Properties;
-import net.insane96mcp.mobrandomness.proxies.CommonProxy;
+import net.insane96mcp.mpr.commands.ReloadJson;
+import net.insane96mcp.mpr.lib.Properties;
+import net.insane96mcp.mpr.proxies.CommonProxy;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.common.Mod.EventHandler;
 import net.minecraftforge.fml.common.Mod.Instance;
@@ -19,7 +19,7 @@ import net.minecraftforge.fml.common.event.FMLServerStartingEvent;
 @Mod(modid = MobsPropertiesRandomness.MOD_ID, name = MobsPropertiesRandomness.MOD_NAME, version = MobsPropertiesRandomness.VERSION, acceptedMinecraftVersions = MobsPropertiesRandomness.MINECRAFT_VERSIONS)
 public class MobsPropertiesRandomness {
 	
-	public static final String MOD_ID = "mobspropertiesrandomness";
+	public static final String MOD_ID = "mpr";
 	public static final String MOD_NAME = "Mobs Properties Randomness";
 	public static final String VERSION = "2.0.1";
 	public static final String RESOURCE_PREFIX = MOD_ID.toLowerCase() + ":";
@@ -30,7 +30,7 @@ public class MobsPropertiesRandomness {
 	@Instance(MOD_ID)
 	public static MobsPropertiesRandomness instance;
 	
-	@SidedProxy(clientSide = "net.insane96mcp.mobrandomness.proxies.ClientProxy", serverSide = "net.insane96mcp.mobrandomness.proxies.ServerProxy")
+	@SidedProxy(clientSide = "net.insane96mcp.mpr.proxies.ClientProxy")
 	public static CommonProxy proxy;
 	public static Logger logger;
 	
@@ -44,7 +44,7 @@ public class MobsPropertiesRandomness {
 	@EventHandler
 	public void PreInit(FMLPreInitializationEvent event) {
 		proxy.PreInit(event);
-		configPath = event.getModConfigurationDirectory().getAbsolutePath() + "/" + MOD_ID + "/";
+		configPath = event.getModConfigurationDirectory().getAbsolutePath() + "/MobsPropertiesRandomness/";
 		logger = event.getModLog();
 	}
 	

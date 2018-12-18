@@ -1,14 +1,14 @@
-package net.insane96mcp.mobrandomness.events;
+package net.insane96mcp.mpr.events;
 
 import java.util.Random;
 import java.util.UUID;
 
-import net.insane96mcp.mobrandomness.MobsPropertiesRandomness;
-import net.insane96mcp.mobrandomness.json.Attribute;
-import net.insane96mcp.mobrandomness.json.Mob;
-import net.insane96mcp.mobrandomness.json.PotionEffect;
-import net.insane96mcp.mobrandomness.json.mobs.Creeper;
-import net.insane96mcp.mobrandomness.json.mobs.Ghast;
+import net.insane96mcp.mpr.MobsPropertiesRandomness;
+import net.insane96mcp.mpr.json.Attribute;
+import net.insane96mcp.mpr.json.Mob;
+import net.insane96mcp.mpr.json.PotionEffect;
+import net.insane96mcp.mpr.json.mobs.Creeper;
+import net.insane96mcp.mpr.json.mobs.Ghast;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityList;
 import net.minecraft.entity.EntityLiving;
@@ -21,8 +21,10 @@ import net.minecraft.util.math.MathHelper;
 import net.minecraft.world.EnumDifficulty;
 import net.minecraft.world.World;
 import net.minecraftforge.event.entity.EntityJoinWorldEvent;
+import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 
+@Mod.EventBusSubscriber(modid = MobsPropertiesRandomness.MOD_ID)
 public class EntityJoinWorld { 
 	
 	@SubscribeEvent

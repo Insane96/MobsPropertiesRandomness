@@ -1,13 +1,13 @@
-package net.insane96mcp.mobrandomness.json;
+package net.insane96mcp.mpr.json;
 
 import java.io.File;
 
 import com.google.gson.annotations.SerializedName;
 
-import net.insane96mcp.mobrandomness.MobsPropertiesRandomness;
-import net.insane96mcp.mobrandomness.exceptions.InvalidJsonException;
-import net.insane96mcp.mobrandomness.json.utils.Chance;
-import net.insane96mcp.mobrandomness.json.utils.RangeMinMax;
+import net.insane96mcp.mpr.MobsPropertiesRandomness;
+import net.insane96mcp.mpr.exceptions.InvalidJsonException;
+import net.insane96mcp.mpr.json.utils.Chance;
+import net.insane96mcp.mpr.json.utils.RangeMinMax;
 
 public class PotionEffect {
 	public String id;
@@ -21,7 +21,7 @@ public class PotionEffect {
 	
 	@Override
 	public String toString() {
-		return String.format("PotionEffect{id: %s, amplifier: %s, chance: %f}", id, amplifier, chance);
+		return String.format("PotionEffect{id: %s, amplifier: %s, chance: %s}", id, amplifier, chance);
 	}
 
 	public void Validate(final File file) throws InvalidJsonException{

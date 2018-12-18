@@ -1,4 +1,4 @@
-package net.insane96mcp.mobrandomness.exceptions;
+package net.insane96mcp.mpr.exceptions;
 
 import java.io.File;
 
