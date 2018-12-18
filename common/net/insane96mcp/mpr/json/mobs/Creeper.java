@@ -9,13 +9,12 @@ import net.insane96mcp.mpr.exceptions.InvalidJsonException;
 import net.insane96mcp.mpr.json.Mob;
 import net.insane96mcp.mpr.json.utils.Chance;
 import net.insane96mcp.mpr.json.utils.RangeMinMax;
-import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityList;
+import net.minecraft.entity.EntityLiving;
 import net.minecraft.entity.monster.EntityCreeper;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.MathHelper;
-import net.minecraft.world.EnumDifficulty;
 import net.minecraft.world.World;
 
 public class Creeper {
@@ -35,7 +34,7 @@ public class Creeper {
 			poweredChance.Validate(file);
 	}
 	
-	public static void Apply(Entity entity, World world, Random random) {		
+	public static void Apply(EntityLiving entity, World world, Random random) {		
 		if (world.isRemote)
 			return;
 		
@@ -70,27 +69,8 @@ public class Creeper {
 				}
 				
 				//Power It
-				if (creeper.poweredChance.affectedByDifficulty) {
-					float chance = creeper.poweredChance.amount;
-					if (creeper.poweredChance.isLocalDifficulty) {
-						chance *= world.getDifficultyForLocation(entityCreeper.getPosition()).getAdditionalDifficulty() * creeper.poweredChance.multiplier;
-					}
-					else {
-						EnumDifficulty difficulty = world.getDifficulty();
-						if (difficulty.equals(EnumDifficulty.EASY))
-							chance *= 0.5f;
-						else if (difficulty.equals(EnumDifficulty.HARD))
-							chance *= 2.0f;
-						
-						chance *= creeper.poweredChance.multiplier;
-					}
-					
-					if (random.nextFloat() < chance / 100f)
-						compound.setBoolean("powered", true);
-				}
-				else if (random.nextFloat() < creeper.poweredChance.amount / 100f) {
+				if(creeper.poweredChance.ChanceMatches(entity, world, random))
 					compound.setBoolean("powered", true);
-				}
 				
 				entityCreeper.readEntityFromNBT(compound);
 			}

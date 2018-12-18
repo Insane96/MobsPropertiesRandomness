@@ -41,6 +41,10 @@ public class MobsPropertiesRandomness {
 			logger.info(string);
 	}
 	
+	public static void Warning(String string) {
+		logger.warn(string);
+	}
+	
 	@EventHandler
 	public void PreInit(FMLPreInitializationEvent event) {
 		proxy.PreInit(event);

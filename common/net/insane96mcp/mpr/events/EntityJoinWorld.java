@@ -9,14 +9,22 @@ import net.insane96mcp.mpr.json.Mob;
 import net.insane96mcp.mpr.json.PotionEffect;
 import net.insane96mcp.mpr.json.mobs.Creeper;
 import net.insane96mcp.mpr.json.mobs.Ghast;
+import net.insane96mcp.mpr.json.utils.Enchantment;
+import net.insane96mcp.mpr.json.utils.Item;
+import net.insane96mcp.mpr.json.utils.Slot;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityList;
 import net.minecraft.entity.EntityLiving;
 import net.minecraft.entity.ai.attributes.AttributeModifier;
 import net.minecraft.entity.ai.attributes.IAttributeInstance;
+import net.minecraft.inventory.EntityEquipmentSlot;
+import net.minecraft.item.ItemStack;
+import net.minecraft.nbt.JsonToNBT;
+import net.minecraft.nbt.NBTException;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.potion.Potion;
 import net.minecraft.util.ResourceLocation;
+import net.minecraft.util.WeightedRandom;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.world.EnumDifficulty;
 import net.minecraft.world.World;
@@ -52,10 +60,11 @@ public class EntityJoinWorld {
 		if (shouldNotBeProcessed)
 			return;
 		
-		ApplyPotionEffects(entity, world, random);
-		ApplyModifiers(entity, world, random);
+		ApplyPotionEffects(entityLiving, world, random);
+		ApplyModifiers(entityLiving, world, random);
+		ApplyEquipment(entityLiving, world, random);
 		
-		Creeper.Apply(entity, world, random);
+		Creeper.Apply(entityLiving, world, random);
 		Ghast.Apply(entityLiving, world, random);
 		
 		tags.setByte(MobsPropertiesRandomness.RESOURCE_PREFIX + "checked", (byte)1);
@@ -71,17 +80,12 @@ public class EntityJoinWorld {
 		*/
 	}
 	
-	private static void ApplyModifiers(Entity entity, World world, Random random) {
+	private static void ApplyModifiers(EntityLiving entity, World world, Random random) {
 		if (world.isRemote)
 			return;
 		
-		if (!(entity instanceof EntityLiving)) 
-			return;
-		
-		EntityLiving entityLiving = (EntityLiving)entity;
-		
 		for (Mob mob : Mob.mobs) {
-			if (EntityList.isMatchingName(entityLiving, new ResourceLocation(mob.id))) {
+			if (EntityList.isMatchingName(entity, new ResourceLocation(mob.id))) {
 				for (Attribute attribute : mob.attributes) {
 					float min = attribute.modifier.min;
 					float max = attribute.modifier.max;
@@ -110,7 +114,7 @@ public class EntityJoinWorld {
 						max *= attribute.difficulty.multiplier;
 					}
 					
-					IAttributeInstance attributeInstance = entityLiving.getAttributeMap().getAttributeInstanceByName(attribute.id);
+					IAttributeInstance attributeInstance = entity.getAttributeMap().getAttributeInstanceByName(attribute.id);
 					
 					
 					float amount = MathHelper.nextFloat(random, min, max);
@@ -123,55 +127,89 @@ public class EntityJoinWorld {
 						amount += 1f;
 					}
 					
-					AttributeModifier modifier = new AttributeModifier(UUID.randomUUID(),"mobspropertiesrandomness:" + attribute.id, amount, attribute.isFlat ? 0 : 1);
+					AttributeModifier modifier = new AttributeModifier(UUID.randomUUID(), MobsPropertiesRandomness.RESOURCE_PREFIX + attribute.id, amount, attribute.isFlat ? 0 : 1);
 					attributeInstance.applyModifier(modifier);
 					
 					//Health Fix
 					if (attribute.id.equals("generic.maxHealth"))
-						entityLiving.setHealth((float) attributeInstance.getAttributeValue());
+						entity.setHealth((float) attributeInstance.getAttributeValue());
 				}
 			}
 		}
 	}
 
-	private static void ApplyPotionEffects(Entity entity, World world, Random random) {
+	private static void ApplyPotionEffects(EntityLiving entity, World world, Random random) {
 		if (world.isRemote)
 			return;
 		
-		if (!(entity instanceof EntityLiving)) 
-			return;
-		
-		EntityLiving entityLiving = (EntityLiving)entity;
 		for (Mob mob : Mob.mobs) {
-			if (EntityList.isMatchingName(entityLiving, new ResourceLocation(mob.id))) {
+			if (EntityList.isMatchingName(entity, new ResourceLocation(mob.id))) {
 				for (PotionEffect potionEffect : mob.potionEffects) {
-					float chance = potionEffect.chance.amount;
-					if (potionEffect.chance.affectedByDifficulty) {
-						if (potionEffect.chance.isLocalDifficulty) {
-							chance *= world.getDifficultyForLocation(entityLiving.getPosition()).getAdditionalDifficulty() * potionEffect.chance.multiplier;
-						}
-						else {
-							EnumDifficulty difficulty = world.getDifficulty();
-							if (difficulty.equals(EnumDifficulty.EASY))
-								chance *= 0.5f;
-							else if (difficulty.equals(EnumDifficulty.HARD))
-								chance *= 2.0f;
-							
-							chance *= potionEffect.chance.multiplier;
-						}
-					}
-					
-					if (random.nextFloat() > chance / 100f)
+					if (!potionEffect.chance.ChanceMatches(entity, world, random))
 						continue;
-
+					
 					int minAmplifier = (int) potionEffect.amplifier.min;
 					int maxAmplifier = (int) potionEffect.amplifier.max;
 					
 					Potion potion = Potion.getPotionFromResourceLocation(potionEffect.id);
 					net.minecraft.potion.PotionEffect effect = new net.minecraft.potion.PotionEffect(potion, 1000000, MathHelper.getInt(random, minAmplifier, maxAmplifier), potionEffect.ambient, !potionEffect.hideParticles);
-					entityLiving.addPotionEffect(effect);
+					entity.addPotionEffect(effect);
 				}
 			}
 		}
+	}
+
+	private static void ApplyEquipment(EntityLiving entity, World world, Random random) {
+		if (world.isRemote)
+			return;
+		
+		for (Mob mob : Mob.mobs) {
+			if (EntityList.isMatchingName(entity, new ResourceLocation(mob.id))) {
+				ApplyEquipmentToSlot(entity, world, random, mob.equipment.head, EntityEquipmentSlot.HEAD);
+				ApplyEquipmentToSlot(entity, world, random, mob.equipment.chest, EntityEquipmentSlot.CHEST);
+				ApplyEquipmentToSlot(entity, world, random, mob.equipment.legs, EntityEquipmentSlot.LEGS);
+				ApplyEquipmentToSlot(entity, world, random, mob.equipment.feets, EntityEquipmentSlot.FEET);
+				ApplyEquipmentToSlot(entity, world, random, mob.equipment.mainHand, EntityEquipmentSlot.MAINHAND);
+				ApplyEquipmentToSlot(entity, world, random, mob.equipment.offHand, EntityEquipmentSlot.OFFHAND);
+			}
+		}
+	}
+	
+	private static void ApplyEquipmentToSlot(EntityLiving entity, World world, Random random, Slot slot, EntityEquipmentSlot entityEquipmentSlot) {
+		if (slot == null)
+			return;
+		
+		if (!slot.overrideVanilla && !entity.getItemStackFromSlot(entityEquipmentSlot).isEmpty())
+			return;
+		
+		if (!slot.chance.ChanceMatches(entity, world, random))
+			return;
+
+		Item choosenItem = WeightedRandom.getRandomItem(random, slot.items);
+
+		ItemStack itemStack = new ItemStack(net.minecraft.item.Item.getByNameOrId(choosenItem.id));
+
+		NBTTagCompound tag = new NBTTagCompound();
+		
+		if (choosenItem.nbt != null) {
+			try {
+				tag = JsonToNBT.getTagFromJson(choosenItem.nbt);
+			} catch (NBTException e) {
+				MobsPropertiesRandomness.logger.error("Failed to parse NBT for " + choosenItem);
+				e.printStackTrace();
+			}
+		}
+		
+		itemStack.deserializeNBT(tag);
+		
+		for (Enchantment enchantment : choosenItem.enchantments) {
+			if (!enchantment.chance.ChanceMatches(entity, world, random))
+				continue;
+			int level = MathHelper.getInt(random, (int)enchantment.level.min, (int)enchantment.level.max);
+			itemStack.addEnchantment(net.minecraft.enchantment.Enchantment.getEnchantmentByLocation(enchantment.id), level);
+		}
+		
+		entity.setItemStackToSlot(entityEquipmentSlot, itemStack);
+		
 	}
 }

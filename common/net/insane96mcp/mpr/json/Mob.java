@@ -24,12 +24,14 @@ public class Mob {
 	
 	public List<Attribute> attributes = new ArrayList<Attribute>();
 	
+	public Equipment equipment = new Equipment();
+	
 	public Creeper creeper;
 	public Ghast ghast;
 	
 	@Override
 	public String toString() {
-		return String.format("Mob{id: %s, potionEffects: %s, attributes: %s, creeper: %s, ghast: %s}", id, potionEffects, attributes, creeper, ghast);
+		return String.format("Mob{id: %s, potionEffects: %s, attributes: %s, equipment: %s, creeper: %s, ghast: %s}", id, potionEffects, attributes, equipment, creeper, ghast);
 	}
 	
 	public static boolean LoadJsons() {
@@ -83,7 +85,7 @@ public class Mob {
 		for (Attribute attribute : attributes) {
 			attribute.Validate(file);
 		}
-		
+		equipment.Validate(file);
 		
 		//Mob specific validations
 		if (creeper != null)

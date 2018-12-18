@@ -1,11 +1,15 @@
 package net.insane96mcp.mpr.json.utils;
 
 import java.io.File;
+import java.util.Random;
 
 import com.google.gson.annotations.SerializedName;
 
 import net.insane96mcp.mpr.MobsPropertiesRandomness;
 import net.insane96mcp.mpr.exceptions.InvalidJsonException;
+import net.minecraft.entity.EntityLiving;
+import net.minecraft.world.EnumDifficulty;
+import net.minecraft.world.World;
 
 public class Chance {
 	public float amount;
@@ -31,5 +35,28 @@ public class Chance {
 		
 		if (isLocalDifficulty)
 			affectedByDifficulty = true;
+	}
+	
+	public boolean ChanceMatches(EntityLiving entity, World world, Random random) {
+		float chance = this.amount;
+		if (this.affectedByDifficulty) {
+			if (this.isLocalDifficulty) {
+				chance *= world.getDifficultyForLocation(entity.getPosition()).getAdditionalDifficulty() * this.multiplier;
+			}
+			else {
+				EnumDifficulty difficulty = world.getDifficulty();
+				if (difficulty.equals(EnumDifficulty.EASY))
+					chance *= 0.5f;
+				else if (difficulty.equals(EnumDifficulty.HARD))
+					chance *= 2.0f;
+				
+				chance *= this.multiplier;
+			}
+		}
+		
+		if (random.nextFloat() < chance / 100f)
+			return true;
+		
+		return false;
 	}
 }

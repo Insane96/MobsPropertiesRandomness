@@ -20,6 +20,10 @@ public class RangeMinMax {
 	public RangeMinMax(int min, int max) {
 		this.min = min;
 		this.max = max;
+		if (max < min) {
+			MobsPropertiesRandomness.Debug("Min is greater than max in Constructor, max now will be equal to min");
+			max = min;
+		}
 	}
 	
 	@Override
