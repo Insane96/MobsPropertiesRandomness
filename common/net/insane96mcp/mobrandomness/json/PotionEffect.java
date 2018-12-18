@@ -6,14 +6,14 @@ import com.google.gson.annotations.SerializedName;
 
 import net.insane96mcp.mobrandomness.MobsPropertiesRandomness;
 import net.insane96mcp.mobrandomness.exceptions.InvalidJsonException;
+import net.insane96mcp.mobrandomness.json.utils.Chance;
+import net.insane96mcp.mobrandomness.json.utils.RangeMinMax;
 
 public class PotionEffect {
 	public String id;
 	public RangeMinMax amplifier;
 
-	public float chance;
-	@SerializedName("chance_with_difficulty")
-	public ChanceWithDifficulty chanceWithDifficulty;
+	public Chance chance;
 	
 	public boolean ambient;
 	@SerializedName("hide_particles")
@@ -21,7 +21,7 @@ public class PotionEffect {
 	
 	@Override
 	public String toString() {
-		return String.format("PotionEffect{id: %s, amplifier: %s, chance: %f, chanceWithDifficulty: %s}", id, amplifier, chance, chanceWithDifficulty);
+		return String.format("PotionEffect{id: %s, amplifier: %s, chance: %f}", id, amplifier, chance);
 	}
 
 	public void Validate(final File file) throws InvalidJsonException{
@@ -37,15 +37,8 @@ public class PotionEffect {
 		amplifier.Validate(file);
 		
 		//Chance
-		if (chance == 0.0f && chanceWithDifficulty == null)
-			throw new InvalidJsonException("Missing Chance (or chance = 0) for " + this.toString(), file);
-		
-		if (chance > 0.0f && chanceWithDifficulty != null) {
-			MobsPropertiesRandomness.Debug("chance and chance_with_difficulty are both present, chance is set to 0 and will be ignored for " + this.toString());
-			chance = 0.0f;
-		}
-		if (chanceWithDifficulty != null)
-			chanceWithDifficulty.Validate(file);
+		if (chance != null)
+			chance.Validate(file);
 		
 		//ambient and show particles
 		if (ambient && hideParticles)

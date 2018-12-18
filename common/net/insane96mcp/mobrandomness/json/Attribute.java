@@ -6,6 +6,8 @@ import com.google.gson.annotations.SerializedName;
 
 import net.insane96mcp.mobrandomness.MobsPropertiesRandomness;
 import net.insane96mcp.mobrandomness.exceptions.InvalidJsonException;
+import net.insane96mcp.mobrandomness.json.utils.Difficulty;
+import net.insane96mcp.mobrandomness.json.utils.RangeMinMax;
 
 public class Attribute {
 	public String id;

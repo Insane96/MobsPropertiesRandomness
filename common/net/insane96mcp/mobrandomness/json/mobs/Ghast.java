@@ -5,7 +5,7 @@ import java.util.Random;
 import com.google.gson.annotations.SerializedName;
 
 import net.insane96mcp.mobrandomness.json.Mob;
-import net.insane96mcp.mobrandomness.json.RangeMinMax;
+import net.insane96mcp.mobrandomness.json.utils.RangeMinMax;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityList;
 import net.minecraft.entity.monster.EntityGhast;

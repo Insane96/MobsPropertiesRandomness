@@ -141,25 +141,23 @@ public class EntityJoinWorld {
 			return;
 		
 		EntityLiving entityLiving = (EntityLiving)entity;
-		
 		for (Mob mob : Mob.mobs) {
 			if (EntityList.isMatchingName(entityLiving, new ResourceLocation(mob.id))) {
 				for (PotionEffect potionEffect : mob.potionEffects) {
-					if (potionEffect.chance == 0.0f || potionEffect.chance / 100f < random.nextFloat())
-						continue;
-					
-					float chance = potionEffect.chanceWithDifficulty.chance;
-					if (potionEffect.chanceWithDifficulty.isLocalDifficulty) {
-						chance *= world.getDifficultyForLocation(entityLiving.getPosition()).getAdditionalDifficulty() * potionEffect.chanceWithDifficulty.multiplier;
-					}
-					else {
-						EnumDifficulty difficulty = world.getDifficulty();
-						if (difficulty.equals(EnumDifficulty.EASY))
-							chance *= 0.5f;
-						else if (difficulty.equals(EnumDifficulty.HARD))
-							chance *= 2.0f;
-						
-						chance *= potionEffect.chanceWithDifficulty.multiplier;
+					float chance = potionEffect.chance.amount;
+					if (potionEffect.chance.affectedByDifficulty) {
+						if (potionEffect.chance.isLocalDifficulty) {
+							chance *= world.getDifficultyForLocation(entityLiving.getPosition()).getAdditionalDifficulty() * potionEffect.chance.multiplier;
+						}
+						else {
+							EnumDifficulty difficulty = world.getDifficulty();
+							if (difficulty.equals(EnumDifficulty.EASY))
+								chance *= 0.5f;
+							else if (difficulty.equals(EnumDifficulty.HARD))
+								chance *= 2.0f;
+							
+							chance *= potionEffect.chance.multiplier;
+						}
 					}
 					
 					if (random.nextFloat() > chance / 100f)
@@ -169,7 +167,7 @@ public class EntityJoinWorld {
 					int maxAmplifier = (int) potionEffect.amplifier.max;
 					
 					Potion potion = Potion.getPotionFromResourceLocation(potionEffect.id);
-					net.minecraft.potion.PotionEffect effect = new net.minecraft.potion.PotionEffect(potion, 100000, MathHelper.getInt(random, minAmplifier, maxAmplifier), potionEffect.ambient, !potionEffect.hideParticles);
+					net.minecraft.potion.PotionEffect effect = new net.minecraft.potion.PotionEffect(potion, 1000000, MathHelper.getInt(random, minAmplifier, maxAmplifier), potionEffect.ambient, !potionEffect.hideParticles);
 					entityLiving.addPotionEffect(effect);
 				}
 			}

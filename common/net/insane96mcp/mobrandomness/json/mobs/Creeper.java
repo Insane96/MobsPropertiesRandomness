@@ -5,11 +5,10 @@ import java.util.Random;
 
 import com.google.gson.annotations.SerializedName;
 
-import net.insane96mcp.mobrandomness.MobsPropertiesRandomness;
 import net.insane96mcp.mobrandomness.exceptions.InvalidJsonException;
-import net.insane96mcp.mobrandomness.json.ChanceWithDifficulty;
 import net.insane96mcp.mobrandomness.json.Mob;
-import net.insane96mcp.mobrandomness.json.RangeMinMax;
+import net.insane96mcp.mobrandomness.json.utils.Chance;
+import net.insane96mcp.mobrandomness.json.utils.RangeMinMax;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityList;
 import net.minecraft.entity.monster.EntityCreeper;
@@ -24,22 +23,16 @@ public class Creeper {
 	@SerializedName("explosion_radius")
 	public RangeMinMax explosionRadius;
 	@SerializedName("powered_chance")
-	public float poweredChance;
-	@SerializedName("powered_chance_with_difficulty")
-	public ChanceWithDifficulty poweredChanceDifficulty;
+	public Chance poweredChance;
 	
 	@Override
 	public String toString() {
-		return String.format("Creeper{fuse: %s, explosionRadius: %s, poweredChance: %f, poweredChanceWithDifficulty: %s}", fuse, explosionRadius, poweredChance, poweredChanceDifficulty);
+		return String.format("Creeper{fuse: %s, explosionRadius: %s, poweredChance: %s}", fuse, explosionRadius, poweredChance);
 	}
 	
 	public void Validate(final File file) throws InvalidJsonException{
-		if (poweredChance > 0.0f && poweredChanceDifficulty != null) {
-			MobsPropertiesRandomness.Debug("chance and chance_with_difficulty are both present, chance is set to 0 and will be ignored for " + this.toString());
-			poweredChance = 0.0f;
-		}
-		if (poweredChanceDifficulty != null)
-			poweredChanceDifficulty.Validate(file);
+		if (poweredChance != null)
+			poweredChance.Validate(file);
 	}
 	
 	public static void Apply(Entity entity, World world, Random random) {		
@@ -76,14 +69,11 @@ public class Creeper {
 					compound.setByte("ExplosionRadius", (byte) explosionRadius);
 				}
 				
-				//Powered
-				if (random.nextFloat() < creeper.poweredChance / 100f) {
-					compound.setBoolean("powered", true);
-				}
-				else if (creeper.poweredChance == 0.0f){
-					float chance = creeper.poweredChanceDifficulty.chance;
-					if (creeper.poweredChanceDifficulty.isLocalDifficulty) {
-						chance *= world.getDifficultyForLocation(entityCreeper.getPosition()).getAdditionalDifficulty() * creeper.poweredChanceDifficulty.multiplier;
+				//Power It
+				if (creeper.poweredChance.affectedByDifficulty) {
+					float chance = creeper.poweredChance.amount;
+					if (creeper.poweredChance.isLocalDifficulty) {
+						chance *= world.getDifficultyForLocation(entityCreeper.getPosition()).getAdditionalDifficulty() * creeper.poweredChance.multiplier;
 					}
 					else {
 						EnumDifficulty difficulty = world.getDifficulty();
@@ -92,11 +82,14 @@ public class Creeper {
 						else if (difficulty.equals(EnumDifficulty.HARD))
 							chance *= 2.0f;
 						
-						chance *= creeper.poweredChanceDifficulty.multiplier;
+						chance *= creeper.poweredChance.multiplier;
 					}
 					
 					if (random.nextFloat() < chance / 100f)
 						compound.setBoolean("powered", true);
+				}
+				else if (random.nextFloat() < creeper.poweredChance.amount / 100f) {
+					compound.setBoolean("powered", true);
 				}
 				
 				entityCreeper.readEntityFromNBT(compound);
