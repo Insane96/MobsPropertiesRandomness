@@ -10,7 +10,7 @@ import net.minecraftforge.fml.client.event.ConfigChangedEvent.OnConfigChangedEve
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 
-@Config(modid = MobsPropertiesRandomness.MOD_ID, name = MobsPropertiesRandomness.MOD_ID + "/MobsPropertiesRandomness", category = "")
+@Config(modid = MobsPropertiesRandomness.MOD_ID, name = "/MobsPropertiesRandomness/MobsPropertiesRandomness", category = "")
 public class Properties {
 
 	@Name("Config")
