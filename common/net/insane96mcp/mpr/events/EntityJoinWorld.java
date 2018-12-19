@@ -119,7 +119,6 @@ public class EntityJoinWorld {
 					}
 					else {
 						amount /= 100f;
-						amount += 1f;
 					}
 					
 					AttributeModifier modifier = new AttributeModifier(UUID.randomUUID(), MobsPropertiesRandomness.RESOURCE_PREFIX + attribute.id, amount, attribute.isFlat ? 0 : 1);
