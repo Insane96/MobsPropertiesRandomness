@@ -53,7 +53,7 @@ public class Chance {
 				chance *= this.multiplier;
 			}
 		}
-		
+		System.out.println(chance);
 		if (random.nextFloat() < chance / 100f)
 			return true;
 		
