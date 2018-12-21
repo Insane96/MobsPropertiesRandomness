@@ -21,7 +21,7 @@ public class MobsPropertiesRandomness {
 	
 	public static final String MOD_ID = "mpr";
 	public static final String MOD_NAME = "Mobs Properties Randomness";
-	public static final String VERSION = "2.0.5";
+	public static final String VERSION = "2.0.6";
 	public static final String RESOURCE_PREFIX = MOD_ID.toLowerCase() + ":";
 	public static final String MINECRAFT_VERSIONS = "[1.12,1.12.2]";
 
@@ -30,7 +30,7 @@ public class MobsPropertiesRandomness {
 	@Instance(MOD_ID)
 	public static MobsPropertiesRandomness instance;
 	
-	@SidedProxy(clientSide = "net.insane96mcp.mpr.proxies.ClientProxy", serverSide = "net.insane96mcp.mpr.ServerProxy")
+	@SidedProxy(clientSide = "net.insane96mcp.mpr.proxies.ClientProxy", serverSide = "net.insane96mcp.mpr.proxies.ServerProxy")
 	public static CommonProxy proxy;
 	public static Logger logger;
 	
