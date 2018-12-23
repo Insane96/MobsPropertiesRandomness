@@ -7,6 +7,7 @@ import com.google.gson.annotations.SerializedName;
 
 import net.insane96mcp.mpr.MobsPropertiesRandomness;
 import net.insane96mcp.mpr.exceptions.InvalidJsonException;
+import net.insane96mcp.mpr.lib.Properties;
 import net.minecraft.entity.EntityLiving;
 import net.minecraft.world.EnumDifficulty;
 import net.minecraft.world.World;
@@ -46,14 +47,16 @@ public class Chance {
 			else {
 				EnumDifficulty difficulty = world.getDifficulty();
 				if (difficulty.equals(EnumDifficulty.EASY))
-					chance *= 0.5f;
+					chance *= Properties.config.difficulty.easyMultiplier;
+				else if (difficulty.equals(EnumDifficulty.NORMAL))
+					chance *= Properties.config.difficulty.normalMultiplier;
 				else if (difficulty.equals(EnumDifficulty.HARD))
-					chance *= 2.0f;
+					chance *= Properties.config.difficulty.hardMultiplier;
 				
 				chance *= this.multiplier;
 			}
 		}
-		System.out.println(chance);
+
 		if (random.nextFloat() < chance / 100f)
 			return true;
 		

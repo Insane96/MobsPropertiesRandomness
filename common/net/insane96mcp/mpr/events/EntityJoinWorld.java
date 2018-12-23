@@ -12,6 +12,7 @@ import net.insane96mcp.mpr.json.mobs.Ghast;
 import net.insane96mcp.mpr.json.utils.Enchantment;
 import net.insane96mcp.mpr.json.utils.Item;
 import net.insane96mcp.mpr.json.utils.Slot;
+import net.insane96mcp.mpr.lib.Properties;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityList;
 import net.minecraft.entity.EntityLiving;
@@ -61,18 +62,16 @@ public class EntityJoinWorld {
 			return;
 		
 		ApplyPotionEffects(entityLiving, world, random);
-		ApplyModifiers(entityLiving, world, random);
+		ApplyAttributeModifiers(entityLiving, world, random);
 		ApplyEquipment(entityLiving, world, random);
 		
 		Creeper.Apply(entityLiving, world, random);
 		Ghast.Apply(entityLiving, world, random);
 		
 		tags.setByte(MobsPropertiesRandomness.RESOURCE_PREFIX + "checked", (byte)1);
-		
-		//RNGSkeleton.TippedArrow(living, multiplier, random);
 	}
 	
-	private static void ApplyModifiers(EntityLiving entity, World world, Random random) {
+	private static void ApplyAttributeModifiers(EntityLiving entity, World world, Random random) {
 		if (world.isRemote)
 			return;
 		
@@ -89,13 +88,18 @@ public class EntityJoinWorld {
 						if (!attribute.difficulty.isLocalDifficulty) {
 							if (difficulty.equals(EnumDifficulty.EASY)) {
 								if (!attribute.difficulty.affectsMaxOnly)
-									min *= 0.5f;
-								max *= 0.5f;
+									min *= Properties.config.difficulty.easyMultiplier;
+								max *= Properties.config.difficulty.easyMultiplier;
+							}
+							else if (difficulty.equals(EnumDifficulty.NORMAL)) {
+								if (!attribute.difficulty.affectsMaxOnly)
+									min *= Properties.config.difficulty.normalMultiplier;
+								max *= Properties.config.difficulty.normalMultiplier;
 							}
 							else if (difficulty.equals(EnumDifficulty.HARD)) {
 								if (!attribute.difficulty.affectsMaxOnly)
-									min *= 2.0f;
-								max *= 2.0f;
+									min *= Properties.config.difficulty.hardMultiplier;
+								max *= Properties.config.difficulty.hardMultiplier;
 							}
 						}
 						else {
