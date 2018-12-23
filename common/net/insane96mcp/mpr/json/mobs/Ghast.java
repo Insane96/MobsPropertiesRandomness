@@ -32,19 +32,23 @@ public class Ghast {
 		
 		EntityGhast entityGhast = (EntityGhast)entity;
 		
+
+		NBTTagCompound compound = new NBTTagCompound();
+		entityGhast.writeEntityToNBT(compound);
+		
 		for (Mob mob : Mob.mobs) {
 			if (mob.ghast == null)
 				continue;
 			
 			if (EntityList.isMatchingName(entityGhast, new ResourceLocation(mob.id))) {
-				NBTTagCompound compound = new NBTTagCompound();
 				
-				int minExplosionPower = (int) mob.ghast.explosionPower.min;
-				int maxExplosionPower = (int) mob.ghast.explosionPower.max;
-				int explosionPower = MathHelper.getInt(random, minExplosionPower, maxExplosionPower);
-				compound.setInteger("ExplosionPower", explosionPower);
-				
-				System.out.println(explosionPower);
+				//Explosion Power
+				if (compound.getInteger("ExplosionPower") == 1) {
+					int minExplosionPower = (int) mob.ghast.explosionPower.min;
+					int maxExplosionPower = (int) mob.ghast.explosionPower.max;
+					int explosionPower = MathHelper.getInt(random, minExplosionPower, maxExplosionPower);
+					compound.setInteger("ExplosionPower", explosionPower);
+				}
 				
 				entityGhast.readEntityFromNBT(compound);
 			}

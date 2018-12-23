@@ -51,9 +51,10 @@ public class Creeper {
 				Creeper creeper = mob.creeper;
 				
 				NBTTagCompound compound = new NBTTagCompound();
+				entityCreeper.writeEntityToNBT(compound);
 				
 				//Fuse
-				if (mob.creeper.fuse != null) {
+				if (mob.creeper.fuse != null && compound.getShort("Fuse") == 30) {
 					int minFuse = (int) mob.creeper.fuse.min;
 					int maxFuse = (int) mob.creeper.fuse.max;
 					int fuse = MathHelper.getInt(random, minFuse, maxFuse);
@@ -61,7 +62,7 @@ public class Creeper {
 				}
 				
 				//Explosion Radius
-				if (mob.creeper.explosionRadius != null) {
+				if (mob.creeper.explosionRadius != null && compound.getByte("ExplosionRadius") == 30) {
 					int minExplosionRadius = (int) mob.creeper.explosionRadius.min;
 					int maxExplosionRadius = (int) mob.creeper.explosionRadius.max;
 					int explosionRadius = MathHelper.getInt(random, minExplosionRadius, maxExplosionRadius);
