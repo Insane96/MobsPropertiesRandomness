@@ -23,7 +23,7 @@ public class Properties {
 		
 		@Name("Difficulty")
 		@Comment("Change all the difficulty multiplier settings here")
-		public Difficulty difficulty = new Difficulty();
+		public Difficulty difficulty;
 		
 		public static class Difficulty {
 			@Name("Easy Multiplier")
