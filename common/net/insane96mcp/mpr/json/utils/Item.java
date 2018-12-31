@@ -22,7 +22,7 @@ public class Item extends WeightedRandom.Item{
 	
 	@Override
 	public String toString() {
-		return String.format("Item{id: %s, data: %d, %weight: %d, enchantments: %s, nbt: %s}", id, data, weight, enchantments, nbt);
+		return String.format("Item{id: %s, data: %d, weight: %d, enchantments: %s, nbt: %s}", id, data, weight, enchantments, nbt);
 	}
 
 	public void Validate(final File file) throws InvalidJsonException{
@@ -32,7 +32,7 @@ public class Item extends WeightedRandom.Item{
 			MobsPropertiesRandomness.Warning("Failed to find item with id " + id);
 		
 		if (weight <= 0)
-			throw new InvalidJsonException("Missing weight (or weight = 0) for " + this, file);
+			throw new InvalidJsonException("Missing weight (or weight <= 0) for " + this, file);
 		else
 			itemWeight = weight;
 		
