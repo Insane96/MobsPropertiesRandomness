@@ -15,13 +15,14 @@ public class Item extends WeightedRandom.Item{
 	}
 
 	public String id;
+	public int data;
 	private int weight;
 	public List<Enchantment> enchantments;
 	public String nbt;
 	
 	@Override
 	public String toString() {
-		return String.format("Item{id: %s, weight: %d, enchantments: %s, nbt: %s}", id, weight, enchantments, nbt);
+		return String.format("Item{id: %s, data: %d, %weight: %d, enchantments: %s, nbt: %s}", id, data, weight, enchantments, nbt);
 	}
 
 	public void Validate(final File file) throws InvalidJsonException{

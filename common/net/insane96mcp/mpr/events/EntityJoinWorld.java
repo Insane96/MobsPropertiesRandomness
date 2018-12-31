@@ -188,7 +188,7 @@ public class EntityJoinWorld {
 
 		Item choosenItem = WeightedRandom.getRandomItem(random, slot.items);
 
-		ItemStack itemStack = new ItemStack(net.minecraft.item.Item.getByNameOrId(choosenItem.id));
+		ItemStack itemStack = new ItemStack(net.minecraft.item.Item.getByNameOrId(choosenItem.id), 1, choosenItem.data);
 
 		NBTTagCompound tag = new NBTTagCompound();
 		
@@ -201,7 +201,10 @@ public class EntityJoinWorld {
 			}
 		}
 		
-		itemStack.deserializeNBT(tag);
+		NBTTagCompound tagCompound = new NBTTagCompound();
+		tagCompound.setTag("tag", tag);
+		
+		itemStack.deserializeNBT(tagCompound);
 		
 		for (Enchantment enchantment : choosenItem.enchantments) {
 			if (!enchantment.chance.ChanceMatches(entity, world, random))
