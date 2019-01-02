@@ -1,3 +1,9 @@
+/*
+ * 
+ * Copy-pasted "some" code from https://github.com/CraftTweaker/CraftTweaker/blob/1.12/CraftTweaker2-MC1120-Main/src/main/java/crafttweaker/mc1120/logger/MCLogger.java
+ *
+ */
+
 package net.insane96mcp.mpr.lib;
 
 import java.io.File;
