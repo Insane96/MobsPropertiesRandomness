@@ -216,5 +216,8 @@ public class EntityJoinWorld {
 		
 		entity.setItemStackToSlot(entityEquipmentSlot, itemStack);
 		
+		//Drop Chance
+		entity.setDropChance(entityEquipmentSlot, choosenItem.dropChance / 100f);
+		
 	}
 }
