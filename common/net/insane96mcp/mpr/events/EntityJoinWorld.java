@@ -12,6 +12,7 @@ import net.insane96mcp.mpr.json.mobs.Ghast;
 import net.insane96mcp.mpr.json.utils.Enchantment;
 import net.insane96mcp.mpr.json.utils.Item;
 import net.insane96mcp.mpr.json.utils.Slot;
+import net.insane96mcp.mpr.lib.Logger;
 import net.insane96mcp.mpr.lib.Properties;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityList;
@@ -112,7 +113,7 @@ public class EntityJoinWorld {
 					
 					IAttributeInstance attributeInstance = entity.getAttributeMap().getAttributeInstanceByName(attribute.id);
 					if (attributeInstance == null) {
-						MobsPropertiesRandomness.Warning("Attribute " + attribute.id + " not found for the entity, skipping the attribute");
+						Logger.Warning("Attribute " + attribute.id + " not found for the entity, skipping the attribute");
 						continue;
 					}
 					
@@ -196,7 +197,7 @@ public class EntityJoinWorld {
 			try {
 				tag = JsonToNBT.getTagFromJson(choosenItem.nbt);
 			} catch (NBTException e) {
-				MobsPropertiesRandomness.logger.error("Failed to parse NBT for " + choosenItem);
+				Logger.Error("Failed to parse NBT for " + choosenItem);
 				e.printStackTrace();
 			}
 		}

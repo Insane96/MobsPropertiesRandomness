@@ -5,8 +5,8 @@ import java.util.Random;
 
 import com.google.gson.annotations.SerializedName;
 
-import net.insane96mcp.mpr.MobsPropertiesRandomness;
 import net.insane96mcp.mpr.exceptions.InvalidJsonException;
+import net.insane96mcp.mpr.lib.Logger;
 import net.insane96mcp.mpr.lib.Properties;
 import net.minecraft.entity.EntityLiving;
 import net.minecraft.world.EnumDifficulty;
@@ -30,7 +30,7 @@ public class Chance {
 			throw new InvalidJsonException("Missing chance in " + this.toString(), file);
 		
 		if (multiplier == 0.0f) {
-			MobsPropertiesRandomness.Debug("Missing multiplier, defaulting to 1.0 for " + this.toString());
+			Logger.Debug("Missing multiplier, defaulting to 1.0 for " + this.toString());
 			multiplier = 1.0f;
 		}
 		

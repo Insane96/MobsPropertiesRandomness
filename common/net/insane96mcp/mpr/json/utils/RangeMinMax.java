@@ -2,7 +2,7 @@ package net.insane96mcp.mpr.json.utils;
 
 import java.io.File;
 
-import net.insane96mcp.mpr.MobsPropertiesRandomness;
+import net.insane96mcp.mpr.lib.Logger;
 
 public class RangeMinMax {
 	public float min;
@@ -21,7 +21,7 @@ public class RangeMinMax {
 		this.min = min;
 		this.max = max;
 		if (max < min) {
-			MobsPropertiesRandomness.Debug("Min is greater than max in Constructor, max now will be equal to min");
+			Logger.Debug("Min is greater than max in Constructor, max now will be equal to min");
 			max = min;
 		}
 	}
@@ -33,7 +33,7 @@ public class RangeMinMax {
 	
 	public void Validate(final File file){
 		if (max < min) {
-			MobsPropertiesRandomness.Debug("Min is greater than max (or max has been omitted), max now will be equal to min");
+			Logger.Debug("Min is greater than max (or max has been omitted), max now will be equal to min");
 			max = min;
 		}
 	}

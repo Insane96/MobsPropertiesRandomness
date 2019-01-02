@@ -4,10 +4,10 @@ import java.io.File;
 
 import com.google.gson.annotations.SerializedName;
 
-import net.insane96mcp.mpr.MobsPropertiesRandomness;
 import net.insane96mcp.mpr.exceptions.InvalidJsonException;
 import net.insane96mcp.mpr.json.utils.Difficulty;
 import net.insane96mcp.mpr.json.utils.RangeMinMax;
+import net.insane96mcp.mpr.lib.Logger;
 
 public class Attribute {
 	public String id;
@@ -37,10 +37,10 @@ public class Attribute {
 		//difficulty
 		if (!affectedByDifficulty) {
 			if (difficulty == null) {
-				MobsPropertiesRandomness.Debug("Difficulty Object is missing, affected_by_difficulty will be false for " + this.toString());
+				Logger.Debug("Difficulty Object is missing, affected_by_difficulty will be false for " + this.toString());
 			}
 			else {
-				MobsPropertiesRandomness.Debug("Difficulty Object is present, affected_by_difficulty will be true for " + this.toString());
+				Logger.Debug("Difficulty Object is present, affected_by_difficulty will be true for " + this.toString());
 				affectedByDifficulty = true;
 				difficulty.Validate(file);
 			}

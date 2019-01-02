@@ -18,7 +18,7 @@ public class Properties {
 	
 	public static class ConfigOptions {
 		@Name("Debug")
-		@Comment("Enabled debug info in log file, useful when configuring the mod by adding and modifying JSONs. It is recommended to disable this on release")
+		@Comment("Enable debug info in log file, useful when configuring the mod by adding and modifying JSONs. It should be disabled when shipping packs")
 		public boolean debug = true;
 		
 		@Name("Difficulty")

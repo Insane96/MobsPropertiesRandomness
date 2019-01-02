@@ -16,7 +16,7 @@ public class CreeperFuse implements IMessage{
 
 	public int id;
 	
-	public CreeperFuse() { this(-1); }
+	public CreeperFuse() { }
 	public CreeperFuse(int id) {
 		this.id = id;
 	}
@@ -46,15 +46,17 @@ public class CreeperFuse implements IMessage{
 					Entity entity = world.getEntityByID(message.id);
 					
 					int fuse = 30;
+					boolean powered = false;
 					
 					if (entity instanceof EntityCreeper) {
 						EntityCreeper creeper = (EntityCreeper) entity;
 						NBTTagCompound nbt = new NBTTagCompound();
 						creeper.writeEntityToNBT(nbt);
 						fuse = nbt.getShort("Fuse");
+						powered = nbt.getBoolean("powered");
 					}
 					
-					PacketHandler.SendToClient(new CreeperFuseReply(fuse, message.id), player);
+					PacketHandler.SendToClient(new CreeperFuseReply(message.id, fuse, powered), player);
 				}
 			});
 			

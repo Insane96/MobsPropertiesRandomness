@@ -12,6 +12,7 @@ import net.insane96mcp.mpr.MobsPropertiesRandomness;
 import net.insane96mcp.mpr.exceptions.InvalidJsonException;
 import net.insane96mcp.mpr.json.mobs.Creeper;
 import net.insane96mcp.mpr.json.mobs.Ghast;
+import net.insane96mcp.mpr.lib.Logger;
 
 public class Mob {
 	public static List<Mob> mobs = new ArrayList<Mob>();
@@ -60,19 +61,20 @@ public class Mob {
 				continue;
 			
 			try {
-				MobsPropertiesRandomness.Debug("Reading file " + file.getName());
+				Logger.Debug("Reading file " + file.getName());
 				FileReader fileReader = new FileReader(file);
 				Mob mob = gson.fromJson(fileReader, Mob.class);
-				MobsPropertiesRandomness.Debug(mob.toString());
+				Logger.Debug(mob.toString());
 				mob.Validate(file);
 				mobs.add(mob);
 			} catch (Exception e) {
 				correctlyReloaded = false;
-				MobsPropertiesRandomness.logger.error("Failed to parse file with name " + file.getName());
+				Logger.Error("Failed to parse file with name " + file.getName());
 				e.printStackTrace();
 			}
 		}
 		
+		Logger.Info("Reloaded All JSONs");
 		return correctlyReloaded;
 	}
 

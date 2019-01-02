@@ -13,25 +13,29 @@ import net.minecraftforge.fml.common.network.simpleimpl.MessageContext;
 
 public class CreeperFuseReply implements IMessage {
 	
-	public short fuse;
 	public int id;
+	public short fuse;
+	public boolean powered;
 	
-	public CreeperFuseReply() { this(30, -1); }
-	public CreeperFuseReply(int fuse, int id) {
+	public CreeperFuseReply() { }
+	public CreeperFuseReply(int id, int fuse, boolean powered) {
 		this.fuse = (short) fuse;
 		this.id = id;
+		this.powered = powered;
 	}
 	
 	@Override
 	public void fromBytes(ByteBuf buf) {
-		this.fuse = buf.readShort();
 		this.id = buf.readInt();
+		this.fuse = buf.readShort();
+		this.powered = buf.readBoolean();
 	}
 
 	@Override
 	public void toBytes(ByteBuf buf) {
-		buf.writeShort(this.fuse);
 		buf.writeInt(this.id);
+		buf.writeShort(this.fuse);
+		buf.writeBoolean(this.powered);
 	}
 
 	public static class Handler implements IMessageHandler<CreeperFuseReply, IMessage> {
@@ -49,6 +53,7 @@ public class CreeperFuseReply implements IMessage {
 						EntityCreeper creeper = (EntityCreeper) entity;
 						NBTTagCompound compound = new NBTTagCompound();
 						compound.setShort("Fuse", message.fuse);
+						compound.setBoolean("powered", message.powered);
 						creeper.readEntityFromNBT(compound);
 					}
 				}

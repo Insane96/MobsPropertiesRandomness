@@ -2,10 +2,8 @@ package net.insane96mcp.mpr;
 
 import java.util.Random;
 
-import org.apache.logging.log4j.Logger;
-
 import net.insane96mcp.mpr.commands.ReloadJson;
-import net.insane96mcp.mpr.lib.Properties;
+import net.insane96mcp.mpr.lib.Logger;
 import net.insane96mcp.mpr.proxies.CommonProxy;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.common.Mod.EventHandler;
@@ -32,24 +30,14 @@ public class MobsPropertiesRandomness {
 	
 	@SidedProxy(clientSide = "net.insane96mcp.mpr.proxies.ClientProxy", serverSide = "net.insane96mcp.mpr.proxies.ServerProxy")
 	public static CommonProxy proxy;
-	public static Logger logger;
 	
 	public static String configPath;
-	
-	public static void Debug(String string) {
-		if (Properties.config.debug)
-			logger.info(string);
-	}
-	
-	public static void Warning(String string) {
-		logger.warn(string);
-	}
 	
 	@EventHandler
 	public void PreInit(FMLPreInitializationEvent event) {
 		proxy.PreInit(event);
 		configPath = event.getModConfigurationDirectory().getAbsolutePath() + "/MobsPropertiesRandomness/";
-		logger = event.getModLog();
+		Logger.Init("logs/MobsPropertiesRandomness.log");
 	}
 	
 	@EventHandler

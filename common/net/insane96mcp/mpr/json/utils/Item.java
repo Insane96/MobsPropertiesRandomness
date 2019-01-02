@@ -4,8 +4,8 @@ import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 
-import net.insane96mcp.mpr.MobsPropertiesRandomness;
 import net.insane96mcp.mpr.exceptions.InvalidJsonException;
+import net.insane96mcp.mpr.lib.Logger;
 import net.minecraft.util.WeightedRandom;
 
 public class Item extends WeightedRandom.Item{
@@ -29,7 +29,7 @@ public class Item extends WeightedRandom.Item{
 		if (id == null)
 			throw new InvalidJsonException("Missing Id for " + this, file);
 		else if (net.minecraft.item.Item.getByNameOrId(id) == null)
-			MobsPropertiesRandomness.Warning("Failed to find item with id " + id);
+			Logger.Warning("Failed to find item with id " + id);
 		
 		if (weight <= 0)
 			throw new InvalidJsonException("Missing weight (or weight <= 0) for " + this, file);

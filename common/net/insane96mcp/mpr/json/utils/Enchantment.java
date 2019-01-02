@@ -2,8 +2,8 @@ package net.insane96mcp.mpr.json.utils;
 
 import java.io.File;
 
-import net.insane96mcp.mpr.MobsPropertiesRandomness;
 import net.insane96mcp.mpr.exceptions.InvalidJsonException;
+import net.insane96mcp.mpr.lib.Logger;
 
 public class Enchantment {
 
@@ -20,12 +20,12 @@ public class Enchantment {
 		if (id == null)
 			throw new InvalidJsonException("Missing Enchantment ID for " + this, file);
 		else if (net.minecraft.enchantment.Enchantment.getEnchantmentByLocation(id) == null)
-			MobsPropertiesRandomness.Warning("Failed to find enchantment with id " + id);
+			Logger.Warning("Failed to find enchantment with id " + id);
 		
 		if (level != null)
 			level.Validate(file);
 		else {
-			MobsPropertiesRandomness.Debug("Missing Enchantment Level for " + this + ". Will default to 1");
+			Logger.Debug("Missing Enchantment Level for " + this + ". Will default to 1");
 			level = new RangeMinMax(1, 1);
 		}
 		

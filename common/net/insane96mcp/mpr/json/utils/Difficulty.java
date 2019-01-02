@@ -4,7 +4,7 @@ import java.io.File;
 
 import com.google.gson.annotations.SerializedName;
 
-import net.insane96mcp.mpr.MobsPropertiesRandomness;
+import net.insane96mcp.mpr.lib.Logger;
 
 public class Difficulty {
 	@SerializedName("affects_max_only")
@@ -26,7 +26,7 @@ public class Difficulty {
 	
 	public void Validate(final File file) {
 		if (multiplier == 0.0f) {
-			MobsPropertiesRandomness.Debug("Missing multiplier, defaulting to 1.0 for " + this.toString());
+			Logger.Debug("Missing multiplier, defaulting to 1.0 for " + this.toString());
 			multiplier = 1.0f;
 		}
 	}
