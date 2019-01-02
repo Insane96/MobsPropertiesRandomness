@@ -9,6 +9,8 @@ import net.insane96mcp.mpr.exceptions.InvalidJsonException;
 import net.insane96mcp.mpr.json.Mob;
 import net.insane96mcp.mpr.json.utils.Chance;
 import net.insane96mcp.mpr.json.utils.RangeMinMax;
+import net.insane96mcp.mpr.network.CreeperFuse;
+import net.insane96mcp.mpr.network.PacketHandler;
 import net.minecraft.entity.EntityList;
 import net.minecraft.entity.EntityLiving;
 import net.minecraft.entity.monster.EntityCreeper;
@@ -34,14 +36,19 @@ public class Creeper {
 			poweredChance.Validate(file);
 	}
 	
-	public static void Apply(EntityLiving entity, World world, Random random) {		
-		if (world.isRemote)
-			return;
+	public static void Apply(EntityLiving entity, World world, Random random) {
 		
 		if (!(entity instanceof EntityCreeper)) 
 			return;
 		
 		EntityCreeper entityCreeper = (EntityCreeper)entity;
+		
+		if (world.isRemote) {
+			//Fix creeper fuse animation clientside
+			PacketHandler.SendToServer(new CreeperFuse(entityCreeper.getEntityId()));
+			
+			return;
+		}
 		
 		for (Mob mob : Mob.mobs) {
 			if (mob.creeper == null)
