@@ -72,12 +72,31 @@ public class EntityJoinWorld {
 		tags.setByte(MobsPropertiesRandomness.RESOURCE_PREFIX + "checked", (byte)1);
 	}
 	
+	private static boolean MatchesEntity(EntityLiving entity, World world, Random random, Mob mob) {
+		if (mob.id.endsWith("*")) {
+			String[] splitId = mob.id.split(":");
+			if (splitId.length != 2) {
+				Logger.Warning("Failed to parse mod domain from " + mob);
+			}
+			ResourceLocation location = EntityList.getKey(entity);
+			if (location.getNamespace().toString().equals(splitId[0])) {
+				return true;
+			}
+		}
+		
+		if (EntityList.isMatchingName(entity, new ResourceLocation(mob.id)))
+			return true;
+		
+		return false;
+		
+	}
+	
 	private static void ApplyAttributeModifiers(EntityLiving entity, World world, Random random) {
 		if (world.isRemote)
 			return;
 		
 		for (Mob mob : Mob.mobs) {
-			if (EntityList.isMatchingName(entity, new ResourceLocation(mob.id))) {
+			if (MatchesEntity(entity, world, random, mob)) {
 				for (Attribute attribute : mob.attributes) {
 					float min = attribute.modifier.min;
 					float max = attribute.modifier.max;
@@ -143,7 +162,7 @@ public class EntityJoinWorld {
 			return;
 		
 		for (Mob mob : Mob.mobs) {
-			if (EntityList.isMatchingName(entity, new ResourceLocation(mob.id))) {
+			if (MatchesEntity(entity, world, random, mob)) {
 				for (PotionEffect potionEffect : mob.potionEffects) {
 					if (!potionEffect.chance.ChanceMatches(entity, world, random))
 						continue;
@@ -165,7 +184,7 @@ public class EntityJoinWorld {
 			return;
 		
 		for (Mob mob : Mob.mobs) {
-			if (EntityList.isMatchingName(entity, new ResourceLocation(mob.id))) {
+			if (MatchesEntity(entity, world, random, mob)) {
 				ApplyEquipmentToSlot(entity, world, random, mob.equipment.head, EntityEquipmentSlot.HEAD);
 				ApplyEquipmentToSlot(entity, world, random, mob.equipment.chest, EntityEquipmentSlot.CHEST);
 				ApplyEquipmentToSlot(entity, world, random, mob.equipment.legs, EntityEquipmentSlot.LEGS);
