@@ -71,7 +71,7 @@ public class Mob {
 				correctlyReloaded = false;
 				Logger.Error("Failed to parse file with name " + file.getName());
 				Logger.Error(e.toString());
-				//e.printStackTrace();
+				e.printStackTrace();
 			}
 		}
 		if (correctlyReloaded)

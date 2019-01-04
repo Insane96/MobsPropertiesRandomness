@@ -1,6 +1,8 @@
 package net.insane96mcp.mpr.json;
 
 import java.io.File;
+import java.util.ArrayList;
+import java.util.List;
 
 import com.google.gson.annotations.SerializedName;
 
@@ -17,6 +19,7 @@ public class Attribute {
 	@SerializedName("affected_by_difficulty")
 	public boolean affectedByDifficulty;
 	public Difficulty difficulty;
+	public List<Integer> dimensions;
 	
 	@Override
 	public String toString() {
@@ -48,5 +51,8 @@ public class Attribute {
 		else
 			if (difficulty == null) 
 				difficulty = new Difficulty();
+		
+		if (dimensions == null)
+			dimensions = new ArrayList<Integer>();
 	}
 }

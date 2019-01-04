@@ -13,10 +13,10 @@ import net.insane96mcp.mpr.json.utils.Enchantment;
 import net.insane96mcp.mpr.json.utils.Item;
 import net.insane96mcp.mpr.json.utils.ItemAttribute;
 import net.insane96mcp.mpr.json.utils.Slot;
+import net.insane96mcp.mpr.json.utils.Utils;
 import net.insane96mcp.mpr.lib.Logger;
 import net.insane96mcp.mpr.lib.Properties;
 import net.minecraft.entity.Entity;
-import net.minecraft.entity.EntityList;
 import net.minecraft.entity.EntityLiving;
 import net.minecraft.entity.ai.attributes.AttributeModifier;
 import net.minecraft.entity.ai.attributes.IAttributeInstance;
@@ -26,7 +26,6 @@ import net.minecraft.nbt.JsonToNBT;
 import net.minecraft.nbt.NBTException;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.potion.Potion;
-import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.WeightedRandom;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.world.EnumDifficulty;
@@ -72,33 +71,17 @@ public class EntityJoinWorld {
 		
 		tags.setByte(MobsPropertiesRandomness.RESOURCE_PREFIX + "checked", (byte)1);
 	}
-	
-	private static boolean MatchesEntity(EntityLiving entity, World world, Random random, Mob mob) {
-		if (mob.id.endsWith("*")) {
-			String[] splitId = mob.id.split(":");
-			if (splitId.length != 2) {
-				Logger.Warning("Failed to parse mod domain from " + mob);
-			}
-			ResourceLocation location = EntityList.getKey(entity);
-			if (location.getNamespace().toString().equals(splitId[0])) {
-				return true;
-			}
-		}
-		
-		if (EntityList.isMatchingName(entity, new ResourceLocation(mob.id)))
-			return true;
-		
-		return false;
-		
-	}
-	
+
 	private static void ApplyAttributeModifiers(EntityLiving entity, World world, Random random) {
 		if (world.isRemote)
 			return;
 		
 		for (Mob mob : Mob.mobs) {
-			if (MatchesEntity(entity, world, random, mob)) {
+			if (Utils.MatchesEntity(entity, world, random, mob)) {
 				for (Attribute attribute : mob.attributes) {
+					if (!Utils.doesDimensionMatch(entity, attribute.dimensions))
+						continue;
+					
 					float min = attribute.modifier.min;
 					float max = attribute.modifier.max;
 					
@@ -163,9 +146,12 @@ public class EntityJoinWorld {
 			return;
 		
 		for (Mob mob : Mob.mobs) {
-			if (MatchesEntity(entity, world, random, mob)) {
+			if (Utils.MatchesEntity(entity, world, random, mob)) {
 				for (PotionEffect potionEffect : mob.potionEffects) {
 					if (!potionEffect.chance.ChanceMatches(entity, world, random))
+						continue;
+
+					if (!Utils.doesDimensionMatch(entity, potionEffect.dimensions))
 						continue;
 					
 					int minAmplifier = (int) potionEffect.amplifier.min;
@@ -185,7 +171,7 @@ public class EntityJoinWorld {
 			return;
 		
 		for (Mob mob : Mob.mobs) {
-			if (MatchesEntity(entity, world, random, mob)) {
+			if (Utils.MatchesEntity(entity, world, random, mob)) {
 				ApplyEquipmentToSlot(entity, world, random, mob.equipment.head, EntityEquipmentSlot.HEAD);
 				ApplyEquipmentToSlot(entity, world, random, mob.equipment.chest, EntityEquipmentSlot.CHEST);
 				ApplyEquipmentToSlot(entity, world, random, mob.equipment.legs, EntityEquipmentSlot.LEGS);

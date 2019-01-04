@@ -31,6 +31,10 @@ public class ItemAttribute {
 		if (attributeName == null) {
 			throw new InvalidJsonException("Missing attribute name for " + this, file);
 		}
+		
+		if (operation == null)
+			throw new InvalidJsonException("Missing modifier operation for " + this, file);
+		
 		if (amount != null)
 			amount.Validate(file);
 		else 
