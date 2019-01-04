@@ -22,11 +22,12 @@ public class Item extends WeightedRandom.Item{
 	@SerializedName("drop_chance")
 	public float dropChance;
 	public List<Enchantment> enchantments;
+	public List<ItemAttribute> attributes;
 	public String nbt;
 	
 	@Override
 	public String toString() {
-		return String.format("Item{id: %s, data: %d, weight: %d, dropChance: %f, enchantments: %s, nbt: %s}", id, data, weight, dropChance, enchantments, nbt);
+		return String.format("Item{id: %s, data: %d, weight: %d, dropChance: %f, enchantments: %s, attributes: %s, nbt: %s}", id, data, weight, dropChance, enchantments, attributes, nbt);
 	}
 
 	public void Validate(final File file) throws InvalidJsonException{
@@ -55,6 +56,15 @@ public class Item extends WeightedRandom.Item{
 		if (!enchantments.isEmpty()) {
 			for (Enchantment enchantment : enchantments) {
 				enchantment.Validate(file);
+			}
+		}
+		
+		if (attributes == null) 
+			attributes = new ArrayList<ItemAttribute>();
+		
+		if (!attributes.isEmpty()) {
+			for (ItemAttribute itemAttribute : attributes) {
+				itemAttribute.Validate(file);
 			}
 		}
 	}

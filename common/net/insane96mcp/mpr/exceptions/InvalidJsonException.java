@@ -13,6 +13,6 @@ public class InvalidJsonException extends Exception {
 	
     public String getMessage()
     {
-        return "Invalid JSON parsed (File: " + file.getName() + "): " + this.message;
+        return "Failed to parse JSON (File: " + file.getName() + "): " + this.message;
     }
 }

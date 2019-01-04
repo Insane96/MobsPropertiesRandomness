@@ -11,6 +11,7 @@ import net.insane96mcp.mpr.json.mobs.Creeper;
 import net.insane96mcp.mpr.json.mobs.Ghast;
 import net.insane96mcp.mpr.json.utils.Enchantment;
 import net.insane96mcp.mpr.json.utils.Item;
+import net.insane96mcp.mpr.json.utils.ItemAttribute;
 import net.insane96mcp.mpr.json.utils.Slot;
 import net.insane96mcp.mpr.lib.Logger;
 import net.insane96mcp.mpr.lib.Properties;
@@ -234,6 +235,13 @@ public class EntityJoinWorld {
 		}
 		
 		entity.setItemStackToSlot(entityEquipmentSlot, itemStack);
+	
+		for (ItemAttribute itemAttribute : choosenItem.attributes) {
+			float amount = MathHelper.nextFloat(random, itemAttribute.amount.min, itemAttribute.amount.max) / 100f;
+			AttributeModifier modifier = new AttributeModifier(itemAttribute.id, itemAttribute.modifier, amount, itemAttribute.operation.ordinal());
+			EntityEquipmentSlot modifierSlot = itemAttribute.slot == null ? entityEquipmentSlot : itemAttribute.slot;
+			itemStack.addAttributeModifier(itemAttribute.attributeName, modifier, modifierSlot);
+		}
 		
 		//Drop Chance
 		entity.setDropChance(entityEquipmentSlot, choosenItem.dropChance / 100f);

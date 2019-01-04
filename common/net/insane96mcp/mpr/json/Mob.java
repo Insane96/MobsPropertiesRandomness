@@ -70,11 +70,14 @@ public class Mob {
 			} catch (Exception e) {
 				correctlyReloaded = false;
 				Logger.Error("Failed to parse file with name " + file.getName());
-				e.printStackTrace();
+				Logger.Error(e.toString());
+				//e.printStackTrace();
 			}
 		}
-		
-		Logger.Info("Reloaded All JSONs");
+		if (correctlyReloaded)
+			Logger.Info("Reloaded All JSONs");
+		else
+			Logger.Info("Reloaded All JSONs with errors");
 		return correctlyReloaded;
 	}
 
