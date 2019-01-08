@@ -190,6 +190,9 @@ public class EntityJoinWorld {
 		if (!slot.overrideVanilla && !entity.getItemStackFromSlot(entityEquipmentSlot).isEmpty())
 			return;
 		
+		if (slot.replaceOnly && entity.getItemStackFromSlot(entityEquipmentSlot).isEmpty())
+			return;
+		
 		if (!slot.chance.ChanceMatches(entity, world, random))
 			return;
 
