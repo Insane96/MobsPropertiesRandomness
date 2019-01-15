@@ -26,7 +26,6 @@ import net.minecraft.nbt.JsonToNBT;
 import net.minecraft.nbt.NBTException;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.potion.Potion;
-import net.minecraft.util.WeightedRandom;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.world.EnumDifficulty;
 import net.minecraft.world.World;
@@ -196,7 +195,7 @@ public class EntityJoinWorld {
 		if (!slot.chance.ChanceMatches(entity, world, random))
 			return;
 
-		Item choosenItem = WeightedRandom.getRandomItem(random, slot.items);
+		Item choosenItem = slot.GetRandomItem(world);
 
 		ItemStack itemStack = new ItemStack(net.minecraft.item.Item.getByNameOrId(choosenItem.id), 1, choosenItem.data);
 

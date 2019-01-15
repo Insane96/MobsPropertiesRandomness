@@ -8,6 +8,8 @@ import com.google.gson.annotations.SerializedName;
 
 import net.insane96mcp.mpr.exceptions.InvalidJsonException;
 import net.insane96mcp.mpr.lib.Logger;
+import net.minecraft.util.WeightedRandom;
+import net.minecraft.world.World;
 
 public class Slot {
 
@@ -16,11 +18,24 @@ public class Slot {
 	@SerializedName("replace_only")
 	public boolean replaceOnly;
 	public Chance chance;
-	public List<Item> items = new ArrayList<Item>();
+	public ArrayList<Item> items = new ArrayList<Item>();
 	
 	@Override
 	public String toString() {
 		return String.format("Slot{overrideVanilla: %s, replaceOnly: %s, chance: %s, items: %s}", overrideVanilla, replaceOnly, chance, items);
+	}
+	
+	private List<Item> GetItemsWithWeightDifficulty(World world){
+		ArrayList<Item> items = new ArrayList<Item>();
+		for (Item item : this.items) {
+			items.add(item.GetWeightWithDifficulty(item, world));
+		}
+		System.out.println(items);
+		return items;
+	}
+	
+	public Item GetRandomItem(World world) {
+		return WeightedRandom.getRandomItem(world.rand, GetItemsWithWeightDifficulty(world));
 	}
 
 	public void Validate(final File file) throws InvalidJsonException{
