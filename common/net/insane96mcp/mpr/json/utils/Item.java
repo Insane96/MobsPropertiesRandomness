@@ -7,11 +7,12 @@ import java.util.List;
 import com.google.gson.annotations.SerializedName;
 
 import net.insane96mcp.mpr.exceptions.InvalidJsonException;
+import net.insane96mcp.mpr.json.IJsonObject;
 import net.insane96mcp.mpr.lib.Logger;
 import net.minecraft.util.WeightedRandom;
 import net.minecraft.world.World;
 
-public class Item extends WeightedRandom.Item{
+public class Item extends WeightedRandom.Item implements IJsonObject{
 
 	public Item(int itemWeightIn) {
 		super(itemWeightIn);

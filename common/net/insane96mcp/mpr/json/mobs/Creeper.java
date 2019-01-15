@@ -6,6 +6,7 @@ import java.util.Random;
 import com.google.gson.annotations.SerializedName;
 
 import net.insane96mcp.mpr.exceptions.InvalidJsonException;
+import net.insane96mcp.mpr.json.IJsonObject;
 import net.insane96mcp.mpr.json.Mob;
 import net.insane96mcp.mpr.json.utils.Chance;
 import net.insane96mcp.mpr.json.utils.RangeMinMax;
@@ -19,7 +20,7 @@ import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.world.World;
 
-public class Creeper {
+public class Creeper implements IJsonObject {
 	public RangeMinMax fuse;
 	@SerializedName("explosion_radius")
 	public RangeMinMax explosionRadius;

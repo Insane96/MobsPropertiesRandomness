@@ -3,9 +3,10 @@ package net.insane96mcp.mpr.json.utils;
 import java.io.File;
 
 import net.insane96mcp.mpr.exceptions.InvalidJsonException;
+import net.insane96mcp.mpr.json.IJsonObject;
 import net.insane96mcp.mpr.lib.Logger;
 
-public class Enchantment {
+public class Enchantment implements IJsonObject{
 
 	public String id;
 	public RangeMinMax level;

@@ -6,10 +6,11 @@ import java.util.UUID;
 import com.google.gson.annotations.SerializedName;
 
 import net.insane96mcp.mpr.exceptions.InvalidJsonException;
+import net.insane96mcp.mpr.json.IJsonObject;
 import net.insane96mcp.mpr.lib.Logger;
 import net.minecraft.inventory.EntityEquipmentSlot;
 
-public class ItemAttribute {
+public class ItemAttribute implements IJsonObject{
 	
 	public String modifier;
 	@SerializedName("attribute_name")

@@ -4,9 +4,10 @@ import java.io.File;
 
 import com.google.gson.annotations.SerializedName;
 
+import net.insane96mcp.mpr.json.IJsonObject;
 import net.insane96mcp.mpr.lib.Logger;
 
-public class Difficulty {
+public class Difficulty implements IJsonObject{
 	@SerializedName("affects_max_only")
 	public boolean affectsMaxOnly;
 	@SerializedName("is_local_difficulty")

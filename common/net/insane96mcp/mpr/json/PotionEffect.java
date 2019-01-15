@@ -12,7 +12,7 @@ import net.insane96mcp.mpr.json.utils.RangeMinMax;
 import net.insane96mcp.mpr.lib.Logger;
 import net.minecraft.potion.Potion;
 
-public class PotionEffect {
+public class PotionEffect implements IJsonObject{
 	public String id;
 	public RangeMinMax amplifier;
 
@@ -34,7 +34,7 @@ public class PotionEffect {
 		if (id == null)
 			throw new InvalidJsonException("Missing Potion Effect Id for " + this.toString(), file);
 		else if (Potion.getPotionFromResourceLocation(id) == null)
-			Logger.Warning("Failed to find Potion with " + id);
+			throw new InvalidJsonException("Potion effect with Id " + id + " does not exist", file);
 		
 		//Amplifier
 		if (amplifier == null) {

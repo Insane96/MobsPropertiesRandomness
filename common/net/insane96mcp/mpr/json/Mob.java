@@ -14,6 +14,8 @@ import net.insane96mcp.mpr.json.mobs.Creeper;
 import net.insane96mcp.mpr.json.mobs.Ghast;
 import net.insane96mcp.mpr.lib.Logger;
 import net.insane96mcp.mpr.utils.Utils;
+import net.minecraft.entity.EntityList;
+import net.minecraft.util.ResourceLocation;
 
 public class Mob implements IJsonObject{
 	public static List<Mob> mobs = new ArrayList<Mob>();
@@ -89,18 +91,21 @@ public class Mob implements IJsonObject{
 		if (mobId == null && group == null)
 			throw new InvalidJsonException("Missing mob_id or group for " + this.toString(), file);
 		else if (mobId != null && group != null)
-			Logger.Info("mob_id and group are both present, mob_id will be ignored");
+			Logger.Debug("mob_id and group are both present, mob_id will be ignored");
 		
 		if (mobId != null) {
 			String[] splitId = mobId.split(":");
-			if (splitId.length != 2) {
+			if (splitId.length != 2)
 				throw new InvalidJsonException("Invalid mob_id " + mobId, file);
-			}
+
+			ResourceLocation resourceLocation = new ResourceLocation(mobId);
+			if (!EntityList.isRegistered(resourceLocation) && !mobId.endsWith("*"))
+				throw new InvalidJsonException("mob_id " + mobId + " does not exist", file);
 		}
 		
 		if (group != null) {
 			if (!Group.DoesGroupExist(group))
-				throw new InvalidJsonException("Group " + group + " does not exist", file);
+				throw new InvalidJsonException("group " + group + " does not exist", file);
 		}
 		
 		for (PotionEffect potionEffect : potionEffects) {
@@ -114,5 +119,8 @@ public class Mob implements IJsonObject{
 		//Mob specific validations
 		if (creeper != null)
 			creeper.Validate(file);
+		
+		if (ghast != null)
+			ghast.Validate(file);
 	}
 }

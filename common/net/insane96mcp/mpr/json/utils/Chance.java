@@ -6,13 +6,14 @@ import java.util.Random;
 import com.google.gson.annotations.SerializedName;
 
 import net.insane96mcp.mpr.exceptions.InvalidJsonException;
+import net.insane96mcp.mpr.json.IJsonObject;
 import net.insane96mcp.mpr.lib.Logger;
 import net.insane96mcp.mpr.lib.Properties;
 import net.minecraft.entity.EntityLiving;
 import net.minecraft.world.EnumDifficulty;
 import net.minecraft.world.World;
 
-public class Chance {
+public class Chance implements IJsonObject {
 	public float amount;
 	@SerializedName("affected_by_difficulty")
 	public boolean affectedByDifficulty;

@@ -7,7 +7,7 @@ import com.google.gson.annotations.SerializedName;
 import net.insane96mcp.mpr.exceptions.InvalidJsonException;
 import net.insane96mcp.mpr.json.utils.Slot;
 
-public class Equipment {
+public class Equipment implements IJsonObject{
 
 	public Slot head;
 	public Slot chest;

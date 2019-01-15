@@ -11,7 +11,7 @@ import net.insane96mcp.mpr.json.utils.Difficulty;
 import net.insane96mcp.mpr.json.utils.RangeMinMax;
 import net.insane96mcp.mpr.lib.Logger;
 
-public class Attribute {
+public class Attribute implements IJsonObject{
 	public String id;
 	public RangeMinMax modifier;
 	@SerializedName("is_flat")

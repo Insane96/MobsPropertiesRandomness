@@ -1,9 +1,12 @@
 package net.insane96mcp.mpr.json.mobs;
 
+import java.io.File;
 import java.util.Random;
 
 import com.google.gson.annotations.SerializedName;
 
+import net.insane96mcp.mpr.exceptions.InvalidJsonException;
+import net.insane96mcp.mpr.json.IJsonObject;
 import net.insane96mcp.mpr.json.Mob;
 import net.insane96mcp.mpr.json.utils.RangeMinMax;
 import net.minecraft.entity.Entity;
@@ -14,7 +17,7 @@ import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.world.World;
 
-public class Ghast {
+public class Ghast implements IJsonObject{
 	@SerializedName("explosion_power")
 	public RangeMinMax explosionPower;
 	
@@ -53,5 +56,14 @@ public class Ghast {
 				entityGhast.readEntityFromNBT(compound);
 			}
 		}
+	}
+
+	@Override
+	public void Validate(File file) throws InvalidJsonException {
+		if (explosionPower == null)
+			throw new InvalidJsonException("Missing explosion_power for " + this, file);
+		else 
+			explosionPower.Validate(file);
+		
 	}
 }

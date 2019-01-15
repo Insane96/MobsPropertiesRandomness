@@ -1,6 +1,11 @@
 package net.insane96mcp.mpr.json.utils;
 
-public class WeightDifficulty {
+import java.io.File;
+
+import net.insane96mcp.mpr.exceptions.InvalidJsonException;
+import net.insane96mcp.mpr.json.IJsonObject;
+
+public class WeightDifficulty implements IJsonObject{
 
 	public int easy;
 	public int normal;
@@ -16,4 +21,7 @@ public class WeightDifficulty {
 	public String toString() {
 		return String.format("WeightDifficulty{easy: %d, normal: %d, hard: %d}", easy, normal, hard);
 	}
+	
+	@Override
+	public void Validate(File file) throws InvalidJsonException { }
 }
