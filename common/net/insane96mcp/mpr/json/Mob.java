@@ -13,12 +13,14 @@ import net.insane96mcp.mpr.exceptions.InvalidJsonException;
 import net.insane96mcp.mpr.json.mobs.Creeper;
 import net.insane96mcp.mpr.json.mobs.Ghast;
 import net.insane96mcp.mpr.lib.Logger;
+import net.insane96mcp.mpr.utils.Utils;
 
-public class Mob {
+public class Mob implements IJsonObject{
 	public static List<Mob> mobs = new ArrayList<Mob>();
 	
 	@SerializedName("mob_id")
-	public String id;
+	public String mobId;
+	public String group;
 	
 	@SerializedName("potion_effects")
 	public List<PotionEffect> potionEffects = new ArrayList<PotionEffect>();
@@ -32,16 +34,18 @@ public class Mob {
 	
 	@Override
 	public String toString() {
-		return String.format("Mob{id: %s, potionEffects: %s, attributes: %s, equipment: %s, creeper: %s, ghast: %s}", id, potionEffects, attributes, equipment, creeper, ghast);
+		return String.format("Mob{id: %s, group: %s, potionEffects: %s, attributes: %s, equipment: %s, creeper: %s, ghast: %s}", mobId, group, potionEffects, attributes, equipment, creeper, ghast);
 	}
 	
 	public static boolean LoadJsons() {
 		//check if json folder exist, if not, create it
 		File jsonFolder = new File(MobsPropertiesRandomness.configPath + "json");
-		if (!jsonFolder.exists()) {
+		if (!jsonFolder.exists())
 			jsonFolder.mkdir();
-			return true;
-		}
+		
+		File groupsFolder = new File(MobsPropertiesRandomness.configPath + "groups");
+		if (!groupsFolder.exists())
+			groupsFolder.mkdir();
 		
 		//Empty the list with the loaded jsons
 		mobs.clear();
@@ -53,7 +57,7 @@ public class Mob {
 		
 		//config/mobspropertiesrandomness/json
 		File jsonPath = new File(MobsPropertiesRandomness.configPath + "json");
-		ArrayList<File> jsonFiles = ListFilesForFolder(jsonPath);
+		ArrayList<File> jsonFiles = Utils.ListFilesForFolder(jsonPath);
 		
 		for (File file : jsonFiles) {
 			//Ignore files that start with underscore '_'
@@ -82,8 +86,23 @@ public class Mob {
 	}
 
 	public void Validate(final File file) throws InvalidJsonException{
-		if (id == null)
-			throw new InvalidJsonException("Missing Mob Id for " + this.toString(), file);
+		if (mobId == null && group == null)
+			throw new InvalidJsonException("Missing mob_id or group for " + this.toString(), file);
+		else if (mobId != null && group != null)
+			Logger.Info("mob_id and group are both present, mob_id will be ignored");
+		
+		if (mobId != null) {
+			String[] splitId = mobId.split(":");
+			if (splitId.length != 2) {
+				throw new InvalidJsonException("Invalid mob_id " + mobId, file);
+			}
+		}
+		
+		if (group != null) {
+			if (!Group.DoesGroupExist(group))
+				throw new InvalidJsonException("Group " + group + " does not exist", file);
+		}
+		
 		for (PotionEffect potionEffect : potionEffects) {
 			potionEffect.Validate(file);
 		}
@@ -95,17 +114,5 @@ public class Mob {
 		//Mob specific validations
 		if (creeper != null)
 			creeper.Validate(file);
-	}
-	
-	private static ArrayList<File> ListFilesForFolder(final File folder) {
-	    ArrayList<File> list = new ArrayList<File>();
-	    for (final File fileEntry : folder.listFiles()) {
-	        if (fileEntry.isDirectory()) {
-	        	ListFilesForFolder(fileEntry);
-	        } else {
-	            list.add(fileEntry);
-	        }
-	    }
-	    return list;
 	}
 }

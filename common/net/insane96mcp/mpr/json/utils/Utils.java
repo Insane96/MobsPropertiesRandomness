@@ -3,8 +3,8 @@ package net.insane96mcp.mpr.json.utils;
 import java.util.List;
 import java.util.Random;
 
+import net.insane96mcp.mpr.json.Group;
 import net.insane96mcp.mpr.json.Mob;
-import net.insane96mcp.mpr.lib.Logger;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityList;
 import net.minecraft.entity.EntityLiving;
@@ -29,22 +29,33 @@ public class Utils {
 	}
 
 	/**
-	 * Checks if the entity passed matches the mob, or the namespace if the mob_id is "modid:*"
+	 * Checks if the entity passed matches the mob, or the namespace if the id is "modid:*", or the group if the namespace is "group"
 	 * @return true if the entity matches the mob_id or it's in the mod namespace
 	 */
 	public static boolean MatchesEntity(EntityLiving entity, World world, Random random, Mob mob) {
-		if (mob.id.endsWith("*")) {
-			String[] splitId = mob.id.split(":");
-			if (splitId.length != 2) {
-				Logger.Warning("Failed to parse mod domain from " + mob);
+		if (mob.group != null) {
+			for (Group group : Group.groups) {
+				if (!group.name.equals(mob.group))
+					continue;
+				
+				for (String mobId : group.mobs) {
+					ResourceLocation location = new ResourceLocation(mobId);
+					if (EntityList.isMatchingName(entity, location))
+						return true;
+				}
 			}
+			return false;
+		}
+		
+		if (mob.mobId.endsWith("*")) {
+			String modDomain = mob.mobId.split(":")[1];
 			ResourceLocation location = EntityList.getKey(entity);
-			if (location.getNamespace().toString().equals(splitId[0])) {
+			if (location.getNamespace().toString().equals(modDomain)) {
 				return true;
 			}
 		}
 		
-		if (EntityList.isMatchingName(entity, new ResourceLocation(mob.id)))
+		if (EntityList.isMatchingName(entity, new ResourceLocation(mob.mobId)))
 			return true;
 		
 		return false;

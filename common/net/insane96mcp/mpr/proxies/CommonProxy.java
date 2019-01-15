@@ -1,5 +1,6 @@
 package net.insane96mcp.mpr.proxies;
 
+import net.insane96mcp.mpr.json.Group;
 import net.insane96mcp.mpr.json.Mob;
 import net.insane96mcp.mpr.network.PacketHandler;
 import net.minecraftforge.fml.common.event.FMLInitializationEvent;
@@ -16,6 +17,8 @@ public class CommonProxy {
 	}
 	
 	public void PostInit(FMLPostInitializationEvent event) {
+		//TODO move this to PlayerJoinedWorld or LoggedIn
+		Group.LoadGroups();
 		Mob.LoadJsons();
 	}
 }

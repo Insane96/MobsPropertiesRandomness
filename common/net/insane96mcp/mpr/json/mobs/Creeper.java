@@ -54,7 +54,7 @@ public class Creeper {
 			if (mob.creeper == null)
 				continue;
 			
-			if (EntityList.isMatchingName(entityCreeper, new ResourceLocation(mob.id))) {
+			if (EntityList.isMatchingName(entityCreeper, new ResourceLocation(mob.mobId))) {
 				Creeper creeper = mob.creeper;
 				
 				NBTTagCompound compound = new NBTTagCompound();

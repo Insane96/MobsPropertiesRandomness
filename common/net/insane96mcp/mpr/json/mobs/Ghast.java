@@ -40,7 +40,7 @@ public class Ghast {
 			if (mob.ghast == null)
 				continue;
 			
-			if (EntityList.isMatchingName(entityGhast, new ResourceLocation(mob.id))) {
+			if (EntityList.isMatchingName(entityGhast, new ResourceLocation(mob.mobId))) {
 				
 				//Explosion Power
 				if (compound.getInteger("ExplosionPower") == 1) {
