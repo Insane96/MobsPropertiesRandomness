@@ -19,7 +19,7 @@ public class Slot implements IJsonObject{
 	@SerializedName("replace_only")
 	public boolean replaceOnly;
 	public Chance chance;
-	public ArrayList<Item> items = new ArrayList<Item>();
+	public ArrayList<Item> items;
 	
 	@Override
 	public String toString() {
@@ -29,9 +29,9 @@ public class Slot implements IJsonObject{
 	private List<Item> GetItemsWithWeightDifficulty(World world){
 		ArrayList<Item> items = new ArrayList<Item>();
 		for (Item item : this.items) {
-			items.add(item.GetWeightWithDifficulty(item, world));
+			if (item.HasDimension(world))
+				items.add(item.GetWeightWithDifficulty(world));
 		}
-		System.out.println(items);
 		return items;
 	}
 	
@@ -51,8 +51,8 @@ public class Slot implements IJsonObject{
 			overrideVanilla = true;
 		}
 		
-		if (items.isEmpty())
-			throw new InvalidJsonException("There's no item set in the slot " + this, file);
+		if (items == null || items.isEmpty())
+			throw new InvalidJsonException("There's no item set or item is missing in the slot " + this, file);
 		else {
 			for (Item item : items) {
 				item.Validate(file);

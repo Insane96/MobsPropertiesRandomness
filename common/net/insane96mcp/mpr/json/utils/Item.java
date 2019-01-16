@@ -29,32 +29,11 @@ public class Item extends WeightedRandom.Item implements IJsonObject{
 	public List<ItemAttribute> attributes;
 	public String nbt;
 	
+	public List<Integer> dimensions;
+	
 	@Override
 	public String toString() {
-		return String.format("Item{id: %s, data: %d, weight: %d, weightDifficulty: %s, dropChance: %f, enchantments: %s, attributes: %s, nbt: %s}", id, data, weight, weightDifficulty, dropChance, enchantments, attributes, nbt);
-	}
-	
-	public Item GetWeightWithDifficulty(Item item, World world) {
-		Item item2 = item.copy();
-		
-		switch (world.getDifficulty()) {
-		case EASY:
-			item2.itemWeight += weightDifficulty.easy;
-			break;
-			
-		case NORMAL:
-			item2.itemWeight += weightDifficulty.normal;
-			break;
-			
-		case HARD:
-			item2.itemWeight += weightDifficulty.hard;
-			break;
-
-		default:
-			break;
-		}
-
-		return item2;
+		return String.format("Item{id: %s, data: %d, weight: %d, weightDifficulty: %s, dropChance: %f, enchantments: %s, attributes: %s, dimensions: %s, nbt: %s}", id, data, weight, weightDifficulty, dropChance, enchantments, attributes, dimensions, nbt);
 	}
 
 	public void Validate(final File file) throws InvalidJsonException{
@@ -97,6 +76,43 @@ public class Item extends WeightedRandom.Item implements IJsonObject{
 				itemAttribute.Validate(file);
 			}
 		}
+
+		if (dimensions == null)
+			dimensions = new ArrayList<Integer>();
+	}
+	
+	public boolean HasDimension(World world) {
+		boolean hasDimension = this.dimensions.isEmpty();
+		
+		for (Integer dimension : dimensions) {
+			if (world.provider.getDimension() == dimension.intValue())
+				hasDimension = true;
+		}
+		
+		return hasDimension;
+	}
+	
+	public Item GetWeightWithDifficulty(World world) {
+		Item item2 = this.copy();
+		
+		switch (world.getDifficulty()) {
+			case EASY:
+				item2.itemWeight += weightDifficulty.easy;
+				break;
+				
+			case NORMAL:
+				item2.itemWeight += weightDifficulty.normal;
+				break;
+				
+			case HARD:
+				item2.itemWeight += weightDifficulty.hard;
+				break;
+	
+			default:
+				break;
+		}
+
+		return item2;
 	}
 
 	/**

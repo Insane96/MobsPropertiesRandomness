@@ -24,7 +24,7 @@ public class Group implements IJsonObject{
 	}
 	
 	public String name;
-	public List<String> mobs = new ArrayList<String>();
+	public List<String> mobs;
 	
 	@Override
 	public String toString() {
@@ -80,8 +80,8 @@ public class Group implements IJsonObject{
 			throw new InvalidJsonException("Group name " + name + " already exist", file);
 		}
 		
-		if (mobs.isEmpty()) {
-			throw new InvalidJsonException("Group " + this.name + " has no mobs in the list", file);
+		if (mobs == null || mobs.isEmpty()) {
+			throw new InvalidJsonException("Group " + this.name + " is missing or has no mobs in the list", file);
 		}
 	}
 }

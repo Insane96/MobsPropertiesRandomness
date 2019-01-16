@@ -25,11 +25,11 @@ public class Mob implements IJsonObject{
 	public String group;
 	
 	@SerializedName("potion_effects")
-	public List<PotionEffect> potionEffects = new ArrayList<PotionEffect>();
+	public List<PotionEffect> potionEffects;
 	
-	public List<Attribute> attributes = new ArrayList<Attribute>();
+	public List<Attribute> attributes;
 	
-	public Equipment equipment = new Equipment();
+	public Equipment equipment;
 	
 	public Creeper creeper;
 	public Ghast ghast;
@@ -108,12 +108,20 @@ public class Mob implements IJsonObject{
 				throw new InvalidJsonException("group " + group + " does not exist", file);
 		}
 		
+		if (potionEffects == null)
+			potionEffects = new ArrayList<PotionEffect>();
 		for (PotionEffect potionEffect : potionEffects) {
 			potionEffect.Validate(file);
 		}
+		
+		if (attributes == null)
+			attributes = new ArrayList<Attribute>();
 		for (Attribute attribute : attributes) {
 			attribute.Validate(file);
 		}
+		
+		if (equipment == null)
+			equipment = new Equipment();
 		equipment.Validate(file);
 		
 		//Mob specific validations
