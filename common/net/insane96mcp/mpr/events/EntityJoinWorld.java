@@ -135,7 +135,6 @@ public class EntityJoinWorld {
 					if (attribute.id.equals("generic.maxHealth"))
 						entity.setHealth((float) attributeInstance.getAttributeValue());
 				}
-				break;
 			}
 		}
 	}
@@ -160,7 +159,6 @@ public class EntityJoinWorld {
 					net.minecraft.potion.PotionEffect effect = new net.minecraft.potion.PotionEffect(potion, 1000000, MathHelper.getInt(random, minAmplifier, maxAmplifier), potionEffect.ambient, !potionEffect.hideParticles);
 					entity.addPotionEffect(effect);
 				}
-				break;
 			}
 		}
 	}
@@ -177,7 +175,6 @@ public class EntityJoinWorld {
 				ApplyEquipmentToSlot(entity, world, random, mob.equipment.feets, EntityEquipmentSlot.FEET);
 				ApplyEquipmentToSlot(entity, world, random, mob.equipment.mainHand, EntityEquipmentSlot.MAINHAND);
 				ApplyEquipmentToSlot(entity, world, random, mob.equipment.offHand, EntityEquipmentSlot.OFFHAND);
-				break;
 			}
 		}
 	}
