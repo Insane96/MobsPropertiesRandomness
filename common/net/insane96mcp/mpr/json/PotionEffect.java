@@ -3,14 +3,19 @@ package net.insane96mcp.mpr.json;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Random;
 
 import com.google.gson.annotations.SerializedName;
 
 import net.insane96mcp.mpr.exceptions.InvalidJsonException;
 import net.insane96mcp.mpr.json.utils.Chance;
 import net.insane96mcp.mpr.json.utils.RangeMinMax;
+import net.insane96mcp.mpr.json.utils.Utils;
 import net.insane96mcp.mpr.lib.Logger;
+import net.minecraft.entity.EntityLiving;
 import net.minecraft.potion.Potion;
+import net.minecraft.util.math.MathHelper;
+import net.minecraft.world.World;
 
 public class PotionEffect implements IJsonObject{
 	public String id;
@@ -53,5 +58,29 @@ public class PotionEffect implements IJsonObject{
 		
 		if (dimensions == null)
 			dimensions = new ArrayList<Integer>();
+	}
+
+	public static void Apply(EntityLiving entity, World world, Random random) {
+		if (world.isRemote)
+			return;
+		
+		for (Mob mob : Mob.mobs) {
+			if (Utils.MatchesEntity(entity, world, random, mob)) {
+				for (PotionEffect potionEffect : mob.potionEffects) {
+					if (!potionEffect.chance.ChanceMatches(entity, world, random))
+						continue;
+
+					if (!Utils.doesDimensionMatch(entity, potionEffect.dimensions))
+						continue;
+					
+					int minAmplifier = (int) potionEffect.amplifier.min;
+					int maxAmplifier = (int) potionEffect.amplifier.max;
+					
+					Potion potion = Potion.getPotionFromResourceLocation(potionEffect.id);
+					net.minecraft.potion.PotionEffect effect = new net.minecraft.potion.PotionEffect(potion, 1000000, MathHelper.getInt(random, minAmplifier, maxAmplifier), potionEffect.ambient, !potionEffect.hideParticles);
+					entity.addPotionEffect(effect);
+				}
+			}
+		}
 	}
 }

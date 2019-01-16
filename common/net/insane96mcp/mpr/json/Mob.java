@@ -4,6 +4,7 @@ import java.io.File;
 import java.io.FileReader;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Random;
 
 import com.google.gson.Gson;
 import com.google.gson.annotations.SerializedName;
@@ -14,8 +15,13 @@ import net.insane96mcp.mpr.json.mobs.Creeper;
 import net.insane96mcp.mpr.json.mobs.Ghast;
 import net.insane96mcp.mpr.lib.Logger;
 import net.insane96mcp.mpr.utils.Utils;
+import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityList;
+import net.minecraft.entity.EntityLiving;
+import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.ResourceLocation;
+import net.minecraft.world.World;
+import net.minecraftforge.event.entity.EntityJoinWorldEvent;
 
 public class Mob implements IJsonObject{
 	public static List<Mob> mobs = new ArrayList<Mob>();
@@ -130,5 +136,41 @@ public class Mob implements IJsonObject{
 		
 		if (ghast != null)
 			ghast.Validate(file);
+	}
+
+	public static void Apply(EntityJoinWorldEvent event) {
+		if (Mob.mobs.isEmpty())
+			return;
+		
+		Entity entity = event.getEntity();
+		World world = event.getWorld();
+		Random random = world.rand;
+		
+		Creeper.FixAreaEffectClouds(entity);
+		
+		if (!(entity instanceof EntityLiving)) 
+			return;
+		
+		EntityLiving entityLiving = (EntityLiving)entity;
+		
+		NBTTagCompound tags = entityLiving.getEntityData();
+		boolean isAlreadyChecked = tags.getBoolean(MobsPropertiesRandomness.RESOURCE_PREFIX + "checked");
+
+		if (isAlreadyChecked)
+			return;
+		
+		boolean shouldNotBeProcessed = tags.getBoolean(MobsPropertiesRandomness.RESOURCE_PREFIX + "prevent_processing");
+		
+		if (shouldNotBeProcessed)
+			return;
+		
+		PotionEffect.Apply(entityLiving, world, random);
+		Attribute.Apply(entityLiving, world, random);
+		Equipment.Apply(entityLiving, world, random);
+		
+		Creeper.Apply(entityLiving, world, random);
+		Ghast.Apply(entityLiving, world, random);
+		
+		tags.setBoolean(MobsPropertiesRandomness.RESOURCE_PREFIX + "checked", true);
 	}
 }
