@@ -32,6 +32,10 @@ public class Group implements IJsonObject{
 	}
 	
 	public static boolean LoadGroups() {
+		File groupsFolder = new File(MobsPropertiesRandomness.configPath + "groups");
+		if (!groupsFolder.exists())
+			groupsFolder.mkdir();
+		
 		//Empty the list with the loaded groups
 		groups.clear();
 		
@@ -39,10 +43,8 @@ public class Group implements IJsonObject{
 		boolean correctlyReloaded = true;
 		
 		Gson gson = new Gson();
-		
-		//config/mobspropertiesrandomness/json
-		File groupsPath = new File(MobsPropertiesRandomness.configPath + "groups");
-		ArrayList<File> gropusFiles = Utils.ListFilesForFolder(groupsPath);
+
+		ArrayList<File> gropusFiles = Utils.ListFilesForFolder(groupsFolder);
 		
 		for (File file : gropusFiles) {
 			//Ignore files that start with underscore '_'

@@ -51,10 +51,6 @@ public class Mob implements IJsonObject{
 		if (!jsonFolder.exists())
 			jsonFolder.mkdir();
 		
-		File groupsFolder = new File(MobsPropertiesRandomness.configPath + "groups");
-		if (!groupsFolder.exists())
-			groupsFolder.mkdir();
-		
 		//Empty the list with the loaded jsons
 		mobs.clear();
 		
@@ -64,8 +60,7 @@ public class Mob implements IJsonObject{
 		Gson gson = new Gson();
 		
 		//config/mobspropertiesrandomness/json
-		File jsonPath = new File(MobsPropertiesRandomness.configPath + "json");
-		ArrayList<File> jsonFiles = Utils.ListFilesForFolder(jsonPath);
+		ArrayList<File> jsonFiles = Utils.ListFilesForFolder(jsonFolder);
 		
 		for (File file : jsonFiles) {
 			//Ignore files that start with underscore '_'
