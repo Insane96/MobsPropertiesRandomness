@@ -1,21 +1,28 @@
 package net.insane96mcp.mpr.json.mobs;
 
 import java.io.File;
+import java.util.ArrayList;
 import java.util.Random;
 
 import com.google.gson.annotations.SerializedName;
 
+import net.insane96mcp.mpr.MobsPropertiesRandomness;
 import net.insane96mcp.mpr.exceptions.InvalidJsonException;
 import net.insane96mcp.mpr.json.IJsonObject;
 import net.insane96mcp.mpr.json.Mob;
 import net.insane96mcp.mpr.json.utils.Chance;
 import net.insane96mcp.mpr.json.utils.RangeMinMax;
+import net.insane96mcp.mpr.lib.Reflection;
 import net.insane96mcp.mpr.network.CreeperFuse;
 import net.insane96mcp.mpr.network.PacketHandler;
+import net.minecraft.entity.Entity;
+import net.minecraft.entity.EntityAreaEffectCloud;
 import net.minecraft.entity.EntityList;
 import net.minecraft.entity.EntityLiving;
 import net.minecraft.entity.monster.EntityCreeper;
+import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.potion.PotionEffect;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.world.World;
@@ -84,5 +91,39 @@ public class Creeper implements IJsonObject {
 				entityCreeper.readEntityFromNBT(compound);
 			}
 		}
+	}
+	
+	/**
+	 * Fixes area effect clouds (not spawned by the player) that spawn with duration over 8 minutes setting them to 30 seconds
+	 */
+	public static void FixAreaEffectClouds(Entity entity) {
+		if (!(entity instanceof EntityAreaEffectCloud))
+			return;
+		
+		NBTTagCompound tags = entity.getEntityData();
+		boolean isAlreadyChecked = tags.getBoolean(MobsPropertiesRandomness.RESOURCE_PREFIX + "checked");
+		
+		if (isAlreadyChecked)
+			return;
+		
+		EntityAreaEffectCloud areaEffectCloud = (EntityAreaEffectCloud) entity;
+		if (areaEffectCloud.getOwner() instanceof EntityPlayer) {
+			tags.setBoolean(MobsPropertiesRandomness.RESOURCE_PREFIX + "checked", true);
+			return;
+		}
+		
+		ArrayList<PotionEffect> effects = new ArrayList<PotionEffect>();
+		effects = (ArrayList<PotionEffect>) Reflection.Get(Reflection.EntityAreaEffectCloud_effects, areaEffectCloud);
+		ArrayList<PotionEffect> newEffects = new ArrayList<PotionEffect>();
+		for (PotionEffect potionEffect : effects) {
+			if (potionEffect.getDuration() > 9600) {
+				PotionEffect newPotionEffect = new PotionEffect(potionEffect.getPotion(), 600, potionEffect.getAmplifier());
+				newEffects.add(newPotionEffect);
+				continue;
+			}
+			newEffects.add(potionEffect);
+		}
+		Reflection.Set(Reflection.EntityAreaEffectCloud_effects, areaEffectCloud, newEffects);
+		tags.setBoolean(MobsPropertiesRandomness.RESOURCE_PREFIX + "checked", true);
 	}
 }

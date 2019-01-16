@@ -45,15 +45,17 @@ public class EntityJoinWorld {
 		World world = event.getWorld();
 		Random random = world.rand;
 		
+		Creeper.FixAreaEffectClouds(entity);
+		
 		if (!(entity instanceof EntityLiving)) 
 			return;
 		
 		EntityLiving entityLiving = (EntityLiving)entity;
 		
 		NBTTagCompound tags = entityLiving.getEntityData();
-		byte isAlreadyChecked = tags.getByte(MobsPropertiesRandomness.RESOURCE_PREFIX + "checked");
+		boolean isAlreadyChecked = tags.getBoolean(MobsPropertiesRandomness.RESOURCE_PREFIX + "checked");
 
-		if (isAlreadyChecked == 1)
+		if (isAlreadyChecked)
 			return;
 		
 		boolean shouldNotBeProcessed = tags.getBoolean(MobsPropertiesRandomness.RESOURCE_PREFIX + "prevent_processing");
@@ -68,7 +70,7 @@ public class EntityJoinWorld {
 		Creeper.Apply(entityLiving, world, random);
 		Ghast.Apply(entityLiving, world, random);
 		
-		tags.setByte(MobsPropertiesRandomness.RESOURCE_PREFIX + "checked", (byte)1);
+		tags.setBoolean(MobsPropertiesRandomness.RESOURCE_PREFIX + "checked", true);
 	}
 
 	private static void ApplyAttributeModifiers(EntityLiving entity, World world, Random random) {
