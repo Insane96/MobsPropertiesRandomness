@@ -30,10 +30,10 @@ public class ReloadJson extends CommandBase {
 	public void execute(MinecraftServer server, ICommandSender sender, String[] args) throws CommandException {
 		sender.sendMessage(new TextComponentTranslation(MobsPropertiesRandomness.RESOURCE_PREFIX + "reload_json"));
 		boolean correctlyReloaded = Group.LoadGroups() && Mob.LoadJsons();
-		if (!correctlyReloaded) {
-			sender.sendMessage(new TextComponentTranslation(MobsPropertiesRandomness.RESOURCE_PREFIX + "json_reload_error"));
-		}
-		sender.sendMessage(new TextComponentTranslation(MobsPropertiesRandomness.RESOURCE_PREFIX + "json_count", String.valueOf(Mob.mobs.size())));
+		if (!correctlyReloaded) 
+			sender.sendMessage(new TextComponentTranslation(MobsPropertiesRandomness.RESOURCE_PREFIX + "json_reloaded_error"));
+		else
+			sender.sendMessage(new TextComponentTranslation(MobsPropertiesRandomness.RESOURCE_PREFIX + "json_reloaded"));
 	}
 
 }

@@ -1,0 +1,3 @@
+mpr:reload_json=[MPR] Caricando i file JSON dalle cartelle 'json' & 'group'
+mpr:json_reloaded_error=[MPR] Caricamento completato ma qualcosa è andato storto con alcuni JSON. Controlla i log nella cartella 'logs' per maggiori dettagli
+mpr:json_reloaded=[MPR] Caricamento completato con successo

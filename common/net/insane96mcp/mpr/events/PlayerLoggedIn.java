@@ -19,9 +19,9 @@ public class PlayerLoggedIn {
 		boolean correctlyLoaded = Group.LoadGroups() &&	Mob.LoadJsons();
 		
 		if (!correctlyLoaded) {
-			event.player.sendMessage(new TextComponentTranslation(MobsPropertiesRandomness.RESOURCE_PREFIX + "json_reload_error"));
-			if (Properties.config.debug)
-				event.player.sendMessage(new TextComponentTranslation(MobsPropertiesRandomness.RESOURCE_PREFIX + "json_count", String.valueOf(Mob.mobs.size())));
+			event.player.sendMessage(new TextComponentTranslation(MobsPropertiesRandomness.RESOURCE_PREFIX + "json_reloaded_error"));
 		}
+		else if (Properties.config.debug)
+		event.player.sendMessage(new TextComponentTranslation(MobsPropertiesRandomness.RESOURCE_PREFIX + "json_reloaded"));
 	}
 }
