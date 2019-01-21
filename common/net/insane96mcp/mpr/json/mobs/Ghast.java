@@ -47,8 +47,8 @@ public class Ghast implements IJsonObject{
 				
 				//Explosion Power
 				if (compound.getInteger("ExplosionPower") == 1) {
-					int minExplosionPower = (int) mob.ghast.explosionPower.min;
-					int maxExplosionPower = (int) mob.ghast.explosionPower.max;
+					int minExplosionPower = (int) mob.ghast.explosionPower.GetMin();
+					int maxExplosionPower = (int) mob.ghast.explosionPower.GetMax();
 					int explosionPower = MathHelper.getInt(random, minExplosionPower, maxExplosionPower);
 					compound.setInteger("ExplosionPower", explosionPower);
 				}

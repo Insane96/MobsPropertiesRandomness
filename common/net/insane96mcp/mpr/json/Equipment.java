@@ -105,14 +105,14 @@ public class Equipment implements IJsonObject{
 		for (Enchantment enchantment : choosenItem.enchantments) {
 			if (!enchantment.chance.ChanceMatches(entity, world, random))
 				continue;
-			int level = MathHelper.getInt(random, (int)enchantment.level.min, (int)enchantment.level.max);
+			int level = MathHelper.getInt(random, (int)enchantment.level.GetMin(), (int)enchantment.level.GetMax());
 			itemStack.addEnchantment(net.minecraft.enchantment.Enchantment.getEnchantmentByLocation(enchantment.id), level);
 		}
 		
 		entity.setItemStackToSlot(entityEquipmentSlot, itemStack);
 	
 		for (ItemAttribute itemAttribute : choosenItem.attributes) {
-			float amount = MathHelper.nextFloat(random, itemAttribute.amount.min, itemAttribute.amount.max) / 100f;
+			float amount = MathHelper.nextFloat(random, itemAttribute.amount.GetMin(), itemAttribute.amount.GetMax()) / 100f;
 			AttributeModifier modifier = new AttributeModifier(itemAttribute.id, itemAttribute.modifier, amount, itemAttribute.operation.ordinal());
 			EntityEquipmentSlot modifierSlot = itemAttribute.slot == null ? entityEquipmentSlot : itemAttribute.slot;
 			itemStack.addAttributeModifier(itemAttribute.attributeName, modifier, modifierSlot);

@@ -2,29 +2,33 @@ package net.insane96mcp.mpr.json.utils;
 
 import java.io.File;
 
+import net.insane96mcp.mpr.exceptions.InvalidJsonException;
 import net.insane96mcp.mpr.json.IJsonObject;
 import net.insane96mcp.mpr.lib.Logger;
 
 public class RangeMinMax implements IJsonObject{
-	public float min;
-	public float max;
 	
-	public RangeMinMax() {
-		this(0, 0);
+	private Float min;
+	
+	public float GetMin() {
+		return min;
+	}
+	
+	private Float max;
+	
+	public float GetMax() {
+		return max;
+	}
+	
+	public RangeMinMax(int min, int max) {
+		this((float) min, (float) max);
 	}
 	
 	public RangeMinMax(float min, float max) {
 		this.min = min;
 		this.max = max;
-	}
-	
-	public RangeMinMax(int min, int max) {
-		this.min = min;
-		this.max = max;
-		if (max < min) {
-			Logger.Debug("Min is greater than max in Constructor, max now will be equal to min");
+		if (max < min)
 			max = min;
-		}
 	}
 	
 	@Override
@@ -32,9 +36,16 @@ public class RangeMinMax implements IJsonObject{
 		return String.format("RangeMinMax{min: %f, max: %f}", min, max);
 	}
 	
-	public void Validate(final File file){
+	public void Validate(final File file) throws InvalidJsonException{
+		if (min == null) {
+			throw new InvalidJsonException("Missing min for " + this.toString(), file);
+		}
+		if (max == null) {
+			Logger.Debug("Missing max for " + this.toString() + ". Max will now be equal to min");
+			max = min;
+		}
 		if (max < min) {
-			Logger.Debug("Min is greater than max (or max has been omitted), max now will be equal to min");
+			Logger.Debug("Min is greater than max " + this.toString() + ". Max will now be equal to min");
 			max = min;
 		}
 	}

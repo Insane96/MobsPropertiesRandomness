@@ -77,8 +77,8 @@ public class Attribute implements IJsonObject{
 					if (!Utils.doesDimensionMatch(entity, attribute.dimensions))
 						continue;
 					
-					float min = attribute.modifier.min;
-					float max = attribute.modifier.max;
+					float min = attribute.modifier.GetMin();
+					float max = attribute.modifier.GetMax();
 					
 					if (attribute.affectedByDifficulty) {
 						
@@ -114,6 +114,7 @@ public class Attribute implements IJsonObject{
 						Logger.Warning("Attribute " + attribute.id + " not found for the entity, skipping the attribute");
 						continue;
 					}
+					
 					
 					float amount = MathHelper.nextFloat(random, min, max);
 					

@@ -70,16 +70,16 @@ public class Creeper implements IJsonObject {
 				
 				//Fuse
 				if (mob.creeper.fuse != null && compound.getShort("Fuse") == 30) {
-					int minFuse = (int) mob.creeper.fuse.min;
-					int maxFuse = (int) mob.creeper.fuse.max;
+					int minFuse = (int) mob.creeper.fuse.GetMin();
+					int maxFuse = (int) mob.creeper.fuse.GetMax();
 					int fuse = MathHelper.getInt(random, minFuse, maxFuse);
 					compound.setShort("Fuse", (short)fuse);
 				}
 				
 				//Explosion Radius
 				if (mob.creeper.explosionRadius != null && compound.getByte("ExplosionRadius") == 30) {
-					int minExplosionRadius = (int) mob.creeper.explosionRadius.min;
-					int maxExplosionRadius = (int) mob.creeper.explosionRadius.max;
+					int minExplosionRadius = (int) mob.creeper.explosionRadius.GetMin();
+					int maxExplosionRadius = (int) mob.creeper.explosionRadius.GetMax();
 					int explosionRadius = MathHelper.getInt(random, minExplosionRadius, maxExplosionRadius);
 					compound.setByte("ExplosionRadius", (byte) explosionRadius);
 				}

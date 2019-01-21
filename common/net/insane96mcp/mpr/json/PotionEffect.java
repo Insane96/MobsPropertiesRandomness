@@ -44,7 +44,7 @@ public class PotionEffect implements IJsonObject{
 		//Amplifier
 		if (amplifier == null) {
 			Logger.Debug("Missing Amplifier from " + this.toString() + ". Creating a new one with min and max set to 0");
-			amplifier = new RangeMinMax();
+			amplifier = new RangeMinMax(0, 0);
 		}
 		amplifier.Validate(file);
 		
@@ -73,8 +73,8 @@ public class PotionEffect implements IJsonObject{
 					if (!Utils.doesDimensionMatch(entity, potionEffect.dimensions))
 						continue;
 					
-					int minAmplifier = (int) potionEffect.amplifier.min;
-					int maxAmplifier = (int) potionEffect.amplifier.max;
+					int minAmplifier = (int) potionEffect.amplifier.GetMin();
+					int maxAmplifier = (int) potionEffect.amplifier.GetMax();
 					
 					Potion potion = Potion.getPotionFromResourceLocation(potionEffect.id);
 					net.minecraft.potion.PotionEffect effect = new net.minecraft.potion.PotionEffect(potion, 1000000, MathHelper.getInt(random, minAmplifier, maxAmplifier), potionEffect.ambient, !potionEffect.hideParticles);

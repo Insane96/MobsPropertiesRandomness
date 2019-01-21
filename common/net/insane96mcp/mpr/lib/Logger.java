@@ -15,9 +15,6 @@ import java.io.PrintWriter;
 import java.io.UnsupportedEncodingException;
 import java.io.Writer;
 
-import net.minecraftforge.fml.common.FMLCommonHandler;
-import net.minecraftforge.fml.common.Loader;
-
 public class Logger {
 	public static File logFile;
 	public static Writer writer;
@@ -38,7 +35,7 @@ public class Logger {
 	public static void Debug(String message) {
 		if (Properties.config.debug) {
 			try {
-				writer.write("[" + Loader.instance().getLoaderState() + "][" + FMLCommonHandler.instance().getEffectiveSide() + "][DEBUG] " + message + "\n");
+				writer.write("[DEBUG] " + message + "\n");
 				writer.flush();
 			} catch (IOException e) {
 				throw new RuntimeException(e);
@@ -48,7 +45,7 @@ public class Logger {
 	
 	public static void Info(String message) {
 		try {
-			writer.write("[" + Loader.instance().getLoaderState() + "][" + FMLCommonHandler.instance().getEffectiveSide() + "][INFO] " + message + "\n");
+			writer.write("[INFO] " + message + "\n");
 			writer.flush();
 		} catch (IOException e) {
 			throw new RuntimeException(e);
@@ -57,7 +54,7 @@ public class Logger {
 	
 	public static void Warning(String message) {
 		try {
-			writer.write("[" + Loader.instance().getLoaderState() + "][" + FMLCommonHandler.instance().getEffectiveSide() + "][WARNING] " + message + "\n");
+			writer.write("[WARNING] " + message + "\n");
 			writer.flush();
 		} catch (IOException e) {
 			throw new RuntimeException(e);
@@ -66,7 +63,7 @@ public class Logger {
 	
 	public static void Error(String message) {
 		try {
-			writer.write("[" + Loader.instance().getLoaderState() + "][" + FMLCommonHandler.instance().getEffectiveSide() + "][ERROR] " + message + "\n");
+			writer.write("[ERROR] " + message + "\n");
 			writer.flush();
 		} catch (IOException e) {
 			throw new RuntimeException(e);
