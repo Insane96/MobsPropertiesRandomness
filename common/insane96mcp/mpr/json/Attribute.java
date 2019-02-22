@@ -18,9 +18,11 @@ import insane96mcp.mpr.lib.Properties;
 import net.minecraft.entity.EntityLiving;
 import net.minecraft.entity.ai.attributes.AttributeModifier;
 import net.minecraft.entity.ai.attributes.IAttributeInstance;
+import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.world.EnumDifficulty;
 import net.minecraft.world.World;
+import net.minecraft.world.biome.Biome;
 
 public class Attribute implements IJsonObject{
 	public String id;
@@ -31,10 +33,12 @@ public class Attribute implements IJsonObject{
 	public boolean affectedByDifficulty;
 	public Difficulty difficulty;
 	public List<Integer> dimensions;
+	private List<String> biomes;
+	public transient List<Biome> biomesList;
 	
 	@Override
 	public String toString() {
-		return String.format("Attribute{id: %s, modifier: %s, isFlat: %b, affectedByDifficulty: %b, difficulty: %s}", id, modifier, isFlat, affectedByDifficulty, difficulty);
+		return String.format("Attribute{id: %s, modifier: %s, isFlat: %b, affectedByDifficulty: %b, difficulty: %s, dimensions: %s, biomes: %s}", id, modifier, isFlat, affectedByDifficulty, difficulty, dimensions, biomes);
 	}
 	
 	public void Validate(final File file) throws InvalidJsonException {
@@ -65,6 +69,18 @@ public class Attribute implements IJsonObject{
 		
 		if (dimensions == null)
 			dimensions = new ArrayList<Integer>();
+		
+		biomesList = new ArrayList<Biome>();
+		if (biomes == null) {
+			biomes = new ArrayList<String>();
+		}
+		else {
+			for (String biome : biomes) {
+				ResourceLocation biomeLoc = new ResourceLocation(biome);
+				Biome b = Biome.REGISTRY.getObject(biomeLoc);
+				biomesList.add(b);
+			}
+		}
 	}
 
 	public static void Apply(EntityLiving entity, World world, Random random) {
@@ -77,6 +93,9 @@ public class Attribute implements IJsonObject{
 					if (!Utils.doesDimensionMatch(entity, attribute.dimensions))
 						continue;
 					
+					if (!Utils.doesBiomeMatch(entity, attribute.biomesList))
+						continue;
+					
 					float min = attribute.modifier.GetMin();
 					float max = attribute.modifier.GetMax();
 					
@@ -85,20 +104,27 @@ public class Attribute implements IJsonObject{
 						EnumDifficulty difficulty = world.getDifficulty();
 						
 						if (!attribute.difficulty.isLocalDifficulty) {
-							if (difficulty.equals(EnumDifficulty.EASY)) {
+							switch (difficulty) {
+							case EASY:
 								if (!attribute.difficulty.affectsMaxOnly)
 									min *= Properties.config.difficulty.easyMultiplier;
 								max *= Properties.config.difficulty.easyMultiplier;
-							}
-							else if (difficulty.equals(EnumDifficulty.NORMAL)) {
+								break;
+
+							case NORMAL:
 								if (!attribute.difficulty.affectsMaxOnly)
 									min *= Properties.config.difficulty.normalMultiplier;
 								max *= Properties.config.difficulty.normalMultiplier;
-							}
-							else if (difficulty.equals(EnumDifficulty.HARD)) {
+								break;
+								
+							case HARD:
 								if (!attribute.difficulty.affectsMaxOnly)
 									min *= Properties.config.difficulty.hardMultiplier;
 								max *= Properties.config.difficulty.hardMultiplier;
+								break;
+								
+							default:
+								break;
 							}
 						}
 						else {
@@ -114,7 +140,6 @@ public class Attribute implements IJsonObject{
 						Logger.Warning("Attribute " + attribute.id + " not found for the entity, skipping the attribute");
 						continue;
 					}
-					
 					
 					float amount = MathHelper.nextFloat(random, min, max);
 					

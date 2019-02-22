@@ -82,7 +82,9 @@ public class Equipment implements IJsonObject{
 		if (!slot.chance.ChanceMatches(entity, world, random))
 			return;
 
-		Item choosenItem = slot.GetRandomItem(world);
+		Item choosenItem = slot.GetRandomItem(world, entity.getPosition());
+		if (choosenItem == null)
+			return;
 
 		ItemStack itemStack = new ItemStack(net.minecraft.item.Item.getByNameOrId(choosenItem.id), 1, choosenItem.data);
 

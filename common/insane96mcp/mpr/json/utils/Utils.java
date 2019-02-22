@@ -9,8 +9,10 @@ import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityList;
 import net.minecraft.entity.EntityLiving;
 import net.minecraft.util.ResourceLocation;
+import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.DimensionType;
 import net.minecraft.world.World;
+import net.minecraft.world.biome.Biome;
 
 public class Utils {
 	public static boolean doesDimensionMatch(Entity entity, List<Integer> dimensions) {
@@ -66,5 +68,18 @@ public class Utils {
 		
 		return false;
 		
+	}
+
+	public static boolean doesBiomeMatch(EntityLiving entity, List<Biome> biomes) {
+		if (biomes.isEmpty())
+			return true;
+		
+		BlockPos pos = entity.getPosition();
+		Biome entityBiome = entity.world.getChunk(pos).getBiome(pos, entity.world.getBiomeProvider());
+		for (Biome biome : biomes) {
+			if (biome.equals(entityBiome))
+				return true;
+		}
+		return false;
 	}
 }

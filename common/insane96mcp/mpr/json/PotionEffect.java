@@ -14,8 +14,10 @@ import insane96mcp.mpr.json.utils.Utils;
 import insane96mcp.mpr.lib.Logger;
 import net.minecraft.entity.EntityLiving;
 import net.minecraft.potion.Potion;
+import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.world.World;
+import net.minecraft.world.biome.Biome;
 
 public class PotionEffect implements IJsonObject{
 	public String id;
@@ -28,10 +30,12 @@ public class PotionEffect implements IJsonObject{
 	public boolean hideParticles;
 	
 	public List<Integer> dimensions;
+	private List<String> biomes;
+	public transient List<Biome> biomesList;
 	
 	@Override
 	public String toString() {
-		return String.format("PotionEffect{id: %s, amplifier: %s, chance: %s, ambient: %s, hideParticles: %s, dimensions: %s}", id, amplifier, chance, ambient, hideParticles, dimensions);
+		return String.format("PotionEffect{id: %s, amplifier: %s, chance: %s, ambient: %s, hideParticles: %s, dimensions: %s, biomes: %s}", id, amplifier, chance, ambient, hideParticles, dimensions, biomes);
 	}
 
 	public void Validate(final File file) throws InvalidJsonException {
@@ -58,6 +62,18 @@ public class PotionEffect implements IJsonObject{
 		
 		if (dimensions == null)
 			dimensions = new ArrayList<Integer>();
+		
+		biomesList = new ArrayList<Biome>();
+		if (biomes == null) {
+			biomes = new ArrayList<String>();
+		}
+		else {
+			for (String biome : biomes) {
+				ResourceLocation biomeLoc = new ResourceLocation(biome);
+				Biome b = Biome.REGISTRY.getObject(biomeLoc);
+				biomesList.add(b);
+			}
+		}
 	}
 
 	public static void Apply(EntityLiving entity, World world, Random random) {
@@ -71,6 +87,9 @@ public class PotionEffect implements IJsonObject{
 						continue;
 
 					if (!Utils.doesDimensionMatch(entity, potionEffect.dimensions))
+						continue;
+					
+					if (!Utils.doesBiomeMatch(entity, potionEffect.biomesList))
 						continue;
 					
 					int minAmplifier = (int) potionEffect.amplifier.GetMin();

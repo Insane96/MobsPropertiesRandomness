@@ -9,8 +9,11 @@ import com.google.gson.annotations.SerializedName;
 import insane96mcp.mpr.exceptions.InvalidJsonException;
 import insane96mcp.mpr.json.IJsonObject;
 import insane96mcp.mpr.lib.Logger;
+import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.WeightedRandom;
+import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
+import net.minecraft.world.biome.Biome;
 
 public class Item extends WeightedRandom.Item implements IJsonObject{
 
@@ -30,10 +33,12 @@ public class Item extends WeightedRandom.Item implements IJsonObject{
 	public String nbt;
 	
 	public List<Integer> dimensions;
+	private List<String> biomes;
+	public transient List<Biome> biomesList;
 	
 	@Override
 	public String toString() {
-		return String.format("Item{id: %s, data: %d, weight: %d, weightDifficulty: %s, dropChance: %f, enchantments: %s, attributes: %s, dimensions: %s, nbt: %s}", id, data, weight, weightDifficulty, dropChance, enchantments, attributes, dimensions, nbt);
+		return String.format("Item{id: %s, data: %d, weight: %d, weightDifficulty: %s, dropChance: %f, enchantments: %s, attributes: %s, dimensions: %s, biomes: %s, nbt: %s}", id, data, weight, weightDifficulty, dropChance, enchantments, attributes, dimensions, biomes, nbt);
 	}
 
 	public void Validate(final File file) throws InvalidJsonException{
@@ -79,6 +84,18 @@ public class Item extends WeightedRandom.Item implements IJsonObject{
 
 		if (dimensions == null)
 			dimensions = new ArrayList<Integer>();
+		
+		biomesList = new ArrayList<Biome>();
+		if (biomes == null) {
+			biomes = new ArrayList<String>();
+		}
+		else {
+			for (String biome : biomes) {
+				ResourceLocation biomeLoc = new ResourceLocation(biome);
+				Biome b = Biome.REGISTRY.getObject(biomeLoc);
+				biomesList.add(b);
+			}
+		}
 	}
 	
 	public boolean HasDimension(World world) {
@@ -90,6 +107,19 @@ public class Item extends WeightedRandom.Item implements IJsonObject{
 		}
 		
 		return hasDimension;
+	}
+	
+	public boolean HasBiome(World world, BlockPos pos) {
+		boolean hasBiome = this.biomesList.isEmpty();
+		
+		Biome b = world.getBiome(pos);
+		
+		for (Biome biome : biomesList) {
+			if (biome.equals(b))
+				hasBiome = true;
+		}
+		
+		return hasBiome;
 	}
 	
 	public Item GetWeightWithDifficulty(World world) {

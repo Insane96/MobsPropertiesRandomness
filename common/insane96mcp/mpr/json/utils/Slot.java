@@ -10,6 +10,7 @@ import insane96mcp.mpr.exceptions.InvalidJsonException;
 import insane96mcp.mpr.json.IJsonObject;
 import insane96mcp.mpr.lib.Logger;
 import net.minecraft.util.WeightedRandom;
+import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 
 public class Slot implements IJsonObject{
@@ -26,17 +27,26 @@ public class Slot implements IJsonObject{
 		return String.format("Slot{overrideVanilla: %s, replaceOnly: %s, chance: %s, items: %s}", overrideVanilla, replaceOnly, chance, items);
 	}
 	
-	private List<Item> GetItemsWithWeightDifficulty(World world){
+	private List<Item> GetItemsWithWeightDifficulty(World world, BlockPos pos){
 		ArrayList<Item> items = new ArrayList<Item>();
 		for (Item item : this.items) {
-			if (item.HasDimension(world))
+			if (item.HasDimension(world) && item.HasBiome(world, pos))
 				items.add(item.GetWeightWithDifficulty(world));
 		}
 		return items;
 	}
 	
-	public Item GetRandomItem(World world) {
-		return WeightedRandom.getRandomItem(world.rand, GetItemsWithWeightDifficulty(world));
+	/**
+	 * Returns a random item from the pool based of weights, dimensions whitelist and biomes whitelist
+	 * @param world
+	 * @param pos
+	 * @return an Item or null if no items were available
+	 */
+	public Item GetRandomItem(World world, BlockPos pos) {
+		List<Item> items = GetItemsWithWeightDifficulty(world, pos);
+		if (items.isEmpty())
+			return null;
+		return WeightedRandom.getRandomItem(world.rand, items);
 	}
 
 	public void Validate(final File file) throws InvalidJsonException{
