@@ -20,16 +20,16 @@ public class Slot implements IJsonObject{
 	@SerializedName("replace_only")
 	public boolean replaceOnly;
 	public Chance chance;
-	public ArrayList<Item> items;
+	public ArrayList<JItem> items;
 	
 	@Override
 	public String toString() {
 		return String.format("Slot{overrideVanilla: %s, replaceOnly: %s, chance: %s, items: %s}", overrideVanilla, replaceOnly, chance, items);
 	}
 	
-	private List<Item> GetItemsWithWeightDifficulty(World world, BlockPos pos){
-		ArrayList<Item> items = new ArrayList<Item>();
-		for (Item item : this.items) {
+	private List<JItem> GetItemsWithWeightDifficulty(World world, BlockPos pos){
+		ArrayList<JItem> items = new ArrayList<JItem>();
+		for (JItem item : this.items) {
 			if (item.HasDimension(world) && item.HasBiome(world, pos))
 				items.add(item.GetWeightWithDifficulty(world));
 		}
@@ -42,8 +42,8 @@ public class Slot implements IJsonObject{
 	 * @param pos
 	 * @return an Item or null if no items were available
 	 */
-	public Item GetRandomItem(World world, BlockPos pos) {
-		List<Item> items = GetItemsWithWeightDifficulty(world, pos);
+	public JItem GetRandomItem(World world, BlockPos pos) {
+		List<JItem> items = GetItemsWithWeightDifficulty(world, pos);
 		if (items.isEmpty())
 			return null;
 		return WeightedRandom.getRandomItem(world.rand, items);
@@ -64,7 +64,7 @@ public class Slot implements IJsonObject{
 		if (items == null || items.isEmpty())
 			throw new InvalidJsonException("There's no item set or item is missing in the slot " + this, file);
 		else {
-			for (Item item : items) {
+			for (JItem item : items) {
 				item.Validate(file);
 			}
 		}

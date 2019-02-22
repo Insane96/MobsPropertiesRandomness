@@ -6,15 +6,16 @@ import java.util.Random;
 import com.google.gson.annotations.SerializedName;
 
 import insane96mcp.mpr.exceptions.InvalidJsonException;
-import insane96mcp.mpr.json.utils.Enchantment;
-import insane96mcp.mpr.json.utils.Item;
 import insane96mcp.mpr.json.utils.ItemAttribute;
+import insane96mcp.mpr.json.utils.JEnchantment;
+import insane96mcp.mpr.json.utils.JItem;
 import insane96mcp.mpr.json.utils.Slot;
 import insane96mcp.mpr.json.utils.Utils;
 import insane96mcp.mpr.lib.Logger;
 import net.minecraft.entity.EntityLiving;
 import net.minecraft.entity.ai.attributes.AttributeModifier;
 import net.minecraft.inventory.EntityEquipmentSlot;
+import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.JsonToNBT;
 import net.minecraft.nbt.NBTException;
@@ -82,11 +83,11 @@ public class Equipment implements IJsonObject{
 		if (!slot.chance.ChanceMatches(entity, world, random))
 			return;
 
-		Item choosenItem = slot.GetRandomItem(world, entity.getPosition());
+		JItem choosenItem = slot.GetRandomItem(world, entity.getPosition());
 		if (choosenItem == null)
 			return;
 
-		ItemStack itemStack = new ItemStack(net.minecraft.item.Item.getByNameOrId(choosenItem.id), 1, choosenItem.data);
+		ItemStack itemStack = new ItemStack(Item.getByNameOrId(choosenItem.id), 1, choosenItem.data);
 
 		NBTTagCompound tag = new NBTTagCompound();
 		
@@ -104,7 +105,7 @@ public class Equipment implements IJsonObject{
 		
 		itemStack.deserializeNBT(tagCompound);
 			
-		Enchantment.Apply(entity, world, random, choosenItem, itemStack);
+		JEnchantment.Apply(entity, world, random, choosenItem, itemStack);
 		
 		entity.setItemStackToSlot(entityEquipmentSlot, itemStack);
 	

@@ -14,12 +14,13 @@ import insane96mcp.mpr.json.utils.Utils;
 import insane96mcp.mpr.lib.Logger;
 import net.minecraft.entity.EntityLiving;
 import net.minecraft.potion.Potion;
+import net.minecraft.potion.PotionEffect;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.world.World;
 import net.minecraft.world.biome.Biome;
 
-public class PotionEffect implements IJsonObject{
+public class JPotionEffect implements IJsonObject{
 	public String id;
 	public RangeMinMax amplifier;
 
@@ -82,7 +83,7 @@ public class PotionEffect implements IJsonObject{
 		
 		for (Mob mob : Mob.mobs) {
 			if (Utils.MatchesEntity(entity, world, random, mob)) {
-				for (PotionEffect potionEffect : mob.potionEffects) {
+				for (JPotionEffect potionEffect : mob.potionEffects) {
 					if (!potionEffect.chance.ChanceMatches(entity, world, random))
 						continue;
 
@@ -96,7 +97,7 @@ public class PotionEffect implements IJsonObject{
 					int maxAmplifier = (int) potionEffect.amplifier.GetMax();
 					
 					Potion potion = Potion.getPotionFromResourceLocation(potionEffect.id);
-					net.minecraft.potion.PotionEffect effect = new net.minecraft.potion.PotionEffect(potion, 1000000, MathHelper.getInt(random, minAmplifier, maxAmplifier), potionEffect.ambient, !potionEffect.hideParticles);
+					PotionEffect effect = new PotionEffect(potion, 1000000, MathHelper.getInt(random, minAmplifier, maxAmplifier), potionEffect.ambient, !potionEffect.hideParticles);
 					entity.addPotionEffect(effect);
 				}
 			}

@@ -9,6 +9,7 @@ import com.google.common.collect.Lists;
 import insane96mcp.mpr.exceptions.InvalidJsonException;
 import insane96mcp.mpr.json.IJsonObject;
 import insane96mcp.mpr.lib.Logger;
+import net.minecraft.enchantment.Enchantment;
 import net.minecraft.enchantment.EnchantmentData;
 import net.minecraft.entity.EntityLiving;
 import net.minecraft.init.Items;
@@ -17,7 +18,7 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.world.World;
 
-public class Enchantment implements IJsonObject{
+public class JEnchantment implements IJsonObject{
 
 	public String id;
 	public RangeMinMax level;
@@ -31,7 +32,7 @@ public class Enchantment implements IJsonObject{
 	public void Validate(final File file) throws InvalidJsonException{
 		if (id == null)
 			throw new InvalidJsonException("Missing Enchantment ID for " + this, file);
-		else if (id != "random" && net.minecraft.enchantment.Enchantment.getEnchantmentByLocation(id) == null)
+		else if (id != "random" && Enchantment.getEnchantmentByLocation(id) == null)
 			Logger.Warning("Failed to find enchantment with id " + id);
 		
 		if (level != null)
@@ -48,17 +49,17 @@ public class Enchantment implements IJsonObject{
 		
 	}
 	
-	public static void Apply(EntityLiving entity, World world, Random random, Item item, ItemStack itemStack) {
-		for (Enchantment enchantment : item.enchantments) {
-			if (!enchantment.chance.ChanceMatches(entity, world, random))
+	public static void Apply(EntityLiving entity, World world, Random random, JItem item, ItemStack itemStack) {
+		for (JEnchantment jEnchantment : item.enchantments) {
+			if (!jEnchantment.chance.ChanceMatches(entity, world, random))
 				continue;
 
-			if (enchantment.id.equals("random")) {
-	            List<net.minecraft.enchantment.Enchantment> list = Lists.<net.minecraft.enchantment.Enchantment>newArrayList();
+			if (jEnchantment.id.equals("random")) {
+	            List<Enchantment> list = Lists.<Enchantment>newArrayList();
 
-	            for (net.minecraft.enchantment.Enchantment ench : net.minecraft.enchantment.Enchantment.REGISTRY) {
-	                if (itemStack.getItem() == Items.ENCHANTED_BOOK || ench.canApply(itemStack)) {
-	                    list.add(ench);
+	            for (Enchantment enchantment : Enchantment.REGISTRY) {
+	                if (itemStack.getItem() == Items.ENCHANTED_BOOK || enchantment.canApply(itemStack)) {
+	                    list.add(enchantment);
 	                }
 	            }
 
@@ -68,17 +69,17 @@ public class Enchantment implements IJsonObject{
 	            }
 
 	            else {
-		            net.minecraft.enchantment.Enchantment choosen = list.get(random.nextInt(list.size()));
-		            int level = MathHelper.getInt(random, choosen.getMinLevel(), choosen.getMaxLevel());
+		            Enchantment choosenEnch = list.get(random.nextInt(list.size()));
+		            int level = MathHelper.getInt(random, choosenEnch.getMinLevel(), choosenEnch.getMaxLevel());
 	            	if (itemStack.getItem() == Items.ENCHANTED_BOOK)
-	                    ItemEnchantedBook.addEnchantment(itemStack, new EnchantmentData(choosen, level));
+	                    ItemEnchantedBook.addEnchantment(itemStack, new EnchantmentData(choosenEnch, level));
 	                else
-	                	itemStack.addEnchantment(choosen, level);
+	                	itemStack.addEnchantment(choosenEnch, level);
 	            }
 			}
 			else {
-				int level = MathHelper.getInt(random, (int)enchantment.level.GetMin(), (int)enchantment.level.GetMax());
-				itemStack.addEnchantment(net.minecraft.enchantment.Enchantment.getEnchantmentByLocation(enchantment.id), level);
+				int level = MathHelper.getInt(random, (int)jEnchantment.level.GetMin(), (int)jEnchantment.level.GetMax());
+				itemStack.addEnchantment(Enchantment.getEnchantmentByLocation(jEnchantment.id), level);
 			}
 		}
 	}

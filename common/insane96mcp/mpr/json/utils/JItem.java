@@ -9,15 +9,16 @@ import com.google.gson.annotations.SerializedName;
 import insane96mcp.mpr.exceptions.InvalidJsonException;
 import insane96mcp.mpr.json.IJsonObject;
 import insane96mcp.mpr.lib.Logger;
+import net.minecraft.item.Item;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.WeightedRandom;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 import net.minecraft.world.biome.Biome;
 
-public class Item extends WeightedRandom.Item implements IJsonObject{
+public class JItem extends WeightedRandom.Item implements IJsonObject{
 
-	public Item(int itemWeightIn) {
+	public JItem(int itemWeightIn) {
 		super(itemWeightIn);
 	}
 
@@ -28,7 +29,7 @@ public class Item extends WeightedRandom.Item implements IJsonObject{
 	private WeightDifficulty weightDifficulty;
 	@SerializedName("drop_chance")
 	public float dropChance;
-	public List<Enchantment> enchantments;
+	public List<JEnchantment> enchantments;
 	public List<ItemAttribute> attributes;
 	public String nbt;
 	
@@ -44,7 +45,7 @@ public class Item extends WeightedRandom.Item implements IJsonObject{
 	public void Validate(final File file) throws InvalidJsonException{
 		if (id == null)
 			throw new InvalidJsonException("Missing Id for " + this, file);
-		else if (net.minecraft.item.Item.getByNameOrId(id) == null)
+		else if (Item.getByNameOrId(id) == null)
 			Logger.Warning("Failed to find item with id " + id);
 		
 		if (weight <= 0)
@@ -65,10 +66,10 @@ public class Item extends WeightedRandom.Item implements IJsonObject{
 		}
 		
 		if (enchantments == null)
-			enchantments = new ArrayList<Enchantment>();
+			enchantments = new ArrayList<JEnchantment>();
 		
 		if (!enchantments.isEmpty()) {
-			for (Enchantment enchantment : enchantments) {
+			for (JEnchantment enchantment : enchantments) {
 				enchantment.Validate(file);
 			}
 		}
@@ -122,8 +123,8 @@ public class Item extends WeightedRandom.Item implements IJsonObject{
 		return hasBiome;
 	}
 	
-	public Item GetWeightWithDifficulty(World world) {
-		Item item2 = this.copy();
+	public JItem GetWeightWithDifficulty(World world) {
+		JItem item2 = this.copy();
 		
 		switch (world.getDifficulty()) {
 			case EASY:
@@ -146,20 +147,20 @@ public class Item extends WeightedRandom.Item implements IJsonObject{
 	}
 
 	/**
-	 * Returns a copy of the Item
-	 * @return a copy of the Item
+	 * Returns a copy of the JItem
+	 * @return a copy of the JItem
 	 */
-	protected Item copy() {
-		Item item = new Item(this.weight);
-		item.attributes = this.attributes;
-		item.data = this.data;
-		item.dropChance = this.dropChance;
-		item.enchantments = this.enchantments;
-		item.id = this.id;
-		item.itemWeight = this.itemWeight;
-		item.nbt = this.nbt;
-		item.weight = this.weight;
-		item.weightDifficulty = this.weightDifficulty;
-		return item;
+	protected JItem copy() {
+		JItem jItem = new JItem(this.weight);
+		jItem.attributes = this.attributes;
+		jItem.data = this.data;
+		jItem.dropChance = this.dropChance;
+		jItem.enchantments = this.enchantments;
+		jItem.id = this.id;
+		jItem.itemWeight = this.itemWeight;
+		jItem.nbt = this.nbt;
+		jItem.weight = this.weight;
+		jItem.weightDifficulty = this.weightDifficulty;
+		return jItem;
 	}
 }

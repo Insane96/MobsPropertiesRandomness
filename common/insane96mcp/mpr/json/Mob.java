@@ -31,7 +31,7 @@ public class Mob implements IJsonObject{
 	public String group;
 	
 	@SerializedName("potion_effects")
-	public List<PotionEffect> potionEffects;
+	public List<JPotionEffect> potionEffects;
 	
 	public List<Attribute> attributes;
 	
@@ -110,8 +110,8 @@ public class Mob implements IJsonObject{
 		}
 		
 		if (potionEffects == null)
-			potionEffects = new ArrayList<PotionEffect>();
-		for (PotionEffect potionEffect : potionEffects) {
+			potionEffects = new ArrayList<JPotionEffect>();
+		for (JPotionEffect potionEffect : potionEffects) {
 			potionEffect.Validate(file);
 		}
 		
@@ -159,7 +159,7 @@ public class Mob implements IJsonObject{
 		if (shouldNotBeProcessed)
 			return;
 		
-		PotionEffect.Apply(entityLiving, world, random);
+		JPotionEffect.Apply(entityLiving, world, random);
 		Attribute.Apply(entityLiving, world, random);
 		Equipment.Apply(entityLiving, world, random);
 		
