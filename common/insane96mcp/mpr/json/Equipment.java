@@ -103,13 +103,8 @@ public class Equipment implements IJsonObject{
 		tagCompound.setTag("tag", tag);
 		
 		itemStack.deserializeNBT(tagCompound);
-		
-		for (Enchantment enchantment : choosenItem.enchantments) {
-			if (!enchantment.chance.ChanceMatches(entity, world, random))
-				continue;
-			int level = MathHelper.getInt(random, (int)enchantment.level.GetMin(), (int)enchantment.level.GetMax());
-			itemStack.addEnchantment(net.minecraft.enchantment.Enchantment.getEnchantmentByLocation(enchantment.id), level);
-		}
+			
+		Enchantment.Apply(entity, world, random, choosenItem, itemStack);
 		
 		entity.setItemStackToSlot(entityEquipmentSlot, itemStack);
 	
