@@ -109,11 +109,11 @@ public class JsonAttribute implements IJsonObject{
 							case EASY:
 								multiplier *= Properties.config.difficulty.easyMultiplier;
 								break;
-							case HARD:
-								multiplier *= Properties.config.difficulty.hardMultiplier;
-								break;
 							case NORMAL:
 								multiplier *= Properties.config.difficulty.normalMultiplier;
+								break;
+							case HARD:
+								multiplier *= Properties.config.difficulty.hardMultiplier;
 								break;
 							default:
 								break;
