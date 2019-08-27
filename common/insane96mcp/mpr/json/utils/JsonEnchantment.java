@@ -37,7 +37,7 @@ public class JsonEnchantment implements IJsonObject{
 		
 		if (level != null)
 			level.Validate(file);
-		else {
+		else if (id != "random"){
 			Logger.Debug("Missing Enchantment Level for " + this + ". Will default to 1");
 			level = new JsonRangeMinMax(1, 1);
 		}
