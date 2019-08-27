@@ -6,7 +6,7 @@ import insane96mcp.mpr.exceptions.InvalidJsonException;
 import insane96mcp.mpr.json.IJsonObject;
 import insane96mcp.mpr.lib.Logger;
 
-public class RangeMinMax implements IJsonObject{
+public class JsonRangeMinMax implements IJsonObject{
 	
 	private Float min;
 	
@@ -20,11 +20,11 @@ public class RangeMinMax implements IJsonObject{
 		return max;
 	}
 	
-	public RangeMinMax(int min, int max) {
+	public JsonRangeMinMax(int min, int max) {
 		this((float) min, (float) max);
 	}
 	
-	public RangeMinMax(float min, float max) {
+	public JsonRangeMinMax(float min, float max) {
 		this.min = min;
 		this.max = max;
 		if (max < min)

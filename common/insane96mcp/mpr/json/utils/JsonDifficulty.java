@@ -7,14 +7,14 @@ import com.google.gson.annotations.SerializedName;
 import insane96mcp.mpr.json.IJsonObject;
 import insane96mcp.mpr.lib.Logger;
 
-public class Difficulty implements IJsonObject{
+public class JsonDifficulty implements IJsonObject{
 	@SerializedName("affects_max_only")
 	public boolean affectsMaxOnly;
 	@SerializedName("is_local_difficulty")
 	public boolean isLocalDifficulty;
 	public float multiplier;
 	
-	public Difficulty() {
+	public JsonDifficulty() {
 		affectsMaxOnly = false;
 		isLocalDifficulty = false;
 		multiplier = 1.0f;

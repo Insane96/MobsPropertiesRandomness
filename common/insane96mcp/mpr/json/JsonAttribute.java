@@ -10,9 +10,9 @@ import com.google.gson.annotations.SerializedName;
 
 import insane96mcp.mpr.MobsPropertiesRandomness;
 import insane96mcp.mpr.exceptions.InvalidJsonException;
-import insane96mcp.mpr.json.utils.Difficulty;
-import insane96mcp.mpr.json.utils.RangeMinMax;
-import insane96mcp.mpr.json.utils.Utils;
+import insane96mcp.mpr.json.utils.JsonDifficulty;
+import insane96mcp.mpr.json.utils.JsonRangeMinMax;
+import insane96mcp.mpr.json.utils.JsonUtils;
 import insane96mcp.mpr.lib.Logger;
 import insane96mcp.mpr.lib.Properties;
 import net.minecraft.entity.EntityLiving;
@@ -24,14 +24,14 @@ import net.minecraft.world.EnumDifficulty;
 import net.minecraft.world.World;
 import net.minecraft.world.biome.Biome;
 
-public class Attribute implements IJsonObject{
+public class JsonAttribute implements IJsonObject{
 	public String id;
-	public RangeMinMax modifier;
+	public JsonRangeMinMax modifier;
 	@SerializedName("is_flat")
 	public boolean isFlat;
 	@SerializedName("affected_by_difficulty")
 	public boolean affectedByDifficulty;
-	public Difficulty difficulty;
+	public JsonDifficulty difficulty;
 	public List<Integer> dimensions;
 	private List<String> biomes;
 	public transient List<Biome> biomesList;
@@ -65,7 +65,7 @@ public class Attribute implements IJsonObject{
 		}
 		else
 			if (difficulty == null) 
-				difficulty = new Difficulty();
+				difficulty = new JsonDifficulty();
 		
 		if (dimensions == null)
 			dimensions = new ArrayList<Integer>();
@@ -87,13 +87,13 @@ public class Attribute implements IJsonObject{
 		if (world.isRemote)
 			return;
 		
-		for (Mob mob : Mob.mobs) {
-			if (Utils.MatchesEntity(entity, world, random, mob)) {
-				for (Attribute attribute : mob.attributes) {
-					if (!Utils.doesDimensionMatch(entity, attribute.dimensions))
+		for (JsonMob mob : JsonMob.mobs) {
+			if (JsonUtils.matchesEntity(entity, world, random, mob)) {
+				for (JsonAttribute attribute : mob.attributes) {
+					if (!JsonUtils.doesDimensionMatch(entity, attribute.dimensions))
 						continue;
 					
-					if (!Utils.doesBiomeMatch(entity, attribute.biomesList))
+					if (!JsonUtils.doesBiomeMatch(entity, attribute.biomesList))
 						continue;
 					
 					float min = attribute.modifier.GetMin();

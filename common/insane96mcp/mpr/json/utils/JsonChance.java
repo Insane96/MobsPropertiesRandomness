@@ -13,7 +13,7 @@ import net.minecraft.entity.EntityLiving;
 import net.minecraft.world.EnumDifficulty;
 import net.minecraft.world.World;
 
-public class Chance implements IJsonObject {
+public class JsonChance implements IJsonObject {
 	public float amount;
 	@SerializedName("affected_by_difficulty")
 	public boolean affectedByDifficulty;

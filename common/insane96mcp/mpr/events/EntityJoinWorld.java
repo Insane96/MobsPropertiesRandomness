@@ -1,7 +1,7 @@
 package insane96mcp.mpr.events;
 
 import insane96mcp.mpr.MobsPropertiesRandomness;
-import insane96mcp.mpr.json.Mob;
+import insane96mcp.mpr.json.JsonMob;
 import net.minecraftforge.event.entity.EntityJoinWorldEvent;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
@@ -11,6 +11,6 @@ public class EntityJoinWorld {
 	
 	@SubscribeEvent
 	public static void EventEntityJoinWorld(EntityJoinWorldEvent event) {
-		Mob.Apply(event);
+		JsonMob.Apply(event);
 	}
 }

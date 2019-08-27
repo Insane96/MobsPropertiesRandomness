@@ -7,8 +7,8 @@ import com.google.gson.annotations.SerializedName;
 
 import insane96mcp.mpr.exceptions.InvalidJsonException;
 import insane96mcp.mpr.json.IJsonObject;
-import insane96mcp.mpr.json.Mob;
-import insane96mcp.mpr.json.utils.RangeMinMax;
+import insane96mcp.mpr.json.JsonMob;
+import insane96mcp.mpr.json.utils.JsonRangeMinMax;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityList;
 import net.minecraft.entity.monster.EntityGhast;
@@ -17,9 +17,9 @@ import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.world.World;
 
-public class Ghast implements IJsonObject{
+public class JsonGhast implements IJsonObject{
 	@SerializedName("explosion_power")
-	public RangeMinMax explosionPower;
+	public JsonRangeMinMax explosionPower;
 	
 	@Override
 	public String toString() {
@@ -39,7 +39,7 @@ public class Ghast implements IJsonObject{
 		NBTTagCompound compound = new NBTTagCompound();
 		entityGhast.writeEntityToNBT(compound);
 		
-		for (Mob mob : Mob.mobs) {
+		for (JsonMob mob : JsonMob.mobs) {
 			if (mob.ghast == null)
 				continue;
 			

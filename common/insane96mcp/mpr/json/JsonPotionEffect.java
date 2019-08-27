@@ -8,9 +8,9 @@ import java.util.Random;
 import com.google.gson.annotations.SerializedName;
 
 import insane96mcp.mpr.exceptions.InvalidJsonException;
-import insane96mcp.mpr.json.utils.Chance;
-import insane96mcp.mpr.json.utils.RangeMinMax;
-import insane96mcp.mpr.json.utils.Utils;
+import insane96mcp.mpr.json.utils.JsonChance;
+import insane96mcp.mpr.json.utils.JsonRangeMinMax;
+import insane96mcp.mpr.json.utils.JsonUtils;
 import insane96mcp.mpr.lib.Logger;
 import net.minecraft.entity.EntityLiving;
 import net.minecraft.potion.Potion;
@@ -20,11 +20,11 @@ import net.minecraft.util.math.MathHelper;
 import net.minecraft.world.World;
 import net.minecraft.world.biome.Biome;
 
-public class JPotionEffect implements IJsonObject{
+public class JsonPotionEffect implements IJsonObject{
 	public String id;
-	public RangeMinMax amplifier;
+	public JsonRangeMinMax amplifier;
 
-	public Chance chance;
+	public JsonChance chance;
 	
 	public boolean ambient;
 	@SerializedName("hide_particles")
@@ -49,7 +49,7 @@ public class JPotionEffect implements IJsonObject{
 		//Amplifier
 		if (amplifier == null) {
 			Logger.Debug("Missing Amplifier from " + this.toString() + ". Creating a new one with min and max set to 0");
-			amplifier = new RangeMinMax(0, 0);
+			amplifier = new JsonRangeMinMax(0, 0);
 		}
 		amplifier.Validate(file);
 		
@@ -81,16 +81,16 @@ public class JPotionEffect implements IJsonObject{
 		if (world.isRemote)
 			return;
 		
-		for (Mob mob : Mob.mobs) {
-			if (Utils.MatchesEntity(entity, world, random, mob)) {
-				for (JPotionEffect potionEffect : mob.potionEffects) {
+		for (JsonMob mob : JsonMob.mobs) {
+			if (JsonUtils.matchesEntity(entity, world, random, mob)) {
+				for (JsonPotionEffect potionEffect : mob.potionEffects) {
 					if (!potionEffect.chance.ChanceMatches(entity, world, random))
 						continue;
 
-					if (!Utils.doesDimensionMatch(entity, potionEffect.dimensions))
+					if (!JsonUtils.doesDimensionMatch(entity, potionEffect.dimensions))
 						continue;
 					
-					if (!Utils.doesBiomeMatch(entity, potionEffect.biomesList))
+					if (!JsonUtils.doesBiomeMatch(entity, potionEffect.biomesList))
 						continue;
 					
 					int minAmplifier = (int) potionEffect.amplifier.GetMin();

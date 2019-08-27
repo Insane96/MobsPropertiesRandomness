@@ -1,8 +1,8 @@
 package insane96mcp.mpr.commands;
 
 import insane96mcp.mpr.MobsPropertiesRandomness;
-import insane96mcp.mpr.json.Group;
-import insane96mcp.mpr.json.Mob;
+import insane96mcp.mpr.json.JsonGroup;
+import insane96mcp.mpr.json.JsonMob;
 import net.minecraft.command.CommandBase;
 import net.minecraft.command.CommandException;
 import net.minecraft.command.ICommandSender;
@@ -29,7 +29,7 @@ public class ReloadJson extends CommandBase {
 	@Override
 	public void execute(MinecraftServer server, ICommandSender sender, String[] args) throws CommandException {
 		sender.sendMessage(new TextComponentTranslation(MobsPropertiesRandomness.RESOURCE_PREFIX + "reload_json"));
-		boolean correctlyReloaded = Group.LoadGroups() && Mob.LoadJsons();
+		boolean correctlyReloaded = JsonGroup.LoadGroups() && JsonMob.LoadJsons();
 		if (!correctlyReloaded) 
 			sender.sendMessage(new TextComponentTranslation(MobsPropertiesRandomness.RESOURCE_PREFIX + "json_reloaded_error"));
 		else

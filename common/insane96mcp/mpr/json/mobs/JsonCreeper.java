@@ -9,9 +9,9 @@ import com.google.gson.annotations.SerializedName;
 import insane96mcp.mpr.MobsPropertiesRandomness;
 import insane96mcp.mpr.exceptions.InvalidJsonException;
 import insane96mcp.mpr.json.IJsonObject;
-import insane96mcp.mpr.json.Mob;
-import insane96mcp.mpr.json.utils.Chance;
-import insane96mcp.mpr.json.utils.RangeMinMax;
+import insane96mcp.mpr.json.JsonMob;
+import insane96mcp.mpr.json.utils.JsonChance;
+import insane96mcp.mpr.json.utils.JsonRangeMinMax;
 import insane96mcp.mpr.lib.Reflection;
 import insane96mcp.mpr.network.CreeperFuse;
 import insane96mcp.mpr.network.PacketHandler;
@@ -27,12 +27,12 @@ import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.world.World;
 
-public class Creeper implements IJsonObject {
-	public RangeMinMax fuse;
+public class JsonCreeper implements IJsonObject {
+	public JsonRangeMinMax fuse;
 	@SerializedName("explosion_radius")
-	public RangeMinMax explosionRadius;
+	public JsonRangeMinMax explosionRadius;
 	@SerializedName("powered_chance")
-	public Chance poweredChance;
+	public JsonChance poweredChance;
 	
 	@Override
 	public String toString() {
@@ -58,12 +58,12 @@ public class Creeper implements IJsonObject {
 			return;
 		}
 		
-		for (Mob mob : Mob.mobs) {
+		for (JsonMob mob : JsonMob.mobs) {
 			if (mob.creeper == null)
 				continue;
 			
 			if (EntityList.isMatchingName(entityCreeper, new ResourceLocation(mob.mobId))) {
-				Creeper creeper = mob.creeper;
+				JsonCreeper creeper = mob.creeper;
 				
 				NBTTagCompound compound = new NBTTagCompound();
 				entityCreeper.writeEntityToNBT(compound);

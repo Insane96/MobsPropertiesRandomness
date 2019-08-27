@@ -11,8 +11,8 @@ import com.google.gson.annotations.SerializedName;
 
 import insane96mcp.mpr.MobsPropertiesRandomness;
 import insane96mcp.mpr.exceptions.InvalidJsonException;
-import insane96mcp.mpr.json.mobs.Creeper;
-import insane96mcp.mpr.json.mobs.Ghast;
+import insane96mcp.mpr.json.mobs.JsonCreeper;
+import insane96mcp.mpr.json.mobs.JsonGhast;
 import insane96mcp.mpr.lib.Logger;
 import insane96mcp.mpr.utils.Utils;
 import net.minecraft.entity.Entity;
@@ -23,22 +23,22 @@ import net.minecraft.util.ResourceLocation;
 import net.minecraft.world.World;
 import net.minecraftforge.event.entity.EntityJoinWorldEvent;
 
-public class Mob implements IJsonObject{
-	public static List<Mob> mobs = new ArrayList<Mob>();
+public class JsonMob implements IJsonObject{
+	public static List<JsonMob> mobs = new ArrayList<JsonMob>();
 	
 	@SerializedName("mob_id")
 	public String mobId;
 	public String group;
 	
 	@SerializedName("potion_effects")
-	public List<JPotionEffect> potionEffects;
+	public List<JsonPotionEffect> potionEffects;
 	
-	public List<Attribute> attributes;
+	public List<JsonAttribute> attributes;
 	
-	public Equipment equipment;
+	public JsonEquipment equipment;
 	
-	public Creeper creeper;
-	public Ghast ghast;
+	public JsonCreeper creeper;
+	public JsonGhast ghast;
 	
 	@Override
 	public String toString() {
@@ -70,7 +70,7 @@ public class Mob implements IJsonObject{
 			try {
 				Logger.Debug("Reading file " + file.getName());
 				FileReader fileReader = new FileReader(file);
-				Mob mob = gson.fromJson(fileReader, Mob.class);
+				JsonMob mob = gson.fromJson(fileReader, JsonMob.class);
 				Logger.Debug(mob.toString());
 				mob.Validate(file);
 				mobs.add(mob);
@@ -105,24 +105,24 @@ public class Mob implements IJsonObject{
 		}
 		
 		if (group != null) {
-			if (!Group.DoesGroupExist(group))
+			if (!JsonGroup.DoesGroupExist(group))
 				throw new InvalidJsonException("group " + group + " does not exist", file);
 		}
 		
 		if (potionEffects == null)
-			potionEffects = new ArrayList<JPotionEffect>();
-		for (JPotionEffect potionEffect : potionEffects) {
+			potionEffects = new ArrayList<JsonPotionEffect>();
+		for (JsonPotionEffect potionEffect : potionEffects) {
 			potionEffect.Validate(file);
 		}
 		
 		if (attributes == null)
-			attributes = new ArrayList<Attribute>();
-		for (Attribute attribute : attributes) {
+			attributes = new ArrayList<JsonAttribute>();
+		for (JsonAttribute attribute : attributes) {
 			attribute.Validate(file);
 		}
 		
 		if (equipment == null)
-			equipment = new Equipment();
+			equipment = new JsonEquipment();
 		equipment.Validate(file);
 		
 		//Mob specific validations
@@ -134,14 +134,14 @@ public class Mob implements IJsonObject{
 	}
 
 	public static void Apply(EntityJoinWorldEvent event) {
-		if (Mob.mobs.isEmpty())
+		if (JsonMob.mobs.isEmpty())
 			return;
 		
 		Entity entity = event.getEntity();
 		World world = event.getWorld();
 		Random random = world.rand;
 		
-		Creeper.FixAreaEffectClouds(entity);
+		JsonCreeper.FixAreaEffectClouds(entity);
 		
 		if (!(entity instanceof EntityLiving)) 
 			return;
@@ -159,12 +159,12 @@ public class Mob implements IJsonObject{
 		if (shouldNotBeProcessed)
 			return;
 		
-		JPotionEffect.Apply(entityLiving, world, random);
-		Attribute.Apply(entityLiving, world, random);
-		Equipment.Apply(entityLiving, world, random);
+		JsonPotionEffect.Apply(entityLiving, world, random);
+		JsonAttribute.Apply(entityLiving, world, random);
+		JsonEquipment.Apply(entityLiving, world, random);
 		
-		Creeper.Apply(entityLiving, world, random);
-		Ghast.Apply(entityLiving, world, random);
+		JsonCreeper.Apply(entityLiving, world, random);
+		JsonGhast.Apply(entityLiving, world, random);
 		
 		tags.setBoolean(MobsPropertiesRandomness.RESOURCE_PREFIX + "checked", true);
 	}

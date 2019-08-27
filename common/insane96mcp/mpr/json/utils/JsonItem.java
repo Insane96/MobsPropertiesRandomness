@@ -16,9 +16,9 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 import net.minecraft.world.biome.Biome;
 
-public class JItem extends WeightedRandom.Item implements IJsonObject{
+public class JsonItem extends WeightedRandom.Item implements IJsonObject{
 
-	public JItem(int itemWeightIn) {
+	public JsonItem(int itemWeightIn) {
 		super(itemWeightIn);
 	}
 
@@ -26,11 +26,11 @@ public class JItem extends WeightedRandom.Item implements IJsonObject{
 	public int data;
 	private int weight;
 	@SerializedName("weight_difficulty")
-	private WeightDifficulty weightDifficulty;
+	private JsonWeightDifficulty weightDifficulty;
 	@SerializedName("drop_chance")
 	public float dropChance;
-	public List<JEnchantment> enchantments;
-	public List<ItemAttribute> attributes;
+	public List<JsonEnchantment> enchantments;
+	public List<JsonItemAttribute> attributes;
 	public String nbt;
 	
 	public List<Integer> dimensions;
@@ -54,7 +54,7 @@ public class JItem extends WeightedRandom.Item implements IJsonObject{
 			itemWeight = weight;
 		
 		if (weightDifficulty == null)
-			weightDifficulty = new WeightDifficulty();
+			weightDifficulty = new JsonWeightDifficulty();
 		
 		if (dropChance == 0f) {
 			Logger.Debug("Drop Chance has been set to 0 (or omitted). Will now default to 8.5f. If you want mobs to not drop this item, set dropChance to -1");
@@ -66,19 +66,19 @@ public class JItem extends WeightedRandom.Item implements IJsonObject{
 		}
 		
 		if (enchantments == null)
-			enchantments = new ArrayList<JEnchantment>();
+			enchantments = new ArrayList<JsonEnchantment>();
 		
 		if (!enchantments.isEmpty()) {
-			for (JEnchantment enchantment : enchantments) {
+			for (JsonEnchantment enchantment : enchantments) {
 				enchantment.Validate(file);
 			}
 		}
 		
 		if (attributes == null) 
-			attributes = new ArrayList<ItemAttribute>();
+			attributes = new ArrayList<JsonItemAttribute>();
 		
 		if (!attributes.isEmpty()) {
-			for (ItemAttribute itemAttribute : attributes) {
+			for (JsonItemAttribute itemAttribute : attributes) {
 				itemAttribute.Validate(file);
 			}
 		}
@@ -123,8 +123,8 @@ public class JItem extends WeightedRandom.Item implements IJsonObject{
 		return hasBiome;
 	}
 	
-	public JItem GetWeightWithDifficulty(World world) {
-		JItem item2 = this.copy();
+	public JsonItem GetWeightWithDifficulty(World world) {
+		JsonItem item2 = this.copy();
 		
 		switch (world.getDifficulty()) {
 			case EASY:
@@ -150,17 +150,17 @@ public class JItem extends WeightedRandom.Item implements IJsonObject{
 	 * Returns a copy of the JItem
 	 * @return a copy of the JItem
 	 */
-	protected JItem copy() {
-		JItem jItem = new JItem(this.weight);
-		jItem.attributes = this.attributes;
-		jItem.data = this.data;
-		jItem.dropChance = this.dropChance;
-		jItem.enchantments = this.enchantments;
-		jItem.id = this.id;
-		jItem.itemWeight = this.itemWeight;
-		jItem.nbt = this.nbt;
-		jItem.weight = this.weight;
-		jItem.weightDifficulty = this.weightDifficulty;
-		return jItem;
+	protected JsonItem copy() {
+		JsonItem jsonItem = new JsonItem(this.weight);
+		jsonItem.attributes = this.attributes;
+		jsonItem.data = this.data;
+		jsonItem.dropChance = this.dropChance;
+		jsonItem.enchantments = this.enchantments;
+		jsonItem.id = this.id;
+		jsonItem.itemWeight = this.itemWeight;
+		jsonItem.nbt = this.nbt;
+		jsonItem.weight = this.weight;
+		jsonItem.weightDifficulty = this.weightDifficulty;
+		return jsonItem;
 	}
 }

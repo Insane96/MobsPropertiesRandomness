@@ -3,8 +3,8 @@ package insane96mcp.mpr.json.utils;
 import java.util.List;
 import java.util.Random;
 
-import insane96mcp.mpr.json.Group;
-import insane96mcp.mpr.json.Mob;
+import insane96mcp.mpr.json.JsonGroup;
+import insane96mcp.mpr.json.JsonMob;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityList;
 import net.minecraft.entity.EntityLiving;
@@ -14,7 +14,7 @@ import net.minecraft.world.DimensionType;
 import net.minecraft.world.World;
 import net.minecraft.world.biome.Biome;
 
-public class Utils {
+public class JsonUtils {
 	public static boolean doesDimensionMatch(Entity entity, List<Integer> dimensions) {
 		if (dimensions.isEmpty())
 			return true;
@@ -34,9 +34,9 @@ public class Utils {
 	 * Checks if the entity passed matches the mob, or the namespace if the id is "modid:*", or the group if the namespace is "group"
 	 * @return true if the entity matches the mob_id or it's in the mod namespace
 	 */
-	public static boolean MatchesEntity(EntityLiving entity, World world, Random random, Mob mob) {
+	public static boolean matchesEntity(EntityLiving entity, World world, Random random, JsonMob mob) {
 		if (mob.group != null) {
-			for (Group group : Group.groups) {
+			for (JsonGroup group : JsonGroup.groups) {
 				if (!group.name.equals(mob.group))
 					continue;
 				

@@ -1,8 +1,8 @@
 package insane96mcp.mpr.events;
 
 import insane96mcp.mpr.MobsPropertiesRandomness;
-import insane96mcp.mpr.json.Group;
-import insane96mcp.mpr.json.Mob;
+import insane96mcp.mpr.json.JsonGroup;
+import insane96mcp.mpr.json.JsonMob;
 import insane96mcp.mpr.lib.Properties;
 import net.minecraft.util.text.TextComponentTranslation;
 import net.minecraftforge.fml.common.Mod;
@@ -16,7 +16,7 @@ public class PlayerLoggedIn {
 	public static void EventPlayerLoggedIn(PlayerLoggedInEvent event) {
 		if (Properties.config.debug)
 			event.player.sendMessage(new TextComponentTranslation(MobsPropertiesRandomness.RESOURCE_PREFIX + "reload_json"));
-		boolean correctlyLoaded = Group.LoadGroups() &&	Mob.LoadJsons();
+		boolean correctlyLoaded = JsonGroup.LoadGroups() &&	JsonMob.LoadJsons();
 		
 		if (!correctlyLoaded) {
 			event.player.sendMessage(new TextComponentTranslation(MobsPropertiesRandomness.RESOURCE_PREFIX + "json_reloaded_error"));

@@ -5,13 +5,13 @@ import java.io.File;
 import insane96mcp.mpr.exceptions.InvalidJsonException;
 import insane96mcp.mpr.json.IJsonObject;
 
-public class WeightDifficulty implements IJsonObject{
+public class JsonWeightDifficulty implements IJsonObject{
 
 	public int easy;
 	public int normal;
 	public int hard;
 	
-	public WeightDifficulty() {
+	public JsonWeightDifficulty() {
 		easy = 0;
 		normal = 0;
 		hard = 0;

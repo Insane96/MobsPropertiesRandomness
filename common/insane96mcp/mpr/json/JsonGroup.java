@@ -12,11 +12,11 @@ import insane96mcp.mpr.exceptions.InvalidJsonException;
 import insane96mcp.mpr.lib.Logger;
 import insane96mcp.mpr.utils.Utils;
 
-public class Group implements IJsonObject{
-	public static ArrayList<Group> groups = new ArrayList<Group>();
+public class JsonGroup implements IJsonObject{
+	public static ArrayList<JsonGroup> groups = new ArrayList<JsonGroup>();
 	
 	public static boolean DoesGroupExist(String name) {
-		for (Group group : groups) {
+		for (JsonGroup group : groups) {
 			if (group.name.equals(name))
 				return true;
 		}
@@ -54,7 +54,7 @@ public class Group implements IJsonObject{
 			try {
 				Logger.Debug("Reading file " + file.getName());
 				FileReader fileReader = new FileReader(file);
-				Group group = gson.fromJson(fileReader, Group.class);
+				JsonGroup group = gson.fromJson(fileReader, JsonGroup.class);
 				Logger.Debug(group.toString());
 				group.Validate(file);
 				groups.add(group);

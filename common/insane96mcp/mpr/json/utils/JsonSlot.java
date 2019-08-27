@@ -13,23 +13,23 @@ import net.minecraft.util.WeightedRandom;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 
-public class Slot implements IJsonObject{
+public class JsonSlot implements IJsonObject{
 
 	@SerializedName("override_vanilla")
 	public boolean overrideVanilla;
 	@SerializedName("replace_only")
 	public boolean replaceOnly;
-	public Chance chance;
-	public ArrayList<JItem> items;
+	public JsonChance chance;
+	public ArrayList<JsonItem> items;
 	
 	@Override
 	public String toString() {
 		return String.format("Slot{overrideVanilla: %s, replaceOnly: %s, chance: %s, items: %s}", overrideVanilla, replaceOnly, chance, items);
 	}
 	
-	private List<JItem> GetItemsWithWeightDifficulty(World world, BlockPos pos){
-		ArrayList<JItem> items = new ArrayList<JItem>();
-		for (JItem item : this.items) {
+	private List<JsonItem> GetItemsWithWeightDifficulty(World world, BlockPos pos){
+		ArrayList<JsonItem> items = new ArrayList<JsonItem>();
+		for (JsonItem item : this.items) {
 			if (item.HasDimension(world) && item.HasBiome(world, pos))
 				items.add(item.GetWeightWithDifficulty(world));
 		}
@@ -42,8 +42,8 @@ public class Slot implements IJsonObject{
 	 * @param pos
 	 * @return an Item or null if no items were available
 	 */
-	public JItem GetRandomItem(World world, BlockPos pos) {
-		List<JItem> items = GetItemsWithWeightDifficulty(world, pos);
+	public JsonItem GetRandomItem(World world, BlockPos pos) {
+		List<JsonItem> items = GetItemsWithWeightDifficulty(world, pos);
 		if (items.isEmpty())
 			return null;
 		return WeightedRandom.getRandomItem(world.rand, items);
@@ -64,7 +64,7 @@ public class Slot implements IJsonObject{
 		if (items == null || items.isEmpty())
 			throw new InvalidJsonException("There's no item set or item is missing in the slot " + this, file);
 		else {
-			for (JItem item : items) {
+			for (JsonItem item : items) {
 				item.Validate(file);
 			}
 		}

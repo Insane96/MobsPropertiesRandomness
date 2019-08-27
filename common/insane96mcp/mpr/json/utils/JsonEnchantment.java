@@ -18,11 +18,11 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.world.World;
 
-public class JEnchantment implements IJsonObject{
+public class JsonEnchantment implements IJsonObject{
 
 	public String id;
-	public RangeMinMax level;
-	public Chance chance;
+	public JsonRangeMinMax level;
+	public JsonChance chance;
 	
 	@Override
 	public String toString() {
@@ -39,7 +39,7 @@ public class JEnchantment implements IJsonObject{
 			level.Validate(file);
 		else {
 			Logger.Debug("Missing Enchantment Level for " + this + ". Will default to 1");
-			level = new RangeMinMax(1, 1);
+			level = new JsonRangeMinMax(1, 1);
 		}
 		
 		if (chance != null) 
@@ -49,8 +49,8 @@ public class JEnchantment implements IJsonObject{
 		
 	}
 	
-	public static void Apply(EntityLiving entity, World world, Random random, JItem item, ItemStack itemStack) {
-		for (JEnchantment jEnchantment : item.enchantments) {
+	public static void Apply(EntityLiving entity, World world, Random random, JsonItem item, ItemStack itemStack) {
+		for (JsonEnchantment jEnchantment : item.enchantments) {
 			if (!jEnchantment.chance.ChanceMatches(entity, world, random))
 				continue;
 

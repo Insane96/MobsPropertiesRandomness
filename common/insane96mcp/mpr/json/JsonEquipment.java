@@ -6,11 +6,11 @@ import java.util.Random;
 import com.google.gson.annotations.SerializedName;
 
 import insane96mcp.mpr.exceptions.InvalidJsonException;
-import insane96mcp.mpr.json.utils.ItemAttribute;
-import insane96mcp.mpr.json.utils.JEnchantment;
-import insane96mcp.mpr.json.utils.JItem;
-import insane96mcp.mpr.json.utils.Slot;
-import insane96mcp.mpr.json.utils.Utils;
+import insane96mcp.mpr.json.utils.JsonEnchantment;
+import insane96mcp.mpr.json.utils.JsonItem;
+import insane96mcp.mpr.json.utils.JsonItemAttribute;
+import insane96mcp.mpr.json.utils.JsonSlot;
+import insane96mcp.mpr.json.utils.JsonUtils;
 import insane96mcp.mpr.lib.Logger;
 import net.minecraft.entity.EntityLiving;
 import net.minecraft.entity.ai.attributes.AttributeModifier;
@@ -23,16 +23,16 @@ import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.world.World;
 
-public class Equipment implements IJsonObject{
+public class JsonEquipment implements IJsonObject{
 
-	public Slot head;
-	public Slot chest;
-	public Slot legs;
-	public Slot feets;
+	public JsonSlot head;
+	public JsonSlot chest;
+	public JsonSlot legs;
+	public JsonSlot feets;
 	@SerializedName("main_hand")
-	public Slot mainHand;
+	public JsonSlot mainHand;
 	@SerializedName("off_hand")
-	public Slot offHand;
+	public JsonSlot offHand;
 	
 	@Override
 	public String toString() {
@@ -58,8 +58,8 @@ public class Equipment implements IJsonObject{
 		if (world.isRemote)
 			return;
 		
-		for (Mob mob : Mob.mobs) {
-			if (Utils.MatchesEntity(entity, world, random, mob)) {
+		for (JsonMob mob : JsonMob.mobs) {
+			if (JsonUtils.matchesEntity(entity, world, random, mob)) {
 				ApplyEquipmentToSlot(entity, world, random, mob.equipment.head, EntityEquipmentSlot.HEAD);
 				ApplyEquipmentToSlot(entity, world, random, mob.equipment.chest, EntityEquipmentSlot.CHEST);
 				ApplyEquipmentToSlot(entity, world, random, mob.equipment.legs, EntityEquipmentSlot.LEGS);
@@ -70,7 +70,7 @@ public class Equipment implements IJsonObject{
 		}
 	}
 	
-	private static void ApplyEquipmentToSlot(EntityLiving entity, World world, Random random, Slot slot, EntityEquipmentSlot entityEquipmentSlot) {
+	private static void ApplyEquipmentToSlot(EntityLiving entity, World world, Random random, JsonSlot slot, EntityEquipmentSlot entityEquipmentSlot) {
 		if (slot == null)
 			return;
 		
@@ -83,7 +83,7 @@ public class Equipment implements IJsonObject{
 		if (!slot.chance.ChanceMatches(entity, world, random))
 			return;
 
-		JItem choosenItem = slot.GetRandomItem(world, entity.getPosition());
+		JsonItem choosenItem = slot.GetRandomItem(world, entity.getPosition());
 		if (choosenItem == null)
 			return;
 
@@ -94,22 +94,22 @@ public class Equipment implements IJsonObject{
 		if (choosenItem.nbt != null) {
 			try {
 				tag = JsonToNBT.getTagFromJson(choosenItem.nbt);
+		
+				NBTTagCompound tagCompound = new NBTTagCompound();
+				tagCompound.setTag("tag", tag);
+				itemStack.deserializeNBT(tagCompound);
 			} catch (NBTException e) {
 				Logger.Error("Failed to parse NBT for " + choosenItem);
 				e.printStackTrace();
 			}
 		}
 		
-		NBTTagCompound tagCompound = new NBTTagCompound();
-		tagCompound.setTag("tag", tag);
-		
-		itemStack.deserializeNBT(tagCompound);
 			
-		JEnchantment.Apply(entity, world, random, choosenItem, itemStack);
+		JsonEnchantment.Apply(entity, world, random, choosenItem, itemStack);
 		
 		entity.setItemStackToSlot(entityEquipmentSlot, itemStack);
 	
-		for (ItemAttribute itemAttribute : choosenItem.attributes) {
+		for (JsonItemAttribute itemAttribute : choosenItem.attributes) {
 			float amount = MathHelper.nextFloat(random, itemAttribute.amount.GetMin(), itemAttribute.amount.GetMax()) / 100f;
 			AttributeModifier modifier = new AttributeModifier(itemAttribute.id, itemAttribute.modifier, amount, itemAttribute.operation.ordinal());
 			EntityEquipmentSlot modifierSlot = itemAttribute.slot == null ? entityEquipmentSlot : itemAttribute.slot;

@@ -10,13 +10,13 @@ import insane96mcp.mpr.json.IJsonObject;
 import insane96mcp.mpr.lib.Logger;
 import net.minecraft.inventory.EntityEquipmentSlot;
 
-public class ItemAttribute implements IJsonObject{
+public class JsonItemAttribute implements IJsonObject{
 	
 	public String modifier;
 	@SerializedName("attribute_name")
 	public String attributeName;
 	public EnumOperation operation;
-	public RangeMinMax amount;
+	public JsonRangeMinMax amount;
 	public UUID id;
 	public EntityEquipmentSlot slot;
 	
