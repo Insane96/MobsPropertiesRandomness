@@ -98,6 +98,7 @@ public class JsonAttribute implements IJsonObject{
 					
 					float min = attribute.modifier.GetMin();
 					float max = attribute.modifier.GetMax();
+					float multiplier = 1.0f;
 					
 					if (attribute.affectedByDifficulty) {
 						
@@ -106,33 +107,27 @@ public class JsonAttribute implements IJsonObject{
 						if (!attribute.difficulty.isLocalDifficulty) {
 							switch (difficulty) {
 							case EASY:
-								if (!attribute.difficulty.affectsMaxOnly)
-									min *= Properties.config.difficulty.easyMultiplier;
-								max *= Properties.config.difficulty.easyMultiplier;
+								multiplier *= Properties.config.difficulty.easyMultiplier;
 								break;
-
-							case NORMAL:
-								if (!attribute.difficulty.affectsMaxOnly)
-									min *= Properties.config.difficulty.normalMultiplier;
-								max *= Properties.config.difficulty.normalMultiplier;
-								break;
-								
 							case HARD:
-								if (!attribute.difficulty.affectsMaxOnly)
-									min *= Properties.config.difficulty.hardMultiplier;
-								max *= Properties.config.difficulty.hardMultiplier;
+								multiplier *= Properties.config.difficulty.hardMultiplier;
 								break;
-								
+							case NORMAL:
+								multiplier *= Properties.config.difficulty.normalMultiplier;
+								break;
 							default:
 								break;
 							}
 						}
 						else {
-							if (!attribute.difficulty.affectsMaxOnly)
-								min *= world.getDifficultyForLocation(entity.getPosition()).getAdditionalDifficulty();
-							max *= world.getDifficultyForLocation(entity.getPosition()).getAdditionalDifficulty();
+							multiplier *= world.getDifficultyForLocation(entity.getPosition()).getAdditionalDifficulty();
 						}
-						max *= attribute.difficulty.multiplier;
+						
+						multiplier *= attribute.difficulty.multiplier;
+						
+						if (!attribute.difficulty.affectsMaxOnly)
+							min *= multiplier;
+						max *= multiplier;
 					}
 					
 					IAttributeInstance attributeInstance = entity.getAttributeMap().getAttributeInstanceByName(attribute.id);
