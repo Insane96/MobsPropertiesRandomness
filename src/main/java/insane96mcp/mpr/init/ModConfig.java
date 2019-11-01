@@ -37,7 +37,7 @@ public class ModConfig {
     }
 
     public static class Difficulty {
-        public static String name = "Difficulty";
+        public static String name = "JsonDifficulty";
 
         public static ConfigValue<Double> easyMultiplier;
         public static ConfigValue<Double> normalMultiplier;
@@ -46,13 +46,13 @@ public class ModConfig {
         public static void init() {
             BUILDER.push(name);
             easyMultiplier = BUILDER
-                    .comment("Values affected by difficulty will be multiplied by this value in Easy Difficulty")
+                    .comment("Values affected by difficulty will be multiplied by this value in Easy JsonDifficulty")
                     .defineInRange("Easy Multiplier", 0.5, 0.0, Double.MAX_VALUE);
             normalMultiplier = BUILDER
-                    .comment("Values affected by difficulty will be multiplied by this value in Normal Difficulty")
+                    .comment("Values affected by difficulty will be multiplied by this value in Normal JsonDifficulty")
                     .defineInRange("Normal Multiplier", 1.0, 0.0, Double.MAX_VALUE);
             hardMultiplier = BUILDER
-                    .comment("Values affected by difficulty will be multiplied by this value in Hard Difficulty")
+                    .comment("Values affected by difficulty will be multiplied by this value in Hard JsonDifficulty")
                     .defineInRange("Hard Multiplier", 2.0, 0.0, Double.MAX_VALUE);
             BUILDER.pop();
         }
