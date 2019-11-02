@@ -49,6 +49,7 @@ public class ModConfig {
 		SPEC = BUILDER.build();
 	}
 
+	//TODO Those don't work
 	@SubscribeEvent
 	public static void eventConfigReload(final net.minecraftforge.fml.config.ModConfig.ConfigReloading event) {
 		Logger.Info("Config Reloaded");

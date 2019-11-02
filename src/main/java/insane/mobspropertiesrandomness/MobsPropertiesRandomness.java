@@ -1,7 +1,10 @@
 package insane.mobspropertiesrandomness;
 
+import insane.mobspropertiesrandomness.exceptions.InvalidJsonException;
 import insane.mobspropertiesrandomness.setup.Logger;
 import insane.mobspropertiesrandomness.setup.ModConfig;
+import net.minecraft.block.Blocks;
+import net.minecraftforge.common.Tags;
 import net.minecraftforge.fml.ModLoadingContext;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.event.lifecycle.FMLClientSetupEvent;
@@ -26,6 +29,15 @@ public class MobsPropertiesRandomness
 		ModConfig.init(Paths.get("config", MOD_ID + ".toml"));
 
 		Logger.Init(MOD_ID + ".log");
+
+		try {
+			throw new InvalidJsonException("Entry %s is not valid", Blocks.ACACIA_BUTTON);
+
+		}
+		catch (InvalidJsonException e){
+			Logger.Error("Failed to parse file with name bla bla");
+			Logger.Error(e.toString());
+		}
 	}
 
 	private void doClientStuff(final FMLClientSetupEvent event) {

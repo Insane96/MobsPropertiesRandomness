@@ -1,6 +1,6 @@
 /*
  *
- * Copy-pasted "some" code from https://github.com/CraftTweaker/CraftTweaker/blob/1.12/CraftTweaker2-MC1120-Main/src/main/java/crafttweaker/mc1120/logger/MCLogger.java
+ * Copy-pasted some code from https://github.com/CraftTweaker/CraftTweaker/blob/1.12/CraftTweaker2-MC1120-Main/src/main/java/crafttweaker/mc1120/logger/MCLogger.java
  *
  */
 
@@ -34,37 +34,28 @@ public class Logger {
 	}
 
 	public static void Debug(String message) {
-		if (ModConfig.General.debug.get()) {
-			try {
-				writer.write("[DEBUG] " + message + "\n");
-				writer.flush();
-			} catch (IOException e) {
-				throw new RuntimeException(e);
-			}
-		}
+		if (ModConfig.General.debug.get())
+			write(message, "DEBUG");
 	}
 
 	public static void Info(String message) {
-		try {
-			writer.write("[INFO] " + message + "\n");
-			writer.flush();
-		} catch (IOException e) {
-			throw new RuntimeException(e);
-		}
+		write(message, "INFO");
 	}
 
 	public static void Warning(String message) {
-		try {
-			writer.write("[WARNING] " + message + "\n");
-			writer.flush();
-		} catch (IOException e) {
-			throw new RuntimeException(e);
-		}
+		write(message, "WARNING");
 	}
 
 	public static void Error(String message) {
+		write(message, "ERROR");
+	}
+
+	private static void write(String message, String type){
 		try {
-			writer.write("[ERROR] " + message + "\n");
+			String[] splitMessage = message.split("\n");
+			for (String m : splitMessage) {
+				writer.write("[" + type + "] " + m + "\n");
+			}
 			writer.flush();
 		} catch (IOException e) {
 			throw new RuntimeException(e);
