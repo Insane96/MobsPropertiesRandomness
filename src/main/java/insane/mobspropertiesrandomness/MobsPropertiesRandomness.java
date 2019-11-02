@@ -1,5 +1,6 @@
 package insane.mobspropertiesrandomness;
 
+import insane.mobspropertiesrandomness.utils.Logger;
 import net.minecraft.block.Block;
 import net.minecraft.block.Blocks;
 import net.minecraftforge.common.MinecraftForge;
@@ -14,27 +15,27 @@ import net.minecraftforge.fml.event.lifecycle.InterModProcessEvent;
 import net.minecraftforge.fml.event.server.FMLServerStartingEvent;
 import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
 import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
 
 import java.util.stream.Collectors;
 
 @Mod(MobsPropertiesRandomness.MOD_ID)
 public class MobsPropertiesRandomness
 {
-    public static final String MOD_ID = "mobspropertiesrandomness";
-    public static final Logger LOGGER = LogManager.getLogger();
+	public static final String MOD_ID = "mobspropertiesrandomness";
 
-    public MobsPropertiesRandomness() {
-        FMLJavaModLoadingContext.get().getModEventBus().addListener(this::setup);
-        FMLJavaModLoadingContext.get().getModEventBus().addListener(this::doClientStuff);
-    }
+	public MobsPropertiesRandomness() {
+		FMLJavaModLoadingContext.get().getModEventBus().addListener(this::setup);
+		FMLJavaModLoadingContext.get().getModEventBus().addListener(this::doClientStuff);
+	}
 
-    private void setup(final FMLCommonSetupEvent event)
-    {
-        // some preinit code
-    }
+	private void setup(final FMLCommonSetupEvent event)
+	{
+		Logger.Init(MOD_ID + ".log");
+		Logger.Info("Logger Test");
+		Logger.Debug("Logger Test");
+	}
 
-    private void doClientStuff(final FMLClientSetupEvent event) {
-        // do something that can only be done on the client
-    }
+	private void doClientStuff(final FMLClientSetupEvent event) {
+		// do something that can only be done on the client
+	}
 }
