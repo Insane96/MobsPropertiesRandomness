@@ -4,9 +4,7 @@
  *
  */
 
-package insane.mobspropertiesrandomness.utils;
-
-import net.minecraftforge.fml.config.ModConfig;
+package insane.mobspropertiesrandomness.setup;
 
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -27,6 +25,7 @@ public class Logger {
 		try {
 			writer = new OutputStreamWriter(new FileOutputStream(logFile), "utf-8");
 			printWriter = new PrintWriter(writer);
+			Logger.Debug("Logger Successfully Initialized");
 		} catch (UnsupportedEncodingException ex) {
 			throw new RuntimeException("How?");
 		} catch (FileNotFoundException ex) {
@@ -35,8 +34,7 @@ public class Logger {
 	}
 
 	public static void Debug(String message) {
-		//TODO Re-add Config for debug
-		if (true) {
+		if (ModConfig.General.debug.get()) {
 			try {
 				writer.write("[DEBUG] " + message + "\n");
 				writer.flush();
