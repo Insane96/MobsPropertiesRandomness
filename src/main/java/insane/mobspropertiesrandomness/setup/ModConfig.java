@@ -6,6 +6,7 @@ import insane.mobspropertiesrandomness.MobsPropertiesRandomness;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.common.ForgeConfigSpec;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
+import net.minecraftforge.fml.client.event.ConfigChangedEvent;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.registries.ForgeRegistries;
 
@@ -50,11 +51,11 @@ public class ModConfig {
 
 	@SubscribeEvent
 	public static void eventConfigReload(final net.minecraftforge.fml.config.ModConfig.ConfigReloading event) {
-		Logger.Debug("Config Reloaded");
+		Logger.Info("Config Reloaded");
 	}
 
 	@SubscribeEvent
 	public static void eventConfigLoad(final net.minecraftforge.fml.config.ModConfig.Loading event) {
-		Logger.Debug("Config Loaded");
+		Logger.Info("Config Loaded");
 	}
 }
