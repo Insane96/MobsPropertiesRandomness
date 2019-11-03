@@ -10,6 +10,7 @@ import net.minecraftforge.fml.client.event.ConfigChangedEvent;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.registries.ForgeRegistries;
 
+import java.io.File;
 import java.nio.file.Path;
 
 @Mod.EventBusSubscriber(modid = MobsPropertiesRandomness.MOD_ID, bus = Mod.EventBusSubscriber.Bus.MOD)
@@ -18,6 +19,7 @@ public class ModConfig {
 	public static ForgeConfigSpec SPEC;
 
 	public static void init(Path file) {
+		new File("config/" + MobsPropertiesRandomness.MOD_ID).mkdirs();
 		final CommentedFileConfig configData = CommentedFileConfig.builder(file)
 				.sync()
 				.autosave()

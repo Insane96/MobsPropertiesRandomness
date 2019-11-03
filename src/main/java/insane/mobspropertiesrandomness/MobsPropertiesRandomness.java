@@ -11,12 +11,14 @@ import net.minecraftforge.fml.event.lifecycle.FMLClientSetupEvent;
 import net.minecraftforge.fml.event.lifecycle.FMLCommonSetupEvent;
 import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
 
+import java.io.File;
 import java.nio.file.Paths;
 
 @Mod(MobsPropertiesRandomness.MOD_ID)
 public class MobsPropertiesRandomness
 {
 	public static final String MOD_ID = "mobspropertiesrandomness";
+	public static final String RESOURCE_PREFIX = MOD_ID + ":";
 
 	public MobsPropertiesRandomness() {
 		FMLJavaModLoadingContext.get().getModEventBus().addListener(this::setup);
@@ -26,18 +28,9 @@ public class MobsPropertiesRandomness
 	private void setup(final FMLCommonSetupEvent event)
 	{
 		ModLoadingContext.get().registerConfig(net.minecraftforge.fml.config.ModConfig.Type.COMMON, ModConfig.SPEC);
-		ModConfig.init(Paths.get("config", MOD_ID + ".toml"));
+		ModConfig.init(Paths.get("config", MOD_ID, "config.toml"));
 
 		Logger.Init(MOD_ID + ".log");
-
-		try {
-			throw new InvalidJsonException("Entry %s is not valid", Blocks.ACACIA_BUTTON);
-
-		}
-		catch (InvalidJsonException e){
-			Logger.Error("Failed to parse file with name bla bla");
-			Logger.Error(e.toString());
-		}
 	}
 
 	private void doClientStuff(final FMLClientSetupEvent event) {
