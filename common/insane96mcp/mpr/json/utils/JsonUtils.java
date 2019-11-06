@@ -10,7 +10,6 @@ import net.minecraft.entity.EntityList;
 import net.minecraft.entity.EntityLiving;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.BlockPos;
-import net.minecraft.world.DimensionType;
 import net.minecraft.world.World;
 import net.minecraft.world.biome.Biome;
 
@@ -19,10 +18,9 @@ public class JsonUtils {
 		if (dimensions.isEmpty())
 			return true;
 		else {
-			DimensionType entityDimension = entity.world.provider.getDimensionType();
+			int entityDimension = entity.world.provider.getDimension();
 			for (Integer dimension : dimensions) {
-				DimensionType potionDimension = DimensionType.getById(dimension.intValue());
-				if (entityDimension.equals(potionDimension)) {
+				if (entityDimension == dimension.intValue()) {
 					return true;
 				}
 			}
