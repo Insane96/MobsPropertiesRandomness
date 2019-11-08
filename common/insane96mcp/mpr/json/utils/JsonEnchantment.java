@@ -15,6 +15,8 @@ import net.minecraft.entity.EntityLiving;
 import net.minecraft.init.Items;
 import net.minecraft.item.ItemEnchantedBook;
 import net.minecraft.item.ItemStack;
+import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.nbt.NBTTagList;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.world.World;
 
@@ -78,8 +80,28 @@ public class JsonEnchantment implements IJsonObject{
 	            }
 			}
 			else {
-				int level = MathHelper.getInt(random, (int)jEnchantment.level.GetMin(), (int)jEnchantment.level.GetMax());
-				itemStack.addEnchantment(Enchantment.getEnchantmentByLocation(jEnchantment.id), level);
+				Enchantment applyingEnchantment = Enchantment.getEnchantmentByLocation(jEnchantment.id);
+				boolean canApply = true;
+				NBTTagList enchantments = itemStack.getEnchantmentTagList();
+				if (enchantments.tagCount() != 0) {
+					for (int i = 0; i <= enchantments.tagCount(); i++)
+	                {
+	                    NBTTagCompound nbtTagCompound = enchantments.getCompoundTagAt(i);
+	                    if (nbtTagCompound.isEmpty())
+	                    	continue;
+	                    int id = nbtTagCompound.getShort("id");
+	                    Enchantment ench = Enchantment.getEnchantmentByID(id);
+	                    if (!applyingEnchantment.isCompatibleWith(ench)) {
+	                    	canApply = false;
+	                    	break;
+	                    }
+	                }
+				}
+
+				if (canApply) {
+					int level = MathHelper.getInt(random, (int)jEnchantment.level.GetMin(), (int)jEnchantment.level.GetMax());
+					itemStack.addEnchantment(Enchantment.getEnchantmentByLocation(jEnchantment.id), level);
+				}
 			}
 		}
 	}

@@ -19,7 +19,7 @@ public class MobsPropertiesRandomness {
 	
 	public static final String MOD_ID = "mpr";
 	public static final String MOD_NAME = "Mobs Properties Randomness";
-	public static final String VERSION = "2.3.2";
+	public static final String VERSION = "2.3.3";
 	public static final String RESOURCE_PREFIX = MOD_ID.toLowerCase() + ":";
 	public static final String MINECRAFT_VERSIONS = "[1.12,1.12.2]";
 
