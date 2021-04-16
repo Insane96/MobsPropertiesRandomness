@@ -1,0 +1,27 @@
+modLoader="javafml"
+loaderVersion="[36,)"
+license="All rights reserved"
+issueTrackerURL="https://github.com/Insane96/MobsPropertiesRandomness/issues"
+[[mods]]
+modId="mobspropertiesrandomness"
+version="${file.jarVersion}"
+displayName="Mobs Properties Randomness"
+displayURL="https://www.curseforge.com/minecraft/mc-mods/mobs-properties-randomness"
+#logoFile="examplemod.png"
+credits="CraftTweaker for Logger code"
+authors="Insane96MCP"
+description='''
+Randomize (or just set) mobs Attributes, Equipment and Potion Effects on spawn
+'''
+[[dependencies.mobspropertiesrandomness]]
+    modId="forge"
+    mandatory=true
+    versionRange="[36,)"
+    ordering="NONE"
+    side="BOTH"
+[[dependencies.mobspropertiesrandomness]]
+    modId="minecraft"
+    mandatory=true
+    versionRange="[1.16.5,1.17)"
+    ordering="NONE"
+    side="BOTH"
