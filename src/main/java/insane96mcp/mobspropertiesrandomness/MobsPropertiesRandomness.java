@@ -1,12 +1,10 @@
 package insane96mcp.mobspropertiesrandomness;
 
-import insane96mcp.mobspropertiesrandomness.config.Config;
+import insane96mcp.mobspropertiesrandomness.setup.Config;
 import net.minecraftforge.fml.ModLoadingContext;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.event.lifecycle.FMLCommonSetupEvent;
 import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
 
 import java.io.File;
 
@@ -15,7 +13,6 @@ public class MobsPropertiesRandomness
 {
     public static final String MOD_ID = "mobspropertiesrandomness";
     public static final String RESOURCE_PREFIX = MOD_ID + ":";
-    private static final Logger LOGGER = LogManager.getLogger();
 
     public MobsPropertiesRandomness() {
         File directory = new File("config/MobsPropertiesRandomness");
