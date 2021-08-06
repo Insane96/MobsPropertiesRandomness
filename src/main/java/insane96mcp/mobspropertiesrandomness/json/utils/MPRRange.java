@@ -33,11 +33,11 @@ public class MPRRange implements IMPRObject {
 			throw new InvalidJsonException("Missing min for " + this, file);
 		}
 		if (max == null) {
-			Logger.debug("Missing max for " + this + ". Max will now be equal to min");
+			Logger.debug("Missing max for " + this + ". Max will be equal to min");
 			max = min;
 		}
 		if (max < min) {
-			Logger.debug("Min is greater than max " + this + ". Max will now be equal to min");
+			Logger.debug("Min is greater than max " + this + ". Max will be equal to min");
 			max = min;
 		}
 	}

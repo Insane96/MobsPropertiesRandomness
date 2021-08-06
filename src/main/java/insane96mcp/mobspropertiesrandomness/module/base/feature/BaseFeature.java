@@ -3,8 +3,11 @@ package insane96mcp.mobspropertiesrandomness.module.base.feature;
 import insane96mcp.insanelib.base.Feature;
 import insane96mcp.insanelib.base.Label;
 import insane96mcp.insanelib.base.Module;
+import insane96mcp.mobspropertiesrandomness.json.MPRMob;
 import insane96mcp.mobspropertiesrandomness.setup.Config;
 import net.minecraftforge.common.ForgeConfigSpec;
+import net.minecraftforge.event.entity.EntityJoinWorldEvent;
+import net.minecraftforge.eventbus.api.SubscribeEvent;
 
 @Label(name = "Base", description = "Base feature of the mod")
 public class BaseFeature extends Feature {
@@ -25,5 +28,10 @@ public class BaseFeature extends Feature {
 	public void loadConfig() {
 		super.loadConfig();
 		this.debug = this.debugConfig.get();
+	}
+
+	@SubscribeEvent
+	public void onEntityJoinWorld(EntityJoinWorldEvent event) {
+		MPRMob.apply(event);
 	}
 }

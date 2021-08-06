@@ -25,6 +25,7 @@ public class MPRMob implements IMPRObject {
 	public String mobId;
 	public String group;
 
+	@SerializedName("potion_effects")
 	public List<MPRPotionEffect> potionEffects;
 
 	@Override

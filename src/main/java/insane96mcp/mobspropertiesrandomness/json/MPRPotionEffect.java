@@ -30,16 +30,16 @@ public class MPRPotionEffect implements IMPRObject {
 	public boolean hideParticles;
 
 	private List<String> dimensions;
-	public transient List<ResourceLocation> dimensionsList;
+	public transient List<ResourceLocation> dimensionsList = new ArrayList<>();
 
 	private List<String> biomes;
-	public transient List<ResourceLocation> biomesList;
+	public transient List<ResourceLocation> biomesList = new ArrayList<>();
 
 	public void validate(final File file) throws InvalidJsonException {
 		//Potion Id
 		if (id == null)
 			throw new InvalidJsonException("Missing Potion Effect Id for " + this, file);
-		else if (ForgeRegistries.POTIONS.containsKey(new ResourceLocation(id)))
+		else if (!ForgeRegistries.POTIONS.containsKey(new ResourceLocation(id)))
 			throw new InvalidJsonException("Potion effect with Id " + id + " does not exist", file);
 
 		//Amplifier
@@ -57,19 +57,16 @@ public class MPRPotionEffect implements IMPRObject {
 		if (ambient && hideParticles)
 			Logger.info("Particles are hidden, but ambient is enabled. This might be an unintended behaviour for " + this);
 
-		if (dimensions == null)
-			dimensions = new ArrayList<>();
-		else {
+		dimensionsList.clear();
+		if (dimensions != null) {
 			for (String dimension : dimensions) {
 				ResourceLocation dimensionRL = new ResourceLocation(dimension);
 				dimensionsList.add(dimensionRL);
 			}
 		}
 
-		biomesList = new ArrayList<>();
-		if (biomes == null)
-			biomes = new ArrayList<>();
-		else {
+		biomesList.clear();
+		if (biomes != null) {
 			for (String biome : biomes) {
 				ResourceLocation biomeLoc = new ResourceLocation(biome);
 				biomesList.add(biomeLoc);
