@@ -13,9 +13,10 @@ public class MobsPropertiesRandomness
 {
     public static final String MOD_ID = "mobspropertiesrandomness";
     public static final String RESOURCE_PREFIX = MOD_ID + ":";
+    public static final String CONFIG_FOLDER = "config/MobsPropertiesRandomness";
 
     public MobsPropertiesRandomness() {
-        File directory = new File("config/MobsPropertiesRandomness");
+        File directory = new File(CONFIG_FOLDER);
         if (!directory.exists())
             directory.mkdir();
 
