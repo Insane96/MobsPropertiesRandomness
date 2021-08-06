@@ -1,6 +1,10 @@
 package insane96mcp.mobspropertiesrandomness;
 
+import insane96mcp.mobspropertiesrandomness.data.MPRReloadListener;
 import insane96mcp.mobspropertiesrandomness.setup.Config;
+import net.minecraftforge.common.MinecraftForge;
+import net.minecraftforge.event.AddReloadListenerEvent;
+import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.ModLoadingContext;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.event.lifecycle.FMLCommonSetupEvent;
@@ -22,6 +26,12 @@ public class MobsPropertiesRandomness
 
         ModLoadingContext.get().registerConfig(net.minecraftforge.fml.config.ModConfig.Type.COMMON, Config.COMMON_SPEC, "MobsPropertiesRandomness/" + MOD_ID + ".toml");
         FMLJavaModLoadingContext.get().getModEventBus().addListener(this::preInit);
+        MinecraftForge.EVENT_BUS.register(this);
+    }
+
+    @SubscribeEvent
+    public void onServerAboutToStart(AddReloadListenerEvent event) {
+        event.addListener(MPRReloadListener.INSTANCE);
     }
 
     public void preInit(FMLCommonSetupEvent event) {
