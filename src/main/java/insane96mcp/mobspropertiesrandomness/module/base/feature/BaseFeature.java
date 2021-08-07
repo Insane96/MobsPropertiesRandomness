@@ -7,6 +7,7 @@ import insane96mcp.mobspropertiesrandomness.json.MPRMob;
 import insane96mcp.mobspropertiesrandomness.setup.Config;
 import net.minecraftforge.common.ForgeConfigSpec;
 import net.minecraftforge.event.entity.EntityJoinWorldEvent;
+import net.minecraftforge.eventbus.api.EventPriority;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 
 @Label(name = "Base", description = "Base feature of the mod")
@@ -30,7 +31,7 @@ public class BaseFeature extends Feature {
 		this.debug = this.debugConfig.get();
 	}
 
-	@SubscribeEvent
+	@SubscribeEvent(priority = EventPriority.LOWEST)
 	public void onEntityJoinWorld(EntityJoinWorldEvent event) {
 		MPRMob.apply(event);
 	}

@@ -1,8 +1,8 @@
 package insane96mcp.mobspropertiesrandomness.json;
 
 import com.google.gson.annotations.SerializedName;
-import insane96mcp.mobspropertiesrandomness.MobsPropertiesRandomness;
 import insane96mcp.mobspropertiesrandomness.exception.InvalidJsonException;
+import insane96mcp.mobspropertiesrandomness.setup.Strings;
 import insane96mcp.mobspropertiesrandomness.utils.Logger;
 import insane96mcp.mobspropertiesrandomness.utils.MPRUtils;
 import net.minecraft.entity.Entity;
@@ -90,15 +90,9 @@ public class MPRMob implements IMPRObject {
 		LivingEntity entityLiving = (LivingEntity) entity;
 
 		CompoundNBT tags = entityLiving.getPersistentData();
-		//TODO Strings class
-		boolean isAlreadyChecked = tags.getBoolean(MobsPropertiesRandomness.RESOURCE_PREFIX + "checked");
+		boolean isAlreadyChecked = tags.getBoolean(Strings.Tags.PROCESSED);
 
 		if (isAlreadyChecked)
-			return;
-
-		boolean shouldNotBeProcessed = tags.getBoolean(MobsPropertiesRandomness.RESOURCE_PREFIX + "prevent_processing");
-
-		if (shouldNotBeProcessed)
 			return;
 
 		for (MPRMob mob : MPR_MOBS) {
@@ -114,7 +108,7 @@ public class MPRMob implements IMPRObject {
 		//JsonCreeper.Apply(entityLiving, world, random);
 		//JsonGhast.Apply(entityLiving, world, random);
 
-		tags.putBoolean(MobsPropertiesRandomness.RESOURCE_PREFIX + "checked", true);
+		tags.putBoolean(Strings.Tags.PROCESSED, true);
 	}
 
 	@Override
