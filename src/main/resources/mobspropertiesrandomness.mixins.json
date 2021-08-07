@@ -1,0 +1,11 @@
+{
+	"required": true,
+	"package": "insane96mcp.mobspropertiesrandomness.mixin",
+	"compatibilityLevel": "JAVA_8",
+	"refmap": "mobspropertiesrandomness.refmap.json",
+	"mixins": [
+		"AreaEffectCloudEntityMixin",
+		"CreeperEntityMixin"
+	],
+	"minVersion": "0.8"
+}

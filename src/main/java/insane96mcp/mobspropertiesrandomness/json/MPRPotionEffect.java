@@ -78,7 +78,7 @@ public class MPRPotionEffect implements IMPRObject {
 		if (world.isRemote)
 			return;
 
-		if (!this.chance.chanceMatches(entity, world, random))
+		if (this.chance != null && !this.chance.chanceMatches(entity, world, random))
 			return;
 
 		if (!MPRUtils.doesDimensionMatch(entity, this.dimensionsList))
@@ -91,7 +91,7 @@ public class MPRPotionEffect implements IMPRObject {
 		int maxAmplifier = (int) this.amplifier.getMax();
 
 		Effect effect = ForgeRegistries.POTIONS.getValue(new ResourceLocation(this.id));
-		EffectInstance effectInstance = new EffectInstance(effect, 1000000, RandomHelper.getInt(random, minAmplifier, maxAmplifier), this.ambient, !this.hideParticles);
+		EffectInstance effectInstance = new EffectInstance(effect, 1000000, RandomHelper.getInt(random, minAmplifier, maxAmplifier), this.ambient, !this.hideParticles, false);
 		entity.addPotionEffect(effectInstance);
 	}
 
