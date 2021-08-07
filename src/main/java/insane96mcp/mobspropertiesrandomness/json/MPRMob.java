@@ -3,6 +3,7 @@ package insane96mcp.mobspropertiesrandomness.json;
 import com.google.gson.annotations.SerializedName;
 import insane96mcp.mobspropertiesrandomness.exception.InvalidJsonException;
 import insane96mcp.mobspropertiesrandomness.json.mobs.MPRCreeper;
+import insane96mcp.mobspropertiesrandomness.json.utils.MPRAttribute;
 import insane96mcp.mobspropertiesrandomness.setup.Strings;
 import insane96mcp.mobspropertiesrandomness.utils.Logger;
 import insane96mcp.mobspropertiesrandomness.utils.MPRUtils;
@@ -17,7 +18,6 @@ import net.minecraftforge.registries.ForgeRegistries;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Random;
 
 import static insane96mcp.mobspropertiesrandomness.data.MPRReloadListener.MPR_MOBS;
 
@@ -28,6 +28,8 @@ public class MPRMob implements IMPRObject {
 
 	@SerializedName("potion_effects")
 	public List<MPRPotionEffect> potionEffects;
+
+	public List<MPRAttribute> attributes;
 
 	public MPRCreeper creeper;
 
@@ -59,13 +61,13 @@ public class MPRMob implements IMPRObject {
 			potionEffect.validate(file);
 		}
 
-		/*if (attributes == null)
-			attributes = new ArrayList<JsonAttribute>();
-		for (JsonAttribute attribute : attributes) {
-			attribute.Validate(file);
+		if (attributes == null)
+			attributes = new ArrayList<>();
+		for (MPRAttribute attribute : attributes) {
+			attribute.validate(file);
 		}
 
-		if (equipment == null)
+		/*if (equipment == null)
 			equipment = new JsonEquipment();
 		equipment.Validate(file);*/
 
@@ -83,9 +85,6 @@ public class MPRMob implements IMPRObject {
 
 		Entity entity = event.getEntity();
 		World world = event.getWorld();
-		Random random = world.rand;
-
-		//JsonCreeper.FixAreaEffectClouds(entity);
 
 		if (!(entity instanceof LivingEntity))
 			return;
@@ -104,6 +103,9 @@ public class MPRMob implements IMPRObject {
 			for (MPRPotionEffect potionEffect : mob.potionEffects) {
 				potionEffect.apply(entityLiving, world);
 			}
+			for (MPRAttribute attribute : mob.attributes) {
+				attribute.apply(entityLiving, world);
+			}
 
 			if (mob.creeper != null)
 				mob.creeper.apply(entityLiving, world);
@@ -117,7 +119,7 @@ public class MPRMob implements IMPRObject {
 
 	@Override
 	public String toString() {
-		return String.format("Mob{id: %s, group: %s, potion_effects: %s, creeper: %s}", mobId, group, potionEffects, creeper);
+		return String.format("Mob{id: %s, group: %s, potion_effects: %s, attributes: %s, creeper: %s}", mobId, group, potionEffects, attributes, creeper);
 		//return String.format("Mob{id: %s, group: %s, potionEffects: %s, attributes: %s, equipment: %s, creeper: %s, ghast: %s}", mobId, group, potionEffects, attributes, equipment, creeper, ghast);
 	}
 }

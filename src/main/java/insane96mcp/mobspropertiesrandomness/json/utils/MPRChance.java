@@ -12,6 +12,7 @@ import java.io.File;
 
 public class MPRChance implements IMPRObject {
 	public float amount;
+	//TODO Use MPRDifficulty
 	@SerializedName("affected_by_difficulty")
 	public boolean affectedByDifficulty;
 	@SerializedName("is_local_difficulty")
@@ -39,7 +40,7 @@ public class MPRChance implements IMPRObject {
 			}
 			else {
 				Difficulty difficulty = world.getDifficulty();
-				//TODO Create a json object to set the multiplier based off difficulty, without config
+				//TODO Move the multipliers to MPRDifficulty
 				if (difficulty.equals(Difficulty.EASY))
 					chance *= 0.5d;//Properties.config.difficulty.easyMultiplier;
 				else if (difficulty.equals(Difficulty.NORMAL))
