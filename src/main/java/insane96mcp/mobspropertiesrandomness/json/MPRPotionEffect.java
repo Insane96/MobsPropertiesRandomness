@@ -3,6 +3,7 @@ package insane96mcp.mobspropertiesrandomness.json;
 import com.google.gson.annotations.SerializedName;
 import insane96mcp.insanelib.utils.RandomHelper;
 import insane96mcp.mobspropertiesrandomness.exception.InvalidJsonException;
+import insane96mcp.mobspropertiesrandomness.json.utils.IMPRAppliable;
 import insane96mcp.mobspropertiesrandomness.json.utils.MPRChance;
 import insane96mcp.mobspropertiesrandomness.json.utils.MPRRange;
 import insane96mcp.mobspropertiesrandomness.utils.Logger;
@@ -17,9 +18,8 @@ import net.minecraftforge.registries.ForgeRegistries;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Random;
 
-public class MPRPotionEffect implements IMPRObject {
+public class MPRPotionEffect implements IMPRObject, IMPRAppliable {
 	public String id;
 	public MPRRange amplifier;
 
@@ -74,11 +74,11 @@ public class MPRPotionEffect implements IMPRObject {
 		}
 	}
 
-	public void apply(LivingEntity entity, World world, Random random) {
+	public void apply(LivingEntity entity, World world) {
 		if (world.isRemote)
 			return;
 
-		if (this.chance != null && !this.chance.chanceMatches(entity, world, random))
+		if (this.chance != null && !this.chance.chanceMatches(entity, world))
 			return;
 
 		if (!MPRUtils.doesDimensionMatch(entity, this.dimensionsList))
@@ -91,12 +91,12 @@ public class MPRPotionEffect implements IMPRObject {
 		int maxAmplifier = (int) this.amplifier.getMax();
 
 		Effect effect = ForgeRegistries.POTIONS.getValue(new ResourceLocation(this.id));
-		EffectInstance effectInstance = new EffectInstance(effect, 1000000, RandomHelper.getInt(random, minAmplifier, maxAmplifier), this.ambient, !this.hideParticles, false);
+		EffectInstance effectInstance = new EffectInstance(effect, 1000000, RandomHelper.getInt(world.rand, minAmplifier, maxAmplifier), this.ambient, !this.hideParticles, false);
 		entity.addPotionEffect(effectInstance);
 	}
 
 	@Override
 	public String toString() {
-		return String.format("PotionEffect{id: %s, amplifier: %s, chance: %s, ambient: %s, hideParticles: %s, dimensions: %s, biomes: %s}", id, amplifier, chance, ambient, hideParticles, dimensions, biomes);
+		return String.format("PotionEffect{id: %s, amplifier: %s, chance: %s, ambient: %s, hide_particles: %s, dimensions: %s, biomes: %s}", id, amplifier, chance, ambient, hideParticles, dimensions, biomes);
 	}
 }

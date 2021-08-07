@@ -9,7 +9,6 @@ import net.minecraft.world.Difficulty;
 import net.minecraft.world.World;
 
 import java.io.File;
-import java.util.Random;
 
 public class MPRChance implements IMPRObject {
 	public float amount;
@@ -32,7 +31,7 @@ public class MPRChance implements IMPRObject {
 			affectedByDifficulty = true;
 	}
 
-	public boolean chanceMatches(LivingEntity entity, World world, Random random) {
+	public boolean chanceMatches(LivingEntity entity, World world) {
 		float chance = this.amount;
 		if (this.affectedByDifficulty) {
 			if (this.isLocalDifficulty) {
@@ -52,11 +51,11 @@ public class MPRChance implements IMPRObject {
 			}
 		}
 
-		return random.nextFloat() < chance / 100f;
+		return world.rand.nextFloat() < chance / 100f;
 	}
 
 	@Override
 	public String toString() {
-		return String.format("Chance{chance: %f, affectedByDifficulty: %b, isLocalDifficulty: %b, multiplier: %f}", amount, affectedByDifficulty, isLocalDifficulty, multiplier);
+		return String.format("Chance{chance: %f, affected_by_bifficulty: %b, is_local_difficulty: %b, multiplier: %f}", amount, affectedByDifficulty, isLocalDifficulty, multiplier);
 	}
 }

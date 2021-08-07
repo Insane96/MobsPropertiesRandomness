@@ -2,6 +2,7 @@ package insane96mcp.mobspropertiesrandomness.json;
 
 import com.google.gson.annotations.SerializedName;
 import insane96mcp.mobspropertiesrandomness.exception.InvalidJsonException;
+import insane96mcp.mobspropertiesrandomness.json.mobs.MPRCreeper;
 import insane96mcp.mobspropertiesrandomness.setup.Strings;
 import insane96mcp.mobspropertiesrandomness.utils.Logger;
 import insane96mcp.mobspropertiesrandomness.utils.MPRUtils;
@@ -27,6 +28,8 @@ public class MPRMob implements IMPRObject {
 
 	@SerializedName("potion_effects")
 	public List<MPRPotionEffect> potionEffects;
+
+	public MPRCreeper creeper;
 
 	@Override
 	public void validate(File file) throws InvalidJsonException {
@@ -64,13 +67,13 @@ public class MPRMob implements IMPRObject {
 
 		if (equipment == null)
 			equipment = new JsonEquipment();
-		equipment.Validate(file);
+		equipment.Validate(file);*/
 
 		//Mob specific validations
 		if (creeper != null)
-			creeper.Validate(file);
+			creeper.validate(file);
 
-		if (ghast != null)
+		/*if (ghast != null)
 			ghast.Validate(file);*/
 	}
 
@@ -99,13 +102,14 @@ public class MPRMob implements IMPRObject {
 			if (!MPRUtils.matchesEntity(entityLiving, mob))
 				continue;
 			for (MPRPotionEffect potionEffect : mob.potionEffects) {
-				potionEffect.apply(entityLiving, world, random);
+				potionEffect.apply(entityLiving, world);
 			}
+
+			if (mob.creeper != null)
+				mob.creeper.apply(entityLiving, world);
 		}
 		//JsonAttribute.Apply(entityLiving, world, random);
 		//JsonEquipment.Apply(entityLiving, world, random);
-
-		//JsonCreeper.Apply(entityLiving, world, random);
 		//JsonGhast.Apply(entityLiving, world, random);
 
 		tags.putBoolean(Strings.Tags.PROCESSED, true);
@@ -113,7 +117,7 @@ public class MPRMob implements IMPRObject {
 
 	@Override
 	public String toString() {
-		return String.format("Mob{id: %s, group: %s, potionEffects: %s}", mobId, group, potionEffects);
+		return String.format("Mob{id: %s, group: %s, potion_effects: %s, creeper: %s}", mobId, group, potionEffects, creeper);
 		//return String.format("Mob{id: %s, group: %s, potionEffects: %s, attributes: %s, equipment: %s, creeper: %s, ghast: %s}", mobId, group, potionEffects, attributes, equipment, creeper, ghast);
 	}
 }
