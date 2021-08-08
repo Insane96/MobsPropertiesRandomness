@@ -51,7 +51,7 @@ public class MPRMob implements IMPRObject {
 
 			ResourceLocation resourceLocation = new ResourceLocation(mobId);
 			if (!ForgeRegistries.ENTITIES.containsKey(resourceLocation) && !mobId.endsWith("*"))
-				throw new InvalidJsonException("mob_id " + mobId + " does not exist", file);
+				throw new InvalidJsonException("Mob with ID " + mobId + " does not exist", file);
 		}
 
 		if (group != null) {
