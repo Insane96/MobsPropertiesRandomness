@@ -2,24 +2,25 @@ package insane96mcp.mobspropertiesrandomness.data;
 
 import com.google.gson.Gson;
 import insane96mcp.mobspropertiesrandomness.MobsPropertiesRandomness;
-import insane96mcp.mobspropertiesrandomness.json.MPRMob;
+import insane96mcp.mobspropertiesrandomness.json.MPRGroup;
 import insane96mcp.mobspropertiesrandomness.utils.FileUtils;
 import insane96mcp.mobspropertiesrandomness.utils.Logger;
 import net.minecraft.client.resources.ReloadListener;
 import net.minecraft.profiler.IProfiler;
 import net.minecraft.resources.IResourceManager;
+import org.apache.commons.io.FilenameUtils;
 
 import java.io.File;
 import java.io.FileReader;
 import java.util.ArrayList;
 import java.util.List;
 
-public class MPRReloadListener extends ReloadListener<Void> {
-	public static final List<MPRMob> MPR_MOBS = new ArrayList<>();
+public class MPRGroupReloadListener extends ReloadListener<Void> {
+	public static final List<MPRGroup> MPR_GROUPS = new ArrayList<>();
 
-	public static final MPRReloadListener INSTANCE;
+	public static final MPRGroupReloadListener INSTANCE;
 
-	public MPRReloadListener() {
+	public MPRGroupReloadListener() {
 		super();
 	}
 
@@ -29,21 +30,21 @@ public class MPRReloadListener extends ReloadListener<Void> {
 	}
 
 	static {
-		INSTANCE = new MPRReloadListener();
+		INSTANCE = new MPRGroupReloadListener();
 	}
 
 	@Override
 	protected void apply(Void objectIn, IResourceManager iResourceManager, IProfiler iProfiler) {
-		File jsonFolder = new File(MobsPropertiesRandomness.CONFIG_FOLDER + "/json");
-		if (!jsonFolder.exists())
-			jsonFolder.mkdir();
+		File groupsFolder = new File(MobsPropertiesRandomness.CONFIG_FOLDER + "/groups");
+		if (!groupsFolder.exists())
+			groupsFolder.mkdir();
 
-		MPR_MOBS.clear();
+		MPR_GROUPS.clear();
 
 		boolean correctlyReloaded = true;
 		Gson gson = new Gson();
 
-		ArrayList<File> jsonFiles = FileUtils.ListFilesForFolder(jsonFolder);
+		ArrayList<File> jsonFiles = FileUtils.ListFilesForFolder(groupsFolder);
 
 		for (File file : jsonFiles) {
 			//Ignore files that start with underscore '_'
@@ -53,10 +54,11 @@ public class MPRReloadListener extends ReloadListener<Void> {
 			try {
 				Logger.debug("Reading file " + file.getName());
 				FileReader fileReader = new FileReader(file);
-				MPRMob mob = gson.fromJson(fileReader, MPRMob.class);
-				Logger.debug(mob.toString());
-				mob.validate(file);
-				MPR_MOBS.add(mob);
+				MPRGroup group = gson.fromJson(fileReader, MPRGroup.class);
+				group.name = FilenameUtils.removeExtension(file.getName());
+				Logger.debug(group.toString());
+				group.validate(file);
+				MPR_GROUPS.add(group);
 			} catch (Exception e) {
 				correctlyReloaded = false;
 				//Logger.error("Failed to parse file with name " + file.getName());
@@ -66,8 +68,16 @@ public class MPRReloadListener extends ReloadListener<Void> {
 		}
 
 		if (correctlyReloaded)
-			Logger.info("Correctly reloaded all JSONs");
+			Logger.info("Correctly reloaded all Groups");
 		else
-			Logger.info("Reloaded all JSONs with error(s)");
+			Logger.info("Reloaded all Groups with error(s)");
+	}
+
+	public boolean doesGroupExist(String name) {
+		for (MPRGroup group : MPR_GROUPS) {
+			if (group.name.equals(name))
+				return true;
+		}
+		return false;
 	}
 }

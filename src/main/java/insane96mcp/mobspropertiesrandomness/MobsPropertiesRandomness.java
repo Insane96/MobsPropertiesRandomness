@@ -1,6 +1,7 @@
 package insane96mcp.mobspropertiesrandomness;
 
-import insane96mcp.mobspropertiesrandomness.data.MPRReloadListener;
+import insane96mcp.mobspropertiesrandomness.data.MPRGroupReloadListener;
+import insane96mcp.mobspropertiesrandomness.data.MPRMobReloadListener;
 import insane96mcp.mobspropertiesrandomness.setup.Config;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.event.AddReloadListenerEvent;
@@ -31,7 +32,8 @@ public class MobsPropertiesRandomness
 
     @SubscribeEvent
     public void onServerAboutToStart(AddReloadListenerEvent event) {
-        event.addListener(MPRReloadListener.INSTANCE);
+        event.addListener(MPRMobReloadListener.INSTANCE);
+        event.addListener(MPRGroupReloadListener.INSTANCE);
     }
 
     public void preInit(FMLCommonSetupEvent event) {

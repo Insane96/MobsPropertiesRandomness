@@ -1,5 +1,7 @@
 package insane96mcp.mobspropertiesrandomness.utils;
 
+import insane96mcp.mobspropertiesrandomness.data.MPRGroupReloadListener;
+import insane96mcp.mobspropertiesrandomness.json.MPRGroup;
 import insane96mcp.mobspropertiesrandomness.json.MPRMob;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.LivingEntity;
@@ -29,27 +31,21 @@ public class MPRUtils {
 	 * @return true if the entity passed matches the mob, or the namespace if the id is "modid:*", or the group if the namespace is "group"
 	 */
 	public static boolean matchesEntity(LivingEntity entity, MPRMob mob) {
-		/*if (mob.group != null) {
-			for (JsonGroup group : JsonGroup.groups) {
-				if (!group.name.equals(mob.group))
-					continue;
-
-				for (String mobId : group.mobs) {
-					if (mobId.endsWith("*")) {
-						String modDomain = mobId.split(":")[0];
-						ResourceLocation location = EntityList.getKey(entity);
-						if (location.getNamespace().toString().equals(modDomain))
-							return true;
-					}
-					ResourceLocation location = new ResourceLocation(mobId);
-					if (EntityList.isMatchingName(entity, location))
+		if (mob.group != null) {
+			MPRGroup group = MPRGroupReloadListener.MPR_GROUPS.stream().filter(g -> g.name.equals(mob.group)).findFirst().orElse(null);
+			for (String mobId : group.mobs) {
+				if (mobId.endsWith("*")) {
+					String modDomain = mobId.split(":")[0];
+					ResourceLocation location = entity.getType().getRegistryName();
+					if (location.getNamespace().equals(modDomain))
 						return true;
 				}
+				if (entity.getType().getRegistryName().equals(new ResourceLocation(mobId)))
+					return true;
 			}
 			return false;
 		}
-
-		else*/ if (mob.mobId.endsWith("*")) {
+		else if (mob.mobId.endsWith("*")) {
 			String modDomain = mob.mobId.split(":")[0];
 			ResourceLocation location = entity.getType().getRegistryName();
 			if (location.getNamespace().equals(modDomain)) {

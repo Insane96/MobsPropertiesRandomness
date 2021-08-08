@@ -1,6 +1,7 @@
 package insane96mcp.mobspropertiesrandomness.json;
 
 import com.google.gson.annotations.SerializedName;
+import insane96mcp.mobspropertiesrandomness.data.MPRGroupReloadListener;
 import insane96mcp.mobspropertiesrandomness.exception.InvalidJsonException;
 import insane96mcp.mobspropertiesrandomness.json.mobs.MPRCreeper;
 import insane96mcp.mobspropertiesrandomness.json.mobs.MPRGhast;
@@ -19,7 +20,7 @@ import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 
-import static insane96mcp.mobspropertiesrandomness.data.MPRReloadListener.MPR_MOBS;
+import static insane96mcp.mobspropertiesrandomness.data.MPRMobReloadListener.MPR_MOBS;
 
 public class MPRMob implements IMPRObject {
 	@SerializedName("mob_id")
@@ -53,10 +54,10 @@ public class MPRMob implements IMPRObject {
 				throw new InvalidJsonException("mob_id " + mobId + " does not exist", file);
 		}
 
-		/*if (group != null) {
-			if (!JsonGroup.DoesGroupExist(group))
-				throw new InvalidJsonException("group " + group + " does not exist", file);
-		}*/
+		if (group != null) {
+			if (!MPRGroupReloadListener.INSTANCE.doesGroupExist(group))
+				throw new InvalidJsonException("Group " + group + " does not exist", file);
+		}
 
 		if (potionEffects == null)
 			potionEffects = new ArrayList<>();
@@ -123,6 +124,5 @@ public class MPRMob implements IMPRObject {
 	@Override
 	public String toString() {
 		return String.format("Mob{id: %s, group: %s, potion_effects: %s, attributes: %s, equipment: %s, creeper: %s, ghast: %s}", mobId, group, potionEffects, attributes, equipment, creeper, ghast);
-		//return String.format("Mob{id: %s, group: %s, potionEffects: %s, attributes: %s, equipment: %s, creeper: %s, ghast: %s}", mobId, group, potionEffects, attributes, equipment, creeper, ghast);
 	}
 }

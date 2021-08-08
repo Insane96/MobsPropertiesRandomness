@@ -7,3 +7,4 @@
 * The apply of properties is now done at the lowest priority so mods can add the prevent processing tag correctly. Also the tag prevent processing has been changed to `mobspropertiesrandomness:processed`.
 * Change attribute's is_flat to operation
 * Renamed weight_difficulty to weight_modifier
+* Groups no longer need a name. Group name is now given by file name
