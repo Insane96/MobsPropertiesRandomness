@@ -7,7 +7,7 @@ import insane96mcp.mobspropertiesrandomness.json.IMPRObject;
 import insane96mcp.mobspropertiesrandomness.json.utils.IMPRAppliable;
 import insane96mcp.mobspropertiesrandomness.json.utils.MPRChance;
 import insane96mcp.mobspropertiesrandomness.json.utils.MPRRange;
-import net.minecraft.entity.LivingEntity;
+import net.minecraft.entity.MobEntity;
 import net.minecraft.entity.monster.CreeperEntity;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.world.World;
@@ -34,7 +34,7 @@ public class MPRCreeper implements IMPRObject, IMPRAppliable {
 	}
 
 	@Override
-	public void apply(LivingEntity entity, World world) {
+	public void apply(MobEntity entity, World world) {
 		if (!(entity instanceof CreeperEntity))
 			return;
 

@@ -57,6 +57,6 @@ public class MPRChance implements IMPRObject {
 
 	@Override
 	public String toString() {
-		return String.format("Chance{chance: %f, affected_by_bifficulty: %b, is_local_difficulty: %b, multiplier: %f}", amount, affectedByDifficulty, isLocalDifficulty, multiplier);
+		return String.format("Chance{amount: %f, affected_by_bifficulty: %b, is_local_difficulty: %b, multiplier: %f}", amount, affectedByDifficulty, isLocalDifficulty, multiplier);
 	}
 }

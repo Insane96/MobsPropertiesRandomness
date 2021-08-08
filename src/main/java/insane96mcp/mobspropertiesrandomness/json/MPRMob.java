@@ -3,12 +3,11 @@ package insane96mcp.mobspropertiesrandomness.json;
 import com.google.gson.annotations.SerializedName;
 import insane96mcp.mobspropertiesrandomness.exception.InvalidJsonException;
 import insane96mcp.mobspropertiesrandomness.json.mobs.MPRCreeper;
-import insane96mcp.mobspropertiesrandomness.json.utils.MPRAttribute;
 import insane96mcp.mobspropertiesrandomness.setup.Strings;
 import insane96mcp.mobspropertiesrandomness.utils.Logger;
 import insane96mcp.mobspropertiesrandomness.utils.MPRUtils;
 import net.minecraft.entity.Entity;
-import net.minecraft.entity.LivingEntity;
+import net.minecraft.entity.MobEntity;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.world.World;
@@ -30,6 +29,8 @@ public class MPRMob implements IMPRObject {
 	public List<MPRPotionEffect> potionEffects;
 
 	public List<MPRAttribute> attributes;
+
+	public MPREquipment equipment;
 
 	public MPRCreeper creeper;
 
@@ -67,9 +68,9 @@ public class MPRMob implements IMPRObject {
 			attribute.validate(file);
 		}
 
-		/*if (equipment == null)
-			equipment = new JsonEquipment();
-		equipment.Validate(file);*/
+		if (equipment == null)
+			equipment = new MPREquipment();
+		equipment.validate(file);
 
 		//Mob specific validations
 		if (creeper != null)
@@ -86,40 +87,40 @@ public class MPRMob implements IMPRObject {
 		Entity entity = event.getEntity();
 		World world = event.getWorld();
 
-		if (!(entity instanceof LivingEntity))
+		if (!(entity instanceof MobEntity))
 			return;
 
-		LivingEntity entityLiving = (LivingEntity) entity;
+		MobEntity mobEntity = (MobEntity) entity;
 
-		CompoundNBT tags = entityLiving.getPersistentData();
+		CompoundNBT tags = mobEntity.getPersistentData();
 		boolean isAlreadyChecked = tags.getBoolean(Strings.Tags.PROCESSED);
 
 		if (isAlreadyChecked)
 			return;
 
-		for (MPRMob mob : MPR_MOBS) {
-			if (!MPRUtils.matchesEntity(entityLiving, mob))
+		for (MPRMob mprMob : MPR_MOBS) {
+			if (!MPRUtils.matchesEntity(mobEntity, mprMob))
 				continue;
-			for (MPRPotionEffect potionEffect : mob.potionEffects) {
-				potionEffect.apply(entityLiving, world);
+			for (MPRPotionEffect potionEffect : mprMob.potionEffects) {
+				potionEffect.apply(mobEntity, world);
 			}
-			for (MPRAttribute attribute : mob.attributes) {
-				attribute.apply(entityLiving, world);
+			for (MPRAttribute attribute : mprMob.attributes) {
+				attribute.apply(mobEntity, world);
 			}
+			mprMob.equipment.apply(mobEntity, world);
 
-			if (mob.creeper != null)
-				mob.creeper.apply(entityLiving, world);
+			if (mprMob.creeper != null)
+				mprMob.creeper.apply(mobEntity, world);
 		}
-		//JsonAttribute.Apply(entityLiving, world, random);
-		//JsonEquipment.Apply(entityLiving, world, random);
-		//JsonGhast.Apply(entityLiving, world, random);
+		//JsonAttribute.Apply(mobEntity, world, random);
+		//JsonGhast.Apply(mobEntity, world, random);
 
 		tags.putBoolean(Strings.Tags.PROCESSED, true);
 	}
 
 	@Override
 	public String toString() {
-		return String.format("Mob{id: %s, group: %s, potion_effects: %s, attributes: %s, creeper: %s}", mobId, group, potionEffects, attributes, creeper);
+		return String.format("Mob{id: %s, group: %s, potion_effects: %s, attributes: %s, equipment: %s, creeper: %s}", mobId, group, potionEffects, attributes, equipment, creeper);
 		//return String.format("Mob{id: %s, group: %s, potionEffects: %s, attributes: %s, equipment: %s, creeper: %s, ghast: %s}", mobId, group, potionEffects, attributes, equipment, creeper, ghast);
 	}
 }

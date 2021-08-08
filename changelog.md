@@ -6,3 +6,4 @@
 * Potion effects dimensions now require a string instead of a numeric id (e.g. "minecraft:overworld")
 * The apply of properties is now done at the lowest priority so mods can add the prevent processing tag correctly. Also the tag prevent processing has been changed to `mobspropertiesrandomness:processed`.
 * Change attribute's is_flat to operation
+* Renamed weight_difficulty to weight_modifier

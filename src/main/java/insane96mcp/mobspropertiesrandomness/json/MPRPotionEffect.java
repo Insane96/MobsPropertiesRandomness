@@ -8,7 +8,7 @@ import insane96mcp.mobspropertiesrandomness.json.utils.MPRChance;
 import insane96mcp.mobspropertiesrandomness.json.utils.MPRRange;
 import insane96mcp.mobspropertiesrandomness.utils.Logger;
 import insane96mcp.mobspropertiesrandomness.utils.MPRUtils;
-import net.minecraft.entity.LivingEntity;
+import net.minecraft.entity.MobEntity;
 import net.minecraft.potion.Effect;
 import net.minecraft.potion.EffectInstance;
 import net.minecraft.util.ResourceLocation;
@@ -74,7 +74,7 @@ public class MPRPotionEffect implements IMPRObject, IMPRAppliable {
 		}
 	}
 
-	public void apply(LivingEntity entity, World world) {
+	public void apply(MobEntity entity, World world) {
 		if (world.isRemote)
 			return;
 

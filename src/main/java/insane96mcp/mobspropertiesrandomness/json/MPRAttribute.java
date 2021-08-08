@@ -1,13 +1,15 @@
-package insane96mcp.mobspropertiesrandomness.json.utils;
+package insane96mcp.mobspropertiesrandomness.json;
 
 import com.google.gson.annotations.SerializedName;
 import insane96mcp.insanelib.utils.RandomHelper;
 import insane96mcp.mobspropertiesrandomness.MobsPropertiesRandomness;
 import insane96mcp.mobspropertiesrandomness.exception.InvalidJsonException;
-import insane96mcp.mobspropertiesrandomness.json.IMPRObject;
+import insane96mcp.mobspropertiesrandomness.json.utils.IMPRAppliable;
+import insane96mcp.mobspropertiesrandomness.json.utils.MPRDifficulty;
+import insane96mcp.mobspropertiesrandomness.json.utils.MPRRange;
 import insane96mcp.mobspropertiesrandomness.utils.Logger;
 import insane96mcp.mobspropertiesrandomness.utils.MPRUtils;
-import net.minecraft.entity.LivingEntity;
+import net.minecraft.entity.MobEntity;
 import net.minecraft.entity.ai.attributes.Attribute;
 import net.minecraft.entity.ai.attributes.AttributeModifier;
 import net.minecraft.entity.ai.attributes.ModifiableAttributeInstance;
@@ -85,7 +87,7 @@ public class MPRAttribute implements IMPRObject, IMPRAppliable {
 	}
 
 	@Override
-	public void apply(LivingEntity entity, World world) {
+	public void apply(MobEntity entity, World world) {
 		if (world.isRemote)
 			return;
 
