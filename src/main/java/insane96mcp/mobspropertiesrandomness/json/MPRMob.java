@@ -3,6 +3,7 @@ package insane96mcp.mobspropertiesrandomness.json;
 import com.google.gson.annotations.SerializedName;
 import insane96mcp.mobspropertiesrandomness.exception.InvalidJsonException;
 import insane96mcp.mobspropertiesrandomness.json.mobs.MPRCreeper;
+import insane96mcp.mobspropertiesrandomness.json.mobs.MPRGhast;
 import insane96mcp.mobspropertiesrandomness.setup.Strings;
 import insane96mcp.mobspropertiesrandomness.utils.Logger;
 import insane96mcp.mobspropertiesrandomness.utils.MPRUtils;
@@ -33,6 +34,7 @@ public class MPRMob implements IMPRObject {
 	public MPREquipment equipment;
 
 	public MPRCreeper creeper;
+	public MPRGhast ghast;
 
 	@Override
 	public void validate(File file) throws InvalidJsonException {
@@ -76,8 +78,8 @@ public class MPRMob implements IMPRObject {
 		if (creeper != null)
 			creeper.validate(file);
 
-		/*if (ghast != null)
-			ghast.Validate(file);*/
+		if (ghast != null)
+			ghast.validate(file);
 	}
 
 	public static void apply(EntityJoinWorldEvent event) {
@@ -111,16 +113,16 @@ public class MPRMob implements IMPRObject {
 
 			if (mprMob.creeper != null)
 				mprMob.creeper.apply(mobEntity, world);
+			if (mprMob.ghast != null)
+				mprMob.ghast.apply(mobEntity, world);
 		}
-		//JsonAttribute.Apply(mobEntity, world, random);
-		//JsonGhast.Apply(mobEntity, world, random);
 
 		tags.putBoolean(Strings.Tags.PROCESSED, true);
 	}
 
 	@Override
 	public String toString() {
-		return String.format("Mob{id: %s, group: %s, potion_effects: %s, attributes: %s, equipment: %s, creeper: %s}", mobId, group, potionEffects, attributes, equipment, creeper);
+		return String.format("Mob{id: %s, group: %s, potion_effects: %s, attributes: %s, equipment: %s, creeper: %s, ghast: %s}", mobId, group, potionEffects, attributes, equipment, creeper, ghast);
 		//return String.format("Mob{id: %s, group: %s, potionEffects: %s, attributes: %s, equipment: %s, creeper: %s, ghast: %s}", mobId, group, potionEffects, attributes, equipment, creeper, ghast);
 	}
 }
