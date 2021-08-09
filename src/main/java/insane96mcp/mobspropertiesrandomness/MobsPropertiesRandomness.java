@@ -32,8 +32,8 @@ public class MobsPropertiesRandomness
 
     @SubscribeEvent
     public void onServerAboutToStart(AddReloadListenerEvent event) {
-        event.addListener(MPRMobReloadListener.INSTANCE);
         event.addListener(MPRGroupReloadListener.INSTANCE);
+        event.addListener(MPRMobReloadListener.INSTANCE);
     }
 
     public void preInit(FMLCommonSetupEvent event) {

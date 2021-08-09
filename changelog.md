@@ -1,5 +1,8 @@
 # Changelog
 
+## Alpha 3.0.1
+* Create folders on Minecraft load
+
 ## Alpha 3.0.0
 * The mod's JSON are now reloaded with the /reload command instead of begin a separate command
 * Creepers with mod's applied potion effects no longer generate clouds
