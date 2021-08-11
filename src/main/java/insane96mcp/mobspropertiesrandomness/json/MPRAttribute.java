@@ -12,7 +12,10 @@ import insane96mcp.mobspropertiesrandomness.utils.MPRUtils;
 import net.minecraft.entity.MobEntity;
 import net.minecraft.entity.ai.attributes.Attribute;
 import net.minecraft.entity.ai.attributes.AttributeModifier;
+import net.minecraft.entity.ai.attributes.Attributes;
 import net.minecraft.entity.ai.attributes.ModifiableAttributeInstance;
+import net.minecraft.entity.ai.goal.NearestAttackableTargetGoal;
+import net.minecraft.entity.ai.goal.PrioritizedGoal;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.world.Difficulty;
 import net.minecraft.world.World;
@@ -143,8 +146,19 @@ public class MPRAttribute implements IMPRObject, IMPRAppliable {
 		attributeInstance.applyPersistentModifier(modifier);
 
 		//Health Fix
-		if (this.id.equals("generic.max_health"))
+		if (this.id.contains("generic.max_health"))
 			entity.setHealth((float) attributeInstance.getValue());
+		else if (this.id.contains("generic.follow_range"))
+			fixFollowRange(entity);
+	}
+
+	private void fixFollowRange(MobEntity entity) {
+		for (PrioritizedGoal pGoal : entity.targetSelector.goals) {
+			if (pGoal.getGoal() instanceof NearestAttackableTargetGoal) {
+				NearestAttackableTargetGoal nearestAttackableTargetGoal = (NearestAttackableTargetGoal) pGoal.getGoal();
+				nearestAttackableTargetGoal.targetEntitySelector.setDistance(entity.getAttributeValue(Attributes.FOLLOW_RANGE));
+			}
+		}
 	}
 
 	@Override
