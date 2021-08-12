@@ -30,7 +30,7 @@ public class MPRMob implements IMPRObject {
 	@SerializedName("potion_effects")
 	public List<MPRPotionEffect> potionEffects;
 
-	public List<MPRAttribute> attributes;
+	public List<MPRMobAttribute> attributes;
 
 	public MPREquipment equipment;
 
@@ -67,7 +67,7 @@ public class MPRMob implements IMPRObject {
 
 		if (attributes == null)
 			attributes = new ArrayList<>();
-		for (MPRAttribute attribute : attributes) {
+		for (MPRMobAttribute attribute : attributes) {
 			attribute.validate(file);
 		}
 
@@ -107,7 +107,7 @@ public class MPRMob implements IMPRObject {
 			for (MPRPotionEffect potionEffect : mprMob.potionEffects) {
 				potionEffect.apply(mobEntity, world);
 			}
-			for (MPRAttribute attribute : mprMob.attributes) {
+			for (MPRMobAttribute attribute : mprMob.attributes) {
 				attribute.apply(mobEntity, world);
 			}
 			mprMob.equipment.apply(mobEntity, world);

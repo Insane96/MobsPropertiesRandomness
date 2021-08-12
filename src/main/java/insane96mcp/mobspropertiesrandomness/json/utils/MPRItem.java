@@ -32,7 +32,6 @@ public class MPRItem extends WeightedRandom.Item implements IMPRObject {
 	private List<String> biomes;
 	public transient List<ResourceLocation> biomesList;
 
-	//TODO Can't I validate the JSON in the constructor?
 	public MPRItem(int itemWeightIn) {
 		super(itemWeightIn);
 	}
@@ -56,10 +55,6 @@ public class MPRItem extends WeightedRandom.Item implements IMPRObject {
 			Logger.debug("Drop Chance has been set to 0 (or omitted). Will now default to 8.5f. If you want mobs to not drop this item, even with looting, set dropChance to -4");
 			dropChance = 8.5f;
 		}
-		/*else if (dropChance == -4f) {
-			Logger.debug("Drop Chance has been set to -1. Mob no longer drops this item in any case");
-			dropChance = Short.MIN_VALUE;
-		}*/
 
 		if (enchantments == null)
 			enchantments = new ArrayList<>();

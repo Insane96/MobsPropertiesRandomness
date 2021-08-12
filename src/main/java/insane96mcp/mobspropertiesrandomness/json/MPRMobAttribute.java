@@ -1,11 +1,10 @@
 package insane96mcp.mobspropertiesrandomness.json;
 
-import com.google.gson.annotations.SerializedName;
 import insane96mcp.insanelib.utils.RandomHelper;
 import insane96mcp.mobspropertiesrandomness.MobsPropertiesRandomness;
 import insane96mcp.mobspropertiesrandomness.exception.InvalidJsonException;
+import insane96mcp.mobspropertiesrandomness.json.utils.MPRAttribute;
 import insane96mcp.mobspropertiesrandomness.json.utils.MPRRange;
-import insane96mcp.mobspropertiesrandomness.json.utils.difficulty.MPRDifficultyModifier;
 import insane96mcp.mobspropertiesrandomness.utils.Logger;
 import insane96mcp.mobspropertiesrandomness.utils.MPRUtils;
 import net.minecraft.entity.MobEntity;
@@ -20,55 +19,12 @@ import net.minecraft.world.World;
 import net.minecraftforge.registries.ForgeRegistries;
 
 import java.io.File;
-import java.util.ArrayList;
-import java.util.List;
 import java.util.UUID;
 
-public class MPRAttribute implements IMPRObject, IMPRAppliable {
-	//TODO Add uuid?
-	public String id;
-	public MPRRange modifier;
-	public AttributeModifier.Operation operation;
-	@SerializedName("difficulty_modifier")
-	public MPRDifficultyModifier difficultyModifier;
-
-	//Move to MPRWorld
-	private List<String> dimensions;
-	public transient List<ResourceLocation> dimensionsList = new ArrayList<>();
-
-	private List<String> biomes;
-	public transient List<ResourceLocation> biomesList = new ArrayList<>();
-
+public class MPRMobAttribute extends MPRAttribute implements IMPRObject, IMPRAppliable {
 	@Override
 	public void validate(File file) throws InvalidJsonException {
-		//Attribute Id
-		if (id == null)
-			throw new InvalidJsonException("Missing Attribute Id for " + this, file);
-
-		//Modifier
-		if (modifier == null)
-			throw new InvalidJsonException("Missing Modifier (Min/Max) Id for " + this, file);
-		modifier.validate(file);
-
-		//Modifier
-		if (operation == null)
-			throw new InvalidJsonException("Missing Operation for " + this, file);
-
-		dimensionsList.clear();
-		if (dimensions != null) {
-			for (String dimension : dimensions) {
-				ResourceLocation dimensionRL = new ResourceLocation(dimension);
-				dimensionsList.add(dimensionRL);
-			}
-		}
-
-		biomesList.clear();
-		if (biomes != null) {
-			for (String biome : biomes) {
-				ResourceLocation biomeLoc = new ResourceLocation(biome);
-				biomesList.add(biomeLoc);
-			}
-		}
+		super.validate(file);
 	}
 
 	@Override
@@ -82,8 +38,8 @@ public class MPRAttribute implements IMPRObject, IMPRAppliable {
 		if (!MPRUtils.doesBiomeMatch(entity, this.biomesList))
 			return;
 
-		float min = this.modifier.getMin();
-		float max = this.modifier.getMax();
+		float min = this.amount.getMin();
+		float max = this.amount.getMax();
 
 		if (difficultyModifier != null) {
 			MPRRange minMax = difficultyModifier.applyModifier(world.getDifficulty(), world.getDifficultyForLocation(entity.getPosition()).getAdditionalDifficulty(), min, max);
@@ -91,22 +47,22 @@ public class MPRAttribute implements IMPRObject, IMPRAppliable {
 			max = minMax.getMax();
 		}
 
-		Attribute attribute = ForgeRegistries.ATTRIBUTES.getValue(new ResourceLocation(this.id));
+		Attribute attribute = ForgeRegistries.ATTRIBUTES.getValue(new ResourceLocation(this.attributeId));
 		ModifiableAttributeInstance attributeInstance = entity.getAttribute(attribute);
 		if (attributeInstance == null) {
-			Logger.warn("Attribute " + this.id + " not found for the entity, skipping the attribute");
+			Logger.warn("Attribute " + this.attributeId + " not found for the entity, skipping the attribute");
 			return;
 		}
 
 		float amount = RandomHelper.getFloat(world.rand, min, max);
 
-		AttributeModifier modifier = new AttributeModifier(UUID.randomUUID(), MobsPropertiesRandomness.RESOURCE_PREFIX + this.id, amount, operation);
+		AttributeModifier modifier = new AttributeModifier(UUID.randomUUID(), MobsPropertiesRandomness.RESOURCE_PREFIX + this.attributeId, amount, operation);
 		attributeInstance.applyPersistentModifier(modifier);
 
 		//Health Fix
-		if (this.id.contains("generic.max_health"))
+		if (this.attributeId.contains("generic.max_health"))
 			entity.setHealth((float) attributeInstance.getValue());
-		else if (this.id.contains("generic.follow_range"))
+		else if (this.attributeId.contains("generic.follow_range"))
 			fixFollowRange(entity);
 	}
 
@@ -121,6 +77,6 @@ public class MPRAttribute implements IMPRObject, IMPRAppliable {
 
 	@Override
 	public String toString() {
-		return String.format("Attribute{id: %s, modifier: %s, operation: %s, difficulty_modifier: %s, dimensions: %s, biomes: %s}", id, modifier, operation, difficultyModifier, dimensions, biomes);
+		return String.format("MobAttribute{uuid: %s, attribute_id: %s, amount: %s, operation: %s, difficulty_modifier: %s, dimensions: %s, biomes: %s}", uuid, attributeId, amount, operation, difficultyModifier, dimensions, biomes);
 	}
 }

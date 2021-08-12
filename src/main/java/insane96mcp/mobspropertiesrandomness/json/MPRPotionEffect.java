@@ -54,7 +54,7 @@ public class MPRPotionEffect implements IMPRObject, IMPRAppliable {
 
 		//ambient and hide particles
 		if (ambient && hideParticles)
-			Logger.info("Particles are hidden, but ambient is enabled. This might be an unintended behaviour for " + this);
+			Logger.info("Particles are hidden, but ambient is enabled. This might be an unintended setting for " + this);
 
 		dimensionsList.clear();
 		if (dimensions != null) {
