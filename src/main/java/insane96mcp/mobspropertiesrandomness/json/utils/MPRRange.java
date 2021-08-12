@@ -29,17 +29,16 @@ public class MPRRange implements IMPRObject {
 	}
 
 	public void validate(final File file) throws InvalidJsonException {
-		if (min == null) {
-			throw new InvalidJsonException("Missing min for " + this, file);
-		}
+		if (min == null)
+			throw new InvalidJsonException("Missing min. " + this, file);
+
 		if (max == null) {
-			Logger.debug("Missing max for " + this + ". Max will be equal to min");
+			Logger.info("Missing max for " + this + ". Max will be equal to min.");
 			max = min;
 		}
-		if (max < min) {
-			Logger.debug("Min is greater than max " + this + ". Max will be equal to min");
-			max = min;
-		}
+
+		if (max < min)
+			throw new InvalidJsonException("Min cannot be greater than max. " + this, file);
 	}
 
 	@Override

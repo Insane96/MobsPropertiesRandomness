@@ -51,7 +51,7 @@ public class MPRMobReloadListener extends ReloadListener<Void> {
 				continue;
 
 			try {
-				Logger.debug("Reading file " + file.getName());
+				Logger.info("Loading file " + file.getName());
 				FileReader fileReader = new FileReader(file);
 				MPRMob mob = gson.fromJson(fileReader, MPRMob.class);
 				Logger.debug(mob.toString());

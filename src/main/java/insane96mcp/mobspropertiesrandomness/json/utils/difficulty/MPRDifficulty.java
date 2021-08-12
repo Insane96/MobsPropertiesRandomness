@@ -24,7 +24,7 @@ public class MPRDifficulty implements IMPRObject {
 	@Override
 	public void validate(File file) throws InvalidJsonException {
 		if (operation ==  null) {
-			Logger.info("Missing Operation for " + this + ". Will now default to ADDITIVE.");
+			Logger.info("Missing Operation. " + this + ". Will now default to ADDITIVE.");
 		}
 	}
 

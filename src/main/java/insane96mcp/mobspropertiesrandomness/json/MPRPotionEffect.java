@@ -37,13 +37,13 @@ public class MPRPotionEffect implements IMPRObject, IMPRAppliable {
 	public void validate(final File file) throws InvalidJsonException {
 		//Potion Id
 		if (id == null)
-			throw new InvalidJsonException("Missing Potion Effect Id for " + this, file);
+			throw new InvalidJsonException("Missing Potion Effect Id. " + this, file);
 		else if (!ForgeRegistries.POTIONS.containsKey(new ResourceLocation(id)))
-			throw new InvalidJsonException("Potion effect with Id " + id + " does not exist", file);
+			throw new InvalidJsonException("Invalid Potion Effect Id. " + this, file);
 
 		//Amplifier
 		if (amplifier == null) {
-			Logger.debug("Missing Amplifier from " + this + ". Creating a new one with min and max set to 0");
+			Logger.info("Missing Amplifier. " + this + ". Will default to 0");
 			amplifier = new MPRRange(0, 0);
 		}
 		amplifier.validate(file);

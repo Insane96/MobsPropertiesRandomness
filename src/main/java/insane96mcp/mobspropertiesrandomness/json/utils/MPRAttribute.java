@@ -37,17 +37,17 @@ public abstract class MPRAttribute implements IMPRObject {
 			uuid = UUID.randomUUID().toString();
 
 		if (attributeId == null)
-			throw new InvalidJsonException("Missing Attribute Id for " + this, file);
+			throw new InvalidJsonException("Missing Attribute Id. " + this, file);
 
 		if (modifierName == null)
-			throw new InvalidJsonException("Missing Modifier Name for " + this, file);
+			throw new InvalidJsonException("Missing Modifier Name. " + this, file);
 
 		if (amount == null)
-			throw new InvalidJsonException("Missing Amount (Min/Max) for " + this, file);
+			throw new InvalidJsonException("Missing Amount (Min/Max). " + this, file);
 		amount.validate(file);
 
 		if (operation == null)
-			throw new InvalidJsonException("Missing Operation for " + this, file);
+			throw new InvalidJsonException("Missing Operation. " + this, file);
 
 		if (difficultyModifier != null)
 			difficultyModifier.validate(file);

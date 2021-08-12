@@ -13,7 +13,7 @@ public class MPRGroup implements IMPRObject {
 	@Override
 	public void validate(File file) throws InvalidJsonException {
 		if (mobs == null || mobs.isEmpty()) {
-			throw new InvalidJsonException("Group " + this.name + " is missing or has no mobs in the list", file);
+			throw new InvalidJsonException("Group " + this.name + " is missing mobs or has no mobs in the list", file);
 		}
 	}
 

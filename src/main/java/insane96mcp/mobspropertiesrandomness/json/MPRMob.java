@@ -40,9 +40,9 @@ public class MPRMob implements IMPRObject {
 	@Override
 	public void validate(File file) throws InvalidJsonException {
 		if (mobId == null && group == null)
-			throw new InvalidJsonException("Missing mob_id or group for " + this, file);
+			throw new InvalidJsonException("Missing mob_id or group. " + this, file);
 		else if (mobId != null && group != null)
-			Logger.debug("mob_id and group are both present, mob_id will be ignored");
+			Logger.info("mob_id and group are both present, mob_id will be ignored");
 
 		if (mobId != null) {
 			String[] splitId = mobId.split(":");

@@ -14,7 +14,7 @@ import net.minecraftforge.eventbus.api.SubscribeEvent;
 public class BaseFeature extends Feature {
 	private final ForgeConfigSpec.ConfigValue<Boolean> debugConfig;
 
-	public boolean debug = true;
+	public boolean debug = false;
 
 	public BaseFeature(Module module) {
 		super(Config.builder, module, true, false);

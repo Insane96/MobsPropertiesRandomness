@@ -52,7 +52,7 @@ public class MPRGroupReloadListener extends ReloadListener<Void> {
 				continue;
 
 			try {
-				Logger.debug("Reading file " + file.getName());
+				Logger.info("Loading file " + file.getName());
 				FileReader fileReader = new FileReader(file);
 				MPRGroup group = gson.fromJson(fileReader, MPRGroup.class);
 				group.name = FilenameUtils.removeExtension(file.getName());

@@ -39,22 +39,20 @@ public class MPRItem extends WeightedRandom.Item implements IMPRObject {
 	@Override
 	public void validate(File file) throws InvalidJsonException {
 		if (id == null)
-			throw new InvalidJsonException("Missing Id for " + this, file);
+			throw new InvalidJsonException("Missing id. " + this, file);
 		else if (ForgeRegistries.ITEMS.getValue(new ResourceLocation(this.id)) == null)
-			Logger.warn("Failed to find item with id " + id);
+			throw new InvalidJsonException("Invalid id. " + this, file);
 
 		if (weight <= 0)
-			throw new InvalidJsonException("Missing weight (or weight <= 0) for " + this, file);
+			throw new InvalidJsonException("Missing weight (or weight <= 0). " + this, file);
 		else
 			itemWeight = weight;
 
 		if (weightModifier == null)
 			weightModifier = new MPRDifficulty();
 
-		if (dropChance == 0f) {
-			Logger.debug("Drop Chance has been set to 0 (or omitted). Will now default to 8.5f. If you want mobs to not drop this item, even with looting, set dropChance to -4");
-			dropChance = 8.5f;
-		}
+		if (dropChance == 0f)
+			Logger.info("Drop Chance has been set to 0 (or omitted). Mobs will drop this piece only with Looting. " + this);
 
 		if (enchantments == null)
 			enchantments = new ArrayList<>();

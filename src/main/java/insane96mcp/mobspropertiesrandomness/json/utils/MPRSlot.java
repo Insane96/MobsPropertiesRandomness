@@ -24,19 +24,18 @@ public class MPRSlot implements IMPRObject {
 
 	@Override
 	public void validate(File file) throws InvalidJsonException {
-		if (chance != null)
-			chance.validate(file);
-		else
-			throw new InvalidJsonException("Missing Chance for " + this, file);
+		if (chance == null)
+			throw new InvalidJsonException("Missing chance. " + this, file);
+		chance.validate(file);
 
 		if (replaceOnly && !override)
 		{
-			Logger.debug("override has been set to true since replace_only is true for " + this);
+			Logger.info("override has been set to true since replace_only is true. " + this);
 			override = true;
 		}
 
 		if (items == null || items.isEmpty())
-			throw new InvalidJsonException("There's no item set or item is missing in the slot " + this, file);
+			throw new InvalidJsonException("Missing items. " + this, file);
 		else {
 			for (MPRItem item : items) {
 				item.validate(file);

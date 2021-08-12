@@ -6,7 +6,6 @@ import insane96mcp.mobspropertiesrandomness.json.IMPRObject;
 import java.io.File;
 
 public class MPRLocalDifficulty implements IMPRObject {
-
 	public float multiplier;
 
 	@Override

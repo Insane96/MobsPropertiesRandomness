@@ -41,19 +41,19 @@ public class MPREnchantment implements IMPRObject {
 		if (id == null)
 			throw new InvalidJsonException("Missing Enchantment ID for " + this, file);
 		else if (!id.equals("random") && ForgeRegistries.ENCHANTMENTS.getValue(new ResourceLocation(id)) == null)
-			Logger.warn("Failed to find enchantment with id " + id);
+			throw new InvalidJsonException("Invalid Enchantment ID for " + this, file);
 
 		if (level != null)
 			level.validate(file);
 		else if (!Objects.equals(id, "random")){
-			Logger.debug("Missing Enchantment Level for " + this + ". Will default to 1");
+			Logger.info("Missing Enchantment Level. " + this + ". Will default to 1");
 			level = new MPRRange(1, 1);
 		}
 
 		if (chance != null)
 			chance.validate(file);
 		else
-			throw new InvalidJsonException("Missing chance for " + this, file);
+			throw new InvalidJsonException("Missing chance. " + this, file);
 	}
 
 	public void applyToStack(LivingEntity entity, World world, ItemStack itemStack) {

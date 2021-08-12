@@ -4,6 +4,7 @@ import com.google.gson.annotations.SerializedName;
 import insane96mcp.mobspropertiesrandomness.exception.InvalidJsonException;
 import insane96mcp.mobspropertiesrandomness.json.IMPRObject;
 import insane96mcp.mobspropertiesrandomness.json.utils.difficulty.MPRDifficultyModifier;
+import insane96mcp.mobspropertiesrandomness.utils.Logger;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.world.World;
 
@@ -15,8 +16,8 @@ public class MPRChance implements IMPRObject {
 	public MPRDifficultyModifier difficultyModifier;
 
 	public void validate(final File file) throws InvalidJsonException {
-		if (amount == 0f)
-			throw new InvalidJsonException("Missing chance in " + this, file);
+		if (amount <= 0f)
+			Logger.info("Chance missing, equal to or less than 0. " + this);
 
 		if (difficultyModifier != null)
 			difficultyModifier.validate(file);
