@@ -1,7 +1,16 @@
 # Changelog
 
 ## Alpha 3.0.1
-* Create folders on Minecraft load
+* Revamped Difficulty modifier
+The difficulty object is now `difficulty_modifier` containing a modifier for difficulty, for local difficulty and if should affect the max value only.
+Weight Modifier now uses the `difficulty` object (`operation`, `easy`, `normal`, `hard`)
+Chance and Attributes make use of the new `difficulty_modifier`
+* `override_vanilla` has been renamed to `override`
+* Chance is now required with a value between 0 and 1 instead of 0 and 100
+* Added `allow_curses` and `allow_treasure` for "random" enchantment
+* Debug is now disabled by default and loggin is now slightly better
+* Fixed Groups loading too late
+* JSON and Groups folders are now created on minecraft load
 
 ## Alpha 3.0.0
 * The mod's JSON are now reloaded with the /reload command instead of begin a separate command
