@@ -4,7 +4,6 @@ import com.google.gson.annotations.SerializedName;
 import insane96mcp.insanelib.utils.RandomHelper;
 import insane96mcp.mobspropertiesrandomness.MobsPropertiesRandomness;
 import insane96mcp.mobspropertiesrandomness.exception.InvalidJsonException;
-import insane96mcp.mobspropertiesrandomness.json.utils.IMPRAppliable;
 import insane96mcp.mobspropertiesrandomness.json.utils.MPRDifficulty;
 import insane96mcp.mobspropertiesrandomness.json.utils.MPRRange;
 import insane96mcp.mobspropertiesrandomness.utils.Logger;
