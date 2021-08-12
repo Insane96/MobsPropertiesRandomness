@@ -16,8 +16,8 @@ import java.util.List;
 public class MPRSlot implements IMPRObject {
 
 	//TODO Rename to override?
-	@SerializedName("override_vanilla")
-	public boolean overrideVanilla;
+	@SerializedName("override")
+	public boolean override;
 	@SerializedName("replace_only")
 	public boolean replaceOnly;
 	public MPRChance chance;
@@ -30,10 +30,10 @@ public class MPRSlot implements IMPRObject {
 		else
 			throw new InvalidJsonException("Missing Chance for " + this, file);
 
-		if (replaceOnly && !overrideVanilla)
+		if (replaceOnly && !override)
 		{
-			Logger.debug("override_vanilla has been set to true since replace_only is true for " + this);
-			overrideVanilla = true;
+			Logger.debug("override has been set to true since replace_only is true for " + this);
+			override = true;
 		}
 
 		if (items == null || items.isEmpty())
@@ -69,6 +69,6 @@ public class MPRSlot implements IMPRObject {
 
 	@Override
 	public String toString() {
-		return String.format("Slot{override_vanilla: %s, replace_only: %s, chance: %s, items: %s}", overrideVanilla, replaceOnly, chance, items);
+		return String.format("Slot{override: %s, replace_only: %s, chance: %s, items: %s}", override, replaceOnly, chance, items);
 	}
 }
