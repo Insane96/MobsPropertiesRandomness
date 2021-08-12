@@ -1,7 +1,6 @@
 package insane96mcp.mobspropertiesrandomness.data;
 
 import com.google.gson.Gson;
-import insane96mcp.mobspropertiesrandomness.MobsPropertiesRandomness;
 import insane96mcp.mobspropertiesrandomness.json.MPRGroup;
 import insane96mcp.mobspropertiesrandomness.utils.FileUtils;
 import insane96mcp.mobspropertiesrandomness.utils.Logger;
@@ -20,6 +19,8 @@ public class MPRGroupReloadListener extends ReloadListener<Void> {
 
 	public static final MPRGroupReloadListener INSTANCE;
 
+	public static File groupsFolder;
+
 	public MPRGroupReloadListener() {
 		super();
 	}
@@ -35,10 +36,6 @@ public class MPRGroupReloadListener extends ReloadListener<Void> {
 
 	@Override
 	protected void apply(Void objectIn, IResourceManager iResourceManager, IProfiler iProfiler) {
-		File groupsFolder = new File(MobsPropertiesRandomness.CONFIG_FOLDER + "/groups");
-		if (!groupsFolder.exists())
-			groupsFolder.mkdir();
-
 		MPR_GROUPS.clear();
 
 		boolean correctlyReloaded = true;

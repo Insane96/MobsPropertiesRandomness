@@ -1,7 +1,6 @@
 package insane96mcp.mobspropertiesrandomness.data;
 
 import com.google.gson.Gson;
-import insane96mcp.mobspropertiesrandomness.MobsPropertiesRandomness;
 import insane96mcp.mobspropertiesrandomness.json.MPRMob;
 import insane96mcp.mobspropertiesrandomness.utils.FileUtils;
 import insane96mcp.mobspropertiesrandomness.utils.Logger;
@@ -19,6 +18,8 @@ public class MPRMobReloadListener extends ReloadListener<Void> {
 
 	public static final MPRMobReloadListener INSTANCE;
 
+	public static File jsonFolder;
+
 	public MPRMobReloadListener() {
 		super();
 	}
@@ -34,10 +35,6 @@ public class MPRMobReloadListener extends ReloadListener<Void> {
 
 	@Override
 	protected void apply(Void objectIn, IResourceManager iResourceManager, IProfiler iProfiler) {
-		File jsonFolder = new File(MobsPropertiesRandomness.CONFIG_FOLDER + "/json");
-		if (!jsonFolder.exists())
-			jsonFolder.mkdir();
-
 		MPR_MOBS.clear();
 
 		boolean correctlyReloaded = true;

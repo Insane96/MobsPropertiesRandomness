@@ -25,9 +25,18 @@ public class MobsPropertiesRandomness
         if (!directory.exists())
             directory.mkdir();
 
+        MPRGroupReloadListener.groupsFolder = new File(MobsPropertiesRandomness.CONFIG_FOLDER + "/groups");
+        if (!MPRGroupReloadListener.groupsFolder.exists())
+            MPRGroupReloadListener.groupsFolder.mkdir();
+
+        MPRMobReloadListener.jsonFolder = new File(MobsPropertiesRandomness.CONFIG_FOLDER + "/json");
+        if (!MPRMobReloadListener.jsonFolder.exists())
+            MPRMobReloadListener.jsonFolder.mkdir();
+
         ModLoadingContext.get().registerConfig(net.minecraftforge.fml.config.ModConfig.Type.COMMON, Config.COMMON_SPEC, "MobsPropertiesRandomness/" + MOD_ID + ".toml");
         FMLJavaModLoadingContext.get().getModEventBus().addListener(this::preInit);
         MinecraftForge.EVENT_BUS.register(this);
+
     }
 
     @SubscribeEvent

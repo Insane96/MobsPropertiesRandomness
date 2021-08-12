@@ -22,7 +22,6 @@ import java.util.Objects;
 
 public class MPREnchantment implements IMPRObject {
 
-	//TODO For 'random' add "allow_curses" and "allow_treasure"
 	public String id;
 	@SerializedName("allow_curses")
 	public boolean allowCurses;
