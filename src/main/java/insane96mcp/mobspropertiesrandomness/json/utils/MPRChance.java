@@ -27,7 +27,7 @@ public class MPRChance implements IMPRObject {
 		if (difficultyModifier != null)
 			chance = difficultyModifier.applyModifier(world.getDifficulty(), world.getDifficultyForLocation(entity.getPosition()).getAdditionalDifficulty(), chance);
 
-		return world.rand.nextFloat() < chance / 100f;
+		return world.rand.nextFloat() < chance;
 	}
 
 	@Override
