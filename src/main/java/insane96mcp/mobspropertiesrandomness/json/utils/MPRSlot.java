@@ -15,7 +15,6 @@ import java.util.List;
 
 public class MPRSlot implements IMPRObject {
 
-	//TODO Rename to override?
 	@SerializedName("override")
 	public boolean override;
 	@SerializedName("replace_only")

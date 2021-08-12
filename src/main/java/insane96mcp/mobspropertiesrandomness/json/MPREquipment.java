@@ -65,7 +65,7 @@ public class MPREquipment implements IMPRObject, IMPRAppliable {
 		if (slot == null)
 			return;
 
-		if (!slot.overrideVanilla && !entity.getItemStackFromSlot(equipmentSlotType).isEmpty())
+		if (!slot.override && !entity.getItemStackFromSlot(equipmentSlotType).isEmpty())
 			return;
 
 		if (slot.replaceOnly && entity.getItemStackFromSlot(equipmentSlotType).isEmpty())

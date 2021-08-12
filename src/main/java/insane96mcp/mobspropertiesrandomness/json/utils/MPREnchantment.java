@@ -1,5 +1,6 @@
 package insane96mcp.mobspropertiesrandomness.json.utils;
 
+import com.google.gson.annotations.SerializedName;
 import insane96mcp.insanelib.utils.RandomHelper;
 import insane96mcp.mobspropertiesrandomness.exception.InvalidJsonException;
 import insane96mcp.mobspropertiesrandomness.json.IMPRObject;
@@ -23,8 +24,17 @@ public class MPREnchantment implements IMPRObject {
 
 	//TODO For 'random' add "allow_curses" and "allow_treasure"
 	public String id;
+	@SerializedName("allow_curses")
+	public boolean allowCurses;
+	@SerializedName("allow_treasure")
+	public boolean allowTreasure;
 	public MPRRange level;
 	public MPRChance chance;
+
+	public MPREnchantment() {
+		allowCurses = true;
+		allowTreasure = true;
+	}
 
 	@Override
 	public void validate(File file) throws InvalidJsonException {
@@ -53,7 +63,12 @@ public class MPREnchantment implements IMPRObject {
 		if (this.id.equals("random")) {
 			List<Enchantment> validEnch = new ArrayList<>();
 			for (Enchantment enchantment : ForgeRegistries.ENCHANTMENTS.getValues()) {
-				if (/*itemStack.getItem() == Items.BOOK || */enchantment.canApply(itemStack))
+				if (enchantment.isCurse() && !allowCurses)
+					continue;
+				if (enchantment.isTreasureEnchantment() && !allowTreasure)
+					continue;
+
+				if (enchantment.canApply(itemStack))
 					validEnch.add(enchantment);
 			}
 
@@ -64,8 +79,6 @@ public class MPREnchantment implements IMPRObject {
 
 			Enchantment choosenEnch = validEnch.get(world.rand.nextInt(validEnch.size()));
 			int level = RandomHelper.getInt(world.rand, choosenEnch.getMinLevel(), choosenEnch.getMaxLevel());
-			//if (itemStack.getItem() == Items.ENCHANTED_BOOK)
-			//    ItemEnchantedBook.addEnchantment(itemStack, new EnchantmentData(choosenEnch, level));
 			itemStack.addEnchantment(choosenEnch, level);
 		}
 		else {
