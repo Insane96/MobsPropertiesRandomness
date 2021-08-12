@@ -12,6 +12,7 @@ public class MPRDifficultyModifier implements IMPRObject {
 	@SerializedName("affects_max_only")
 	public boolean affectsMaxOnly;
 	public MPRDifficulty difficulty;
+	@SerializedName("local_difficulty")
 	public MPRLocalDifficulty localDifficulty;
 
 	public MPRDifficultyModifier() {

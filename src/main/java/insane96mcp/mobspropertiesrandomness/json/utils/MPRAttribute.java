@@ -22,8 +22,9 @@ public abstract class MPRAttribute implements IMPRObject {
 	public AttributeModifier.Operation operation;
 	@SerializedName("difficulty_modifier")
 	public MPRDifficultyModifier difficultyModifier;
+	//TODO Add MPRPosModifier
 
-	//TODO Move to MPRWorld, where I can add a depth multiplier too
+	//TODO Move to MPRWorld
 	protected List<String> dimensions;
 	public transient List<ResourceLocation> dimensionsList = new ArrayList<>();
 
@@ -47,6 +48,9 @@ public abstract class MPRAttribute implements IMPRObject {
 
 		if (operation == null)
 			throw new InvalidJsonException("Missing Operation for " + this, file);
+
+		if (difficultyModifier != null)
+			difficultyModifier.validate(file);
 
 		dimensionsList.clear();
 		if (dimensions != null) {

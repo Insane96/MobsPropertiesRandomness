@@ -17,6 +17,9 @@ public class MPRChance implements IMPRObject {
 	public void validate(final File file) throws InvalidJsonException {
 		if (amount == 0f)
 			throw new InvalidJsonException("Missing chance in " + this, file);
+
+		if (difficultyModifier != null)
+			difficultyModifier.validate(file);
 	}
 
 	public boolean chanceMatches(LivingEntity entity, World world) {
