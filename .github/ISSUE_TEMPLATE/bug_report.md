@@ -19,14 +19,14 @@ Please make sure you're using the latest versions before sending a report.
 **What Happens**:  
 Explain what's the problem
 
-//Please send logs even if you don't have any crash  
+//Please send Minecraft logs and MobsPropertiesRandomness.log  
 //**Use Gist or Pastebin**  
 **Logs / Crash reports**:  
 E.g. https://pastebin.com/1AbCDEFG
 
-//If different from default
-**Config**:  
-E.g. https://pastebin.com/1AbCDEFG
+//Send the mod's config folder with all the jsons and groups
+**Config Folder**:  
+E.g. MobsPropertiesRandomness.zip
 
 **Can be reproduced with Mobs Properties Randomness + InsaneLib only?**:  
 Yes/No
