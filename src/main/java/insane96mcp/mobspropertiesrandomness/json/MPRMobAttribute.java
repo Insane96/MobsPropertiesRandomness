@@ -6,7 +6,6 @@ import insane96mcp.mobspropertiesrandomness.exception.InvalidJsonException;
 import insane96mcp.mobspropertiesrandomness.json.utils.MPRAttribute;
 import insane96mcp.mobspropertiesrandomness.json.utils.MPRRange;
 import insane96mcp.mobspropertiesrandomness.utils.Logger;
-import insane96mcp.mobspropertiesrandomness.utils.MPRUtils;
 import net.minecraft.entity.MobEntity;
 import net.minecraft.entity.ai.attributes.Attribute;
 import net.minecraft.entity.ai.attributes.AttributeModifier;
@@ -32,10 +31,7 @@ public class MPRMobAttribute extends MPRAttribute implements IMPRObject, IMPRApp
 		if (world.isRemote)
 			return;
 
-		if (!MPRUtils.doesDimensionMatch(entity, this.dimensionsList))
-			return;
-
-		if (!MPRUtils.doesBiomeMatch(entity, this.biomesList))
+		if (worldWhitelist != null && worldWhitelist.isWhitelisted(entity))
 			return;
 
 		float min = this.amount.getMin();
@@ -77,6 +73,6 @@ public class MPRMobAttribute extends MPRAttribute implements IMPRObject, IMPRApp
 
 	@Override
 	public String toString() {
-		return String.format("MobAttribute{uuid: %s, attribute_id: %s, amount: %s, operation: %s, difficulty_modifier: %s, dimensions: %s, biomes: %s}", uuid, attributeId, amount, operation, difficultyModifier, dimensions, biomes);
+		return String.format("MobAttribute{uuid: %s, attribute_id: %s, amount: %s, operation: %s, difficulty_modifier: %s, world_whitelist: %s}", uuid, attributeId, amount, operation, difficultyModifier, worldWhitelist);
 	}
 }

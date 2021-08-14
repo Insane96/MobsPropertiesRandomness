@@ -5,11 +5,8 @@ import insane96mcp.mobspropertiesrandomness.exception.InvalidJsonException;
 import insane96mcp.mobspropertiesrandomness.json.IMPRObject;
 import insane96mcp.mobspropertiesrandomness.json.utils.difficulty.MPRDifficultyModifier;
 import net.minecraft.entity.ai.attributes.AttributeModifier;
-import net.minecraft.util.ResourceLocation;
 
 import java.io.File;
-import java.util.ArrayList;
-import java.util.List;
 import java.util.UUID;
 
 public abstract class MPRAttribute implements IMPRObject {
@@ -24,12 +21,8 @@ public abstract class MPRAttribute implements IMPRObject {
 	public MPRDifficultyModifier difficultyModifier;
 	//TODO Add MPRPosModifier
 
-	//TODO Move to MPRWorld
-	protected List<String> dimensions;
-	public transient List<ResourceLocation> dimensionsList = new ArrayList<>();
-
-	protected List<String> biomes;
-	public transient List<ResourceLocation> biomesList = new ArrayList<>();
+	@SerializedName("world_whitelist")
+	public MPRWorldWhitelist worldWhitelist;
 
 	@Override
 	public void validate(File file) throws InvalidJsonException {
@@ -52,25 +45,12 @@ public abstract class MPRAttribute implements IMPRObject {
 		if (difficultyModifier != null)
 			difficultyModifier.validate(file);
 
-		dimensionsList.clear();
-		if (dimensions != null) {
-			for (String dimension : dimensions) {
-				ResourceLocation dimensionRL = new ResourceLocation(dimension);
-				dimensionsList.add(dimensionRL);
-			}
-		}
-
-		biomesList.clear();
-		if (biomes != null) {
-			for (String biome : biomes) {
-				ResourceLocation biomeLoc = new ResourceLocation(biome);
-				biomesList.add(biomeLoc);
-			}
-		}
+		if (worldWhitelist != null)
+			worldWhitelist.validate(file);
 	}
 
 	@Override
 	public String toString() {
-		return String.format("Attribute{uuid: %s, attribute_id: %s, modifier_name: %s, amount: %s, operation: %s, difficulty_modifier: %s, dimensions: %s, biomes: %s}", uuid, attributeId, modifierName, amount, operation, difficultyModifier, dimensions, biomes);
+		return String.format("Attribute{uuid: %s, attribute_id: %s, modifier_name: %s, amount: %s, operation: %s, difficulty_modifier: %s, world_whitelist: %s}", uuid, attributeId, modifierName, amount, operation, difficultyModifier, worldWhitelist);
 	}
 }

@@ -5,8 +5,8 @@ import insane96mcp.insanelib.utils.RandomHelper;
 import insane96mcp.mobspropertiesrandomness.exception.InvalidJsonException;
 import insane96mcp.mobspropertiesrandomness.json.utils.MPRChance;
 import insane96mcp.mobspropertiesrandomness.json.utils.MPRRange;
+import insane96mcp.mobspropertiesrandomness.json.utils.MPRWorldWhitelist;
 import insane96mcp.mobspropertiesrandomness.utils.Logger;
-import insane96mcp.mobspropertiesrandomness.utils.MPRUtils;
 import net.minecraft.entity.MobEntity;
 import net.minecraft.potion.Effect;
 import net.minecraft.potion.EffectInstance;
@@ -15,8 +15,6 @@ import net.minecraft.world.World;
 import net.minecraftforge.registries.ForgeRegistries;
 
 import java.io.File;
-import java.util.ArrayList;
-import java.util.List;
 
 public class MPRPotionEffect implements IMPRObject, IMPRAppliable {
 	public String id;
@@ -28,11 +26,8 @@ public class MPRPotionEffect implements IMPRObject, IMPRAppliable {
 	@SerializedName("hide_particles")
 	public boolean hideParticles;
 
-	private List<String> dimensions;
-	public transient List<ResourceLocation> dimensionsList = new ArrayList<>();
-
-	private List<String> biomes;
-	public transient List<ResourceLocation> biomesList = new ArrayList<>();
+	@SerializedName("world_whitelist")
+	public MPRWorldWhitelist worldWhitelist;
 
 	public void validate(final File file) throws InvalidJsonException {
 		//Potion Id
@@ -56,21 +51,8 @@ public class MPRPotionEffect implements IMPRObject, IMPRAppliable {
 		if (ambient && hideParticles)
 			Logger.info("Particles are hidden, but ambient is enabled. This might be an unintended setting for " + this);
 
-		dimensionsList.clear();
-		if (dimensions != null) {
-			for (String dimension : dimensions) {
-				ResourceLocation dimensionRL = new ResourceLocation(dimension);
-				dimensionsList.add(dimensionRL);
-			}
-		}
-
-		biomesList.clear();
-		if (biomes != null) {
-			for (String biome : biomes) {
-				ResourceLocation biomeLoc = new ResourceLocation(biome);
-				biomesList.add(biomeLoc);
-			}
-		}
+		if (worldWhitelist != null)
+			worldWhitelist.validate(file);
 	}
 
 	public void apply(MobEntity entity, World world) {
@@ -80,10 +62,7 @@ public class MPRPotionEffect implements IMPRObject, IMPRAppliable {
 		if (this.chance != null && !this.chance.chanceMatches(entity, world))
 			return;
 
-		if (!MPRUtils.doesDimensionMatch(entity, this.dimensionsList))
-			return;
-
-		if (!MPRUtils.doesBiomeMatch(entity, this.biomesList))
+		if (worldWhitelist != null && worldWhitelist.isWhitelisted(entity))
 			return;
 
 		int minAmplifier = (int) this.amplifier.getMin();
@@ -96,6 +75,6 @@ public class MPRPotionEffect implements IMPRObject, IMPRAppliable {
 
 	@Override
 	public String toString() {
-		return String.format("PotionEffect{id: %s, amplifier: %s, chance: %s, ambient: %s, hide_particles: %s, dimensions: %s, biomes: %s}", id, amplifier, chance, ambient, hideParticles, dimensions, biomes);
+		return String.format("PotionEffect{id: %s, amplifier: %s, chance: %s, ambient: %s, hide_particles: %s, world_whitelist: %s}", id, amplifier, chance, ambient, hideParticles, worldWhitelist);
 	}
 }

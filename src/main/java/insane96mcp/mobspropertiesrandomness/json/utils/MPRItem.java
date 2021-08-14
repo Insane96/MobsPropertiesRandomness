@@ -26,11 +26,8 @@ public class MPRItem extends WeightedRandom.Item implements IMPRObject {
 	public List<MPRItemAttribute> attributes;
 	public String nbt;
 
-	private List<String> dimensions;
-	public transient List<ResourceLocation> dimensionsList;
-
-	private List<String> biomes;
-	public transient List<ResourceLocation> biomesList;
+	@SerializedName("world_whitelist")
+	public MPRWorldWhitelist worldWhitelist;
 
 	public MPRItem(int itemWeightIn) {
 		super(itemWeightIn);
@@ -72,21 +69,8 @@ public class MPRItem extends WeightedRandom.Item implements IMPRObject {
 			}
 		}
 
-		dimensionsList = new ArrayList<>();
-		if (dimensions != null) {
-			for (String dimension : dimensions) {
-				ResourceLocation dimensionRL = new ResourceLocation(dimension);
-				dimensionsList.add(dimensionRL);
-			}
-		}
-
-		biomesList = new ArrayList<>();
-		if (biomes != null) {
-			for (String biome : biomes) {
-				ResourceLocation biomeLoc = new ResourceLocation(biome);
-				biomesList.add(biomeLoc);
-			}
-		}
+		if (worldWhitelist != null)
+			worldWhitelist.validate(file);
 	}
 
 	/**
@@ -135,6 +119,6 @@ public class MPRItem extends WeightedRandom.Item implements IMPRObject {
 
 	@Override
 	public String toString() {
-		return String.format("Item{id: %s, weight: %d, weight_modifier: %s, drop_chance: %f, enchantments: %s, attributes: %s, dimensions: %s, biomes: %s, nbt: %s}", id, weight, weightModifier, dropChance, enchantments, attributes, dimensions, biomes, nbt);
+		return String.format("Item{id: %s, weight: %d, weight_modifier: %s, drop_chance: %f, enchantments: %s, attributes: %s, world_whitelist: %s, nbt: %s}", id, weight, weightModifier, dropChance, enchantments, attributes, worldWhitelist, nbt);
 	}
 }

@@ -1,5 +1,8 @@
 # Changelog
 
+## Upcoming
+* Moved dimension and biome whitelist to a world_whitelist object
+
 ## Alpha 3.0.1
 * Revamped Difficulty modifier
 The difficulty object is now `difficulty_modifier` containing a modifier for difficulty, for local difficulty and if should affect the max value only.

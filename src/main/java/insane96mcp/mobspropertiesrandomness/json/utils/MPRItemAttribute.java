@@ -16,6 +16,6 @@ public class MPRItemAttribute extends MPRAttribute implements IMPRObject {
 
 	@Override
 	public String toString() {
-		return String.format("ItemAttribute{uuid: %s, attribute_id: %s, modifier_name: %s, amount: %s, operation: %s, difficulty_modifier: %s, dimensions: %s, biomes: %s, slot: %s}", uuid, attributeId, modifierName, amount, operation, difficultyModifier, dimensions, biomes, slot);
+		return String.format("ItemAttribute{uuid: %s, attribute_id: %s, modifier_name: %s, amount: %s, operation: %s, difficulty_modifier: %s, world_whitelist: %s, slot: %s}", uuid, attributeId, modifierName, amount, operation, difficultyModifier, worldWhitelist, slot);
 	}
 }

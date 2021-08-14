@@ -3,29 +3,10 @@ package insane96mcp.mobspropertiesrandomness.utils;
 import insane96mcp.mobspropertiesrandomness.data.MPRGroupReloadListener;
 import insane96mcp.mobspropertiesrandomness.json.MPRGroup;
 import insane96mcp.mobspropertiesrandomness.json.MPRMob;
-import net.minecraft.entity.Entity;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.util.ResourceLocation;
 
-import java.util.List;
-
 public class MPRUtils {
-	public static boolean doesDimensionMatch(Entity entity, List<ResourceLocation> dimensions) {
-		if (dimensions.isEmpty())
-			return true;
-
-		ResourceLocation entityDimension = entity.world.getDimensionKey().getLocation();
-		return dimensions.contains(entityDimension);
-	}
-
-	public static boolean doesBiomeMatch(LivingEntity entity, List<ResourceLocation> biomes) {
-		if (biomes.isEmpty())
-			return true;
-
-		ResourceLocation entityBiome = entity.world.getBiome(entity.getPosition()).getRegistryName();
-		return biomes.contains(entityBiome);
-	}
-
 	/**
 	 * Checks if the entity passed matches the mob, or the namespace if the id is "modid:*", or the group if the namespace is "group"
 	 * @return true if the entity passed matches the mob, or the namespace if the id is "modid:*", or the group if the namespace is "group"
