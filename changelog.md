@@ -1,7 +1,7 @@
 # Changelog
 
 ## Upcoming
-* Moved dimension and biome whitelist to a world_whitelist object
+* Moved `dimensions` and `biomes` whitelist to a `world_whitelist` object
 
 ## Alpha 3.0.1
 * Revamped Difficulty modifier

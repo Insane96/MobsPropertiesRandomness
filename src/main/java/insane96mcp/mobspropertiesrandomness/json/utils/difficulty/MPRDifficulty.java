@@ -16,9 +16,9 @@ public class MPRDifficulty implements IMPRObject {
 
 	public MPRDifficulty() {
 		operation = Operation.ADDITIVE;
-		easy = 1;
-		normal = 1;
-		hard = 1;
+		easy = 0;
+		normal = 0;
+		hard = 0;
 	}
 
 	@Override
