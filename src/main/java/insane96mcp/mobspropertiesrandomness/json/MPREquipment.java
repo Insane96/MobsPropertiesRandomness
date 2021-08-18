@@ -103,7 +103,7 @@ public class MPREquipment implements IMPRObject, IMPRAppliable {
 			float amount = RandomHelper.getFloat(world.rand, itemAttribute.amount.getMin(), itemAttribute.amount.getMax());
 			AttributeModifier modifier = new AttributeModifier(itemAttribute.modifierName, amount, itemAttribute.operation);
 			EquipmentSlotType modifierSlot = itemAttribute.slot == null ? equipmentSlotType : itemAttribute.slot;
-			itemStack.addAttributeModifier(ForgeRegistries.ATTRIBUTES.getValue(new ResourceLocation(itemAttribute.modifierName)), modifier, modifierSlot);
+			itemStack.addAttributeModifier(ForgeRegistries.ATTRIBUTES.getValue(new ResourceLocation(itemAttribute.attributeId)), modifier, modifierSlot);
 		}
 
 		entity.setItemStackToSlot(equipmentSlotType, itemStack);

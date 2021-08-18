@@ -45,8 +45,9 @@ public class MPRSlot implements IMPRObject {
 	private List<MPRItem> getItemsWithWeightDifficulty(LivingEntity entity, World world){
 		ArrayList<MPRItem> items = new ArrayList<>();
 		for (MPRItem item : this.items) {
-			if (item.worldWhitelist != null && item.worldWhitelist.isWhitelisted(entity))
-				items.add(item.getModifiedWeightItem(world));
+			if (item.worldWhitelist != null && !item.worldWhitelist.isWhitelisted(entity))
+				continue;
+			items.add(item.getModifiedWeightItem(world));
 		}
 		return items;
 	}
