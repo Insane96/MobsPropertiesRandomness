@@ -12,6 +12,7 @@ import java.io.File;
 
 public class MPRChance implements IMPRObject {
 	public float amount;
+	//TODO Maybe add an abstract MPRModifiable with difficulty and pos modifier, which can be extended
 	@SerializedName("difficulty_modifier")
 	public MPRDifficultyModifier difficultyModifier;
 
