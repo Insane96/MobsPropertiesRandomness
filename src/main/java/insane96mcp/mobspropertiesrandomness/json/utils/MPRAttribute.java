@@ -11,15 +11,23 @@ import java.util.UUID;
 
 public abstract class MPRAttribute implements IMPRObject {
 	public String uuid;
+
 	@SerializedName("attribute_id")
 	public String attributeId;
+
 	@SerializedName("modifier_name")
 	public String modifierName;
+
+	//TODO Move the modifiers in the Range so it's applied to any property?
 	public MPRRange amount;
+
 	public AttributeModifier.Operation operation;
+
 	@SerializedName("difficulty_modifier")
 	public MPRDifficultyModifier difficultyModifier;
-	//TODO Add MPRPosModifier
+
+	@SerializedName("pos_modifier")
+	public MPRPosModifier posModifier;
 
 	@SerializedName("world_whitelist")
 	public MPRWorldWhitelist worldWhitelist;
@@ -44,6 +52,9 @@ public abstract class MPRAttribute implements IMPRObject {
 
 		if (difficultyModifier != null)
 			difficultyModifier.validate(file);
+
+		if (posModifier != null)
+			posModifier.validate(file);
 
 		if (worldWhitelist != null)
 			worldWhitelist.validate(file);
