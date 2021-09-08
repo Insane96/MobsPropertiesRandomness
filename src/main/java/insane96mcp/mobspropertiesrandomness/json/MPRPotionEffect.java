@@ -32,13 +32,13 @@ public class MPRPotionEffect implements IMPRObject, IMPRAppliable {
 	public void validate(final File file) throws InvalidJsonException {
 		//Potion Id
 		if (id == null)
-			throw new InvalidJsonException("Missing Potion Effect Id. " + this, file);
+			throw new InvalidJsonException("Missing Potion Effect Id in PotionEffect Object. " + this, file);
 		else if (!ForgeRegistries.POTIONS.containsKey(new ResourceLocation(id)))
-			throw new InvalidJsonException("Invalid Potion Effect Id. " + this, file);
+			throw new InvalidJsonException("Invalid Potion Effect Id in PotionEffect Object. " + this, file);
 
 		//Amplifier
 		if (amplifier == null) {
-			Logger.info("Missing Amplifier. " + this + ". Will default to 0");
+			Logger.info("Missing Amplifier in PotionEffect object. " + this + ". Will default to 0");
 			amplifier = new MPRRange(0, 0);
 		}
 		amplifier.validate(file);
@@ -49,7 +49,7 @@ public class MPRPotionEffect implements IMPRObject, IMPRAppliable {
 
 		//ambient and hide particles
 		if (ambient && hideParticles)
-			Logger.info("Particles are hidden, but ambient is enabled. This might be an unintended setting for " + this);
+			Logger.info("Particles are hidden, but ambient is enabled. Ambient doesn't work if particles are hidden. " + this);
 
 		if (worldWhitelist != null)
 			worldWhitelist.validate(file);
