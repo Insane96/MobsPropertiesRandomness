@@ -4,6 +4,7 @@
 * Moved `dimensions` and `biomes` whitelist to a `world_whitelist` object
 * Fixed Slot not checking for world whitelist correctly
 * Fixed attribute names breaking them
+* Fixed Difficulty modifier defaulting to +1 instead of +0 when additive
 * Game no longer crashes when InsaneLib is missing
 
 ## Alpha 3.0.1

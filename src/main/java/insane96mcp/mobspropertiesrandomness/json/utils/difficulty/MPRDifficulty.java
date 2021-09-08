@@ -10,21 +10,32 @@ import java.io.File;
 public class MPRDifficulty implements IMPRObject {
 
 	public Operation operation;
-	public float easy;
-	public float normal;
-	public float hard;
-
-	public MPRDifficulty() {
-		operation = Operation.ADDITIVE;
-		easy = 0;
-		normal = 0;
-		hard = 0;
-	}
+	public Float easy;
+	public Float normal;
+	public Float hard;
 
 	@Override
 	public void validate(File file) throws InvalidJsonException {
-		if (operation ==  null) {
+		if (operation == null) {
 			Logger.info("Missing Operation. " + this + ". Will now default to ADDITIVE.");
+			operation = Operation.ADDITIVE;
+		}
+
+		if (operation == Operation.ADDITIVE) {
+			if (easy == null)
+				easy = 0f;
+			if (normal == null)
+				normal = 0f;
+			if (hard == null)
+				hard = 0f;
+		}
+		else {
+			if (easy == null)
+				easy = 1f;
+			if (normal == null)
+				normal = 1f;
+			if (hard == null)
+				hard = 1f;
 		}
 	}
 
