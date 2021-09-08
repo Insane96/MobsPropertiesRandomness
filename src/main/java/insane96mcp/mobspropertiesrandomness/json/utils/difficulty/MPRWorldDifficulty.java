@@ -2,12 +2,11 @@ package insane96mcp.mobspropertiesrandomness.json.utils.difficulty;
 
 import insane96mcp.mobspropertiesrandomness.exception.InvalidJsonException;
 import insane96mcp.mobspropertiesrandomness.json.IMPRObject;
-import insane96mcp.mobspropertiesrandomness.utils.Logger;
 import net.minecraft.world.Difficulty;
 
 import java.io.File;
 
-public class MPRDifficulty implements IMPRObject {
+public class MPRWorldDifficulty implements IMPRObject {
 
 	public Operation operation;
 	public Float easy;
@@ -16,10 +15,8 @@ public class MPRDifficulty implements IMPRObject {
 
 	@Override
 	public void validate(File file) throws InvalidJsonException {
-		if (operation == null) {
-			Logger.info("Missing Operation. " + this + ". Will now default to ADDITIVE.");
-			operation = Operation.ADDITIVE;
-		}
+		if (operation == null)
+			throw new InvalidJsonException("Missing Operation for Difficulty object. " + this, file);
 
 		if (operation == Operation.ADDITIVE) {
 			if (easy == null)
