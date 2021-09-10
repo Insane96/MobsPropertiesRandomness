@@ -43,6 +43,12 @@ public class MPRMobAttribute extends MPRAttribute implements IMPRObject, IMPRApp
 			max = minMax.getMax();
 		}
 
+		if (posModifier != null) {
+			MPRRange minMax = posModifier.applyModifier(world, entity.getPositionVec(), min, max);
+			min = minMax.getMin();
+			max = minMax.getMax();
+		}
+
 		Attribute attribute = ForgeRegistries.ATTRIBUTES.getValue(new ResourceLocation(this.attributeId));
 		ModifiableAttributeInstance attributeInstance = entity.getAttribute(attribute);
 		if (attributeInstance == null) {

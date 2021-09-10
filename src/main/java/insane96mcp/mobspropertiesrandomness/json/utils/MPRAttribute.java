@@ -26,6 +26,7 @@ public abstract class MPRAttribute implements IMPRObject {
 	@SerializedName("difficulty_modifier")
 	public MPRDifficultyModifier difficultyModifier;
 
+	//Applied after difficulty modifier
 	@SerializedName("pos_modifier")
 	public MPRPosModifier posModifier;
 
