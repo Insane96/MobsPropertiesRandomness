@@ -1,6 +1,9 @@
 # Changelog
 
 ## Upcoming
+* Now requires InsaneLib 1.2.1
+* Added Pos Modifier
+* Added Phantom Size property
 * Moved `dimensions` and `biomes` whitelist to a `world_whitelist` object
 * Fixed Slot not checking for world whitelist correctly
 * Fixed attribute names breaking them
