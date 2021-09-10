@@ -5,6 +5,7 @@ import insane96mcp.mobspropertiesrandomness.data.MPRGroupReloadListener;
 import insane96mcp.mobspropertiesrandomness.exception.InvalidJsonException;
 import insane96mcp.mobspropertiesrandomness.json.mobs.MPRCreeper;
 import insane96mcp.mobspropertiesrandomness.json.mobs.MPRGhast;
+import insane96mcp.mobspropertiesrandomness.json.mobs.MPRPhantom;
 import insane96mcp.mobspropertiesrandomness.setup.Strings;
 import insane96mcp.mobspropertiesrandomness.utils.Logger;
 import insane96mcp.mobspropertiesrandomness.utils.MPRUtils;
@@ -36,6 +37,7 @@ public class MPRMob implements IMPRObject {
 
 	public MPRCreeper creeper;
 	public MPRGhast ghast;
+	public MPRPhantom phantom;
 
 	@Override
 	public void validate(File file) throws InvalidJsonException {
@@ -81,6 +83,9 @@ public class MPRMob implements IMPRObject {
 
 		if (ghast != null)
 			ghast.validate(file);
+
+		if (phantom != null)
+			phantom.validate(file);
 	}
 
 	public static void apply(EntityJoinWorldEvent event) {
@@ -116,6 +121,8 @@ public class MPRMob implements IMPRObject {
 				mprMob.creeper.apply(mobEntity, world);
 			if (mprMob.ghast != null)
 				mprMob.ghast.apply(mobEntity, world);
+			if (mprMob.phantom != null)
+				mprMob.phantom.apply(mobEntity, world);
 		}
 
 		tags.putBoolean(Strings.Tags.PROCESSED, true);
