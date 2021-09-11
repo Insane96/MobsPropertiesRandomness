@@ -66,4 +66,9 @@ public class MPRPosModifier implements IMPRObject {
 		float totalBonus = distancePercentage + depthPercentage;
 		return value * (1 + totalBonus);
 	}
+
+	@Override
+	public String toString() {
+		return String.format("PosModifier{distance_from_spawn_bonus: %s, distance_from_spawn_step: %s, depth_bonus: %s, depth_step: %s, depth_starting_level: %s}", distanceFromSpawnBonus, distanceFromSpawnStep, depthBonus, depthStep, depthStartingLevel);
+	}
 }

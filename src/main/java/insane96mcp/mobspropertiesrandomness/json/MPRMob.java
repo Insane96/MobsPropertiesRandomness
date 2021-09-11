@@ -29,6 +29,9 @@ public class MPRMob implements IMPRObject {
 	public String mobId;
 	public String group;
 
+	@SerializedName("spawner_behaviour")
+	public SpawnerBehaviour spawnerBehaviour;
+
 	@SerializedName("potion_effects")
 	public List<MPRPotionEffect> potionEffects;
 
@@ -46,6 +49,9 @@ public class MPRMob implements IMPRObject {
 			throw new InvalidJsonException("Missing mob_id or group. " + this, file);
 		else if (mobId != null && group != null)
 			Logger.info("mob_id and group are both present, mob_id will be ignored");
+
+		if (spawnerBehaviour == null)
+			spawnerBehaviour = SpawnerBehaviour.NONE;
 
 		if (mobId != null) {
 			String[] splitId = mobId.split(":");
@@ -103,12 +109,15 @@ public class MPRMob implements IMPRObject {
 
 		CompoundNBT tags = mobEntity.getPersistentData();
 		boolean isAlreadyChecked = tags.getBoolean(Strings.Tags.PROCESSED);
-
 		if (isAlreadyChecked)
 			return;
 
+		boolean spawnedFromSpawner = tags.getBoolean(Strings.Tags.SPAWNED_FROM_SPAWNER);
+
 		for (MPRMob mprMob : MPR_MOBS) {
 			if (!MPRUtils.matchesEntity(mobEntity, mprMob))
+				continue;
+			if ((!spawnedFromSpawner && mprMob.spawnerBehaviour == SpawnerBehaviour.SPAWNER_ONLY) || (spawnedFromSpawner && mprMob.spawnerBehaviour == SpawnerBehaviour.NATURAL_ONLY))
 				continue;
 			for (MPRPotionEffect potionEffect : mprMob.potionEffects) {
 				potionEffect.apply(mobEntity, world);
@@ -132,5 +141,11 @@ public class MPRMob implements IMPRObject {
 	@Override
 	public String toString() {
 		return String.format("Mob{id: %s, group: %s, potion_effects: %s, attributes: %s, equipment: %s, creeper: %s, ghast: %s}", mobId, group, potionEffects, attributes, equipment, creeper, ghast);
+	}
+
+	public enum SpawnerBehaviour {
+		NONE,
+		SPAWNER_ONLY,
+		NATURAL_ONLY
 	}
 }

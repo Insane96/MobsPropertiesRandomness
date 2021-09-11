@@ -5,8 +5,11 @@ import insane96mcp.insanelib.base.Label;
 import insane96mcp.insanelib.base.Module;
 import insane96mcp.mobspropertiesrandomness.json.MPRMob;
 import insane96mcp.mobspropertiesrandomness.setup.Config;
+import insane96mcp.mobspropertiesrandomness.setup.Strings;
+import net.minecraft.entity.SpawnReason;
 import net.minecraftforge.common.ForgeConfigSpec;
 import net.minecraftforge.event.entity.EntityJoinWorldEvent;
+import net.minecraftforge.event.entity.living.LivingSpawnEvent;
 import net.minecraftforge.eventbus.api.EventPriority;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 
@@ -34,6 +37,12 @@ public class BaseFeature extends Feature {
 	@SubscribeEvent(priority = EventPriority.LOWEST)
 	public void onEntityJoinWorld(EntityJoinWorldEvent event) {
 		MPRMob.apply(event);
+	}
+
+	@SubscribeEvent
+	public void onSpawnFromSpawner(LivingSpawnEvent.CheckSpawn event) {
+		if (event.getSpawnReason() == SpawnReason.SPAWNER)
+			event.getEntityLiving().getPersistentData().putBoolean(Strings.Tags.SPAWNED_FROM_SPAWNER, true);
 	}
 
 	/*@SubscribeEvent(priority = EventPriority.LOWEST)
