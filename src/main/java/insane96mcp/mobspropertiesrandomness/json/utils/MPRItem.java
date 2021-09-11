@@ -4,8 +4,8 @@ import com.google.gson.annotations.SerializedName;
 import insane96mcp.mobspropertiesrandomness.exception.InvalidJsonException;
 import insane96mcp.mobspropertiesrandomness.json.IMPRObject;
 import insane96mcp.mobspropertiesrandomness.json.utils.attribute.MPRItemAttribute;
-import insane96mcp.mobspropertiesrandomness.json.utils.modifier.difficulty.MPRWorldDifficulty;
 import insane96mcp.mobspropertiesrandomness.utils.Logger;
+import net.minecraft.entity.MobEntity;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.WeightedRandom;
 import net.minecraft.world.World;
@@ -18,9 +18,7 @@ import java.util.List;
 public class MPRItem extends WeightedRandom.Item implements IMPRObject {
 
 	public String id;
-	private int weight;
-	@SerializedName("weight_modifier")
-	private MPRWorldDifficulty weightModifier;
+	private MPRModifiableValue weight;
 	@SerializedName("drop_chance")
 	public float dropChance;
 	public List<MPREnchantment> enchantments;
@@ -41,10 +39,9 @@ public class MPRItem extends WeightedRandom.Item implements IMPRObject {
 		else if (ForgeRegistries.ITEMS.getValue(new ResourceLocation(this.id)) == null)
 			throw new InvalidJsonException("Invalid id. " + this, file);
 
-		if (weight <= 0)
-			throw new InvalidJsonException("Missing weight (or weight <= 0). " + this, file);
-		else
-			itemWeight = weight;
+		if (weight == null)
+			throw new InvalidJsonException("Missing weight. " + this, file);
+		weight.validate(file);
 
 		if (dropChance == 0f)
 			Logger.info("Drop Chance has been set to 0 (or omitted). Mobs will drop this piece only with Looting. " + this);
@@ -76,27 +73,10 @@ public class MPRItem extends WeightedRandom.Item implements IMPRObject {
 	 * @param world
 	 * @return
 	 */
-	public MPRItem getModifiedWeightItem(World world) {
+	public MPRItem getModifiedWeightItem(MobEntity entity, World world) {
 		MPRItem item2 = this.copy();
-		if (this.weightModifier == null)
-			return item2;
 
-		switch (world.getDifficulty()) {
-			case EASY:
-				item2.itemWeight += weightModifier.easy;
-				break;
-
-			case NORMAL:
-				item2.itemWeight += weightModifier.normal;
-				break;
-
-			case HARD:
-				item2.itemWeight += weightModifier.hard;
-				break;
-
-			default:
-				break;
-		}
+		item2.itemWeight = (int) this.weight.getValue(entity, world);
 
 		return item2;
 	}
@@ -106,19 +86,18 @@ public class MPRItem extends WeightedRandom.Item implements IMPRObject {
 	 * @return a copy of the JItem
 	 */
 	protected MPRItem copy() {
-		MPRItem jsonItem = new MPRItem(this.itemWeight);
-		jsonItem.attributes = this.attributes;
-		jsonItem.dropChance = this.dropChance;
-		jsonItem.enchantments = this.enchantments;
-		jsonItem.id = this.id;
-		jsonItem.nbt = this.nbt;
-		jsonItem.weight = this.weight;
-		jsonItem.weightModifier = this.weightModifier;
-		return jsonItem;
+		MPRItem mprItem = new MPRItem(this.itemWeight);
+		mprItem.attributes = this.attributes;
+		mprItem.dropChance = this.dropChance;
+		mprItem.enchantments = this.enchantments;
+		mprItem.id = this.id;
+		mprItem.nbt = this.nbt;
+		mprItem.weight = this.weight;
+		return mprItem;
 	}
 
 	@Override
 	public String toString() {
-		return String.format("Item{id: %s, weight: %d, weight_modifier: %s, drop_chance: %f, enchantments: %s, attributes: %s, world_whitelist: %s, nbt: %s}", id, weight, weightModifier, dropChance, enchantments, attributes, worldWhitelist, nbt);
+		return String.format("Item{id: %s, weight: %s, drop_chance: %f, enchantments: %s, attributes: %s, world_whitelist: %s, nbt: %s}", id, weight, dropChance, enchantments, attributes, worldWhitelist, nbt);
 	}
 }

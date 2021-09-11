@@ -18,7 +18,7 @@ public class MPRSlot implements IMPRObject {
 	public boolean override;
 	@SerializedName("replace_only")
 	public boolean replaceOnly;
-	public MPRChance chance;
+	public MPRModifiableValue chance;
 	public List<MPRItem> items;
 
 	@Override
@@ -47,7 +47,7 @@ public class MPRSlot implements IMPRObject {
 		for (MPRItem item : this.items) {
 			if (item.worldWhitelist != null && !item.worldWhitelist.isWhitelisted(entity))
 				continue;
-			items.add(item.getModifiedWeightItem(world));
+			items.add(item.getModifiedWeightItem(entity, world));
 		}
 		return items;
 	}

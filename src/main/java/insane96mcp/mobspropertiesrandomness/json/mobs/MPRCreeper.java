@@ -5,7 +5,7 @@ import insane96mcp.insanelib.utils.RandomHelper;
 import insane96mcp.mobspropertiesrandomness.exception.InvalidJsonException;
 import insane96mcp.mobspropertiesrandomness.json.IMPRAppliable;
 import insane96mcp.mobspropertiesrandomness.json.IMPRObject;
-import insane96mcp.mobspropertiesrandomness.json.utils.MPRChance;
+import insane96mcp.mobspropertiesrandomness.json.utils.MPRModifiableValue;
 import insane96mcp.mobspropertiesrandomness.json.utils.MPRRange;
 import net.minecraft.entity.MobEntity;
 import net.minecraft.entity.monster.CreeperEntity;
@@ -19,7 +19,7 @@ public class MPRCreeper implements IMPRObject, IMPRAppliable {
 	@SerializedName("explosion_radius")
 	public MPRRange explosionRadius;
 	@SerializedName("powered_chance")
-	public MPRChance poweredChance;
+	public MPRModifiableValue poweredChance;
 
 	@Override
 	public void validate(File file) throws InvalidJsonException {
@@ -66,7 +66,7 @@ public class MPRCreeper implements IMPRObject, IMPRAppliable {
 		}
 
 		//Power It
-		if(this.poweredChance != null && this.poweredChance.chanceMatches(creeper, world))
+		if(this.poweredChance != null && world.rand.nextFloat() < this.poweredChance.getValue(creeper, world))
 			compound.putBoolean("powered", true);
 
 		creeper.readAdditional(compound);

@@ -3,7 +3,7 @@ package insane96mcp.mobspropertiesrandomness.json;
 import com.google.gson.annotations.SerializedName;
 import insane96mcp.insanelib.utils.RandomHelper;
 import insane96mcp.mobspropertiesrandomness.exception.InvalidJsonException;
-import insane96mcp.mobspropertiesrandomness.json.utils.MPRChance;
+import insane96mcp.mobspropertiesrandomness.json.utils.MPRModifiableValue;
 import insane96mcp.mobspropertiesrandomness.json.utils.MPRRange;
 import insane96mcp.mobspropertiesrandomness.json.utils.MPRWorldWhitelist;
 import insane96mcp.mobspropertiesrandomness.utils.Logger;
@@ -20,7 +20,7 @@ public class MPRPotionEffect implements IMPRObject, IMPRAppliable {
 	public String id;
 	public MPRRange amplifier;
 
-	public MPRChance chance;
+	public MPRModifiableValue chance;
 
 	public boolean ambient;
 	@SerializedName("hide_particles")
@@ -59,7 +59,7 @@ public class MPRPotionEffect implements IMPRObject, IMPRAppliable {
 		if (world.isRemote)
 			return;
 
-		if (this.chance != null && !this.chance.chanceMatches(entity, world))
+		if (this.chance != null && world.rand.nextFloat() >= this.chance.getValue(entity, world))
 			return;
 
 		if (worldWhitelist != null && worldWhitelist.isWhitelisted(entity))

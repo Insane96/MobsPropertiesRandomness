@@ -28,7 +28,7 @@ public class MPREnchantment implements IMPRObject {
 	@SerializedName("allow_treasure")
 	public boolean allowTreasure;
 	public MPRRange level;
-	public MPRChance chance;
+	public MPRModifiableValue chance;
 
 	public MPREnchantment() {
 		allowCurses = true;
@@ -56,7 +56,7 @@ public class MPREnchantment implements IMPRObject {
 	}
 
 	public void applyToStack(MobEntity entity, World world, ItemStack itemStack) {
-		if (!this.chance.chanceMatches(entity, world))
+		if (world.rand.nextFloat() >= this.chance.getValue(entity, world))
 			return;
 
 		if (this.id.equals("random")) {
