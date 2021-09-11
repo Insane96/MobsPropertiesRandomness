@@ -3,6 +3,10 @@
 ## Beta 3.0.2
 * Now requires InsaneLib 1.2.1
 * `difficulty_modifier` is now specified in Range objects (min max) and in chance objects
+* Added a spawner_behaviour tag to the mob  
+  (Default) NONE: Normal behaviour  
+  SPAWNER_ONLY: Only mobs from spawners will be affected by the property modifiers  
+  NATURAL_ONLY: Only mobs not from spawners will be affected by the property modifiers
 * Chance is now a modifiable value object. Now uses `value` instead of `amount`
 * Added `pos_modifier` in Range objects (min max) and in modifiable values objects (chance and weight). Item no longer has a `world_difficulty` modifier (as it's in the Weight object)
 * Added Phantom Size property
