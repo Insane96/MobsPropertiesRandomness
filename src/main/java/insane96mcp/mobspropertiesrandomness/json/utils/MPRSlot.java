@@ -4,7 +4,7 @@ import com.google.gson.annotations.SerializedName;
 import insane96mcp.mobspropertiesrandomness.exception.InvalidJsonException;
 import insane96mcp.mobspropertiesrandomness.json.IMPRObject;
 import insane96mcp.mobspropertiesrandomness.utils.Logger;
-import net.minecraft.entity.LivingEntity;
+import net.minecraft.entity.MobEntity;
 import net.minecraft.util.WeightedRandom;
 import net.minecraft.world.World;
 
@@ -42,7 +42,7 @@ public class MPRSlot implements IMPRObject {
 		}
 	}
 
-	private List<MPRItem> getItemsWithWeightDifficulty(LivingEntity entity, World world){
+	private List<MPRItem> getItemsWithWeightDifficulty(MobEntity entity, World world){
 		ArrayList<MPRItem> items = new ArrayList<>();
 		for (MPRItem item : this.items) {
 			if (item.worldWhitelist != null && !item.worldWhitelist.isWhitelisted(entity))
@@ -58,7 +58,7 @@ public class MPRSlot implements IMPRObject {
 	 * @param world
 	 * @return an Item or null if no items were available
 	 */
-	public MPRItem getRandomItem(LivingEntity entity, World world) {
+	public MPRItem getRandomItem(MobEntity entity, World world) {
 		List<MPRItem> items = getItemsWithWeightDifficulty(entity, world);
 		if (items.isEmpty())
 			return null;

@@ -27,7 +27,7 @@ public class MPRPhantom implements IMPRObject, IMPRAppliable {
 
 		PhantomEntity phantom = (PhantomEntity) entity;
 
-		phantom.setPhantomSize(RandomHelper.getInt(world.rand, (int) this.size.getMin(), (int) this.size.getMax() + 1));
+		phantom.setPhantomSize(RandomHelper.getInt(world.rand, (int) this.size.getMin(phantom, world), (int) this.size.getMax(phantom, world) + 1));
 	}
 
 

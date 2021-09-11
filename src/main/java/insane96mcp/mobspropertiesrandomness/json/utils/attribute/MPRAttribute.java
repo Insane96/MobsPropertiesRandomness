@@ -1,9 +1,10 @@
-package insane96mcp.mobspropertiesrandomness.json.utils;
+package insane96mcp.mobspropertiesrandomness.json.utils.attribute;
 
 import com.google.gson.annotations.SerializedName;
 import insane96mcp.mobspropertiesrandomness.exception.InvalidJsonException;
 import insane96mcp.mobspropertiesrandomness.json.IMPRObject;
-import insane96mcp.mobspropertiesrandomness.json.utils.difficulty.MPRDifficultyModifier;
+import insane96mcp.mobspropertiesrandomness.json.utils.MPRRange;
+import insane96mcp.mobspropertiesrandomness.json.utils.MPRWorldWhitelist;
 import net.minecraft.entity.ai.attributes.AttributeModifier;
 
 import java.io.File;
@@ -18,17 +19,9 @@ public abstract class MPRAttribute implements IMPRObject {
 	@SerializedName("modifier_name")
 	public String modifierName;
 
-	//TODO Move the modifiers in the Range so it's applied to any property?
 	public MPRRange amount;
 
 	public AttributeModifier.Operation operation;
-
-	@SerializedName("difficulty_modifier")
-	public MPRDifficultyModifier difficultyModifier;
-
-	//Applied after difficulty modifier
-	@SerializedName("pos_modifier")
-	public MPRPosModifier posModifier;
 
 	@SerializedName("world_whitelist")
 	public MPRWorldWhitelist worldWhitelist;
@@ -51,18 +44,12 @@ public abstract class MPRAttribute implements IMPRObject {
 		if (operation == null)
 			throw new InvalidJsonException("Missing Operation. " + this, file);
 
-		if (difficultyModifier != null)
-			difficultyModifier.validate(file);
-
-		if (posModifier != null)
-			posModifier.validate(file);
-
 		if (worldWhitelist != null)
 			worldWhitelist.validate(file);
 	}
 
 	@Override
 	public String toString() {
-		return String.format("Attribute{uuid: %s, attribute_id: %s, modifier_name: %s, amount: %s, operation: %s, difficulty_modifier: %s, world_whitelist: %s}", uuid, attributeId, modifierName, amount, operation, difficultyModifier, worldWhitelist);
+		return String.format("Attribute{uuid: %s, attribute_id: %s, modifier_name: %s, amount: %s, operation: %s, world_whitelist: %s}", uuid, attributeId, modifierName, amount, operation, worldWhitelist);
 	}
 }

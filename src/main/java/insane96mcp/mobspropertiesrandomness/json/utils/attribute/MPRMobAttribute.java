@@ -1,10 +1,10 @@
-package insane96mcp.mobspropertiesrandomness.json;
+package insane96mcp.mobspropertiesrandomness.json.utils.attribute;
 
 import insane96mcp.insanelib.utils.RandomHelper;
 import insane96mcp.mobspropertiesrandomness.MobsPropertiesRandomness;
 import insane96mcp.mobspropertiesrandomness.exception.InvalidJsonException;
-import insane96mcp.mobspropertiesrandomness.json.utils.MPRAttribute;
-import insane96mcp.mobspropertiesrandomness.json.utils.MPRRange;
+import insane96mcp.mobspropertiesrandomness.json.IMPRAppliable;
+import insane96mcp.mobspropertiesrandomness.json.IMPRObject;
 import insane96mcp.mobspropertiesrandomness.utils.Logger;
 import net.minecraft.entity.MobEntity;
 import net.minecraft.entity.ai.attributes.Attribute;
@@ -34,20 +34,8 @@ public class MPRMobAttribute extends MPRAttribute implements IMPRObject, IMPRApp
 		if (worldWhitelist != null && worldWhitelist.isWhitelisted(entity))
 			return;
 
-		float min = this.amount.getMin();
-		float max = this.amount.getMax();
-
-		if (difficultyModifier != null) {
-			MPRRange minMax = difficultyModifier.applyModifier(world.getDifficulty(), world.getDifficultyForLocation(entity.getPosition()).getAdditionalDifficulty(), min, max);
-			min = minMax.getMin();
-			max = minMax.getMax();
-		}
-
-		if (posModifier != null) {
-			MPRRange minMax = posModifier.applyModifier(world, entity.getPositionVec(), min, max);
-			min = minMax.getMin();
-			max = minMax.getMax();
-		}
+		float min = this.amount.getMin(entity, world);
+		float max = this.amount.getMax(entity, world);
 
 		Attribute attribute = ForgeRegistries.ATTRIBUTES.getValue(new ResourceLocation(this.attributeId));
 		ModifiableAttributeInstance attributeInstance = entity.getAttribute(attribute);
@@ -64,6 +52,7 @@ public class MPRMobAttribute extends MPRAttribute implements IMPRObject, IMPRApp
 		//Health Fix
 		if (this.attributeId.contains("generic.max_health"))
 			entity.setHealth((float) attributeInstance.getValue());
+		//Follow range fix
 		else if (this.attributeId.contains("generic.follow_range"))
 			fixFollowRange(entity);
 	}
@@ -79,6 +68,6 @@ public class MPRMobAttribute extends MPRAttribute implements IMPRObject, IMPRApp
 
 	@Override
 	public String toString() {
-		return String.format("MobAttribute{uuid: %s, attribute_id: %s, amount: %s, operation: %s, difficulty_modifier: %s, world_whitelist: %s}", uuid, attributeId, amount, operation, difficultyModifier, worldWhitelist);
+		return String.format("MobAttribute{uuid: %s, attribute_id: %s, amount: %s, operation: %s, world_whitelist: %s}", uuid, attributeId, amount, operation, worldWhitelist);
 	}
 }

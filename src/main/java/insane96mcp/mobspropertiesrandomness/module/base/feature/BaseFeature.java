@@ -35,4 +35,14 @@ public class BaseFeature extends Feature {
 	public void onEntityJoinWorld(EntityJoinWorldEvent event) {
 		MPRMob.apply(event);
 	}
+
+	/*@SubscribeEvent(priority = EventPriority.LOWEST)
+	public void onEntitySize(EntityEvent.Size event) {
+		if (event.getEntity() instanceof CreeperEntity) {
+			event.setNewSize(new EntitySize(0.3f, 0.85f, false));
+			event.setNewEyeHeight(event.getNewEyeHeight() / 2f);
+			CreeperEntity creeper = (CreeperEntity) event.getEntity();
+			creeper
+		}
+	}*/
 }

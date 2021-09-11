@@ -3,7 +3,8 @@ package insane96mcp.mobspropertiesrandomness.json.utils;
 import com.google.gson.annotations.SerializedName;
 import insane96mcp.mobspropertiesrandomness.exception.InvalidJsonException;
 import insane96mcp.mobspropertiesrandomness.json.IMPRObject;
-import insane96mcp.mobspropertiesrandomness.json.utils.difficulty.MPRWorldDifficulty;
+import insane96mcp.mobspropertiesrandomness.json.utils.attribute.MPRItemAttribute;
+import insane96mcp.mobspropertiesrandomness.json.utils.modifier.difficulty.MPRWorldDifficulty;
 import insane96mcp.mobspropertiesrandomness.utils.Logger;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.WeightedRandom;
@@ -45,9 +46,6 @@ public class MPRItem extends WeightedRandom.Item implements IMPRObject {
 		else
 			itemWeight = weight;
 
-		if (weightModifier == null)
-			weightModifier = new MPRWorldDifficulty();
-
 		if (dropChance == 0f)
 			Logger.info("Drop Chance has been set to 0 (or omitted). Mobs will drop this piece only with Looting. " + this);
 
@@ -80,6 +78,8 @@ public class MPRItem extends WeightedRandom.Item implements IMPRObject {
 	 */
 	public MPRItem getModifiedWeightItem(World world) {
 		MPRItem item2 = this.copy();
+		if (this.weightModifier == null)
+			return item2;
 
 		switch (world.getDifficulty()) {
 			case EASY:

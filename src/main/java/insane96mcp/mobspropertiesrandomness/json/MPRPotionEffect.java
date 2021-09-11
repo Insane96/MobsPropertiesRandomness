@@ -65,8 +65,8 @@ public class MPRPotionEffect implements IMPRObject, IMPRAppliable {
 		if (worldWhitelist != null && worldWhitelist.isWhitelisted(entity))
 			return;
 
-		int minAmplifier = (int) this.amplifier.getMin();
-		int maxAmplifier = (int) this.amplifier.getMax();
+		int minAmplifier = (int) this.amplifier.getMin(entity, world);
+		int maxAmplifier = (int) this.amplifier.getMax(entity, world);
 
 		Effect effect = ForgeRegistries.POTIONS.getValue(new ResourceLocation(this.id));
 		EffectInstance effectInstance = new EffectInstance(effect, 1000000, RandomHelper.getInt(world.rand, minAmplifier, maxAmplifier), this.ambient, !this.hideParticles, false);

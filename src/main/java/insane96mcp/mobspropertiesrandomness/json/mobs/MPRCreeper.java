@@ -51,16 +51,16 @@ public class MPRCreeper implements IMPRObject, IMPRAppliable {
 
 		//Fuse
 		if (this.fuse != null && compound.getShort("Fuse") == 30) {
-			int minFuse = (int) this.fuse.getMin();
-			int maxFuse = (int) this.fuse.getMax();
+			int minFuse = (int) this.fuse.getMin(creeper, world);
+			int maxFuse = (int) this.fuse.getMax(creeper, world);
 			int fuse = RandomHelper.getInt(world.rand, minFuse, maxFuse + 1);
 			compound.putShort("Fuse", (short)fuse);
 		}
 
 		//Explosion Radius
 		if (this.explosionRadius != null && compound.getByte("ExplosionRadius") == 3) {
-			int minExplosionRadius = (int) this.explosionRadius.getMin();
-			int maxExplosionRadius = (int) this.explosionRadius.getMax();
+			int minExplosionRadius = (int) this.explosionRadius.getMin(creeper, world);
+			int maxExplosionRadius = (int) this.explosionRadius.getMax(creeper, world);
 			int explosionRadius = RandomHelper.getInt(world.rand, minExplosionRadius, maxExplosionRadius + 1);
 			compound.putByte("ExplosionRadius", (byte) explosionRadius);
 		}

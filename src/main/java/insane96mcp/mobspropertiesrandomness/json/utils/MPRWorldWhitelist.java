@@ -3,7 +3,7 @@ package insane96mcp.mobspropertiesrandomness.json.utils;
 import insane96mcp.mobspropertiesrandomness.exception.InvalidJsonException;
 import insane96mcp.mobspropertiesrandomness.json.IMPRObject;
 import net.minecraft.entity.Entity;
-import net.minecraft.entity.LivingEntity;
+import net.minecraft.entity.MobEntity;
 import net.minecraft.util.ResourceLocation;
 
 import java.io.File;
@@ -45,7 +45,7 @@ public class MPRWorldWhitelist implements IMPRObject {
 		return dimensionsList.contains(entityDimension);
 	}
 
-	public boolean doesBiomeMatch(LivingEntity entity) {
+	public boolean doesBiomeMatch(MobEntity entity) {
 		if (biomesList.isEmpty())
 			return true;
 
@@ -53,7 +53,7 @@ public class MPRWorldWhitelist implements IMPRObject {
 		return biomesList.contains(entityBiome);
 	}
 
-	public boolean isWhitelisted(LivingEntity entity) {
+	public boolean isWhitelisted(MobEntity entity) {
 		return doesBiomeMatch(entity) && doesDimensionMatch(entity);
 	}
 

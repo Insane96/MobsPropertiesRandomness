@@ -1,4 +1,4 @@
-package insane96mcp.mobspropertiesrandomness.json.utils.difficulty;
+package insane96mcp.mobspropertiesrandomness.json.utils.modifier.difficulty;
 
 import insane96mcp.mobspropertiesrandomness.exception.InvalidJsonException;
 import insane96mcp.mobspropertiesrandomness.json.IMPRObject;

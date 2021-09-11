@@ -1,8 +1,9 @@
-package insane96mcp.mobspropertiesrandomness.json.utils;
+package insane96mcp.mobspropertiesrandomness.json.utils.modifier;
 
 import com.google.gson.annotations.SerializedName;
 import insane96mcp.mobspropertiesrandomness.exception.InvalidJsonException;
 import insane96mcp.mobspropertiesrandomness.json.IMPRObject;
+import insane96mcp.mobspropertiesrandomness.json.utils.MPRRange;
 import net.minecraft.util.math.vector.Vector3d;
 import net.minecraft.world.World;
 

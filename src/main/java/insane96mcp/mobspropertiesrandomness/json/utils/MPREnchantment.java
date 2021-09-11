@@ -6,7 +6,7 @@ import insane96mcp.mobspropertiesrandomness.exception.InvalidJsonException;
 import insane96mcp.mobspropertiesrandomness.json.IMPRObject;
 import insane96mcp.mobspropertiesrandomness.utils.Logger;
 import net.minecraft.enchantment.Enchantment;
-import net.minecraft.entity.LivingEntity;
+import net.minecraft.entity.MobEntity;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.nbt.INBT;
@@ -55,7 +55,7 @@ public class MPREnchantment implements IMPRObject {
 			throw new InvalidJsonException("Missing chance. " + this, file);
 	}
 
-	public void applyToStack(LivingEntity entity, World world, ItemStack itemStack) {
+	public void applyToStack(MobEntity entity, World world, ItemStack itemStack) {
 		if (!this.chance.chanceMatches(entity, world))
 			return;
 
@@ -100,7 +100,7 @@ public class MPREnchantment implements IMPRObject {
 			}
 
 			if (canApply) {
-				int level = RandomHelper.getInt(world.rand, (int) this.level.getMin(), (int) this.level.getMax());
+				int level = RandomHelper.getInt(world.rand, (int) this.level.getMin(entity, world), (int) this.level.getMax(entity, world));
 				itemStack.addEnchantment(enchantment, level);
 			}
 		}

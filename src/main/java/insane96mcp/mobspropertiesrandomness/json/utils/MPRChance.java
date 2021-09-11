@@ -1,39 +1,35 @@
 package insane96mcp.mobspropertiesrandomness.json.utils;
 
-import com.google.gson.annotations.SerializedName;
 import insane96mcp.mobspropertiesrandomness.exception.InvalidJsonException;
 import insane96mcp.mobspropertiesrandomness.json.IMPRObject;
-import insane96mcp.mobspropertiesrandomness.json.utils.difficulty.MPRDifficultyModifier;
-import insane96mcp.mobspropertiesrandomness.utils.Logger;
-import net.minecraft.entity.LivingEntity;
+import insane96mcp.mobspropertiesrandomness.json.utils.modifier.MPRModifiable;
+import net.minecraft.entity.MobEntity;
 import net.minecraft.world.World;
 
 import java.io.File;
 
-public class MPRChance implements IMPRObject {
-	public float amount;
-	//TODO Maybe add an abstract MPRModifiable with difficulty and pos modifier, which can be extended
-	@SerializedName("difficulty_modifier")
-	public MPRDifficultyModifier difficultyModifier;
+public class MPRChance extends MPRModifiable implements IMPRObject {
+	public Float amount;
 
 	public void validate(final File file) throws InvalidJsonException {
-		if (amount <= 0f)
-			Logger.info("Chance missing, equal to or less than 0. " + this);
+		if (amount == null)
+			throw new InvalidJsonException("Chance is missing amount", file);
 
-		if (difficultyModifier != null)
-			difficultyModifier.validate(file);
+		super.validate(file);
 	}
 
-	public boolean chanceMatches(LivingEntity entity, World world) {
+	public boolean chanceMatches(MobEntity entity, World world) {
 		float chance = this.amount;
-		if (difficultyModifier != null)
-			chance = difficultyModifier.applyModifier(world.getDifficulty(), world.getDifficultyForLocation(entity.getPosition()).getAdditionalDifficulty(), chance);
+		if (this.difficultyModifier != null)
+			chance = this.difficultyModifier.applyModifier(world.getDifficulty(), world.getDifficultyForLocation(entity.getPosition()).getAdditionalDifficulty(), chance);
+		if (this.posModifier != null)
+			chance = this.posModifier.applyModifier(world, entity.getPositionVec(), chance);
 
 		return world.rand.nextFloat() < chance;
 	}
 
 	@Override
 	public String toString() {
-		return String.format("Chance{amount: %f, difficulty_modifier: %s}", amount, difficultyModifier);
+		return String.format("Chance{amount: %f, %s}", amount, super.toString());
 	}
 }

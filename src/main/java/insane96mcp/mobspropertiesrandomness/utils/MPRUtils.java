@@ -3,15 +3,15 @@ package insane96mcp.mobspropertiesrandomness.utils;
 import insane96mcp.mobspropertiesrandomness.data.MPRGroupReloadListener;
 import insane96mcp.mobspropertiesrandomness.json.MPRGroup;
 import insane96mcp.mobspropertiesrandomness.json.MPRMob;
-import net.minecraft.entity.LivingEntity;
+import net.minecraft.entity.MobEntity;
 import net.minecraft.util.ResourceLocation;
 
 public class MPRUtils {
 	/**
-	 * Checks if the entity passed matches the mob, or the namespace if the id is "modid:*", or the group if the namespace is "group"
-	 * @return true if the entity passed matches the mob, or the namespace if the id is "modid:*", or the group if the namespace is "group"
+	 * Checks if the entity passed matches the mob, or the namespace if the id is "modid:*", or the group
+	 * @return true if the entity passed matches the mob, or the namespace if the id is "modid:*", or the mob in the group
 	 */
-	public static boolean matchesEntity(LivingEntity entity, MPRMob mob) {
+	public static boolean matchesEntity(MobEntity entity, MPRMob mob) {
 		if (mob.group != null) {
 			MPRGroup group = MPRGroupReloadListener.MPR_GROUPS.stream().filter(g -> g.name.equals(mob.group)).findFirst().orElse(null);
 			for (String mobId : group.mobs) {

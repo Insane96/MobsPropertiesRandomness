@@ -2,14 +2,15 @@
 
 ## Upcoming
 * Now requires InsaneLib 1.2.1
-* Added Pos Modifier
+* `difficulty_modifier` is now specified in Range objects (min max) and in chance objects
+* Added `pos_modifier` in Range objects (min max) and in chance objects
 * Added Phantom Size property
 * Moved `dimensions` and `biomes` whitelist to a `world_whitelist` object
 * Fixed Slot not checking for world whitelist correctly
 * Fixed attribute names breaking them
 * Renamed `difficulty` to `world_difficulty`
 * Fixed `world_difficulty` modifier defaulting to +1 instead of +0 when additive
-* Game no longer crashes when InsaneLib is missing
+* Game/Server no longer crashes when InsaneLib is missing
 
 ## Alpha 3.0.1
 * Revamped Difficulty modifier

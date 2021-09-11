@@ -2,15 +2,13 @@ package insane96mcp.mobspropertiesrandomness.json;
 
 import com.google.gson.annotations.SerializedName;
 import com.mojang.brigadier.exceptions.CommandSyntaxException;
-import insane96mcp.insanelib.utils.RandomHelper;
 import insane96mcp.mobspropertiesrandomness.exception.InvalidJsonException;
 import insane96mcp.mobspropertiesrandomness.json.utils.MPREnchantment;
 import insane96mcp.mobspropertiesrandomness.json.utils.MPRItem;
-import insane96mcp.mobspropertiesrandomness.json.utils.MPRItemAttribute;
 import insane96mcp.mobspropertiesrandomness.json.utils.MPRSlot;
+import insane96mcp.mobspropertiesrandomness.json.utils.attribute.MPRItemAttribute;
 import insane96mcp.mobspropertiesrandomness.utils.Logger;
 import net.minecraft.entity.MobEntity;
-import net.minecraft.entity.ai.attributes.AttributeModifier;
 import net.minecraft.inventory.EquipmentSlotType;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.CompoundNBT;
@@ -100,10 +98,7 @@ public class MPREquipment implements IMPRObject, IMPRAppliable {
 		}
 
 		for (MPRItemAttribute itemAttribute : choosenItem.attributes) {
-			float amount = RandomHelper.getFloat(world.rand, itemAttribute.amount.getMin(), itemAttribute.amount.getMax());
-			AttributeModifier modifier = new AttributeModifier(itemAttribute.modifierName, amount, itemAttribute.operation);
-			EquipmentSlotType modifierSlot = itemAttribute.slot == null ? equipmentSlotType : itemAttribute.slot;
-			itemStack.addAttributeModifier(ForgeRegistries.ATTRIBUTES.getValue(new ResourceLocation(itemAttribute.attributeId)), modifier, modifierSlot);
+			itemAttribute.applyToStack(entity, world, itemStack, equipmentSlotType);
 		}
 
 		entity.setItemStackToSlot(equipmentSlotType, itemStack);
