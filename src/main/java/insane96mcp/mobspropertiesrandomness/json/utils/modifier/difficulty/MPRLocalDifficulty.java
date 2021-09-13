@@ -6,13 +6,12 @@ import insane96mcp.mobspropertiesrandomness.json.IMPRObject;
 import java.io.File;
 
 public class MPRLocalDifficulty implements IMPRObject {
-	public float multiplier;
+	public Float multiplier;
 
 	@Override
 	public void validate(File file) throws InvalidJsonException {
-		if (multiplier <= 0.0f) {
-			throw new InvalidJsonException("Multiplier must be greater than 0. " + this, file);
-		}
+		if (multiplier == null || multiplier <= 0)
+			throw new InvalidJsonException("Multiplier is missing or is <= 0. " + this, file);
 	}
 
 	public float applyModifier(float worldLocalDiff, float value) {

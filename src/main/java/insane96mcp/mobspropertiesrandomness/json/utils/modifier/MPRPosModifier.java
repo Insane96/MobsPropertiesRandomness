@@ -3,7 +3,6 @@ package insane96mcp.mobspropertiesrandomness.json.utils.modifier;
 import com.google.gson.annotations.SerializedName;
 import insane96mcp.mobspropertiesrandomness.exception.InvalidJsonException;
 import insane96mcp.mobspropertiesrandomness.json.IMPRObject;
-import insane96mcp.mobspropertiesrandomness.json.utils.MPRRange;
 import net.minecraft.util.math.vector.Vector3d;
 import net.minecraft.world.World;
 
@@ -35,6 +34,7 @@ public class MPRPosModifier implements IMPRObject {
 
 	public MPRPosModifier() {
 		this.distanceFromSpawnBonus = 0f;
+		//TODO Make these required if one of the two is present instead of giving a default value, except for depth starting level
 		this.distanceFromSpawnStep = 100f;
 		this.depthBonus = 0f;
 		this.depthStep = 1f;
@@ -44,13 +44,6 @@ public class MPRPosModifier implements IMPRObject {
 	@Override
 	public void validate(File file) throws InvalidJsonException {
 
-	}
-
-	public MPRRange applyModifier(World world, Vector3d pos, float min, float max) {
-		max = applyModifier(world, pos, max);
-		min = applyModifier(world, pos, min);
-
-		return new MPRRange(min, max);
 	}
 
 	public float applyModifier(World world, Vector3d pos, float value) {

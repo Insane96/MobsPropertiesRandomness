@@ -23,7 +23,7 @@ public class BaseFeature extends Feature {
 		super(Config.builder, module, true, false);
 		Config.builder.comment(this.getDescription()).push(this.getName());
 		this.debugConfig = Config.builder
-				.comment("If true, everything will be logged in the mobspropertiesrandomness.log file.")
+				.comment("If true, all the loaded JSONs will be logged in the mobspropertiesrandomness.log file.")
 				.define("Debug", this.debug);
 		Config.builder.pop();
 	}

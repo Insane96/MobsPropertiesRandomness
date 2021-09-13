@@ -67,6 +67,7 @@ public class MPRWorldDifficulty implements IMPRObject {
 		return String.format("Difficulty{operation: %s, easy: %f, normal: %f, hard: %f}", operation, easy, normal, hard);
 	}
 
+	//TODO Rename to ADD and MULTIPLY
 	public enum Operation {
 		ADDITIVE,
 		MULTIPLIER
