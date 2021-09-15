@@ -18,7 +18,7 @@ public class MPRWorldDifficulty implements IMPRObject {
 		if (operation == null)
 			throw new InvalidJsonException("Missing Operation for Difficulty object. " + this, file);
 
-		if (operation == Operation.ADDITIVE) {
+		if (operation == Operation.ADD) {
 			if (easy == null)
 				easy = 0f;
 			if (normal == null)
@@ -26,7 +26,7 @@ public class MPRWorldDifficulty implements IMPRObject {
 			if (hard == null)
 				hard = 0f;
 		}
-		else {
+		else if (operation == Operation.MULTIPLY) {
 			if (easy == null)
 				easy = 1f;
 			if (normal == null)
@@ -41,21 +41,21 @@ public class MPRWorldDifficulty implements IMPRObject {
 			case PEACEFUL:
 				break;
 			case EASY:
-				if (operation == Operation.ADDITIVE)
+				if (operation == Operation.ADD)
 					value += easy;
-				if (operation == Operation.MULTIPLIER)
+				if (operation == Operation.MULTIPLY)
 					value *= easy;
 				break;
 			case NORMAL:
-				if (operation == Operation.ADDITIVE)
+				if (operation == Operation.ADD)
 					value += normal;
-				if (operation == Operation.MULTIPLIER)
+				if (operation == Operation.MULTIPLY)
 					value *= normal;
 				break;
 			case HARD:
-				if (operation == Operation.ADDITIVE)
+				if (operation == Operation.ADD)
 					value += hard;
-				if (operation == Operation.MULTIPLIER)
+				if (operation == Operation.MULTIPLY)
 					value *= hard;
 				break;
 		}
@@ -67,9 +67,8 @@ public class MPRWorldDifficulty implements IMPRObject {
 		return String.format("Difficulty{operation: %s, easy: %f, normal: %f, hard: %f}", operation, easy, normal, hard);
 	}
 
-	//TODO Rename to ADD and MULTIPLY
 	public enum Operation {
-		ADDITIVE,
-		MULTIPLIER
+		ADD,
+		MULTIPLY
 	}
 }
