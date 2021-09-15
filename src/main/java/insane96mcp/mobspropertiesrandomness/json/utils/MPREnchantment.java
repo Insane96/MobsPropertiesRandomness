@@ -1,12 +1,13 @@
 package insane96mcp.mobspropertiesrandomness.json.utils;
 
+import com.google.common.collect.Maps;
 import com.google.gson.annotations.SerializedName;
 import insane96mcp.insanelib.utils.RandomHelper;
 import insane96mcp.mobspropertiesrandomness.exception.InvalidJsonException;
 import insane96mcp.mobspropertiesrandomness.json.IMPRObject;
 import insane96mcp.mobspropertiesrandomness.utils.Logger;
 import net.minecraft.enchantment.Enchantment;
-import net.minecraft.enchantment.EnchantmentData;
+import net.minecraft.enchantment.EnchantmentHelper;
 import net.minecraft.entity.MobEntity;
 import net.minecraft.item.EnchantedBookItem;
 import net.minecraft.item.ItemStack;
@@ -20,6 +21,7 @@ import net.minecraftforge.registries.ForgeRegistries;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 import java.util.Objects;
 
 public class MPREnchantment implements IMPRObject {
@@ -59,6 +61,8 @@ public class MPREnchantment implements IMPRObject {
 		if (this.chance != null && world.rand.nextFloat() >= this.chance.getValue(entity, world))
 			return;
 
+		Map<Enchantment, Integer> enchantmentsToPut = Maps.newHashMap();
+
 		if (this.id.equals("random")) {
 			List<Enchantment> validEnch = new ArrayList<>();
 			for (Enchantment enchantment : ForgeRegistries.ENCHANTMENTS.getValues()) {
@@ -75,14 +79,10 @@ public class MPREnchantment implements IMPRObject {
 				Logger.warn("Couldn't find any compatible enchantment for " + itemStack);
 				return;
 			}
-
 			Enchantment choosenEnch = validEnch.get(world.rand.nextInt(validEnch.size()));
 			int level = RandomHelper.getInt(world.rand, choosenEnch.getMinLevel(), choosenEnch.getMaxLevel());
-			//TODO Check EnchantmentHelper
-			if (itemStack.getItem() instanceof EnchantedBookItem)
-				EnchantedBookItem.addEnchantment(itemStack, new EnchantmentData(choosenEnch, level));
-			else
-				itemStack.addEnchantment(choosenEnch, level);
+
+			enchantmentsToPut.put(choosenEnch, level);
 		}
 		else {
 			Enchantment enchantment = ForgeRegistries.ENCHANTMENTS.getValue(new ResourceLocation(id));
@@ -105,16 +105,14 @@ public class MPREnchantment implements IMPRObject {
 
 			if (canApply) {
 				int level = RandomHelper.getInt(world.rand, (int) this.level.getMin(entity, world), (int) this.level.getMax(entity, world));
-				if (itemStack.getItem() instanceof EnchantedBookItem)
-					EnchantedBookItem.addEnchantment(itemStack, new EnchantmentData(enchantment, level));
-				else
-					itemStack.addEnchantment(enchantment, level);
+				enchantmentsToPut.put(enchantment, level);
 			}
 		}
+		EnchantmentHelper.setEnchantments(enchantmentsToPut, itemStack);
 	}
 
 	@Override
 	public String toString() {
-		return String.format("Enchantment{id: %s, level: %s, chance: %s}", id, level, chance);
+		return String.format("Enchantment{id: %s, allowCurses: %s, allowTreasure: %s, level: %s, chance: %s}", id, allowCurses, allowTreasure, level, chance);
 	}
 }

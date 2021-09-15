@@ -89,7 +89,7 @@ public class MPREquipment implements IMPRObject, IMPRAppliable {
 				itemStack.deserializeNBT(tagCompound);
 			}
 			catch (CommandSyntaxException e) {
-				Logger.error("Failed to parse NBT for " + choosenItem);
+				Logger.error("Failed to parse NBT " + choosenItem.nbt + " for " + choosenItem);
 				e.printStackTrace();
 			}
 		}
