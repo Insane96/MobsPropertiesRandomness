@@ -9,20 +9,16 @@ import insane96mcp.mobspropertiesrandomness.utils.Logger;
 import net.minecraft.enchantment.Enchantment;
 import net.minecraft.enchantment.EnchantmentHelper;
 import net.minecraft.entity.MobEntity;
-import net.minecraft.item.EnchantedBookItem;
 import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.CompoundNBT;
-import net.minecraft.nbt.INBT;
-import net.minecraft.nbt.ListNBT;
+import net.minecraft.item.Items;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.world.World;
 import net.minecraftforge.registries.ForgeRegistries;
 
 import java.io.File;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
-import java.util.Objects;
+import java.util.stream.Collectors;
 
 public class MPREnchantment implements IMPRObject {
 
@@ -48,10 +44,6 @@ public class MPREnchantment implements IMPRObject {
 
 		if (level != null)
 			level.validate(file);
-		else if (!Objects.equals(id, "random")){
-			Logger.info("Missing Enchantment Level. " + this + ". Will default to 1");
-			level = new MPRRange(1, 1);
-		}
 
 		if (chance != null)
 			chance.validate(file);
@@ -64,47 +56,42 @@ public class MPREnchantment implements IMPRObject {
 		Map<Enchantment, Integer> enchantmentsToPut = Maps.newHashMap();
 
 		if (this.id.equals("random")) {
-			List<Enchantment> validEnch = new ArrayList<>();
-			for (Enchantment enchantment : ForgeRegistries.ENCHANTMENTS.getValues()) {
-				if (enchantment.isCurse() && !allowCurses)
-					continue;
-				if (enchantment.isTreasureEnchantment() && !allowTreasure)
-					continue;
+			boolean isBook = itemStack.getItem() == Items.ENCHANTED_BOOK;
+			List<Enchantment> list = ForgeRegistries.ENCHANTMENTS.getValues().stream().filter((enchantment) -> {
+				if (enchantment.isCurse() && !allowCurses || enchantment.isTreasureEnchantment() && !allowTreasure)
+					return false;
+				return isBook || enchantment.canApply(itemStack);
+			}).collect(Collectors.toList());
 
-				if (enchantment.canApply(itemStack) || itemStack.getItem() instanceof EnchantedBookItem)
-					validEnch.add(enchantment);
-			}
-
-			if (validEnch.isEmpty()) {
+			if (list.isEmpty()) {
 				Logger.warn("Couldn't find any compatible enchantment for " + itemStack);
 				return;
 			}
-			Enchantment choosenEnch = validEnch.get(world.rand.nextInt(validEnch.size()));
-			int level = RandomHelper.getInt(world.rand, choosenEnch.getMinLevel(), choosenEnch.getMaxLevel());
+			Enchantment enchantment = list.get(world.rand.nextInt(list.size()));
+			int minLevel = level != null ? (int) level.getMin(entity, world) : enchantment.getMinLevel();
+			int maxLevel = level != null ? (int) level.getMax(entity, world) : enchantment.getMaxLevel();
+			int level = RandomHelper.getInt(world.rand, minLevel, maxLevel);
 
-			enchantmentsToPut.put(choosenEnch, level);
+			enchantmentsToPut.put(enchantment, level);
 		}
 		else {
 			Enchantment enchantment = ForgeRegistries.ENCHANTMENTS.getValue(new ResourceLocation(id));
 			boolean canApply = true;
-			ListNBT enchantments = itemStack.getEnchantmentTagList();
-			if (!enchantments.isEmpty()) {
-				for (INBT nbt : enchantments) {
-					CompoundNBT compoundNBT = (CompoundNBT) nbt;
-					if (compoundNBT.isEmpty())
-						continue;
+			Map<Enchantment, Integer> enchantmentsOnStack = EnchantmentHelper.getEnchantments(itemStack);
+			if (enchantmentsOnStack.isEmpty())
+				return;
 
-					String itemEnchId = compoundNBT.getString("id");
-					Enchantment itemEnch = ForgeRegistries.ENCHANTMENTS.getValue(new ResourceLocation(itemEnchId));
-					if (!enchantment.isCompatibleWith(itemEnch)) {
-						canApply = false;
-						break;
-					}
+			for (Enchantment enchantmentOnStack : enchantmentsOnStack.keySet()) {
+				if (!enchantment.isCompatibleWith(enchantmentOnStack)) {
+					canApply = false;
+					break;
 				}
 			}
 
 			if (canApply) {
-				int level = RandomHelper.getInt(world.rand, (int) this.level.getMin(entity, world), (int) this.level.getMax(entity, world));
+				int minLevel = level != null ? (int) level.getMin(entity, world) : enchantment.getMinLevel();
+				int maxLevel = level != null ? (int) level.getMax(entity, world) : enchantment.getMaxLevel();
+				int level = RandomHelper.getInt(world.rand, minLevel, maxLevel);
 				enchantmentsToPut.put(enchantment, level);
 			}
 		}
