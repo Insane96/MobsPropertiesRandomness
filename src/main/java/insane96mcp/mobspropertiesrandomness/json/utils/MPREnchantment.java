@@ -6,7 +6,9 @@ import insane96mcp.mobspropertiesrandomness.exception.InvalidJsonException;
 import insane96mcp.mobspropertiesrandomness.json.IMPRObject;
 import insane96mcp.mobspropertiesrandomness.utils.Logger;
 import net.minecraft.enchantment.Enchantment;
+import net.minecraft.enchantment.EnchantmentData;
 import net.minecraft.entity.MobEntity;
+import net.minecraft.item.EnchantedBookItem;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.nbt.INBT;
@@ -65,7 +67,7 @@ public class MPREnchantment implements IMPRObject {
 				if (enchantment.isTreasureEnchantment() && !allowTreasure)
 					continue;
 
-				if (enchantment.canApply(itemStack))
+				if (enchantment.canApply(itemStack) || itemStack.getItem() instanceof EnchantedBookItem)
 					validEnch.add(enchantment);
 			}
 
@@ -76,7 +78,11 @@ public class MPREnchantment implements IMPRObject {
 
 			Enchantment choosenEnch = validEnch.get(world.rand.nextInt(validEnch.size()));
 			int level = RandomHelper.getInt(world.rand, choosenEnch.getMinLevel(), choosenEnch.getMaxLevel());
-			itemStack.addEnchantment(choosenEnch, level);
+			//TODO Check EnchantmentHelper
+			if (itemStack.getItem() instanceof EnchantedBookItem)
+				EnchantedBookItem.addEnchantment(itemStack, new EnchantmentData(choosenEnch, level));
+			else
+				itemStack.addEnchantment(choosenEnch, level);
 		}
 		else {
 			Enchantment enchantment = ForgeRegistries.ENCHANTMENTS.getValue(new ResourceLocation(id));
@@ -99,7 +105,10 @@ public class MPREnchantment implements IMPRObject {
 
 			if (canApply) {
 				int level = RandomHelper.getInt(world.rand, (int) this.level.getMin(entity, world), (int) this.level.getMax(entity, world));
-				itemStack.addEnchantment(enchantment, level);
+				if (itemStack.getItem() instanceof EnchantedBookItem)
+					EnchantedBookItem.addEnchantment(itemStack, new EnchantmentData(enchantment, level));
+				else
+					itemStack.addEnchantment(enchantment, level);
 			}
 		}
 	}
