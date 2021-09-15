@@ -23,9 +23,8 @@ public class MPRSlot implements IMPRObject {
 
 	@Override
 	public void validate(File file) throws InvalidJsonException {
-		if (chance == null)
-			throw new InvalidJsonException("Missing chance. " + this, file);
-		chance.validate(file);
+		if (chance != null)
+			chance.validate(file);
 
 		if (replaceOnly && !override)
 		{

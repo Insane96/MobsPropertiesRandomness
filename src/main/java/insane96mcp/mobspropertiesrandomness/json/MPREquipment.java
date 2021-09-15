@@ -69,7 +69,7 @@ public class MPREquipment implements IMPRObject, IMPRAppliable {
 		if (slot.replaceOnly && entity.getItemStackFromSlot(equipmentSlotType).isEmpty())
 			return;
 
-		if (world.rand.nextFloat() >= slot.chance.getValue(entity, world))
+		if (slot.chance != null && world.rand.nextFloat() >= slot.chance.getValue(entity, world))
 			return;
 
 		MPRItem choosenItem = slot.getRandomItem(entity, world);
