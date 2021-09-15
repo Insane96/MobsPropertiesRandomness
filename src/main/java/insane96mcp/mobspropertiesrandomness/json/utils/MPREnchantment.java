@@ -51,12 +51,10 @@ public class MPREnchantment implements IMPRObject {
 
 		if (chance != null)
 			chance.validate(file);
-		else
-			throw new InvalidJsonException("Missing chance. " + this, file);
 	}
 
 	public void applyToStack(MobEntity entity, World world, ItemStack itemStack) {
-		if (world.rand.nextFloat() >= this.chance.getValue(entity, world))
+		if (this.chance != null && world.rand.nextFloat() >= this.chance.getValue(entity, world))
 			return;
 
 		if (this.id.equals("random")) {
