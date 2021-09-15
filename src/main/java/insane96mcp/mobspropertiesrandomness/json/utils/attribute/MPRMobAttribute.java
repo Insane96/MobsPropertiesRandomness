@@ -37,23 +37,23 @@ public class MPRMobAttribute extends MPRAttribute implements IMPRObject, IMPRApp
 		float min = this.amount.getMin(entity, world);
 		float max = this.amount.getMax(entity, world);
 
-		Attribute attribute = ForgeRegistries.ATTRIBUTES.getValue(new ResourceLocation(this.attributeId));
+		Attribute attribute = ForgeRegistries.ATTRIBUTES.getValue(new ResourceLocation(this.id));
 		ModifiableAttributeInstance attributeInstance = entity.getAttribute(attribute);
 		if (attributeInstance == null) {
-			Logger.warn("Attribute " + this.attributeId + " not found for the entity, skipping the attribute");
+			Logger.warn("Attribute " + this.id + " not found for the entity, skipping the attribute");
 			return;
 		}
 
 		float amount = RandomHelper.getFloat(world.rand, min, max);
 
-		AttributeModifier modifier = new AttributeModifier(UUID.randomUUID(), MobsPropertiesRandomness.RESOURCE_PREFIX + this.attributeId, amount, operation);
+		AttributeModifier modifier = new AttributeModifier(UUID.randomUUID(), MobsPropertiesRandomness.RESOURCE_PREFIX + this.id, amount, operation);
 		attributeInstance.applyPersistentModifier(modifier);
 
 		//Health Fix
-		if (this.attributeId.contains("generic.max_health"))
+		if (this.id.contains("generic.max_health"))
 			entity.setHealth((float) attributeInstance.getValue());
 		//Follow range fix
-		else if (this.attributeId.contains("generic.follow_range"))
+		else if (this.id.contains("generic.follow_range"))
 			fixFollowRange(entity);
 	}
 
@@ -68,6 +68,6 @@ public class MPRMobAttribute extends MPRAttribute implements IMPRObject, IMPRApp
 
 	@Override
 	public String toString() {
-		return String.format("MobAttribute{uuid: %s, attribute_id: %s, amount: %s, operation: %s, world_whitelist: %s}", uuid, attributeId, amount, operation, worldWhitelist);
+		return String.format("MobAttribute{uuid: %s, attribute_id: %s, amount: %s, operation: %s, world_whitelist: %s}", uuid, id, amount, operation, worldWhitelist);
 	}
 }

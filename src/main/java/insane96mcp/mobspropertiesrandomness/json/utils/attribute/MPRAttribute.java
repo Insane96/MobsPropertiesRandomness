@@ -13,8 +13,7 @@ import java.util.UUID;
 public abstract class MPRAttribute implements IMPRObject {
 	public String uuid;
 
-	@SerializedName("attribute_id")
-	public String attributeId;
+	public String id;
 
 	@SerializedName("modifier_name")
 	public String modifierName;
@@ -31,14 +30,14 @@ public abstract class MPRAttribute implements IMPRObject {
 		if (uuid == null)
 			uuid = UUID.randomUUID().toString();
 
-		if (attributeId == null)
-			throw new InvalidJsonException("Missing Attribute Id. " + this, file);
+		if (id == null)
+			throw new InvalidJsonException("Missing Id. " + this, file);
 
 		if (modifierName == null)
 			throw new InvalidJsonException("Missing Modifier Name. " + this, file);
 
 		if (amount == null)
-			throw new InvalidJsonException("Missing Amount (Min/Max). " + this, file);
+			throw new InvalidJsonException("Missing Amount. " + this, file);
 		amount.validate(file);
 
 		if (operation == null)
@@ -50,6 +49,6 @@ public abstract class MPRAttribute implements IMPRObject {
 
 	@Override
 	public String toString() {
-		return String.format("Attribute{uuid: %s, attribute_id: %s, modifier_name: %s, amount: %s, operation: %s, world_whitelist: %s}", uuid, attributeId, modifierName, amount, operation, worldWhitelist);
+		return String.format("Attribute{uuid: %s, id: %s, modifier_name: %s, amount: %s, operation: %s, world_whitelist: %s}", uuid, id, modifierName, amount, operation, worldWhitelist);
 	}
 }

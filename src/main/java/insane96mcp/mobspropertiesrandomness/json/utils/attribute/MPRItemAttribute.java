@@ -34,10 +34,10 @@ public class MPRItemAttribute extends MPRAttribute implements IMPRObject {
 		float min = this.amount.getMin(entity, world);
 		float max = this.amount.getMax(entity, world);
 
-		Attribute attribute = ForgeRegistries.ATTRIBUTES.getValue(new ResourceLocation(this.attributeId));
+		Attribute attribute = ForgeRegistries.ATTRIBUTES.getValue(new ResourceLocation(this.id));
 		ModifiableAttributeInstance attributeInstance = entity.getAttribute(attribute);
 		if (attributeInstance == null) {
-			Logger.warn("Attribute " + this.attributeId + " not found for the entity, skipping the attribute");
+			Logger.warn("Attribute " + this.id + " not found for the entity, skipping the attribute");
 			return;
 		}
 
@@ -50,6 +50,6 @@ public class MPRItemAttribute extends MPRAttribute implements IMPRObject {
 
 	@Override
 	public String toString() {
-		return String.format("ItemAttribute{uuid: %s, attribute_id: %s, modifier_name: %s, amount: %s, operation: %s, world_whitelist: %s, slot: %s}", uuid, attributeId, modifierName, amount, operation, worldWhitelist, slot);
+		return String.format("ItemAttribute{uuid: %s, attribute_id: %s, modifier_name: %s, amount: %s, operation: %s, world_whitelist: %s, slot: %s}", uuid, id, modifierName, amount, operation, worldWhitelist, slot);
 	}
 }

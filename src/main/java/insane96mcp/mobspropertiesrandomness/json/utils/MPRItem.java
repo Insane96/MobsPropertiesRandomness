@@ -20,6 +20,7 @@ public class MPRItem extends WeightedRandom.Item implements IMPRObject {
 	public String id;
 	private MPRModifiableValue weight;
 	@SerializedName("drop_chance")
+	//TODO Convert to ModifiableValue
 	public float dropChance;
 	public List<MPREnchantment> enchantments;
 	public List<MPRItemAttribute> attributes;
