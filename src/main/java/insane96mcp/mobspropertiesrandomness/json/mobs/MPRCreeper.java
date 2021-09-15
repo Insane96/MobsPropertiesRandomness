@@ -7,10 +7,15 @@ import insane96mcp.mobspropertiesrandomness.json.IMPRAppliable;
 import insane96mcp.mobspropertiesrandomness.json.IMPRObject;
 import insane96mcp.mobspropertiesrandomness.json.utils.MPRModifiableValue;
 import insane96mcp.mobspropertiesrandomness.json.utils.MPRRange;
+import insane96mcp.mobspropertiesrandomness.network.MessageCreeperFuseSync;
+import insane96mcp.mobspropertiesrandomness.network.NetworkHandler;
 import net.minecraft.entity.MobEntity;
 import net.minecraft.entity.monster.CreeperEntity;
+import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.entity.player.ServerPlayerEntity;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.world.World;
+import net.minecraftforge.fml.network.NetworkDirection;
 
 import java.io.File;
 
@@ -40,21 +45,24 @@ public class MPRCreeper implements IMPRObject, IMPRAppliable {
 
 		CreeperEntity creeper = (CreeperEntity) entity;
 
-		if (world.isRemote) {
-			//TODO Fix creeper fuse animation clientside
-			//PacketHandler.SendToServer(new CreeperFuse(entityCreeper.getEntityId()));
-			return;
-		}
-
 		CompoundNBT compound = new CompoundNBT();
 		creeper.writeAdditional(compound);
 
+		if (world.isRemote)
+			return;
+
 		//Fuse
+		int fuse = 30;
 		if (this.fuse != null && compound.getShort("Fuse") == 30) {
 			int minFuse = (int) this.fuse.getMin(creeper, world);
 			int maxFuse = (int) this.fuse.getMax(creeper, world);
-			int fuse = RandomHelper.getInt(world.rand, minFuse, maxFuse + 1);
+			fuse = RandomHelper.getInt(world.rand, minFuse, maxFuse + 1);
 			compound.putShort("Fuse", (short)fuse);
+		}
+
+		Object msg = new MessageCreeperFuseSync(creeper.getEntityId(), (short) fuse);
+		for (PlayerEntity player : world.getPlayers()) {
+			NetworkHandler.CHANNEL.sendTo(msg, ((ServerPlayerEntity) player).connection.netManager, NetworkDirection.PLAY_TO_CLIENT);
 		}
 
 		//Explosion Radius
