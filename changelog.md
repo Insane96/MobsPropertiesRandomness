@@ -1,5 +1,17 @@
 # Changelog
 
+## 3.0.3
+* Fixed Creeper's fuse not synced client-side.
+* Drop Chance is now between 0 and 1 instead of 0-100
+* Enchantment Level is no longer required. If omitted will use the min and max level of the enchantment to choose the final level.
+* Renamed WorldDifficulty operations to ADD and MULTIPLY
+* Renamed attribute_id to id
+* Pos modifier's bonus and step are now required for eachother
+* Chance in enchantments is no longer mandatory
+* Chance in slot is no longer mandatory
+* Fixed enchantments not applying to enchanted books
+* Fixed missing allowCurses and Treasure in toString 
+
 ## Beta 3.0.2
 * Now requires InsaneLib 1.2.1
 * `difficulty_modifier` is now specified in Range objects (min max) and in chance objects
