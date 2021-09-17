@@ -22,6 +22,7 @@ import java.util.stream.Collectors;
 
 public class MPREnchantment implements IMPRObject {
 
+	//TODO Rework, split id and Random. Random should be a new object with a list of enchantments and the "allow_curses" and "allow_treasure" keys
 	public String id;
 	@SerializedName("allow_curses")
 	public boolean allowCurses;

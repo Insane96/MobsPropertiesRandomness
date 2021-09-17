@@ -1,5 +1,11 @@
 # Changelog
 
+## 3.0.4
+* Enchantments
+  * Added a new `allow_incompatible` property. When true incompatible enchantments can be applied to the tool even when incompatible. E.g. Adding multishot to a crossbow will prevent you from adding quick charge. Setting quick charge's `allow_incompatible` to true, will make it apply
+  * Fixed "random" enchantments applying incompatible enchantments
+  * Fixed enchantments not applying at all
+
 ## 3.0.3
 * Fixed Creeper's fuse not synced client-side.
 * Drop Chance is now between 0 and 1 instead of 0-100
@@ -45,7 +51,7 @@ Chance and Attributes make use of the new `difficulty_modifier`
 * The mod's JSON are now reloaded with the /reload command instead of begin a separate command
 * Creepers with mod's applied potion effects no longer generate clouds
 * Potion effects dimensions now require a string instead of a numeric id (e.g. "minecraft:overworld")
-* The apply of properties is now done at the lowest priority so mods can add the prevent processing tag correctly. Also the tag prevent processing has been changed to `mobspropertiesrandomness:processed`.
+* Property modification is now done at the lowest priority so mods can add the "prevent processing" tag correctly. Also, the tag prevent processing has been changed to `mobspropertiesrandomness:processed`.
 * Change attribute's is_flat to operation
 * Renamed weight_difficulty to weight_modifier
 * Groups no longer need a name. Group name is now given by file name
