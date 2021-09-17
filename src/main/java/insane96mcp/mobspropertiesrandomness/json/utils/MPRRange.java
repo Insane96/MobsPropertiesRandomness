@@ -53,10 +53,10 @@ public class MPRRange extends MPRModifiable implements IMPRObject {
 		float max = this.max;
 
 		if (this.difficultyModifier != null)
-			max = this.difficultyModifier.applyModifier(world.getDifficulty(), world.getDifficultyForLocation(entity.getPosition()).getAdditionalDifficulty(), min);
+			max = this.difficultyModifier.applyModifier(world.getDifficulty(), world.getDifficultyForLocation(entity.getPosition()).getAdditionalDifficulty(), max);
 
 		if (this.posModifier != null)
-			max = this.posModifier.applyModifier(world, entity.getPositionVec(), min);
+			max = this.posModifier.applyModifier(world, entity.getPositionVec(), max);
 
 		return max;
 	}
