@@ -1,7 +1,6 @@
 package insane96mcp.mobspropertiesrandomness.json.utils.attribute;
 
 import insane96mcp.insanelib.utils.RandomHelper;
-import insane96mcp.mobspropertiesrandomness.MobsPropertiesRandomness;
 import insane96mcp.mobspropertiesrandomness.exception.InvalidJsonException;
 import insane96mcp.mobspropertiesrandomness.json.IMPRAppliable;
 import insane96mcp.mobspropertiesrandomness.json.IMPRObject;
@@ -46,7 +45,7 @@ public class MPRMobAttribute extends MPRAttribute implements IMPRObject, IMPRApp
 
 		float amount = RandomHelper.getFloat(world.rand, min, max);
 
-		AttributeModifier modifier = new AttributeModifier(UUID.randomUUID(), MobsPropertiesRandomness.RESOURCE_PREFIX + this.id, amount, operation);
+		AttributeModifier modifier = new AttributeModifier(UUID.randomUUID(), this.modifierName, amount, operation);
 		attributeInstance.applyPersistentModifier(modifier);
 
 		//Health Fix
