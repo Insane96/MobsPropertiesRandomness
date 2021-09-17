@@ -1,14 +1,15 @@
 package insane96mcp.mobspropertiesrandomness.json.utils;
 
-import com.google.common.collect.Maps;
 import com.google.gson.annotations.SerializedName;
 import insane96mcp.insanelib.utils.RandomHelper;
 import insane96mcp.mobspropertiesrandomness.exception.InvalidJsonException;
 import insane96mcp.mobspropertiesrandomness.json.IMPRObject;
 import insane96mcp.mobspropertiesrandomness.utils.Logger;
 import net.minecraft.enchantment.Enchantment;
+import net.minecraft.enchantment.EnchantmentData;
 import net.minecraft.enchantment.EnchantmentHelper;
 import net.minecraft.entity.MobEntity;
+import net.minecraft.item.EnchantedBookItem;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.Items;
 import net.minecraft.util.ResourceLocation;
@@ -57,7 +58,6 @@ public class MPREnchantment implements IMPRObject {
 		if (this.chance != null && world.rand.nextFloat() >= this.chance.getValue(entity, world))
 			return;
 
-		Map<Enchantment, Integer> enchantmentsToPut = Maps.newHashMap();
 		Map<Enchantment, Integer> enchantmentsOnStack = EnchantmentHelper.getEnchantments(itemStack);
 
 		if (this.id.equals("random")) {
@@ -86,29 +86,27 @@ public class MPREnchantment implements IMPRObject {
 			int maxLevel = level != null ? (int) level.getMax(entity, world) : enchantment.getMaxLevel();
 			int level = RandomHelper.getInt(world.rand, minLevel, maxLevel);
 
-			enchantmentsToPut.put(enchantment, level);
+			addEnchantmentToItemStack(itemStack, enchantment, level);
 		}
 		else {
 			Enchantment enchantment = ForgeRegistries.ENCHANTMENTS.getValue(new ResourceLocation(id));
-			boolean canApply = true;
-
-			if (!this.allowIncompatible) {
-				for (Enchantment enchantmentOnStack : enchantmentsOnStack.keySet()) {
-					if (!enchantment.isCompatibleWith(enchantmentOnStack)) {
-						canApply = false;
-						break;
-					}
-				}
-			}
-
+			boolean canApply = this.allowIncompatible || EnchantmentHelper.areAllCompatibleWith(enchantmentsOnStack.keySet(), enchantment);
 			if (canApply) {
 				int minLevel = level != null ? (int) level.getMin(entity, world) : enchantment.getMinLevel();
 				int maxLevel = level != null ? (int) level.getMax(entity, world) : enchantment.getMaxLevel();
 				int level = RandomHelper.getInt(world.rand, minLevel, maxLevel);
-				enchantmentsToPut.put(enchantment, level);
+
+				addEnchantmentToItemStack(itemStack, enchantment, level);
 			}
 		}
-		EnchantmentHelper.setEnchantments(enchantmentsToPut, itemStack);
+
+	}
+
+	private static void addEnchantmentToItemStack(ItemStack itemStack, Enchantment enchantment, int level) {
+		if (itemStack.getItem() == Items.ENCHANTED_BOOK)
+			EnchantedBookItem.addEnchantment(itemStack, new EnchantmentData(enchantment, level));
+		else
+			itemStack.addEnchantment(enchantment, level);
 	}
 
 	@Override

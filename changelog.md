@@ -1,5 +1,9 @@
 # Changelog
 
+## Upcoming
+* Fixed modifier names for mobs using modid:attribute_id instead of the modifier's name
+* Fixed enchantments replacing already existing enchantments. Adding more than 1 enchantment was not possible.
+
 ## 3.0.4
 * Enchantments
   * Added a new `allow_incompatible` property. When true incompatible enchantments can be applied to the tool even when incompatible. E.g. Adding multishot to a crossbow will prevent you from adding quick charge. Setting quick charge's `allow_incompatible` to true, will make it apply
