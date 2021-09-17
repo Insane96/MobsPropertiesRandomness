@@ -1,6 +1,6 @@
 # Changelog
 
-## Upcoming
+## 3.0.5
 * Fixed modifier names for mobs using modid:attribute_id instead of the modifier's name
 * Fixed enchantments replacing already existing enchantments. Adding more than 1 enchantment was not possible
 * Fixed modifiers using min values for max values
