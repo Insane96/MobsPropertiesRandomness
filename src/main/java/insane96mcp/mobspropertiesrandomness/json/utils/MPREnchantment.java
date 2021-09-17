@@ -29,6 +29,8 @@ public class MPREnchantment implements IMPRObject {
 	public boolean allowTreasure;
 	public MPRRange level;
 	public MPRModifiableValue chance;
+	@SerializedName("allow_incompatible")
+	public boolean allowIncompatible;
 
 	public MPREnchantment() {
 		allowCurses = true;
@@ -78,7 +80,8 @@ public class MPREnchantment implements IMPRObject {
 			Enchantment enchantment = ForgeRegistries.ENCHANTMENTS.getValue(new ResourceLocation(id));
 			boolean canApply = true;
 			Map<Enchantment, Integer> enchantmentsOnStack = EnchantmentHelper.getEnchantments(itemStack);
-			if (!enchantmentsOnStack.isEmpty()) {
+
+			if (!this.allowIncompatible) {
 				for (Enchantment enchantmentOnStack : enchantmentsOnStack.keySet()) {
 					if (!enchantment.isCompatibleWith(enchantmentOnStack)) {
 						canApply = false;
