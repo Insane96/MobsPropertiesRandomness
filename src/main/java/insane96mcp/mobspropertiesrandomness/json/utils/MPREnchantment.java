@@ -27,6 +27,7 @@ public class MPREnchantment implements IMPRObject {
 	public boolean allowCurses;
 	@SerializedName("allow_treasure")
 	public boolean allowTreasure;
+	//TODO Add a list of enchantments for "random"
 	public MPRRange level;
 	public MPRModifiableValue chance;
 	@SerializedName("allow_incompatible")
@@ -56,12 +57,22 @@ public class MPREnchantment implements IMPRObject {
 			return;
 
 		Map<Enchantment, Integer> enchantmentsToPut = Maps.newHashMap();
+		Map<Enchantment, Integer> enchantmentsOnStack = EnchantmentHelper.getEnchantments(itemStack);
 
 		if (this.id.equals("random")) {
 			boolean isBook = itemStack.getItem() == Items.ENCHANTED_BOOK;
 			List<Enchantment> list = ForgeRegistries.ENCHANTMENTS.getValues().stream().filter((enchantment) -> {
 				if (enchantment.isCurse() && !allowCurses || enchantment.isTreasureEnchantment() && !allowTreasure)
 					return false;
+
+				if (!this.allowIncompatible) {
+					for (Enchantment enchantmentOnStack : enchantmentsOnStack.keySet()) {
+						if (!enchantment.isCompatibleWith(enchantmentOnStack)) {
+							return false;
+						}
+					}
+				}
+
 				return isBook || enchantment.canApply(itemStack);
 			}).collect(Collectors.toList());
 
@@ -79,7 +90,6 @@ public class MPREnchantment implements IMPRObject {
 		else {
 			Enchantment enchantment = ForgeRegistries.ENCHANTMENTS.getValue(new ResourceLocation(id));
 			boolean canApply = true;
-			Map<Enchantment, Integer> enchantmentsOnStack = EnchantmentHelper.getEnchantments(itemStack);
 
 			if (!this.allowIncompatible) {
 				for (Enchantment enchantmentOnStack : enchantmentsOnStack.keySet()) {
