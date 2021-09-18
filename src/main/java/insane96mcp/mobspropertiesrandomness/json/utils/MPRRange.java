@@ -18,6 +18,7 @@ public class MPRRange extends MPRModifiable implements IMPRObject {
 	}
 
 	public MPRRange(float min, float max) {
+		super(null, null);
 		this.min = min;
 		this.max = Math.max(min, max);
 	}

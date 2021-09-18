@@ -15,6 +15,11 @@ public abstract class MPRModifiable implements IMPRObject {
 	@SerializedName("pos_modifier")
 	public MPRPosModifier posModifier;
 
+	public MPRModifiable(MPRDifficultyModifier difficultyModifier, MPRPosModifier posModifier) {
+		this.difficultyModifier = difficultyModifier;
+		this.posModifier = posModifier;
+	}
+
 	public void validate(final File file) throws InvalidJsonException {
 		if (difficultyModifier != null)
 			difficultyModifier.validate(file);
@@ -25,6 +30,6 @@ public abstract class MPRModifiable implements IMPRObject {
 
 	@Override
 	public String toString() {
-		return String.format("Modifiable{difficulty_modifier: %s, pos_modifier: %s}", difficultyModifier, posModifier);
+		return String.format("difficulty_modifier: %s, pos_modifier: %s", difficultyModifier, posModifier);
 	}
 }
