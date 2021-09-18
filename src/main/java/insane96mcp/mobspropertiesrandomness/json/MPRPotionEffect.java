@@ -38,8 +38,8 @@ public class MPRPotionEffect implements IMPRObject, IMPRAppliable {
 
 		//Amplifier
 		if (amplifier == null) {
-			Logger.info("Missing Amplifier in PotionEffect object. " + this + ". Will default to 0");
-			amplifier = new MPRRange(0, 0);
+			Logger.info("Missing Amplifier in PotionEffect object. " + this + ". Will default to 0 (I)");
+			amplifier = new MPRRange(0);
 		}
 		amplifier.validate(file);
 
