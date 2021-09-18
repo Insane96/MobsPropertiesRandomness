@@ -1,5 +1,9 @@
 # Changelog
 
+## Upcoming
+* Range and Modifiable value objects can now be set with just a number, instead of having to create an object with the "value" (or "min") key inside.
+* Items Drop Chance is now a Modifiable Value
+
 ## 3.0.5
 * Fixed modifier names for mobs using modid:attribute_id instead of the modifier's name
 * Fixed enchantments replacing already existing enchantments. Adding more than 1 enchantment was not possible

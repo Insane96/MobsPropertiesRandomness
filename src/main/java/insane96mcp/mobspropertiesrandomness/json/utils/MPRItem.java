@@ -4,7 +4,6 @@ import com.google.gson.annotations.SerializedName;
 import insane96mcp.mobspropertiesrandomness.exception.InvalidJsonException;
 import insane96mcp.mobspropertiesrandomness.json.IMPRObject;
 import insane96mcp.mobspropertiesrandomness.json.utils.attribute.MPRItemAttribute;
-import insane96mcp.mobspropertiesrandomness.utils.Logger;
 import net.minecraft.entity.MobEntity;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.WeightedRandom;
@@ -12,7 +11,6 @@ import net.minecraft.world.World;
 import net.minecraftforge.registries.ForgeRegistries;
 
 import java.io.File;
-import java.util.ArrayList;
 import java.util.List;
 
 public class MPRItem extends WeightedRandom.Item implements IMPRObject {
@@ -20,8 +18,7 @@ public class MPRItem extends WeightedRandom.Item implements IMPRObject {
 	public String id;
 	private MPRModifiableValue weight;
 	@SerializedName("drop_chance")
-	//TODO Convert to ModifiableValue
-	public float dropChance;
+	public MPRModifiableValue dropChance;
 	public List<MPREnchantment> enchantments;
 	public List<MPRItemAttribute> attributes;
 	public String nbt;
@@ -44,26 +41,16 @@ public class MPRItem extends WeightedRandom.Item implements IMPRObject {
 			throw new InvalidJsonException("Missing weight. " + this, file);
 		weight.validate(file);
 
-		if (dropChance == 0f)
-			Logger.info("Drop Chance has been set to 0 (or omitted). Mobs will drop this piece only with Looting. " + this);
+		if (dropChance != null)
+			dropChance.validate(file);
 
-		if (enchantments == null)
-			enchantments = new ArrayList<>();
-
-		if (!enchantments.isEmpty()) {
-			for (MPREnchantment enchantment : enchantments) {
+		if (enchantments != null)
+			for (MPREnchantment enchantment : enchantments)
 				enchantment.validate(file);
-			}
-		}
 
-		if (attributes == null)
-			attributes = new ArrayList<>();
-
-		if (!attributes.isEmpty()) {
-			for (MPRItemAttribute itemAttribute : attributes) {
+		if (attributes != null)
+			for (MPRItemAttribute itemAttribute : attributes)
 				itemAttribute.validate(file);
-			}
-		}
 
 		if (worldWhitelist != null)
 			worldWhitelist.validate(file);
