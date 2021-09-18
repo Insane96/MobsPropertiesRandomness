@@ -3,48 +3,90 @@ package insane96mcp.mobspropertiesrandomness.json.utils.attribute;
 import com.google.gson.annotations.SerializedName;
 import insane96mcp.mobspropertiesrandomness.exception.InvalidJsonException;
 import insane96mcp.mobspropertiesrandomness.json.IMPRObject;
+import insane96mcp.mobspropertiesrandomness.json.utils.MPRModifiableValue;
 import insane96mcp.mobspropertiesrandomness.json.utils.MPRRange;
 import insane96mcp.mobspropertiesrandomness.json.utils.MPRWorldWhitelist;
+import net.minecraft.entity.LivingEntity;
+import net.minecraft.entity.MobEntity;
 import net.minecraft.entity.ai.attributes.AttributeModifier;
+import net.minecraft.entity.ai.attributes.Attributes;
+import net.minecraft.entity.ai.attributes.ModifiableAttributeInstance;
+import net.minecraft.entity.ai.goal.NearestAttackableTargetGoal;
+import net.minecraft.entity.ai.goal.PrioritizedGoal;
+import net.minecraft.world.World;
 
 import java.io.File;
 import java.util.UUID;
 
 public abstract class MPRAttribute implements IMPRObject {
 	public String uuid;
-
 	public String id;
-
 	@SerializedName("modifier_name")
 	public String modifierName;
-
 	public MPRRange amount;
-
 	public AttributeModifier.Operation operation;
-
+	public MPRModifiableValue chance;
 	@SerializedName("world_whitelist")
 	public MPRWorldWhitelist worldWhitelist;
 
 	@Override
 	public void validate(File file) throws InvalidJsonException {
-		if (uuid == null)
-			uuid = UUID.randomUUID().toString();
+		if (this.uuid == null)
+			this.uuid = UUID.randomUUID().toString();
 
-		if (id == null)
+		if (this.id == null)
 			throw new InvalidJsonException("Missing Id. " + this, file);
 
-		if (modifierName == null)
+		if (this.modifierName == null)
 			throw new InvalidJsonException("Missing Modifier Name. " + this, file);
 
-		if (amount == null)
+		if (this.amount == null)
 			throw new InvalidJsonException("Missing Amount. " + this, file);
-		amount.validate(file);
+		this.amount.validate(file);
 
-		if (operation == null)
+		if (this.operation == null)
 			throw new InvalidJsonException("Missing Operation. " + this, file);
 
-		if (worldWhitelist != null)
-			worldWhitelist.validate(file);
+		if (this.chance != null)
+			this.chance.validate(file);
+
+		if (this.worldWhitelist != null)
+			this.worldWhitelist.validate(file);
+	}
+
+	public boolean shouldApply(MobEntity entity, World world) {
+		if (world.isRemote)
+			return false;
+
+		if (this.chance != null && world.rand.nextFloat() >= this.chance.getValue(entity, world))
+			return false;
+
+		if (worldWhitelist != null && worldWhitelist.isWhitelisted(entity))
+			return false;
+
+		return true;
+	}
+
+	protected void fixHealth(MobEntity entity) {
+		if (this.id.contains("generic.max_health")) {
+			ModifiableAttributeInstance attributeInstance = entity.getAttribute(Attributes.MAX_HEALTH);
+			if (attributeInstance != null)
+				entity.setHealth((float) attributeInstance.getValue());
+		}
+	}
+
+	protected void fixFollowRange(MobEntity entity) {
+		if (this.id.contains("generic.follow_range")) {
+			ModifiableAttributeInstance attributeInstance = entity.getAttribute(Attributes.FOLLOW_RANGE);
+			if (attributeInstance != null) {
+				for (PrioritizedGoal pGoal : entity.targetSelector.goals) {
+					if (pGoal.getGoal() instanceof NearestAttackableTargetGoal) {
+						NearestAttackableTargetGoal<? extends LivingEntity> nearestAttackableTargetGoal = (NearestAttackableTargetGoal<? extends LivingEntity>) pGoal.getGoal();
+						nearestAttackableTargetGoal.targetEntitySelector.setDistance(entity.getAttributeValue(Attributes.FOLLOW_RANGE));
+					}
+				}
+			}
+		}
 	}
 
 	@Override

@@ -1,6 +1,10 @@
 # Changelog
 
 ## Upcoming
+* Reworked random enchantments  
+  "random" is a new Object in the Enchantment Object. You no longer have to write "random" in the "id" key.  
+  The RandomEnchantment object contains "allow_curses", "allow_treasures" and a list of possible enchantments. If the list is omitted, the old behaviour will apply (random enchantment out of all the possible ones for the item)
+* Added chance to attributes (much like potion effects). Also, health and follow range are now fixed for items too.
 * Range and Modifiable value objects can now be set with just a number, instead of having to create an object with the "value" (or "min") key inside.
 * Items Drop Chance is now a Modifiable Value
 

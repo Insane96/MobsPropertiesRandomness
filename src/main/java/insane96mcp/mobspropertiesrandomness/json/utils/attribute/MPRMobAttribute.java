@@ -8,10 +8,7 @@ import insane96mcp.mobspropertiesrandomness.utils.Logger;
 import net.minecraft.entity.MobEntity;
 import net.minecraft.entity.ai.attributes.Attribute;
 import net.minecraft.entity.ai.attributes.AttributeModifier;
-import net.minecraft.entity.ai.attributes.Attributes;
 import net.minecraft.entity.ai.attributes.ModifiableAttributeInstance;
-import net.minecraft.entity.ai.goal.NearestAttackableTargetGoal;
-import net.minecraft.entity.ai.goal.PrioritizedGoal;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.world.World;
 import net.minecraftforge.registries.ForgeRegistries;
@@ -27,10 +24,7 @@ public class MPRMobAttribute extends MPRAttribute implements IMPRObject, IMPRApp
 
 	@Override
 	public void apply(MobEntity entity, World world) {
-		if (world.isRemote)
-			return;
-
-		if (worldWhitelist != null && worldWhitelist.isWhitelisted(entity))
+		if (!this.shouldApply(entity, world))
 			return;
 
 		float min = this.amount.getMin(entity, world);
@@ -48,21 +42,8 @@ public class MPRMobAttribute extends MPRAttribute implements IMPRObject, IMPRApp
 		AttributeModifier modifier = new AttributeModifier(UUID.randomUUID(), this.modifierName, amount, operation);
 		attributeInstance.applyPersistentModifier(modifier);
 
-		//Health Fix
-		if (this.id.contains("generic.max_health"))
-			entity.setHealth((float) attributeInstance.getValue());
-		//Follow range fix
-		else if (this.id.contains("generic.follow_range"))
-			fixFollowRange(entity);
-	}
-
-	private void fixFollowRange(MobEntity entity) {
-		for (PrioritizedGoal pGoal : entity.targetSelector.goals) {
-			if (pGoal.getGoal() instanceof NearestAttackableTargetGoal) {
-				NearestAttackableTargetGoal nearestAttackableTargetGoal = (NearestAttackableTargetGoal) pGoal.getGoal();
-				nearestAttackableTargetGoal.targetEntitySelector.setDistance(entity.getAttributeValue(Attributes.FOLLOW_RANGE));
-			}
-		}
+		this.fixHealth(entity);
+		this.fixFollowRange(entity);
 	}
 
 	@Override

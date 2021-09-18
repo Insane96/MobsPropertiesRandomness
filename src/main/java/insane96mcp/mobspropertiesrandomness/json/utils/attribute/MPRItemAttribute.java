@@ -25,10 +25,7 @@ public class MPRItemAttribute extends MPRAttribute implements IMPRObject {
 	}
 
 	public void applyToStack(MobEntity entity, World world, ItemStack itemStack, EquipmentSlotType equipmentSlotType) {
-		if (world.isRemote)
-			return;
-
-		if (worldWhitelist != null && worldWhitelist.isWhitelisted(entity))
+		if (!this.shouldApply(entity, world))
 			return;
 
 		float min = this.amount.getMin(entity, world);
@@ -46,6 +43,9 @@ public class MPRItemAttribute extends MPRAttribute implements IMPRObject {
 		AttributeModifier modifier = new AttributeModifier(this.modifierName, amount, this.operation);
 		EquipmentSlotType modifierSlot = this.slot == null ? equipmentSlotType : this.slot;
 		itemStack.addAttributeModifier(attribute, modifier, modifierSlot);
+
+		this.fixHealth(entity);
+		this.fixFollowRange(entity);
 	}
 
 	@Override
