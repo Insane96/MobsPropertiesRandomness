@@ -31,6 +31,8 @@ public class MPRMob implements IMPRObject {
 
 	@SerializedName("spawner_behaviour")
 	public SpawnerBehaviour spawnerBehaviour;
+	@SerializedName("structure_behaviour")
+	public StructureBehaviour structureBehaviour;
 
 	@SerializedName("potion_effects")
 	public List<MPRPotionEffect> potionEffects;
@@ -113,11 +115,14 @@ public class MPRMob implements IMPRObject {
 			return;
 
 		boolean spawnedFromSpawner = tags.getBoolean(Strings.Tags.SPAWNED_FROM_SPAWNER);
+		boolean spawnedFromStructure = tags.getBoolean(Strings.Tags.SPAWNED_FROM_STRUCTURE);
 
 		for (MPRMob mprMob : MPR_MOBS) {
 			if (!MPRUtils.matchesEntity(mobEntity, mprMob))
 				continue;
 			if ((!spawnedFromSpawner && mprMob.spawnerBehaviour == SpawnerBehaviour.SPAWNER_ONLY) || (spawnedFromSpawner && mprMob.spawnerBehaviour == SpawnerBehaviour.NATURAL_ONLY))
+				continue;
+			if ((!spawnedFromStructure && mprMob.structureBehaviour == StructureBehaviour.STRUCTURE_ONLY) || (spawnedFromStructure && mprMob.structureBehaviour == StructureBehaviour.NATURAL_ONLY))
 				continue;
 			for (MPRPotionEffect potionEffect : mprMob.potionEffects) {
 				potionEffect.apply(mobEntity, world);
@@ -140,12 +145,18 @@ public class MPRMob implements IMPRObject {
 
 	@Override
 	public String toString() {
-		return String.format("Mob{id: %s, group: %s, potion_effects: %s, attributes: %s, equipment: %s, creeper: %s, ghast: %s}", mobId, group, potionEffects, attributes, equipment, creeper, ghast);
+		return String.format("Mob{id: %s, group: %s, spawner_behaviour: %s, structure_behaviour: %s, potion_effects: %s, attributes: %s, equipment: %s, creeper: %s, ghast: %s}", mobId, group, spawnerBehaviour, structureBehaviour, potionEffects, attributes, equipment, creeper, ghast);
 	}
 
 	public enum SpawnerBehaviour {
 		NONE,
 		SPAWNER_ONLY,
+		NATURAL_ONLY
+	}
+
+	public enum StructureBehaviour {
+		NONE,
+		STRUCTURE_ONLY,
 		NATURAL_ONLY
 	}
 }

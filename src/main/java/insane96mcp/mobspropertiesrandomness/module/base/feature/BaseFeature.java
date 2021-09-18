@@ -43,6 +43,8 @@ public class BaseFeature extends Feature {
 	public void onSpawnFromSpawner(LivingSpawnEvent.CheckSpawn event) {
 		if (event.getSpawnReason() == SpawnReason.SPAWNER)
 			event.getEntityLiving().getPersistentData().putBoolean(Strings.Tags.SPAWNED_FROM_SPAWNER, true);
+		if (event.getSpawnReason() == SpawnReason.STRUCTURE)
+			event.getEntityLiving().getPersistentData().putBoolean(Strings.Tags.SPAWNED_FROM_STRUCTURE, true);
 	}
 
 	/*@SubscribeEvent(priority = EventPriority.LOWEST)
