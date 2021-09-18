@@ -35,6 +35,7 @@ public class MPRMobReloadListener extends ReloadListener<Void> {
 
 	@Override
 	protected void apply(Void objectIn, IResourceManager iResourceManager, IProfiler iProfiler) {
+		Logger.info("Reloading JSONs");
 		MPR_MOBS.clear();
 
 		boolean correctlyReloaded = true;
@@ -48,7 +49,7 @@ public class MPRMobReloadListener extends ReloadListener<Void> {
 				continue;
 
 			try {
-				Logger.info("Loading file " + file.getName());
+				Logger.info(file.getName());
 				FileReader fileReader = new FileReader(file);
 				MPRMob mob = gson.fromJson(fileReader, MPRMob.class);
 				Logger.debug(mob.toString());

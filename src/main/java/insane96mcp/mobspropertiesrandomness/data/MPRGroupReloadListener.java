@@ -36,6 +36,7 @@ public class MPRGroupReloadListener extends ReloadListener<Void> {
 
 	@Override
 	protected void apply(Void objectIn, IResourceManager iResourceManager, IProfiler iProfiler) {
+		Logger.info("Reloading Groups");
 		MPR_GROUPS.clear();
 
 		boolean correctlyReloaded = true;
@@ -49,7 +50,7 @@ public class MPRGroupReloadListener extends ReloadListener<Void> {
 				continue;
 
 			try {
-				Logger.info("Loading file " + file.getName());
+				Logger.info(file.getName());
 				FileReader fileReader = new FileReader(file);
 				MPRGroup group = gson.fromJson(fileReader, MPRGroup.class);
 				group.name = FilenameUtils.removeExtension(file.getName());
