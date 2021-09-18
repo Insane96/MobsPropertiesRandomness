@@ -86,6 +86,6 @@ public class MPRItem extends WeightedRandom.Item implements IMPRObject {
 
 	@Override
 	public String toString() {
-		return String.format("Item{id: %s, weight: %s, drop_chance: %f, enchantments: %s, attributes: %s, world_whitelist: %s, nbt: %s}", id, weight, dropChance, enchantments, attributes, worldWhitelist, nbt);
+		return String.format("Item{id: %s, weight: %s, drop_chance: %s, enchantments: %s, attributes: %s, world_whitelist: %s, nbt: %s}", id, weight, dropChance, enchantments, attributes, worldWhitelist, nbt);
 	}
 }

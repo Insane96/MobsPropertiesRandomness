@@ -93,12 +93,17 @@ public class MPREquipment implements IMPRObject, IMPRAppliable {
 				e.printStackTrace();
 			}
 		}
-		for (MPREnchantment enchantment : choosenItem.enchantments) {
-			enchantment.applyToStack(entity, world, itemStack);
+
+		if (choosenItem.enchantments != null) {
+			for (MPREnchantment enchantment : choosenItem.enchantments) {
+				enchantment.applyToStack(entity, world, itemStack);
+			}
 		}
 
-		for (MPRItemAttribute itemAttribute : choosenItem.attributes) {
-			itemAttribute.applyToStack(entity, world, itemStack, equipmentSlotType);
+		if (choosenItem.attributes != null) {
+			for (MPRItemAttribute itemAttribute : choosenItem.attributes) {
+				itemAttribute.applyToStack(entity, world, itemStack, equipmentSlotType);
+			}
 		}
 
 		entity.setItemStackToSlot(equipmentSlotType, itemStack);
