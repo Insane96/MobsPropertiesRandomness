@@ -18,6 +18,8 @@ public class MPRWorldWhitelist implements IMPRObject {
 	protected List<String> biomes;
 	public transient List<ResourceLocation> biomesList = new ArrayList<>();
 
+	protected MPRRange deepness;
+
 	@Override
 	public void validate(File file) throws InvalidJsonException {
 		dimensionsList.clear();
@@ -35,6 +37,9 @@ public class MPRWorldWhitelist implements IMPRObject {
 				biomesList.add(biomeLoc);
 			}
 		}
+
+		if (deepness != null)
+			deepness.validate(file);
 	}
 
 	public boolean doesDimensionMatch(Entity entity) {
@@ -53,8 +58,12 @@ public class MPRWorldWhitelist implements IMPRObject {
 		return biomesList.contains(entityBiome);
 	}
 
+	public boolean doesDepthMatch(MobEntity entity) {
+		return entity.getPosY() >= this.deepness.getMin(entity, entity.world) && entity.getPosY() <= this.deepness.getMax(entity, entity.world);
+	}
+
 	public boolean isWhitelisted(MobEntity entity) {
-		return doesBiomeMatch(entity) && doesDimensionMatch(entity);
+		return doesBiomeMatch(entity) && doesDimensionMatch(entity) && doesDepthMatch(entity);
 	}
 
 	@Override
