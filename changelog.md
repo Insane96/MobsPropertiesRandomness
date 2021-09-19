@@ -1,6 +1,6 @@
 # Changelog
 
-## Upcoming
+## Alpha 3.1.0
 * Renamed "json" folder to "mobs". "json" folder is renamed automatically to "mobs" if present.
 * Reworked random enchantments  
   "random" is a new Object in the Enchantment Object. You no longer have to write "random" in the "id" key.  
