@@ -32,8 +32,13 @@ public class MobsPropertiesRandomness
             MPRGroupReloadListener.groupsFolder.mkdir();
 
         MPRMobReloadListener.mobsFolder = new File(MobsPropertiesRandomness.CONFIG_FOLDER + "/mobs");
-        if (!MPRMobReloadListener.mobsFolder.exists())
-            MPRMobReloadListener.mobsFolder.mkdir();
+        File oldFolder = new File(MobsPropertiesRandomness.CONFIG_FOLDER + "/json");
+        if (!MPRMobReloadListener.mobsFolder.exists()) {
+            if (oldFolder.exists())
+                oldFolder.renameTo(MPRMobReloadListener.mobsFolder);
+            else
+                MPRMobReloadListener.mobsFolder.mkdir();
+        }
 
         MPRPresetReloadListener.presetsFolder = new File(MobsPropertiesRandomness.CONFIG_FOLDER + "/presets");
         if (!MPRPresetReloadListener.presetsFolder.exists())
@@ -46,9 +51,10 @@ public class MobsPropertiesRandomness
     }
 
     @SubscribeEvent
-    public void onServerAboutToStart(AddReloadListenerEvent event) {
+    public void onAddReloadListener(AddReloadListenerEvent event) {
         event.addListener(MPRGroupReloadListener.INSTANCE);
         event.addListener(MPRMobReloadListener.INSTANCE);
+        event.addListener(MPRPresetReloadListener.INSTANCE);
     }
 
     public void preInit(FMLCommonSetupEvent event) {

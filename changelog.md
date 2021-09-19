@@ -1,6 +1,7 @@
 # Changelog
 
 ## Upcoming
+* Renamed "json" folder to "mobs". "json" folder is renamed automatically to "mobs" if present.
 * Reworked random enchantments  
   "random" is a new Object in the Enchantment Object. You no longer have to write "random" in the "id" key.  
   The RandomEnchantment object contains `allow_curses`, `allow_treasures` and `list`, which contains a list of enchantments to chose from. If the list is omitted, the old behaviour will apply (random enchantment out of all the possible ones for the item)
