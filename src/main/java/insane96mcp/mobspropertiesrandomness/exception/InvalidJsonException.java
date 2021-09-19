@@ -3,8 +3,8 @@ package insane96mcp.mobspropertiesrandomness.exception;
 import java.io.File;
 
 public class InvalidJsonException extends Exception {
-	private String message;
-	private File file;
+	private final String message;
+	private final File file;
 
 	public InvalidJsonException(String message, File file) {
 		this.message = message;

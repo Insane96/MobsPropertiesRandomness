@@ -2,6 +2,7 @@ package insane96mcp.mobspropertiesrandomness;
 
 import insane96mcp.mobspropertiesrandomness.data.MPRGroupReloadListener;
 import insane96mcp.mobspropertiesrandomness.data.MPRMobReloadListener;
+import insane96mcp.mobspropertiesrandomness.data.MPRPresetReloadListener;
 import insane96mcp.mobspropertiesrandomness.network.NetworkHandler;
 import insane96mcp.mobspropertiesrandomness.setup.Config;
 import net.minecraftforge.common.MinecraftForge;
@@ -30,9 +31,13 @@ public class MobsPropertiesRandomness
         if (!MPRGroupReloadListener.groupsFolder.exists())
             MPRGroupReloadListener.groupsFolder.mkdir();
 
-        MPRMobReloadListener.jsonFolder = new File(MobsPropertiesRandomness.CONFIG_FOLDER + "/json");
-        if (!MPRMobReloadListener.jsonFolder.exists())
-            MPRMobReloadListener.jsonFolder.mkdir();
+        MPRMobReloadListener.mobsFolder = new File(MobsPropertiesRandomness.CONFIG_FOLDER + "/mobs");
+        if (!MPRMobReloadListener.mobsFolder.exists())
+            MPRMobReloadListener.mobsFolder.mkdir();
+
+        MPRPresetReloadListener.presetsFolder = new File(MobsPropertiesRandomness.CONFIG_FOLDER + "/presets");
+        if (!MPRPresetReloadListener.presetsFolder.exists())
+            MPRPresetReloadListener.presetsFolder.mkdir();
 
         ModLoadingContext.get().registerConfig(net.minecraftforge.fml.config.ModConfig.Type.COMMON, Config.COMMON_SPEC, "MobsPropertiesRandomness/" + MOD_ID + ".toml");
         FMLJavaModLoadingContext.get().getModEventBus().addListener(this::preInit);

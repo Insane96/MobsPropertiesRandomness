@@ -18,7 +18,7 @@ public class MPRMobReloadListener extends ReloadListener<Void> {
 
 	public static final MPRMobReloadListener INSTANCE;
 
-	public static File jsonFolder;
+	public static File mobsFolder;
 
 	public MPRMobReloadListener() {
 		super();
@@ -35,13 +35,13 @@ public class MPRMobReloadListener extends ReloadListener<Void> {
 
 	@Override
 	protected void apply(Void objectIn, IResourceManager iResourceManager, IProfiler iProfiler) {
-		Logger.info("Reloading JSONs");
+		Logger.info("Reloading Mobs");
 		MPR_MOBS.clear();
 
 		boolean correctlyReloaded = true;
 		Gson gson = new Gson();
 
-		ArrayList<File> jsonFiles = FileUtils.ListFilesForFolder(jsonFolder);
+		ArrayList<File> jsonFiles = FileUtils.ListFilesForFolder(mobsFolder);
 
 		for (File file : jsonFiles) {
 			//Ignore files that start with underscore '_'
@@ -64,8 +64,8 @@ public class MPRMobReloadListener extends ReloadListener<Void> {
 		}
 
 		if (correctlyReloaded)
-			Logger.info("Correctly reloaded all JSONs");
+			Logger.info("Correctly reloaded all Mobs");
 		else
-			Logger.info("Reloaded all JSONs with error(s)");
+			Logger.warn("Reloaded all Mobs with error(s)");
 	}
 }

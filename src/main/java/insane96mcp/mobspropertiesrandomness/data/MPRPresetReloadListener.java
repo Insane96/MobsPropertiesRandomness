@@ -1,27 +1,26 @@
 package insane96mcp.mobspropertiesrandomness.data;
 
 import com.google.gson.Gson;
-import insane96mcp.mobspropertiesrandomness.json.MPRGroup;
+import insane96mcp.mobspropertiesrandomness.json.MPRMob;
 import insane96mcp.mobspropertiesrandomness.utils.FileUtils;
 import insane96mcp.mobspropertiesrandomness.utils.Logger;
 import net.minecraft.client.resources.ReloadListener;
 import net.minecraft.profiler.IProfiler;
 import net.minecraft.resources.IResourceManager;
-import org.apache.commons.io.FilenameUtils;
 
 import java.io.File;
 import java.io.FileReader;
 import java.util.ArrayList;
 import java.util.List;
 
-public class MPRGroupReloadListener extends ReloadListener<Void> {
-	public static final List<MPRGroup> MPR_GROUPS = new ArrayList<>();
+public class MPRPresetReloadListener extends ReloadListener<Void> {
+	public static final List<MPRMob> MPR_PRESETS = new ArrayList<>();
 
-	public static final MPRGroupReloadListener INSTANCE;
+	public static final MPRPresetReloadListener INSTANCE;
 
-	public static File groupsFolder;
+	public static File presetsFolder;
 
-	public MPRGroupReloadListener() {
+	public MPRPresetReloadListener() {
 		super();
 	}
 
@@ -31,18 +30,18 @@ public class MPRGroupReloadListener extends ReloadListener<Void> {
 	}
 
 	static {
-		INSTANCE = new MPRGroupReloadListener();
+		INSTANCE = new MPRPresetReloadListener();
 	}
 
 	@Override
 	protected void apply(Void objectIn, IResourceManager iResourceManager, IProfiler iProfiler) {
-		Logger.info("Reloading Groups");
-		MPR_GROUPS.clear();
+		Logger.info("Reloading Presets");
+		MPR_PRESETS.clear();
 
 		boolean correctlyReloaded = true;
 		Gson gson = new Gson();
 
-		ArrayList<File> jsonFiles = FileUtils.ListFilesForFolder(groupsFolder);
+		ArrayList<File> jsonFiles = FileUtils.ListFilesForFolder(presetsFolder);
 
 		for (File file : jsonFiles) {
 			//Ignore files that start with underscore '_'
@@ -52,11 +51,10 @@ public class MPRGroupReloadListener extends ReloadListener<Void> {
 			try {
 				Logger.info(file.getName());
 				FileReader fileReader = new FileReader(file);
-				MPRGroup group = gson.fromJson(fileReader, MPRGroup.class);
-				group.name = FilenameUtils.removeExtension(file.getName());
-				Logger.debug(group.toString());
-				group.validate(file);
-				MPR_GROUPS.add(group);
+				MPRMob mob = gson.fromJson(fileReader, MPRMob.class);
+				Logger.debug(mob.toString());
+				mob.validate(file);
+				MPR_PRESETS.add(mob);
 			} catch (Exception e) {
 				correctlyReloaded = false;
 				//Logger.error("Failed to parse file with name " + file.getName());
@@ -66,16 +64,8 @@ public class MPRGroupReloadListener extends ReloadListener<Void> {
 		}
 
 		if (correctlyReloaded)
-			Logger.info("Correctly reloaded all Groups");
+			Logger.info("Correctly reloaded all Presets");
 		else
-			Logger.warn("Reloaded all Groups with error(s)");
-	}
-
-	public boolean doesGroupExist(String name) {
-		for (MPRGroup group : MPR_GROUPS) {
-			if (group.name.equals(name))
-				return true;
-		}
-		return false;
+			Logger.warn("Reloaded all Presets with error(s)");
 	}
 }
