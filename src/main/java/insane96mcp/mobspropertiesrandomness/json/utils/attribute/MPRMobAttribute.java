@@ -48,6 +48,6 @@ public class MPRMobAttribute extends MPRAttribute implements IMPRObject, IMPRApp
 
 	@Override
 	public String toString() {
-		return String.format("MobAttribute{uuid: %s, attribute_id: %s, amount: %s, operation: %s, world_whitelist: %s}", uuid, id, amount, operation, worldWhitelist);
+		return String.format("MobAttribute{uuid: %s, id: %s, amount: %s, operation: %s, world_whitelist: %s}", uuid, id, amount, operation, worldWhitelist);
 	}
 }
