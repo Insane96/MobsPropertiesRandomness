@@ -45,7 +45,6 @@ public class MPRItemAttribute extends MPRAttribute implements IMPRObject {
 		itemStack.addAttributeModifier(attribute, modifier, modifierSlot);
 
 		this.fixHealth(entity);
-		this.fixFollowRange(entity);
 	}
 
 	@Override

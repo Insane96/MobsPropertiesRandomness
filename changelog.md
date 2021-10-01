@@ -1,5 +1,9 @@
 # Changelog
 
+## Upcoming
+* Requires InsaneLib 1.3.0
+  * Fixes follow range globally and removes the Leader Zombies bonus health
+
 ## Alpha 3.1.0
 * Renamed "json" folder to "mobs". "json" folder is renamed automatically to "mobs" if present.
 * Reworked random enchantments  

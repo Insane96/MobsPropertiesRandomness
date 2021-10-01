@@ -6,13 +6,10 @@ import insane96mcp.mobspropertiesrandomness.json.IMPRObject;
 import insane96mcp.mobspropertiesrandomness.json.utils.MPRModifiableValue;
 import insane96mcp.mobspropertiesrandomness.json.utils.MPRRange;
 import insane96mcp.mobspropertiesrandomness.json.utils.MPRWorldWhitelist;
-import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.MobEntity;
 import net.minecraft.entity.ai.attributes.AttributeModifier;
 import net.minecraft.entity.ai.attributes.Attributes;
 import net.minecraft.entity.ai.attributes.ModifiableAttributeInstance;
-import net.minecraft.entity.ai.goal.NearestAttackableTargetGoal;
-import net.minecraft.entity.ai.goal.PrioritizedGoal;
 import net.minecraft.world.World;
 
 import java.io.File;
@@ -72,20 +69,6 @@ public abstract class MPRAttribute implements IMPRObject {
 			ModifiableAttributeInstance attributeInstance = entity.getAttribute(Attributes.MAX_HEALTH);
 			if (attributeInstance != null)
 				entity.setHealth((float) attributeInstance.getValue());
-		}
-	}
-
-	protected void fixFollowRange(MobEntity entity) {
-		if (this.id.contains("generic.follow_range")) {
-			ModifiableAttributeInstance attributeInstance = entity.getAttribute(Attributes.FOLLOW_RANGE);
-			if (attributeInstance != null) {
-				for (PrioritizedGoal pGoal : entity.targetSelector.goals) {
-					if (pGoal.getGoal() instanceof NearestAttackableTargetGoal) {
-						NearestAttackableTargetGoal<? extends LivingEntity> nearestAttackableTargetGoal = (NearestAttackableTargetGoal<? extends LivingEntity>) pGoal.getGoal();
-						nearestAttackableTargetGoal.targetEntitySelector.setDistance(entity.getAttributeValue(Attributes.FOLLOW_RANGE));
-					}
-				}
-			}
 		}
 	}
 

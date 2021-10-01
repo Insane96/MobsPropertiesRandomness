@@ -43,7 +43,6 @@ public class MPRMobAttribute extends MPRAttribute implements IMPRObject, IMPRApp
 		attributeInstance.applyPersistentModifier(modifier);
 
 		this.fixHealth(entity);
-		this.fixFollowRange(entity);
 	}
 
 	@Override
