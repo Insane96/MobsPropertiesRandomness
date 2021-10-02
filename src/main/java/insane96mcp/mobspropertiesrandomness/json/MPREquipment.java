@@ -109,7 +109,8 @@ public class MPREquipment implements IMPRObject, IMPRAppliable {
 		entity.setItemStackToSlot(equipmentSlotType, itemStack);
 
 		//Drop Chance
-		entity.setDropChance(equipmentSlotType, choosenItem.dropChance.getValue(entity, world));
+		if (choosenItem.dropChance != null)
+			entity.setDropChance(equipmentSlotType, choosenItem.dropChance.getValue(entity, world));
 
 	}
 

@@ -23,6 +23,12 @@ public class MPRDifficultyModifier implements IMPRObject {
 	public void validate(File file) throws InvalidJsonException {
 		if (worldDifficulty == null && localDifficulty == null)
 			throw new InvalidJsonException("Difficulty Modifier is missing both difficulty and local_difficulty objects. " + this, file);
+
+		if (worldDifficulty != null)
+			worldDifficulty.validate(file);
+
+		if (localDifficulty != null)
+			localDifficulty.validate(file);
 	}
 
 	public float applyModifier(Difficulty worldDifficulty, float worldLocalDiff, float value) {

@@ -3,6 +3,9 @@
 ## Upcoming
 * Requires InsaneLib 1.3.0
   * Fixes follow range globally and removes the Leader Zombies bonus health
+* Fixed Difficulty modifier not begin validated
+* Fixed crash when not specifiyng drop chance.
+* Fixed missing difficulties validation
 
 ## Alpha 3.1.0
 * Renamed "json" folder to "mobs". "json" folder is renamed automatically to "mobs" if present.
