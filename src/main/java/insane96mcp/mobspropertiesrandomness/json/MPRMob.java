@@ -69,6 +69,9 @@ public class MPRMob extends MPRProperties implements IMPRObject {
 			this.equipment = new MPREquipment();
 		this.equipment.validate(file);
 
+		if (this.customName != null)
+			this.customName.validate(file);
+
 		//Mob specific validations
 		if (this.creeper != null)
 			this.creeper.validate(file);
@@ -114,6 +117,9 @@ public class MPRMob extends MPRProperties implements IMPRObject {
 				attribute.apply(mobEntity, world);
 			}
 			mprMob.equipment.apply(mobEntity, world);
+
+			if (mprMob.customName != null)
+				mprMob.customName.applyCustomName(mobEntity, world);
 
 			if (mprMob.creeper != null)
 				mprMob.creeper.apply(mobEntity, world);

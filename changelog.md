@@ -6,6 +6,8 @@
 * Added a `fire_chance` property to creepers
 * Added `round` property for ModifiableValue  
   After applying the modifiers the final value will be rounded to the specified decimal places. Things that require an integer (e.g. enchantment levels or potion amplifiers) are already rounded.
+* Added `custom_name`  
+  Let you set a chance and a list of names that the mob can get.
 * Fixed potion effects not giving correct amplifiers (e.g. with min and max set to 1 and 2 you would always get amplifier 1)
 * Fixed Difficulty modifier not being validated
 * Fixed crash when not specifiyng drop chance

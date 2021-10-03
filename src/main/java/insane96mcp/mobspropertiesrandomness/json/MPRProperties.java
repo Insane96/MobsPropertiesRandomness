@@ -4,6 +4,7 @@ import com.google.gson.annotations.SerializedName;
 import insane96mcp.mobspropertiesrandomness.json.mobs.MPRCreeper;
 import insane96mcp.mobspropertiesrandomness.json.mobs.MPRGhast;
 import insane96mcp.mobspropertiesrandomness.json.mobs.MPRPhantom;
+import insane96mcp.mobspropertiesrandomness.json.utils.MPRCustomName;
 import insane96mcp.mobspropertiesrandomness.json.utils.attribute.MPRMobAttribute;
 
 import java.util.List;
@@ -20,6 +21,9 @@ public abstract class MPRProperties {
 	public List<MPRMobAttribute> attributes;
 
 	public MPREquipment equipment;
+
+	@SerializedName("custom_name")
+	public MPRCustomName customName;
 
 	public MPRCreeper creeper;
 	public MPRGhast ghast;
