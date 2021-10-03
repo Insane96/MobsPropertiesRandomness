@@ -1,7 +1,6 @@
 package insane96mcp.mobspropertiesrandomness.json;
 
 import com.google.gson.annotations.SerializedName;
-import insane96mcp.insanelib.utils.RandomHelper;
 import insane96mcp.mobspropertiesrandomness.exception.InvalidJsonException;
 import insane96mcp.mobspropertiesrandomness.json.utils.MPRModifiableValue;
 import insane96mcp.mobspropertiesrandomness.json.utils.MPRRange;
@@ -65,11 +64,8 @@ public class MPRPotionEffect implements IMPRObject, IMPRAppliable {
 		if (worldWhitelist != null && worldWhitelist.isWhitelisted(entity))
 			return;
 
-		int minAmplifier = (int) this.amplifier.getMin(entity, world);
-		int maxAmplifier = (int) this.amplifier.getMax(entity, world);
-
 		Effect effect = ForgeRegistries.POTIONS.getValue(new ResourceLocation(this.id));
-		EffectInstance effectInstance = new EffectInstance(effect, 1000000, RandomHelper.getInt(world.rand, minAmplifier, maxAmplifier), this.ambient, !this.hideParticles, false);
+		EffectInstance effectInstance = new EffectInstance(effect, 1000000, this.amplifier.getIntBetween(entity, world), this.ambient, !this.hideParticles, false);
 		entity.addPotionEffect(effectInstance);
 	}
 

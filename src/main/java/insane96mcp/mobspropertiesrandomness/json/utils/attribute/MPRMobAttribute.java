@@ -1,6 +1,5 @@
 package insane96mcp.mobspropertiesrandomness.json.utils.attribute;
 
-import insane96mcp.insanelib.utils.RandomHelper;
 import insane96mcp.mobspropertiesrandomness.exception.InvalidJsonException;
 import insane96mcp.mobspropertiesrandomness.json.IMPRAppliable;
 import insane96mcp.mobspropertiesrandomness.json.IMPRObject;
@@ -27,9 +26,6 @@ public class MPRMobAttribute extends MPRAttribute implements IMPRObject, IMPRApp
 		if (!this.shouldApply(entity, world))
 			return;
 
-		float min = this.amount.getMin(entity, world);
-		float max = this.amount.getMax(entity, world);
-
 		Attribute attribute = ForgeRegistries.ATTRIBUTES.getValue(new ResourceLocation(this.id));
 		ModifiableAttributeInstance attributeInstance = entity.getAttribute(attribute);
 		if (attributeInstance == null) {
@@ -37,9 +33,7 @@ public class MPRMobAttribute extends MPRAttribute implements IMPRObject, IMPRApp
 			return;
 		}
 
-		float amount = RandomHelper.getFloat(world.rand, min, max);
-
-		AttributeModifier modifier = new AttributeModifier(UUID.randomUUID(), this.modifierName, amount, operation);
+		AttributeModifier modifier = new AttributeModifier(UUID.randomUUID(), this.modifierName, this.amount.getFloatBetween(entity, world), operation);
 		attributeInstance.applyPersistentModifier(modifier);
 
 		this.fixHealth(entity);

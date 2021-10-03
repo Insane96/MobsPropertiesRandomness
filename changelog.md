@@ -4,9 +4,12 @@
 * Requires InsaneLib 1.3.0
   * Fixes follow range globally and removes the Leader Zombies bonus health
 * Added a `fire_chance` property to creepers
-* Fixed Difficulty modifier not begin validated
+* Added `round` property for ModifiableValue  
+  After applying the modifiers the final value will be rounded to the specified decimal places. Things that require an integer (e.g. enchantment levels or potion amplifiers) are already rounded.
+* Fixed potion effects not giving correct amplifiers (e.g. with min and max set to 1 and 2 you would always get amplifier 1)
+* Fixed Difficulty modifier not being validated
 * Fixed crash when not specifiyng drop chance
-* Fixed missing difficulties validation, causing mobs to not spawn
+* Fixed missing difficulties' validation, causing mobs to not spawn
 
 ## Alpha 3.1.0
 * Renamed "json" folder to "mobs". "json" folder is renamed automatically to "mobs" if present.

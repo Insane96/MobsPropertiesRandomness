@@ -13,6 +13,7 @@ import insane96mcp.mobspropertiesrandomness.json.utils.modifier.difficulty.MPRDi
 import net.minecraft.entity.MobEntity;
 import net.minecraft.world.World;
 
+import javax.annotation.Nullable;
 import java.io.File;
 import java.lang.reflect.Type;
 
@@ -21,12 +22,12 @@ public class MPRModifiableValue extends MPRModifiable implements IMPRObject {
 	private Float value;
 
 	public MPRModifiableValue(float value) {
-		super(null, null);
+		super(null, null, null);
 		this.value = value;
 	}
 
-	public MPRModifiableValue(float value, MPRDifficultyModifier difficultyModifier, MPRPosModifier posModifier) {
-		super(difficultyModifier, posModifier);
+	public MPRModifiableValue(float value, @Nullable MPRDifficultyModifier difficultyModifier, @Nullable MPRPosModifier posModifier, @Nullable Integer round) {
+		super(difficultyModifier, posModifier, round);
 		this.value = value;
 	}
 
@@ -46,7 +47,7 @@ public class MPRModifiableValue extends MPRModifiable implements IMPRObject {
 		if (this.posModifier != null)
 			value = this.posModifier.applyModifier(world, entity.getPositionVec(), value);
 
-		return value;
+		return this.round(value);
 	}
 
 	@Override
@@ -59,7 +60,7 @@ public class MPRModifiableValue extends MPRModifiable implements IMPRObject {
 		public MPRModifiableValue deserialize(JsonElement json, Type typeOfT, JsonDeserializationContext context) throws JsonParseException {
 			if (json.isJsonPrimitive())
 				return new MPRModifiableValue(json.getAsFloat());
-			return new MPRModifiableValue(json.getAsJsonObject().get("value").getAsFloat(), context.deserialize(json.getAsJsonObject().get("difficulty_modifier"), MPRDifficultyModifier.class), context.deserialize(json.getAsJsonObject().get("pos_modifier"), MPRPosModifier.class));
+			return new MPRModifiableValue(json.getAsJsonObject().get("value").getAsFloat(), context.deserialize(json.getAsJsonObject().get("difficulty_modifier"), MPRDifficultyModifier.class), context.deserialize(json.getAsJsonObject().get("pos_modifier"), MPRPosModifier.class), context.deserialize(json.getAsJsonObject().get("round"), Integer.class));
 		}
 	}
 }

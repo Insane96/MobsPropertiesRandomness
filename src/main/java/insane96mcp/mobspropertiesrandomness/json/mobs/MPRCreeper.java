@@ -2,7 +2,6 @@ package insane96mcp.mobspropertiesrandomness.json.mobs;
 
 import com.google.gson.annotations.SerializedName;
 import insane96mcp.insanelib.setup.Strings;
-import insane96mcp.insanelib.utils.RandomHelper;
 import insane96mcp.mobspropertiesrandomness.exception.InvalidJsonException;
 import insane96mcp.mobspropertiesrandomness.json.IMPRAppliable;
 import insane96mcp.mobspropertiesrandomness.json.IMPRObject;
@@ -60,9 +59,7 @@ public class MPRCreeper implements IMPRObject, IMPRAppliable {
 		//Fuse
 		int fuse = 30;
 		if (this.fuse != null && compound.getShort("Fuse") == 30) {
-			int minFuse = (int) this.fuse.getMin(creeper, world);
-			int maxFuse = (int) this.fuse.getMax(creeper, world);
-			fuse = RandomHelper.getInt(world.rand, minFuse, maxFuse + 1);
+			fuse = this.fuse.getIntBetween(creeper, world);
 			compound.putShort("Fuse", (short)fuse);
 		}
 
@@ -73,9 +70,7 @@ public class MPRCreeper implements IMPRObject, IMPRAppliable {
 
 		//Explosion Radius
 		if (this.explosionRadius != null && compound.getByte("ExplosionRadius") == 3) {
-			int minExplosionRadius = (int) this.explosionRadius.getMin(creeper, world);
-			int maxExplosionRadius = (int) this.explosionRadius.getMax(creeper, world);
-			int explosionRadius = RandomHelper.getInt(world.rand, minExplosionRadius, maxExplosionRadius + 1);
+			int explosionRadius = this.explosionRadius.getIntBetween(creeper, world);
 			compound.putByte("ExplosionRadius", (byte) explosionRadius);
 		}
 

@@ -1,6 +1,5 @@
 package insane96mcp.mobspropertiesrandomness.json.mobs;
 
-import insane96mcp.insanelib.utils.RandomHelper;
 import insane96mcp.mobspropertiesrandomness.exception.InvalidJsonException;
 import insane96mcp.mobspropertiesrandomness.json.IMPRAppliable;
 import insane96mcp.mobspropertiesrandomness.json.IMPRObject;
@@ -27,7 +26,7 @@ public class MPRPhantom implements IMPRObject, IMPRAppliable {
 
 		PhantomEntity phantom = (PhantomEntity) entity;
 
-		phantom.setPhantomSize(RandomHelper.getInt(world.rand, (int) this.size.getMin(phantom, world), (int) this.size.getMax(phantom, world) + 1));
+		phantom.setPhantomSize(this.size.getIntBetween(phantom, world));
 	}
 
 

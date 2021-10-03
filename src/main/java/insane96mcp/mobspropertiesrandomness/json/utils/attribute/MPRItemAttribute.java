@@ -1,6 +1,5 @@
 package insane96mcp.mobspropertiesrandomness.json.utils.attribute;
 
-import insane96mcp.insanelib.utils.RandomHelper;
 import insane96mcp.mobspropertiesrandomness.exception.InvalidJsonException;
 import insane96mcp.mobspropertiesrandomness.json.IMPRObject;
 import insane96mcp.mobspropertiesrandomness.utils.Logger;
@@ -28,9 +27,6 @@ public class MPRItemAttribute extends MPRAttribute implements IMPRObject {
 		if (!this.shouldApply(entity, world))
 			return;
 
-		float min = this.amount.getMin(entity, world);
-		float max = this.amount.getMax(entity, world);
-
 		Attribute attribute = ForgeRegistries.ATTRIBUTES.getValue(new ResourceLocation(this.id));
 		ModifiableAttributeInstance attributeInstance = entity.getAttribute(attribute);
 		if (attributeInstance == null) {
@@ -38,9 +34,7 @@ public class MPRItemAttribute extends MPRAttribute implements IMPRObject {
 			return;
 		}
 
-		float amount = RandomHelper.getFloat(world.rand, min, max);
-
-		AttributeModifier modifier = new AttributeModifier(this.modifierName, amount, this.operation);
+		AttributeModifier modifier = new AttributeModifier(this.modifierName, this.amount.getFloatBetween(entity, world), this.operation);
 		EquipmentSlotType modifierSlot = this.slot == null ? equipmentSlotType : this.slot;
 		itemStack.addAttributeModifier(attribute, modifier, modifierSlot);
 

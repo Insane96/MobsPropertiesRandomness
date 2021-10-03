@@ -5,6 +5,7 @@ import com.google.gson.JsonDeserializer;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonParseException;
 import com.google.gson.annotations.JsonAdapter;
+import insane96mcp.insanelib.utils.RandomHelper;
 import insane96mcp.mobspropertiesrandomness.exception.InvalidJsonException;
 import insane96mcp.mobspropertiesrandomness.json.IMPRObject;
 import insane96mcp.mobspropertiesrandomness.json.utils.modifier.MPRModifiable;
@@ -23,14 +24,14 @@ public class MPRRange extends MPRModifiable implements IMPRObject {
 	private Float min;
 	private Float max;
 
-	public MPRRange(float min, float max, @Nullable MPRDifficultyModifier difficultyModifier, @Nullable MPRPosModifier posModifier) {
-		super(difficultyModifier, posModifier);
+	public MPRRange(float min, float max, @Nullable MPRDifficultyModifier difficultyModifier, @Nullable MPRPosModifier posModifier, @Nullable Integer round) {
+		super(difficultyModifier, posModifier, round);
 		this.min = min;
 		this.max = Math.max(min, max);
 	}
 
 	public MPRRange(float min, float max) {
-		this(min, max, null, null);
+		this(min, max, null, null, null);
 	}
 
 	public MPRRange(float min) {
@@ -76,6 +77,20 @@ public class MPRRange extends MPRModifiable implements IMPRObject {
 		return max;
 	}
 
+	/**
+	 * Returns a random float value between min and max
+	 */
+	public float getFloatBetween(MobEntity entity, World world) {
+		return this.round(RandomHelper.getFloat(world.rand, this.getMin(entity, world), this.getMax(entity, world)));
+	}
+
+	/**
+	 * Returns a random int value between min and max
+	 */
+	public int getIntBetween(MobEntity entity, World world) {
+		return RandomHelper.getInt(world.rand, (int) this.getMin(entity, world), (int) this.getMax(entity, world) + 1);
+	}
+
 	@Override
 	public String toString() {
 		return String.format("Range{min: %f, max: %f, %s}", min, max, super.toString());
@@ -86,7 +101,7 @@ public class MPRRange extends MPRModifiable implements IMPRObject {
 		public MPRRange deserialize(JsonElement json, Type typeOfT, JsonDeserializationContext context) throws JsonParseException {
 			if (json.isJsonPrimitive())
 				return new MPRRange(json.getAsFloat());
-			return new MPRRange(json.getAsJsonObject().get("min").getAsFloat(), json.getAsJsonObject().get("max").getAsFloat(), context.deserialize(json.getAsJsonObject().get("difficulty_modifier"), MPRDifficultyModifier.class), context.deserialize(json.getAsJsonObject().get("pos_modifier"), MPRPosModifier.class));
+			return new MPRRange(json.getAsJsonObject().get("min").getAsFloat(), json.getAsJsonObject().get("max").getAsFloat(), context.deserialize(json.getAsJsonObject().get("difficulty_modifier"), MPRDifficultyModifier.class), context.deserialize(json.getAsJsonObject().get("pos_modifier"), MPRPosModifier.class), context.deserialize(json.getAsJsonObject().get("round"), Integer.class));
 		}
 	}
 }
