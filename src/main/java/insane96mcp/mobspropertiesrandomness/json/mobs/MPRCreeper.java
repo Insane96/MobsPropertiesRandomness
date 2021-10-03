@@ -1,6 +1,7 @@
 package insane96mcp.mobspropertiesrandomness.json.mobs;
 
 import com.google.gson.annotations.SerializedName;
+import insane96mcp.insanelib.setup.Strings;
 import insane96mcp.insanelib.utils.RandomHelper;
 import insane96mcp.mobspropertiesrandomness.exception.InvalidJsonException;
 import insane96mcp.mobspropertiesrandomness.json.IMPRAppliable;
@@ -25,6 +26,8 @@ public class MPRCreeper implements IMPRObject, IMPRAppliable {
 	public MPRRange explosionRadius;
 	@SerializedName("powered_chance")
 	public MPRModifiableValue poweredChance;
+	@SerializedName("fire_chance")
+	public MPRModifiableValue fireChance;
 
 	@Override
 	public void validate(File file) throws InvalidJsonException {
@@ -36,6 +39,9 @@ public class MPRCreeper implements IMPRObject, IMPRAppliable {
 
 		if (poweredChance != null)
 			poweredChance.validate(file);
+
+		if (fireChance != null)
+			fireChance.validate(file);
 	}
 
 	@Override
@@ -76,6 +82,10 @@ public class MPRCreeper implements IMPRObject, IMPRAppliable {
 		//Power It
 		if(this.poweredChance != null && world.rand.nextFloat() < this.poweredChance.getValue(creeper, world))
 			compound.putBoolean("powered", true);
+
+		//Causes fire on explosion
+		if(this.fireChance != null && world.rand.nextFloat() < this.fireChance.getValue(creeper, world))
+			creeper.getPersistentData().putBoolean(Strings.Tags.EXPLOSION_CAUSES_FIRE, true);
 
 		creeper.readAdditional(compound);
 	}

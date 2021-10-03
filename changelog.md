@@ -3,9 +3,10 @@
 ## Upcoming
 * Requires InsaneLib 1.3.0
   * Fixes follow range globally and removes the Leader Zombies bonus health
+* Added a `fire_chance` property to creepers
 * Fixed Difficulty modifier not begin validated
-* Fixed crash when not specifiyng drop chance.
-* Fixed missing difficulties validation
+* Fixed crash when not specifiyng drop chance
+* Fixed missing difficulties validation, causing mobs to not spawn
 
 ## Alpha 3.1.0
 * Renamed "json" folder to "mobs". "json" folder is renamed automatically to "mobs" if present.
