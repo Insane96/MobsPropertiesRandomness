@@ -3,6 +3,7 @@
 ## Upcoming
 * Requires InsaneLib 1.3.0
   * Fixes follow range globally and removes the Leader Zombies bonus health
+* Added `presets`!
 * Added a `fire_chance` property to creepers
 * Added `round` property for ModifiableValue  
   After applying the modifiers the final value will be rounded to the specified decimal places. Things that require an integer (e.g. enchantment levels or potion amplifiers) are already rounded.

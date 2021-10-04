@@ -1,8 +1,8 @@
 package insane96mcp.mobspropertiesrandomness.json;
 
 import com.google.gson.annotations.SerializedName;
-import insane96mcp.mobspropertiesrandomness.data.MPRGroupReloadListener;
 import insane96mcp.mobspropertiesrandomness.exception.InvalidJsonException;
+import insane96mcp.mobspropertiesrandomness.json.utils.MPRPresets;
 import insane96mcp.mobspropertiesrandomness.json.utils.attribute.MPRMobAttribute;
 import insane96mcp.mobspropertiesrandomness.setup.Strings;
 import insane96mcp.mobspropertiesrandomness.utils.Logger;
@@ -16,7 +16,6 @@ import net.minecraftforge.event.entity.EntityJoinWorldEvent;
 import net.minecraftforge.registries.ForgeRegistries;
 
 import java.io.File;
-import java.util.ArrayList;
 
 import static insane96mcp.mobspropertiesrandomness.data.MPRMobReloadListener.MPR_MOBS;
 
@@ -25,18 +24,15 @@ public class MPRMob extends MPRProperties implements IMPRObject {
 	public String mobId;
 	public String group;
 
+	public MPRPresets presets;
+
 	@Override
 	public void validate(File file) throws InvalidJsonException {
+		super.validate(file);
 		if (this.mobId == null && this.group == null)
 			throw new InvalidJsonException("Missing mob_id or group. " + this, file);
 		else if (this.mobId != null && this.group != null)
 			Logger.info("mob_id and group are both present, mob_id will be ignored");
-
-		if (this.spawnerBehaviour == null)
-			this.spawnerBehaviour = SpawnerBehaviour.NONE;
-
-		if (this.structureBehaviour == null)
-			this.structureBehaviour = StructureBehaviour.NONE;
 
 		if (this.mobId != null) {
 			String[] splitId = this.mobId.split(":");
@@ -48,39 +44,8 @@ public class MPRMob extends MPRProperties implements IMPRObject {
 				throw new InvalidJsonException("Mob with ID " + this.mobId + " does not exist", file);
 		}
 
-		if (this.group != null) {
-			if (!MPRGroupReloadListener.INSTANCE.doesGroupExist(this.group))
-				throw new InvalidJsonException("Group " + this.group + " does not exist", file);
-		}
-
-		if (this.potionEffects == null)
-			this.potionEffects = new ArrayList<>();
-		for (MPRPotionEffect potionEffect : this.potionEffects) {
-			potionEffect.validate(file);
-		}
-
-		if (this.attributes == null)
-			this.attributes = new ArrayList<>();
-		for (MPRMobAttribute attribute : this.attributes) {
-			attribute.validate(file);
-		}
-
-		if (this.equipment == null)
-			this.equipment = new MPREquipment();
-		this.equipment.validate(file);
-
-		if (this.customName != null)
-			this.customName.validate(file);
-
-		//Mob specific validations
-		if (this.creeper != null)
-			this.creeper.validate(file);
-
-		if (this.ghast != null)
-			this.ghast.validate(file);
-
-		if (this.phantom != null)
-			this.phantom.validate(file);
+		if (this.presets != null)
+			this.presets.validate(file);
 	}
 
 	public static void apply(EntityJoinWorldEvent event) {
@@ -127,6 +92,9 @@ public class MPRMob extends MPRProperties implements IMPRObject {
 				mprMob.ghast.apply(mobEntity, world);
 			if (mprMob.phantom != null)
 				mprMob.phantom.apply(mobEntity, world);
+
+			if (mprMob.presets != null)
+				mprMob.presets.apply(mobEntity, world);
 		}
 
 		tags.putBoolean(Strings.Tags.PROCESSED, true);

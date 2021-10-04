@@ -1,12 +1,13 @@
 package insane96mcp.mobspropertiesrandomness.data;
 
 import com.google.gson.Gson;
-import insane96mcp.mobspropertiesrandomness.json.MPRMob;
+import insane96mcp.mobspropertiesrandomness.json.MPRPreset;
 import insane96mcp.mobspropertiesrandomness.utils.FileUtils;
 import insane96mcp.mobspropertiesrandomness.utils.Logger;
 import net.minecraft.client.resources.ReloadListener;
 import net.minecraft.profiler.IProfiler;
 import net.minecraft.resources.IResourceManager;
+import org.apache.commons.io.FilenameUtils;
 
 import java.io.File;
 import java.io.FileReader;
@@ -14,7 +15,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class MPRPresetReloadListener extends ReloadListener<Void> {
-	public static final List<MPRMob> MPR_PRESETS = new ArrayList<>();
+	public static final List<MPRPreset> MPR_PRESETS = new ArrayList<>();
 
 	public static final MPRPresetReloadListener INSTANCE;
 
@@ -51,13 +52,13 @@ public class MPRPresetReloadListener extends ReloadListener<Void> {
 			try {
 				Logger.info(file.getName());
 				FileReader fileReader = new FileReader(file);
-				MPRMob mob = gson.fromJson(fileReader, MPRMob.class);
-				Logger.debug(mob.toString());
-				mob.validate(file);
-				MPR_PRESETS.add(mob);
+				MPRPreset preset = gson.fromJson(fileReader, MPRPreset.class);
+				preset.name = FilenameUtils.removeExtension(file.getName());
+				Logger.debug(preset.toString());
+				preset.validate(file);
+				MPR_PRESETS.add(preset);
 			} catch (Exception e) {
 				correctlyReloaded = false;
-				//Logger.error("Failed to parse file with name " + file.getName());
 				Logger.error(e.toString());
 				e.printStackTrace();
 			}
