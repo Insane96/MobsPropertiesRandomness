@@ -61,7 +61,7 @@ public class MPRItem extends WeightedRandom.Item implements IMPRObject {
 	 * @param world
 	 * @return
 	 */
-	public MPRItem getModifiedWeightItem(MobEntity entity, World world) {
+	public MPRItem getItemWithModifiedWeight(MobEntity entity, World world) {
 		MPRItem item2 = this.copy();
 
 		item2.itemWeight = (int) this.weight.getValue(entity, world);
@@ -69,10 +69,6 @@ public class MPRItem extends WeightedRandom.Item implements IMPRObject {
 		return item2;
 	}
 
-	/**
-	 * Returns a copy of the JItem
-	 * @return a copy of the JItem
-	 */
 	protected MPRItem copy() {
 		MPRItem mprItem = new MPRItem(this.itemWeight);
 		mprItem.attributes = this.attributes;

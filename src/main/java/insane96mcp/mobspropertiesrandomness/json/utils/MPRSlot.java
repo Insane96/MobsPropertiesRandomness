@@ -41,12 +41,12 @@ public class MPRSlot implements IMPRObject {
 		}
 	}
 
-	private List<MPRItem> getItemsWithWeightDifficulty(MobEntity entity, World world){
+	private List<MPRItem> getItems(MobEntity entity, World world){
 		ArrayList<MPRItem> items = new ArrayList<>();
 		for (MPRItem item : this.items) {
 			if (item.worldWhitelist != null && !item.worldWhitelist.isWhitelisted(entity))
 				continue;
-			items.add(item.getModifiedWeightItem(entity, world));
+			items.add(item.getItemWithModifiedWeight(entity, world));
 		}
 		return items;
 	}
@@ -58,7 +58,7 @@ public class MPRSlot implements IMPRObject {
 	 * @return an Item or null if no items were available
 	 */
 	public MPRItem getRandomItem(MobEntity entity, World world) {
-		List<MPRItem> items = getItemsWithWeightDifficulty(entity, world);
+		List<MPRItem> items = getItems(entity, world);
 		if (items.isEmpty())
 			return null;
 		return WeightedRandom.getRandomItem(world.rand, items);
