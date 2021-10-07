@@ -1,12 +1,14 @@
 # Changelog
 
-## Upcoming
+## Beta 3.1.1
 * Requires InsaneLib 1.3.0
   * Fixes follow range globally and removes the Leader Zombies bonus health
-* Added `presets`!
-* Added a `fire_chance` property to creepers
+* Added `presets`!  
+  Presets are preset mobs that can have a chance to spawn. E.g. you want to make a zombie boss that spawns only below y=16 and has a rare chance to spawn.
+* Added a `fire_chance` property to creepers  
+  Chance for creepers to generate fire on explosion
 * Added `round` property for ModifiableValue  
-  After applying the modifiers the final value will be rounded to the specified decimal places. Things that require an integer (e.g. enchantment levels or potion amplifiers) are already rounded.
+  After applying the modifiers the final value will be rounded to the specified decimal places, this is done to prevent mobs from having e.g. 26.8645131 health. Things that require an integer (e.g. enchantment levels or potion amplifiers) are already rounded.
 * Added `custom_name`  
   Let you set a chance and a list of names that the mob can get.
 * Fixed potion effects not giving correct amplifiers (e.g. with min and max set to 1 and 2 you would always get amplifier 1)

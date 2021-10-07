@@ -12,6 +12,7 @@ import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.util.WeightedRandom;
 import net.minecraft.world.World;
 
+import javax.annotation.Nullable;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
@@ -36,6 +37,8 @@ public class MPRPresets implements IMPRObject {
 			return;
 
 		MPRWeightedPreset weightedPreset = this.getRandomPreset(entity, world);
+		if (weightedPreset == null)
+			return;
 		for (MPRPreset preset : MPR_PRESETS) {
 			if (!preset.name.equals(weightedPreset.name))
 				continue;
@@ -69,22 +72,22 @@ public class MPRPresets implements IMPRObject {
 	}
 
 	private List<MPRWeightedPreset> getPresets(MobEntity entity, World world){
-		ArrayList<MPRWeightedPreset> items = new ArrayList<>();
-		for (MPRWeightedPreset item : this.list) {
-			//TODO
-			//if (item.worldWhitelist != null && !item.worldWhitelist.isWhitelisted(entity))
-				//continue;
-			items.add(item.getPresetWithModifiedWeight(entity, world));
+		ArrayList<MPRWeightedPreset> weightedPresets = new ArrayList<>();
+		for (MPRWeightedPreset weightedPreset : this.list) {
+			MPRWeightedPreset mprWeightedPreset = weightedPreset.getPresetWithModifiedWeight(entity, world);
+			if (mprWeightedPreset != null)
+				weightedPresets.add(mprWeightedPreset);
 		}
-		return items;
+		return weightedPresets;
 	}
 
 	/**
 	 * Returns a random item from the pool based of weights, dimensions whitelist and biomes whitelist
 	 * @param entity
 	 * @param world
-	 * @return an Item or null if no items were available
+	 * @return a WeightedPreset or null if no items were available
 	 */
+	@Nullable
 	public MPRWeightedPreset getRandomPreset(MobEntity entity, World world) {
 		List<MPRWeightedPreset> items = getPresets(entity, world);
 		if (items.isEmpty())

@@ -10,6 +10,7 @@ import net.minecraft.util.WeightedRandom;
 import net.minecraft.world.World;
 import net.minecraftforge.registries.ForgeRegistries;
 
+import javax.annotation.Nullable;
 import java.io.File;
 import java.util.List;
 
@@ -57,11 +58,15 @@ public class MPRItem extends WeightedRandom.Item implements IMPRObject {
 	}
 
 	/**
-	 * Returns an MPRItem with the weight modifier applied to the item's weight
+	 * Returns an MPRItem with the weight modifier applied to the item's weight. Returns null if the entity doesn't fulfill the world whitelist
 	 * @param world
 	 * @return
 	 */
+	@Nullable
 	public MPRItem getItemWithModifiedWeight(MobEntity entity, World world) {
+		if (worldWhitelist != null && !worldWhitelist.isWhitelisted(entity))
+			return null;
+
 		MPRItem item2 = this.copy();
 
 		item2.itemWeight = (int) this.weight.getValue(entity, world);

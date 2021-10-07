@@ -1,5 +1,6 @@
 package insane96mcp.mobspropertiesrandomness.json.utils;
 
+import com.google.gson.annotations.SerializedName;
 import insane96mcp.mobspropertiesrandomness.exception.InvalidJsonException;
 import insane96mcp.mobspropertiesrandomness.json.IMPRObject;
 import insane96mcp.mobspropertiesrandomness.json.MPRPreset;
@@ -8,6 +9,7 @@ import net.minecraft.entity.MobEntity;
 import net.minecraft.util.WeightedRandom;
 import net.minecraft.world.World;
 
+import javax.annotation.Nullable;
 import java.io.File;
 
 import static insane96mcp.mobspropertiesrandomness.data.MPRPresetReloadListener.MPR_PRESETS;
@@ -16,7 +18,8 @@ public class MPRWeightedPreset extends WeightedRandom.Item implements IMPRObject
 	public String name;
 	private MPRModifiableValue weight;
 
-	//TODO MPRWorldWhitelist
+	@SerializedName("world_whitelist")
+	public MPRWorldWhitelist worldWhitelist;
 
 	public MPRWeightedPreset(int itemWeightIn) {
 		super(itemWeightIn);
@@ -39,14 +42,21 @@ public class MPRWeightedPreset extends WeightedRandom.Item implements IMPRObject
 		if (this.weight == null)
 			throw new InvalidJsonException("Missing weight in Weighted Preset. " + this, file);
 		this.weight.validate(file);
+
+		if (worldWhitelist != null)
+			worldWhitelist.validate(file);
 	}
 
 	/**
-	 * Returns an MPRItem with the weight modifier applied to the item's weight
+	 * Returns an MPRWeightedPreset with the weight modifier applied to the item's weight. Returns null if the entity doesn't fulfill the world whitelist
 	 * @param world
 	 * @return
 	 */
+	@Nullable
 	public MPRWeightedPreset getPresetWithModifiedWeight(MobEntity entity, World world) {
+		if (worldWhitelist != null && !worldWhitelist.isWhitelisted(entity))
+			return null;
+
 		MPRWeightedPreset weightedPreset = this.copy();
 
 		weightedPreset.itemWeight = (int) this.weight.getValue(entity, world);
