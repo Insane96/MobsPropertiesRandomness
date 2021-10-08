@@ -1,7 +1,9 @@
 # Changelog
 
-## 3.1.2
+## Beta 3.1.2
 * Now requires InsaneLib 1.3.1
+* Added `mode` to `presets`  
+  Changes how presets are applied. Valid values: EXCLUSIVE, BEFORE, AFTER
 * Added `silent` property to mobs  
   Chance for a mob to be silent
 * Fixed item attributes replacing vanilla item's attributes

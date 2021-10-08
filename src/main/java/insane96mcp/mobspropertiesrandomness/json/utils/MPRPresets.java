@@ -17,12 +17,15 @@ import static insane96mcp.mobspropertiesrandomness.data.MPRPresetReloadListener.
 public class MPRPresets implements IMPRObject {
 
 	public MPRModifiableValue chance;
+	public Mode mode;
 	public List<MPRWeightedPreset> list;
 
 	@Override
 	public void validate(File file) throws InvalidJsonException {
 		if (this.chance != null)
 			this.chance.validate(file);
+		if (this.mode == null)
+			this.mode = Mode.EXCLUSIVE;
 		if (list == null)
 			throw new InvalidJsonException("Missing list in Presets. " + this, file);
 	}
@@ -64,6 +67,12 @@ public class MPRPresets implements IMPRObject {
 		if (items.isEmpty())
 			return null;
 		return WeightedRandom.getRandomItem(world.rand, items);
+	}
+
+	public enum Mode {
+		EXCLUSIVE,
+		BEFORE,
+		AFTER
 	}
 
 	@Override
