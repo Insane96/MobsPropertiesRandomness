@@ -1,9 +1,10 @@
 # Changelog
 
 ## 3.1.2
+* Now requires InsaneLib 1.3.1
 * Added `silent` property to mobs  
   Chance for a mob to be silent
-* 
+* Fixed item attributes replacing vanilla item's attributes
 
 ## Beta 3.1.1
 * Requires InsaneLib 1.3.0

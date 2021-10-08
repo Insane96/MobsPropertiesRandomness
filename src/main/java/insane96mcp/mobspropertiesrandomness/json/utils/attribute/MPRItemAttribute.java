@@ -1,12 +1,11 @@
 package insane96mcp.mobspropertiesrandomness.json.utils.attribute;
 
+import insane96mcp.insanelib.utils.MCUtils;
 import insane96mcp.mobspropertiesrandomness.exception.InvalidJsonException;
 import insane96mcp.mobspropertiesrandomness.json.IMPRObject;
-import insane96mcp.mobspropertiesrandomness.utils.Logger;
 import net.minecraft.entity.MobEntity;
 import net.minecraft.entity.ai.attributes.Attribute;
 import net.minecraft.entity.ai.attributes.AttributeModifier;
-import net.minecraft.entity.ai.attributes.ModifiableAttributeInstance;
 import net.minecraft.inventory.EquipmentSlotType;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.ResourceLocation;
@@ -28,15 +27,9 @@ public class MPRItemAttribute extends MPRAttribute implements IMPRObject {
 			return;
 
 		Attribute attribute = ForgeRegistries.ATTRIBUTES.getValue(new ResourceLocation(this.id));
-		ModifiableAttributeInstance attributeInstance = entity.getAttribute(attribute);
-		if (attributeInstance == null) {
-			Logger.warn("Attribute " + this.id + " not found for the entity, skipping the attribute");
-			return;
-		}
-
 		AttributeModifier modifier = new AttributeModifier(this.modifierName, this.amount.getFloatBetween(entity, world), this.operation);
 		EquipmentSlotType modifierSlot = this.slot == null ? equipmentSlotType : this.slot;
-		itemStack.addAttributeModifier(attribute, modifier, modifierSlot);
+		MCUtils.addAttributeModifierToItemStack(itemStack, attribute, modifier, modifierSlot);
 
 		this.fixHealth(entity);
 	}
