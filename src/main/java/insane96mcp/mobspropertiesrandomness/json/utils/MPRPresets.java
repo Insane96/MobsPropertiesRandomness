@@ -2,13 +2,8 @@ package insane96mcp.mobspropertiesrandomness.json.utils;
 
 import insane96mcp.mobspropertiesrandomness.exception.InvalidJsonException;
 import insane96mcp.mobspropertiesrandomness.json.IMPRObject;
-import insane96mcp.mobspropertiesrandomness.json.MPRPotionEffect;
 import insane96mcp.mobspropertiesrandomness.json.MPRPreset;
-import insane96mcp.mobspropertiesrandomness.json.MPRProperties;
-import insane96mcp.mobspropertiesrandomness.json.utils.attribute.MPRMobAttribute;
-import insane96mcp.mobspropertiesrandomness.setup.Strings;
 import net.minecraft.entity.MobEntity;
-import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.util.WeightedRandom;
 import net.minecraft.world.World;
 
@@ -43,31 +38,7 @@ public class MPRPresets implements IMPRObject {
 			if (!preset.name.equals(weightedPreset.name))
 				continue;
 
-			CompoundNBT tags = entity.getPersistentData();
-			boolean spawnedFromSpawner = tags.getBoolean(Strings.Tags.SPAWNED_FROM_SPAWNER);
-			boolean spawnedFromStructure = tags.getBoolean(Strings.Tags.SPAWNED_FROM_STRUCTURE);
-
-			if ((!spawnedFromSpawner && preset.spawnerBehaviour == MPRProperties.SpawnerBehaviour.SPAWNER_ONLY) || (spawnedFromSpawner && preset.spawnerBehaviour == MPRProperties.SpawnerBehaviour.NATURAL_ONLY))
-				continue;
-			if ((!spawnedFromStructure && preset.structureBehaviour == MPRProperties.StructureBehaviour.STRUCTURE_ONLY) || (spawnedFromStructure && preset.structureBehaviour == MPRProperties.StructureBehaviour.NATURAL_ONLY))
-				continue;
-			for (MPRPotionEffect potionEffect : preset.potionEffects) {
-				potionEffect.apply(entity, world);
-			}
-			for (MPRMobAttribute attribute : preset.attributes) {
-				attribute.apply(entity, world);
-			}
-			preset.equipment.apply(entity, world);
-
-			if (preset.customName != null)
-				preset.customName.applyCustomName(entity, world);
-
-			if (preset.creeper != null)
-				preset.creeper.apply(entity, world);
-			if (preset.ghast != null)
-				preset.ghast.apply(entity, world);
-			if (preset.phantom != null)
-				preset.phantom.apply(entity, world);
+			preset.apply(entity, world);
 		}
 	}
 

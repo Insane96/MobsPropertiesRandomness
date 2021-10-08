@@ -3,7 +3,6 @@ package insane96mcp.mobspropertiesrandomness.json;
 import com.google.gson.annotations.SerializedName;
 import insane96mcp.mobspropertiesrandomness.exception.InvalidJsonException;
 import insane96mcp.mobspropertiesrandomness.json.utils.MPRPresets;
-import insane96mcp.mobspropertiesrandomness.json.utils.attribute.MPRMobAttribute;
 import insane96mcp.mobspropertiesrandomness.setup.Strings;
 import insane96mcp.mobspropertiesrandomness.utils.Logger;
 import insane96mcp.mobspropertiesrandomness.utils.MPRUtils;
@@ -65,33 +64,10 @@ public class MPRMob extends MPRProperties implements IMPRObject {
 		if (isAlreadyChecked)
 			return;
 
-		boolean spawnedFromSpawner = tags.getBoolean(Strings.Tags.SPAWNED_FROM_SPAWNER);
-		boolean spawnedFromStructure = tags.getBoolean(Strings.Tags.SPAWNED_FROM_STRUCTURE);
-
 		for (MPRMob mprMob : MPR_MOBS) {
 			if (!MPRUtils.matchesEntity(mobEntity, mprMob))
 				continue;
-			if ((!spawnedFromSpawner && mprMob.spawnerBehaviour == SpawnerBehaviour.SPAWNER_ONLY) || (spawnedFromSpawner && mprMob.spawnerBehaviour == SpawnerBehaviour.NATURAL_ONLY))
-				continue;
-			if ((!spawnedFromStructure && mprMob.structureBehaviour == StructureBehaviour.STRUCTURE_ONLY) || (spawnedFromStructure && mprMob.structureBehaviour == StructureBehaviour.NATURAL_ONLY))
-				continue;
-			for (MPRPotionEffect potionEffect : mprMob.potionEffects) {
-				potionEffect.apply(mobEntity, world);
-			}
-			for (MPRMobAttribute attribute : mprMob.attributes) {
-				attribute.apply(mobEntity, world);
-			}
-			mprMob.equipment.apply(mobEntity, world);
-
-			if (mprMob.customName != null)
-				mprMob.customName.applyCustomName(mobEntity, world);
-
-			if (mprMob.creeper != null)
-				mprMob.creeper.apply(mobEntity, world);
-			if (mprMob.ghast != null)
-				mprMob.ghast.apply(mobEntity, world);
-			if (mprMob.phantom != null)
-				mprMob.phantom.apply(mobEntity, world);
+			mprMob.apply(mobEntity, world);
 
 			if (mprMob.presets != null)
 				mprMob.presets.apply(mobEntity, world);

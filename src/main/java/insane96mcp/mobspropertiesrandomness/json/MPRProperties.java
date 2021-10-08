@@ -6,7 +6,12 @@ import insane96mcp.mobspropertiesrandomness.json.mobs.MPRCreeper;
 import insane96mcp.mobspropertiesrandomness.json.mobs.MPRGhast;
 import insane96mcp.mobspropertiesrandomness.json.mobs.MPRPhantom;
 import insane96mcp.mobspropertiesrandomness.json.utils.MPRCustomName;
+import insane96mcp.mobspropertiesrandomness.json.utils.MPRModifiableValue;
 import insane96mcp.mobspropertiesrandomness.json.utils.attribute.MPRMobAttribute;
+import insane96mcp.mobspropertiesrandomness.setup.Strings;
+import net.minecraft.entity.MobEntity;
+import net.minecraft.nbt.CompoundNBT;
+import net.minecraft.world.World;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -31,6 +36,8 @@ public abstract class MPRProperties implements IMPRObject {
 	public MPRCreeper creeper;
 	public MPRGhast ghast;
 	public MPRPhantom phantom;
+
+	public MPRModifiableValue silent;
 
 	@Override
 	public void validate(File file) throws InvalidJsonException {
@@ -59,6 +66,9 @@ public abstract class MPRProperties implements IMPRObject {
 		if (this.customName != null)
 			this.customName.validate(file);
 
+		if (this.silent != null)
+			this.silent.validate(file);
+
 		//Mob specific validations
 		if (this.creeper != null)
 			this.creeper.validate(file);
@@ -68,6 +78,37 @@ public abstract class MPRProperties implements IMPRObject {
 
 		if (this.phantom != null)
 			this.phantom.validate(file);
+	}
+
+	public void apply(MobEntity mobEntity, World world) {
+		CompoundNBT tags = mobEntity.getPersistentData();
+		boolean spawnedFromSpawner = tags.getBoolean(Strings.Tags.SPAWNED_FROM_SPAWNER);
+		boolean spawnedFromStructure = tags.getBoolean(Strings.Tags.SPAWNED_FROM_STRUCTURE);
+
+		if ((!spawnedFromSpawner && this.spawnerBehaviour == SpawnerBehaviour.SPAWNER_ONLY) || (spawnedFromSpawner && this.spawnerBehaviour == SpawnerBehaviour.NATURAL_ONLY))
+			return;
+		if ((!spawnedFromStructure && this.structureBehaviour == StructureBehaviour.STRUCTURE_ONLY) || (spawnedFromStructure && this.structureBehaviour == StructureBehaviour.NATURAL_ONLY))
+			return;
+		for (MPRPotionEffect potionEffect : this.potionEffects) {
+			potionEffect.apply(mobEntity, world);
+		}
+		for (MPRMobAttribute attribute : this.attributes) {
+			attribute.apply(mobEntity, world);
+		}
+		this.equipment.apply(mobEntity, world);
+
+		if (this.customName != null)
+			this.customName.applyCustomName(mobEntity, world);
+
+		if (this.silent != null && world.rand.nextDouble() < this.silent.getValue(mobEntity, world))
+			mobEntity.setSilent(true);
+
+		if (this.creeper != null)
+			this.creeper.apply(mobEntity, world);
+		if (this.ghast != null)
+			this.ghast.apply(mobEntity, world);
+		if (this.phantom != null)
+			this.phantom.apply(mobEntity, world);
 	}
 
 	public enum SpawnerBehaviour {

@@ -1,5 +1,10 @@
 # Changelog
 
+## 3.1.2
+* Added `silent` property to mobs  
+  Chance for a mob to be silent
+* 
+
 ## Beta 3.1.1
 * Requires InsaneLib 1.3.0
   * Fixes follow range globally and removes the Leader Zombies bonus health
