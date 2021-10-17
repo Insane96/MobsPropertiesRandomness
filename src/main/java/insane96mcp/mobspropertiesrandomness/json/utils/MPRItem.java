@@ -57,11 +57,13 @@ public class MPRItem extends WeightedRandom.Item implements IMPRObject {
 			for (MPRItemAttribute itemAttribute : attributes)
 				itemAttribute.validate(file);
 
-		try {
-			this._nbt = JsonToNBT.getTagFromJson(this.nbt);
-		}
-		catch (CommandSyntaxException e) {
-			throw new InvalidJsonException("Invalid nbt for Item: " + this.nbt, file);
+		if (this.nbt != null) {
+			try {
+				this._nbt = JsonToNBT.getTagFromJson(this.nbt);
+			}
+			catch (CommandSyntaxException e) {
+				throw new InvalidJsonException("Invalid nbt for Item: " + this.nbt, file);
+			}
 		}
 
 		if (worldWhitelist != null)
