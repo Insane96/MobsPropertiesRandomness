@@ -57,7 +57,6 @@ public class MPRMobReloadListener extends ReloadListener<Void> {
 				MPR_MOBS.add(mob);
 			} catch (Exception e) {
 				correctlyReloaded = false;
-				//Logger.error("Failed to parse file with name " + file.getName());
 				Logger.error(e.toString());
 				e.printStackTrace();
 			}

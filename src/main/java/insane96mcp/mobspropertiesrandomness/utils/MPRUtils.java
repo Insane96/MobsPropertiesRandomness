@@ -4,6 +4,7 @@ import insane96mcp.mobspropertiesrandomness.data.MPRGroupReloadListener;
 import insane96mcp.mobspropertiesrandomness.json.MPRGroup;
 import insane96mcp.mobspropertiesrandomness.json.MPRMob;
 import net.minecraft.entity.MobEntity;
+import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.util.ResourceLocation;
 
 public class MPRUtils {
@@ -36,5 +37,26 @@ public class MPRUtils {
 
 		return entity.getType().getRegistryName().equals(new ResourceLocation(mob.mobId));
 
+	}
+
+	/**
+	 * Checks if nbt1 tags are all present and match nbt2
+	 * @param nbt1
+	 * @param nbt2
+	 * @return
+	 */
+	public static boolean compareNBT(CompoundNBT nbt1, CompoundNBT nbt2) {
+		for (String key : nbt1.keySet()) {
+			if (!nbt2.contains(key))
+				return false;
+
+			if (nbt1.get(key) instanceof CompoundNBT && nbt2.get(key) instanceof CompoundNBT) {
+				if (!compareNBT(nbt1.getCompound(key), nbt2.getCompound(key)))
+					return false;
+			}
+			else if (!nbt1.get(key).equals(nbt2.get(key)))
+				return false;
+		}
+		return true;
 	}
 }

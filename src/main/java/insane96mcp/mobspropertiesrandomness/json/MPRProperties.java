@@ -5,6 +5,7 @@ import insane96mcp.mobspropertiesrandomness.exception.InvalidJsonException;
 import insane96mcp.mobspropertiesrandomness.json.mobs.MPRCreeper;
 import insane96mcp.mobspropertiesrandomness.json.mobs.MPRGhast;
 import insane96mcp.mobspropertiesrandomness.json.mobs.MPRPhantom;
+import insane96mcp.mobspropertiesrandomness.json.utils.MPRConditions;
 import insane96mcp.mobspropertiesrandomness.json.utils.MPRCustomName;
 import insane96mcp.mobspropertiesrandomness.json.utils.MPRModifiableValue;
 import insane96mcp.mobspropertiesrandomness.json.utils.attribute.MPRMobAttribute;
@@ -18,10 +19,14 @@ import java.util.ArrayList;
 import java.util.List;
 
 public abstract class MPRProperties implements IMPRObject {
+
+	//TODO move to conditions
 	@SerializedName("spawner_behaviour")
 	public SpawnerBehaviour spawnerBehaviour;
 	@SerializedName("structure_behaviour")
 	public StructureBehaviour structureBehaviour;
+
+	public MPRConditions conditions;
 
 	@SerializedName("potion_effects")
 	public List<MPRPotionEffect> potionEffects;
@@ -46,6 +51,9 @@ public abstract class MPRProperties implements IMPRObject {
 
 		if (this.structureBehaviour == null)
 			this.structureBehaviour = StructureBehaviour.NONE;
+
+		if (this.conditions != null)
+			this.conditions.validate(file);
 
 		if (this.potionEffects == null)
 			this.potionEffects = new ArrayList<>();
@@ -88,6 +96,8 @@ public abstract class MPRProperties implements IMPRObject {
 		if ((!spawnedFromSpawner && this.spawnerBehaviour == SpawnerBehaviour.SPAWNER_ONLY) || (spawnedFromSpawner && this.spawnerBehaviour == SpawnerBehaviour.NATURAL_ONLY))
 			return;
 		if ((!spawnedFromStructure && this.structureBehaviour == StructureBehaviour.STRUCTURE_ONLY) || (spawnedFromStructure && this.structureBehaviour == StructureBehaviour.NATURAL_ONLY))
+			return;
+		if (this.conditions != null && !this.conditions.conditionsApply(mobEntity))
 			return;
 		for (MPRPotionEffect potionEffect : this.potionEffects) {
 			potionEffect.apply(mobEntity, world);
