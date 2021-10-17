@@ -5,11 +5,11 @@ import com.mojang.brigadier.exceptions.CommandSyntaxException;
 import insane96mcp.mobspropertiesrandomness.exception.InvalidJsonException;
 import insane96mcp.mobspropertiesrandomness.json.IMPRObject;
 import insane96mcp.mobspropertiesrandomness.json.utils.attribute.MPRItemAttribute;
+import insane96mcp.mobspropertiesrandomness.utils.weightedrandom.IWeightedRandom;
 import net.minecraft.entity.MobEntity;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.nbt.JsonToNBT;
 import net.minecraft.util.ResourceLocation;
-import net.minecraft.util.WeightedRandom;
 import net.minecraft.world.World;
 import net.minecraftforge.registries.ForgeRegistries;
 
@@ -17,10 +17,15 @@ import javax.annotation.Nullable;
 import java.io.File;
 import java.util.List;
 
-public class MPRItem extends WeightedRandom.Item implements IMPRObject {
+public class MPRItem implements IMPRObject, IWeightedRandom {
 
 	public String id;
+	@SerializedName("weight")
 	private MPRModifiableValue modifiableWeight;
+
+	//TODO Make a class for the _weight
+	private transient int _weight;
+
 	@SerializedName("drop_chance")
 	public MPRModifiableValue dropChance;
 	public List<MPREnchantment> enchantments;
@@ -30,10 +35,6 @@ public class MPRItem extends WeightedRandom.Item implements IMPRObject {
 
 	@SerializedName("world_whitelist")
 	public MPRWorldWhitelist worldWhitelist;
-
-	public MPRItem(int itemWeightIn) {
-		super(itemWeightIn);
-	}
 
 	@Override
 	public void validate(File file) throws InvalidJsonException {
@@ -71,40 +72,29 @@ public class MPRItem extends WeightedRandom.Item implements IMPRObject {
 	}
 
 	/**
-	 * Returns an MPRItem with the weight modifier applied to the item's weight. Returns null if the entity doesn't fulfill the world whitelist
-	 * @param world
-	 * @return
+	 * Returns this MPRItem with the weight calculated based off the modifiers, or null if the world whitelist doesn't match
 	 */
 	@Nullable
-	public MPRItem getItemWithModifiedWeight(MobEntity entity, World world) {
+	public MPRItem computeAndGet(MobEntity entity, World world) {
 		if (worldWhitelist != null && !worldWhitelist.isWhitelisted(entity))
 			return null;
 
-		MPRItem item2 = this.copy();
+		this._weight = (int) this.modifiableWeight.getValue(entity, world);
 
-		item2.weight = (int) this.modifiableWeight.getValue(entity, world);
-
-		return item2;
+		return this;
 	}
 
 	public CompoundNBT getNBT() {
 		return this._nbt;
 	}
 
-	protected MPRItem copy() {
-		MPRItem mprItem = new MPRItem(this.weight);
-		mprItem.attributes = this.attributes;
-		mprItem.dropChance = this.dropChance;
-		mprItem.enchantments = this.enchantments;
-		mprItem.id = this.id;
-		mprItem.nbt = this.nbt;
-		mprItem._nbt = this._nbt;
-		mprItem.modifiableWeight = this.modifiableWeight;
-		return mprItem;
-	}
-
 	@Override
 	public String toString() {
 		return String.format("Item{id: %s, weight: %s, drop_chance: %s, enchantments: %s, attributes: %s, world_whitelist: %s, nbt: %s}", id, modifiableWeight, dropChance, enchantments, attributes, worldWhitelist, _nbt);
+	}
+
+	@Override
+	public int getWeight() {
+		return this._weight;
 	}
 }

@@ -3,8 +3,8 @@ package insane96mcp.mobspropertiesrandomness.json.utils;
 import insane96mcp.mobspropertiesrandomness.exception.InvalidJsonException;
 import insane96mcp.mobspropertiesrandomness.json.IMPRObject;
 import insane96mcp.mobspropertiesrandomness.json.MPRPreset;
+import insane96mcp.mobspropertiesrandomness.utils.weightedrandom.WeightedRandom;
 import net.minecraft.entity.MobEntity;
-import net.minecraft.util.WeightedRandom;
 import net.minecraft.world.World;
 
 import javax.annotation.Nullable;
@@ -49,7 +49,7 @@ public class MPRPresets implements IMPRObject {
 	private List<MPRWeightedPreset> getPresets(MobEntity entity, World world){
 		ArrayList<MPRWeightedPreset> weightedPresets = new ArrayList<>();
 		for (MPRWeightedPreset weightedPreset : this.list) {
-			MPRWeightedPreset mprWeightedPreset = weightedPreset.getPresetWithModifiedWeight(entity, world);
+			MPRWeightedPreset mprWeightedPreset = weightedPreset.computeAndGet(entity, world);
 			if (mprWeightedPreset != null)
 				weightedPresets.add(mprWeightedPreset);
 		}

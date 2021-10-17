@@ -5,8 +5,8 @@ import insane96mcp.mobspropertiesrandomness.exception.InvalidJsonException;
 import insane96mcp.mobspropertiesrandomness.json.IMPRObject;
 import insane96mcp.mobspropertiesrandomness.json.MPRPreset;
 import insane96mcp.mobspropertiesrandomness.utils.Logger;
+import insane96mcp.mobspropertiesrandomness.utils.weightedrandom.IWeightedRandom;
 import net.minecraft.entity.MobEntity;
-import net.minecraft.util.WeightedRandom;
 import net.minecraft.world.World;
 
 import javax.annotation.Nullable;
@@ -14,17 +14,16 @@ import java.io.File;
 
 import static insane96mcp.mobspropertiesrandomness.data.MPRPresetReloadListener.MPR_PRESETS;
 
-public class MPRWeightedPreset extends WeightedRandom.Item implements IMPRObject {
+public class MPRWeightedPreset implements IMPRObject, IWeightedRandom {
 	public String name;
+
 	@SerializedName("weight")
 	private MPRModifiableValue modifiableWeight;
 
+	private transient int _weight;
+
 	@SerializedName("world_whitelist")
 	public MPRWorldWhitelist worldWhitelist;
-
-	public MPRWeightedPreset(int itemWeightIn) {
-		super(itemWeightIn);
-	}
 
 	@Override
 	public void validate(File file) throws InvalidJsonException {
@@ -34,7 +33,7 @@ public class MPRWeightedPreset extends WeightedRandom.Item implements IMPRObject
 		for (MPRPreset preset : MPR_PRESETS) {
 			if (preset.name.equals(this.name)) {
 				found = true;
-				continue;
+				break;
 			}
 		}
 		if (!found)
@@ -49,31 +48,25 @@ public class MPRWeightedPreset extends WeightedRandom.Item implements IMPRObject
 	}
 
 	/**
-	 * Returns an MPRWeightedPreset with the weight modifier applied to the item's weight. Returns null if the entity doesn't fulfill the world whitelist
-	 * @param world
-	 * @return
+	 * Returns this MPRWeightedPreset with the weight calculated based off the modifiers, or null if the world whitelist doesn't match
 	 */
 	@Nullable
-	public MPRWeightedPreset getPresetWithModifiedWeight(MobEntity entity, World world) {
+	public MPRWeightedPreset computeAndGet(MobEntity entity, World world) {
 		if (worldWhitelist != null && !worldWhitelist.isWhitelisted(entity))
 			return null;
 
-		MPRWeightedPreset weightedPreset = this.copy();
+		this._weight = (int) this.modifiableWeight.getValue(entity, world);
 
-		weightedPreset.weight = (int) this.modifiableWeight.getValue(entity, world);
-
-		return weightedPreset;
-	}
-
-	protected MPRWeightedPreset copy() {
-		MPRWeightedPreset mprWeightedPreset = new MPRWeightedPreset(this.weight);
-		mprWeightedPreset.name = this.name;
-		mprWeightedPreset.modifiableWeight = this.modifiableWeight;
-		return mprWeightedPreset;
+		return this;
 	}
 
 	@Override
 	public String toString() {
-		return String.format("WeightedPreset{name: %s, weight: %s}", name, modifiableWeight);
+		return String.format("WeightedPreset{name: %s, weight: %s, world_whitelist}", name, modifiableWeight, worldWhitelist, worldWhitelist);
+	}
+
+	@Override
+	public int getWeight() {
+		return this._weight;
 	}
 }

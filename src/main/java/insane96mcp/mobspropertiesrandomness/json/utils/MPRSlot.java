@@ -4,8 +4,8 @@ import com.google.gson.annotations.SerializedName;
 import insane96mcp.mobspropertiesrandomness.exception.InvalidJsonException;
 import insane96mcp.mobspropertiesrandomness.json.IMPRObject;
 import insane96mcp.mobspropertiesrandomness.utils.Logger;
+import insane96mcp.mobspropertiesrandomness.utils.weightedrandom.WeightedRandom;
 import net.minecraft.entity.MobEntity;
-import net.minecraft.util.WeightedRandom;
 import net.minecraft.world.World;
 
 import java.io.File;
@@ -44,7 +44,7 @@ public class MPRSlot implements IMPRObject {
 	private List<MPRItem> getItems(MobEntity entity, World world){
 		ArrayList<MPRItem> items = new ArrayList<>();
 		for (MPRItem item : this.items) {
-			MPRItem mprItem = item.getItemWithModifiedWeight(entity, world);
+			MPRItem mprItem = item.computeAndGet(entity, world);
 			if (mprItem != null)
 				items.add(mprItem);
 		}
