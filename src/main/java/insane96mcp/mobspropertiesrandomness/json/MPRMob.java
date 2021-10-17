@@ -70,14 +70,19 @@ public class MPRMob extends MPRProperties implements IMPRObject {
 			if (mprMob.presets == null)
 				mprMob.apply(mobEntity, world);
 			else {
-				if (mprMob.presets.mode == MPRPresets.Mode.EXCLUSIVE || mprMob.presets.mode == MPRPresets.Mode.BEFORE)
-					mprMob.presets.apply(mobEntity, world);
-
-				if (mprMob.presets.mode != MPRPresets.Mode.EXCLUSIVE)
-					mprMob.apply(mobEntity, world);
-
-				if (mprMob.presets.mode == MPRPresets.Mode.AFTER)
-					mprMob.presets.apply(mobEntity, world);
+				switch (mprMob.presets.mode) {
+					case EXCLUSIVE:
+						if (!mprMob.presets.apply(mobEntity, world))
+							mprMob.apply(mobEntity, world);
+						break;
+					case BEFORE:
+						mprMob.presets.apply(mobEntity, world);
+						mprMob.apply(mobEntity, world);
+						break;
+					case AFTER:
+						mprMob.apply(mobEntity, world);
+						mprMob.presets.apply(mobEntity, world);
+				}
 			}
 		}
 

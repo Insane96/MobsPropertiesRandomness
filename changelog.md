@@ -1,5 +1,8 @@
 # Changelog
 
+## Beta 3.1.3
+* Mobs with EXCLUSIVE presets now correctly apply normal properties if no preset is chosen
+
 ## Beta 3.1.2
 * Now requires InsaneLib 1.3.1
 * Added `mode` to `presets`  

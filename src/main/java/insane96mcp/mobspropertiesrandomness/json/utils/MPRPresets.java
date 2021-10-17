@@ -30,19 +30,21 @@ public class MPRPresets implements IMPRObject {
 			throw new InvalidJsonException("Missing list in Presets. " + this, file);
 	}
 
-	public void apply(MobEntity entity, World world) {
+	public boolean apply(MobEntity entity, World world) {
 		if (this.chance != null && world.rand.nextDouble() >= this.chance.getValue(entity, world))
-			return;
+			return false;
 
 		MPRWeightedPreset weightedPreset = this.getRandomPreset(entity, world);
 		if (weightedPreset == null)
-			return;
+			return false;
 		for (MPRPreset preset : MPR_PRESETS) {
 			if (!preset.name.equals(weightedPreset.name))
 				continue;
 
 			preset.apply(entity, world);
+			return true;
 		}
+		return false;
 	}
 
 	private List<MPRWeightedPreset> getPresets(MobEntity entity, World world){
