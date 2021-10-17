@@ -16,15 +16,15 @@ import net.minecraftforge.fml.LogicalSidedProvider;
 public class ClientNetwork {
 	public static void handleCreeperFuseSyncMessage(int id, short fuse) {
 		ThreadTaskExecutor<Runnable> executor = LogicalSidedProvider.WORKQUEUE.get(LogicalSide.CLIENT);
-		executor.enqueue(new TickDelayedTask(0, () -> {
-			World world = Minecraft.getInstance().world;
-			Entity entity = world.getEntityByID(id);
+		executor.tell(new TickDelayedTask(0, () -> {
+			World world = Minecraft.getInstance().level;
+			Entity entity = world.getEntity(id);
 			if (entity instanceof CreeperEntity) {
 				CreeperEntity creeper = (CreeperEntity) entity;
 				CompoundNBT nbt = new CompoundNBT();
-				creeper.writeAdditional(nbt);
+				creeper.addAdditionalSaveData(nbt);
 				nbt.putShort("Fuse", fuse);
-				creeper.readAdditional(nbt);
+				creeper.readAdditionalSaveData(nbt);
 			}
 		}));
 	}

@@ -21,10 +21,10 @@ public class MPRCustomName implements IMPRObject {
 	}
 
 	public void applyCustomName(MobEntity entity, World world) {
-		if (this.chance != null && world.rand.nextDouble() >= this.chance.getValue(entity, world))
+		if (this.chance != null && world.random.nextDouble() >= this.chance.getValue(entity, world))
 			return;
 
-		entity.setCustomName(new StringTextComponent(list.get(world.rand.nextInt(list.size()))));
+		entity.setCustomName(new StringTextComponent(list.get(world.random.nextInt(list.size()))));
 	}
 
 	@Override

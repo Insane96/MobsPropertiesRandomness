@@ -46,7 +46,7 @@ public class MPRUtils {
 	 * @return
 	 */
 	public static boolean compareNBT(CompoundNBT nbt1, CompoundNBT nbt2) {
-		for (String key : nbt1.keySet()) {
+		for (String key : nbt1.getAllKeys()) {
 			if (!nbt2.contains(key))
 				return false;
 

@@ -51,9 +51,9 @@ public class MPRCreeper implements IMPRObject, IMPRAppliable {
 		CreeperEntity creeper = (CreeperEntity) entity;
 
 		CompoundNBT compound = new CompoundNBT();
-		creeper.writeAdditional(compound);
+		creeper.addAdditionalSaveData(compound);
 
-		if (world.isRemote)
+		if (world.isClientSide)
 			return;
 
 		//Fuse
@@ -63,9 +63,9 @@ public class MPRCreeper implements IMPRObject, IMPRAppliable {
 			compound.putShort("Fuse", (short)fuse);
 		}
 
-		Object msg = new MessageCreeperFuseSync(creeper.getEntityId(), (short) fuse);
-		for (PlayerEntity player : world.getPlayers()) {
-			NetworkHandler.CHANNEL.sendTo(msg, ((ServerPlayerEntity) player).connection.netManager, NetworkDirection.PLAY_TO_CLIENT);
+		Object msg = new MessageCreeperFuseSync(creeper.getId(), (short) fuse);
+		for (PlayerEntity player : world.players()) {
+			NetworkHandler.CHANNEL.sendTo(msg, ((ServerPlayerEntity) player).connection.connection, NetworkDirection.PLAY_TO_CLIENT);
 		}
 
 		//Explosion Radius
@@ -75,14 +75,14 @@ public class MPRCreeper implements IMPRObject, IMPRAppliable {
 		}
 
 		//Power It
-		if(this.poweredChance != null && world.rand.nextFloat() < this.poweredChance.getValue(creeper, world))
+		if(this.poweredChance != null && world.random.nextFloat() < this.poweredChance.getValue(creeper, world))
 			compound.putBoolean("powered", true);
 
 		//Causes fire on explosion
-		if(this.fireChance != null && world.rand.nextFloat() < this.fireChance.getValue(creeper, world))
+		if(this.fireChance != null && world.random.nextFloat() < this.fireChance.getValue(creeper, world))
 			creeper.getPersistentData().putBoolean(Strings.Tags.EXPLOSION_CAUSES_FIRE, true);
 
-		creeper.readAdditional(compound);
+		creeper.readAdditionalSaveData(compound);
 	}
 
 

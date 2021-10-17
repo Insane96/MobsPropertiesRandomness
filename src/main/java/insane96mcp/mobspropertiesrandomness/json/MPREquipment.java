@@ -44,7 +44,7 @@ public class MPREquipment implements IMPRObject, IMPRAppliable {
 
 	@Override
 	public void apply(MobEntity entity, World world) {
-		if (world.isRemote)
+		if (world.isClientSide)
 			return;
 
 		applyEquipmentToSlot(entity, world, this.head, EquipmentSlotType.HEAD);
@@ -59,13 +59,11 @@ public class MPREquipment implements IMPRObject, IMPRAppliable {
 		if (slot == null)
 			return;
 
-		if (!slot.override && !entity.getItemStackFromSlot(equipmentSlotType).isEmpty())
+		if ((!slot.override && !entity.getItemBySlot(equipmentSlotType).isEmpty())
+			|| (slot.replaceOnly && entity.getItemBySlot(equipmentSlotType).isEmpty()))
 			return;
 
-		if (slot.replaceOnly && entity.getItemStackFromSlot(equipmentSlotType).isEmpty())
-			return;
-
-		if (slot.chance != null && world.rand.nextFloat() >= slot.chance.getValue(entity, world))
+		if (slot.chance != null && world.random.nextFloat() >= slot.chance.getValue(entity, world))
 			return;
 
 		MPRItem choosenItem = slot.getRandomItem(entity, world);
@@ -90,7 +88,7 @@ public class MPREquipment implements IMPRObject, IMPRAppliable {
 			}
 		}
 
-		entity.setItemStackToSlot(equipmentSlotType, itemStack);
+		entity.setItemSlot(equipmentSlotType, itemStack);
 
 		//Drop Chance
 		if (choosenItem.dropChance != null)

@@ -52,10 +52,10 @@ public abstract class MPRAttribute implements IMPRObject {
 	}
 
 	public boolean shouldApply(MobEntity entity, World world) {
-		if (world.isRemote)
+		if (world.isClientSide)
 			return false;
 
-		if (this.chance != null && world.rand.nextFloat() >= this.chance.getValue(entity, world))
+		if (this.chance != null && world.random.nextFloat() >= this.chance.getValue(entity, world))
 			return false;
 
 		if (worldWhitelist != null && worldWhitelist.isWhitelisted(entity))

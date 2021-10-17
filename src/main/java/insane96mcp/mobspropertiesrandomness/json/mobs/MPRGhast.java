@@ -30,7 +30,7 @@ public class MPRGhast implements IMPRObject, IMPRAppliable {
 		GhastEntity ghast = (GhastEntity) entity;
 
 		CompoundNBT compound = new CompoundNBT();
-		ghast.writeAdditional(compound);
+		ghast.addAdditionalSaveData(compound);
 
 		//Explosion Radius
 		if (this.explosionPower != null && compound.getByte("ExplosionPower") == 1) {
@@ -38,7 +38,7 @@ public class MPRGhast implements IMPRObject, IMPRAppliable {
 			compound.putInt("ExplosionPower", power);
 		}
 
-		ghast.readAdditional(compound);
+		ghast.readAdditionalSaveData(compound);
 	}
 
 

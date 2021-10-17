@@ -110,7 +110,7 @@ public abstract class MPRProperties implements IMPRObject {
 		if (this.customName != null)
 			this.customName.applyCustomName(mobEntity, world);
 
-		if (this.silent != null && world.rand.nextDouble() < this.silent.getValue(mobEntity, world))
+		if (this.silent != null && world.random.nextDouble() < this.silent.getValue(mobEntity, world))
 			mobEntity.setSilent(true);
 
 		if (this.creeper != null)

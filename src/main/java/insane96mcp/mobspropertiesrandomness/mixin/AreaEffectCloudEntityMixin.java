@@ -11,7 +11,7 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 public class AreaEffectCloudEntityMixin {
 	@Inject(at = @At("HEAD"), method = "addEffect(Lnet/minecraft/potion/EffectInstance;)V", cancellable = true)
 	public void getUseDuration(EffectInstance effect, CallbackInfo callbackInfo) {
-		if (!effect.isShowIcon())
+		if (!effect.showIcon())
 			callbackInfo.cancel();
 	}
 }

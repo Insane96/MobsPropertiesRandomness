@@ -31,7 +31,7 @@ public class MPRPresets implements IMPRObject {
 	}
 
 	public boolean apply(MobEntity entity, World world) {
-		if (this.chance != null && world.rand.nextDouble() >= this.chance.getValue(entity, world))
+		if (this.chance != null && world.random.nextDouble() >= this.chance.getValue(entity, world))
 			return false;
 
 		MPRWeightedPreset weightedPreset = this.getRandomPreset(entity, world);
@@ -68,7 +68,7 @@ public class MPRPresets implements IMPRObject {
 		List<MPRWeightedPreset> items = getPresets(entity, world);
 		if (items.isEmpty())
 			return null;
-		return WeightedRandom.getRandomItem(world.rand, items);
+		return WeightedRandom.getRandomItem(world.random, items);
 	}
 
 	public enum Mode {

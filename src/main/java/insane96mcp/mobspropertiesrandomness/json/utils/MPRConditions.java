@@ -22,7 +22,7 @@ public class MPRConditions implements IMPRObject {
 	public void validate(File file) throws InvalidJsonException {
 		if (this.nbt != null) {
 			try {
-				this._nbt = JsonToNBT.getTagFromJson(this.nbt);
+				this._nbt = JsonToNBT.parseTag(this.nbt);
 			}
 			catch (CommandSyntaxException e) {
 				throw new InvalidJsonException("Invalid nbt for Conditions: " + this.nbt, file);
@@ -33,11 +33,11 @@ public class MPRConditions implements IMPRObject {
 	public boolean conditionsApply(MobEntity mobEntity) {
 		boolean result = true;
 		if (isBaby != null)
-			result = (isBaby && mobEntity.isChild()) || (!isBaby && !mobEntity.isChild());
+			result = (isBaby && mobEntity.isBaby()) || (!isBaby && !mobEntity.isBaby());
 
 		if (nbt != null) {
 			CompoundNBT mobNBT = new CompoundNBT();
-			mobEntity.writeAdditional(mobNBT);
+			mobEntity.addAdditionalSaveData(mobNBT);
 			result = MPRUtils.compareNBT(this._nbt, mobNBT);
 		}
 		return result;

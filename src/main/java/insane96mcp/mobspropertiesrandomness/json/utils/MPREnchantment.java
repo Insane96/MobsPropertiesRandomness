@@ -50,26 +50,26 @@ public class MPREnchantment implements IMPRObject {
 	}
 
 	public void applyToStack(MobEntity entity, World world, ItemStack itemStack) {
-		if (this.chance != null && world.rand.nextFloat() >= this.chance.getValue(entity, world))
+		if (this.chance != null && world.random.nextFloat() >= this.chance.getValue(entity, world))
 			return;
 
 		Enchantment enchantment;
 		if (this.id != null) {
 			Map<Enchantment, Integer> enchantmentsOnStack = EnchantmentHelper.getEnchantments(itemStack);
 			enchantment = ForgeRegistries.ENCHANTMENTS.getValue(new ResourceLocation(id));
-			boolean canApply = this.allowIncompatible || EnchantmentHelper.areAllCompatibleWith(enchantmentsOnStack.keySet(), enchantment);
+			boolean canApply = this.allowIncompatible || EnchantmentHelper.isEnchantmentCompatible(enchantmentsOnStack.keySet(), enchantment);
 			if (!canApply)
 				enchantment = null;
 		}
 		else {
-			enchantment = this.random.getEnchantment(world.rand, itemStack, this.allowIncompatible);
+			enchantment = this.random.getEnchantment(world.random, itemStack, this.allowIncompatible);
 		}
 		if (enchantment == null)
 			return;
 
 		int minLevel = this.level != null ? (int) this.level.getMin(entity, world) : enchantment.getMinLevel();
 		int maxLevel = this.level != null ? (int) this.level.getMax(entity, world) : enchantment.getMaxLevel();
-		int level = RandomHelper.getInt(world.rand, minLevel, maxLevel);
+		int level = RandomHelper.getInt(world.random, minLevel, maxLevel);
 
 		addEnchantmentToItemStack(itemStack, enchantment, level);
 	}
@@ -78,7 +78,7 @@ public class MPREnchantment implements IMPRObject {
 		if (itemStack.getItem() == Items.ENCHANTED_BOOK)
 			EnchantedBookItem.addEnchantment(itemStack, new EnchantmentData(enchantment, level));
 		else
-			itemStack.addEnchantment(enchantment, level);
+			itemStack.enchant(enchantment, level);
 	}
 
 	@Override

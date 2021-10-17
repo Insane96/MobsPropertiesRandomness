@@ -47,12 +47,12 @@ public class MPRPosModifier implements IMPRObject {
 
 	public float applyModifier(World world, Vector3d pos, float value) {
 		//Distance from Spawn
-		Vector3d spawnPos = new Vector3d(world.getWorldInfo().getSpawnX(), world.getWorldInfo().getSpawnY(), world.getWorldInfo().getSpawnZ());
+		Vector3d spawnPos = new Vector3d(world.getLevelData().getXSpawn(), world.getLevelData().getYSpawn(), world.getLevelData().getZSpawn());
 		float distance = (float) spawnPos.distanceTo(pos);
 		float distancePercentage = (distance / distanceFromSpawnStep) * distanceFromSpawnBonus;
 
 		//Depth
-		float depthPercentage = (float) ((Math.max(depthStartingLevel - pos.getY(), 0) / depthStep) * depthBonus);
+		float depthPercentage = (float) ((Math.max(depthStartingLevel - pos.y, 0) / depthStep) * depthBonus);
 
 		float totalBonus = distancePercentage + depthPercentage;
 		return value * (1 + totalBonus);

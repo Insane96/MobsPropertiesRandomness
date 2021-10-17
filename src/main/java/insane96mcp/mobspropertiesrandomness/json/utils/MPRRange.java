@@ -57,10 +57,10 @@ public class MPRRange extends MPRModifiable implements IMPRObject {
 		float min = this.min;
 
 		if (this.difficultyModifier != null && !this.difficultyModifier.affectsMaxOnly)
-			min = this.difficultyModifier.applyModifier(world.getDifficulty(), world.getDifficultyForLocation(entity.getPosition()).getAdditionalDifficulty(), min);
+			min = this.difficultyModifier.applyModifier(world.getDifficulty(), world.getCurrentDifficultyAt(entity.blockPosition()).getEffectiveDifficulty(), min);
 
 		if (this.posModifier != null)
-			min = this.posModifier.applyModifier(world, entity.getPositionVec(), min);
+			min = this.posModifier.applyModifier(world, entity.position(), min);
 
 		return min;
 	}
@@ -69,10 +69,10 @@ public class MPRRange extends MPRModifiable implements IMPRObject {
 		float max = this.max;
 
 		if (this.difficultyModifier != null)
-			max = this.difficultyModifier.applyModifier(world.getDifficulty(), world.getDifficultyForLocation(entity.getPosition()).getAdditionalDifficulty(), max);
+			max = this.difficultyModifier.applyModifier(world.getDifficulty(), world.getCurrentDifficultyAt(entity.blockPosition()).getEffectiveDifficulty(), max);
 
 		if (this.posModifier != null)
-			max = this.posModifier.applyModifier(world, entity.getPositionVec(), max);
+			max = this.posModifier.applyModifier(world, entity.position(), max);
 
 		return max;
 	}
@@ -81,14 +81,14 @@ public class MPRRange extends MPRModifiable implements IMPRObject {
 	 * Returns a random float value between min and max
 	 */
 	public float getFloatBetween(MobEntity entity, World world) {
-		return this.round(RandomHelper.getFloat(world.rand, this.getMin(entity, world), this.getMax(entity, world)));
+		return this.round(RandomHelper.getFloat(world.random, this.getMin(entity, world), this.getMax(entity, world)));
 	}
 
 	/**
 	 * Returns a random int value between min and max
 	 */
 	public int getIntBetween(MobEntity entity, World world) {
-		return RandomHelper.getInt(world.rand, (int) this.getMin(entity, world), (int) this.getMax(entity, world) + 1);
+		return RandomHelper.getInt(world.random, (int) this.getMin(entity, world), (int) this.getMax(entity, world) + 1);
 	}
 
 	@Override

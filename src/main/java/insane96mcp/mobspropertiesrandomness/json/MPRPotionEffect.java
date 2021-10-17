@@ -55,10 +55,10 @@ public class MPRPotionEffect implements IMPRObject, IMPRAppliable {
 	}
 
 	public void apply(MobEntity entity, World world) {
-		if (world.isRemote)
+		if (world.isClientSide)
 			return;
 
-		if (this.chance != null && world.rand.nextFloat() >= this.chance.getValue(entity, world))
+		if (this.chance != null && world.random.nextFloat() >= this.chance.getValue(entity, world))
 			return;
 
 		if (worldWhitelist != null && worldWhitelist.isWhitelisted(entity))
@@ -66,7 +66,7 @@ public class MPRPotionEffect implements IMPRObject, IMPRAppliable {
 
 		Effect effect = ForgeRegistries.POTIONS.getValue(new ResourceLocation(this.id));
 		EffectInstance effectInstance = new EffectInstance(effect, 1000000, this.amplifier.getIntBetween(entity, world), this.ambient, !this.hideParticles, false);
-		entity.addPotionEffect(effectInstance);
+		entity.addEffect(effectInstance);
 	}
 
 	@Override

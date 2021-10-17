@@ -16,7 +16,8 @@ import static insane96mcp.mobspropertiesrandomness.data.MPRPresetReloadListener.
 
 public class MPRWeightedPreset extends WeightedRandom.Item implements IMPRObject {
 	public String name;
-	private MPRModifiableValue weight;
+	@SerializedName("weight")
+	private MPRModifiableValue modifiableWeight;
 
 	@SerializedName("world_whitelist")
 	public MPRWorldWhitelist worldWhitelist;
@@ -39,9 +40,9 @@ public class MPRWeightedPreset extends WeightedRandom.Item implements IMPRObject
 		if (!found)
 			Logger.info("Preset " + this.name + " does not exist");
 
-		if (this.weight == null)
+		if (this.modifiableWeight == null)
 			throw new InvalidJsonException("Missing weight in Weighted Preset. " + this, file);
-		this.weight.validate(file);
+		this.modifiableWeight.validate(file);
 
 		if (worldWhitelist != null)
 			worldWhitelist.validate(file);
@@ -59,20 +60,20 @@ public class MPRWeightedPreset extends WeightedRandom.Item implements IMPRObject
 
 		MPRWeightedPreset weightedPreset = this.copy();
 
-		weightedPreset.itemWeight = (int) this.weight.getValue(entity, world);
+		weightedPreset.weight = (int) this.modifiableWeight.getValue(entity, world);
 
 		return weightedPreset;
 	}
 
 	protected MPRWeightedPreset copy() {
-		MPRWeightedPreset mprWeightedPreset = new MPRWeightedPreset(this.itemWeight);
+		MPRWeightedPreset mprWeightedPreset = new MPRWeightedPreset(this.weight);
 		mprWeightedPreset.name = this.name;
-		mprWeightedPreset.weight = this.weight;
+		mprWeightedPreset.modifiableWeight = this.modifiableWeight;
 		return mprWeightedPreset;
 	}
 
 	@Override
 	public String toString() {
-		return String.format("WeightedPreset{name: %s, weight: %s}", name, weight);
+		return String.format("WeightedPreset{name: %s, weight: %s}", name, modifiableWeight);
 	}
 }

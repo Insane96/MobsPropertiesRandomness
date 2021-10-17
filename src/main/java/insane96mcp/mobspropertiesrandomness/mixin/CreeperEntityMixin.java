@@ -13,8 +13,8 @@ public class CreeperEntityMixin {
 	private void spawnLingeringCloud(CallbackInfo callbackInfo) {
 		CreeperEntity creeper = (CreeperEntity) (Object) this;
 		boolean hasNormalEffect = false;
-		for (EffectInstance effect : creeper.getActivePotionEffects()) {
-			if (effect.isShowIcon()) {
+		for (EffectInstance effect : creeper.getActiveEffects()) {
+			if (effect.showIcon()) {
 				hasNormalEffect = true;
 				break;
 			}

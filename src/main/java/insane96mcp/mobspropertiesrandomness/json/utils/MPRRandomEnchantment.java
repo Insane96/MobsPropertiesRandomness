@@ -57,7 +57,7 @@ public class MPRRandomEnchantment implements IMPRObject {
 			toFilter = new ArrayList<>(ForgeRegistries.ENCHANTMENTS.getValues());
 
 		List<Enchantment> appliableEnchantments = toFilter.stream().filter((enchantment) -> {
-			if (enchantment.isCurse() && !allowCurses || enchantment.isTreasureEnchantment() && !allowTreasure)
+			if (enchantment.isCurse() && !allowCurses || enchantment.isTreasureOnly() && !allowTreasure)
 				return false;
 
 			if (!allowIncompatible) {
@@ -68,7 +68,7 @@ public class MPRRandomEnchantment implements IMPRObject {
 				}
 			}
 
-			return isBook || enchantment.canApply(itemStack);
+			return isBook || enchantment.canEnchant(itemStack);
 		}).collect(Collectors.toList());
 
 		if (appliableEnchantments.isEmpty()) {
