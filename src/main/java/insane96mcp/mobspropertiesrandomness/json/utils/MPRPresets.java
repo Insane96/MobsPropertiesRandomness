@@ -41,8 +41,7 @@ public class MPRPresets implements IMPRObject {
 			if (!preset.name.equals(weightedPreset.name))
 				continue;
 
-			preset.apply(entity, world);
-			return true;
+			return preset.apply(entity, world);
 		}
 		return false;
 	}

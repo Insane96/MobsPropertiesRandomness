@@ -91,6 +91,6 @@ public class MPRMob extends MPRProperties implements IMPRObject {
 
 	@Override
 	public String toString() {
-		return String.format("Mob{id: %s, group: %s, spawner_behaviour: %s, structure_behaviour: %s, potion_effects: %s, attributes: %s, equipment: %s, creeper: %s, ghast: %s}", mobId, group, spawnerBehaviour, structureBehaviour, potionEffects, attributes, equipment, creeper, ghast);
+		return String.format("Mob{id: %s, group: %s, conditions: %s, potion_effects: %s, attributes: %s, equipment: %s, creeper: %s, ghast: %s}", mobId, group, this.conditions, potionEffects, attributes, equipment, creeper, ghast);
 	}
 }

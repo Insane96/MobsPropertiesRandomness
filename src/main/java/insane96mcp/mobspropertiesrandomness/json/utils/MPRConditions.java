@@ -4,6 +4,7 @@ import com.google.gson.annotations.SerializedName;
 import com.mojang.brigadier.exceptions.CommandSyntaxException;
 import insane96mcp.mobspropertiesrandomness.exception.InvalidJsonException;
 import insane96mcp.mobspropertiesrandomness.json.IMPRObject;
+import insane96mcp.mobspropertiesrandomness.setup.Strings;
 import insane96mcp.mobspropertiesrandomness.utils.MPRUtils;
 import net.minecraft.entity.MobEntity;
 import net.minecraft.nbt.CompoundNBT;
@@ -15,11 +16,21 @@ public class MPRConditions implements IMPRObject {
 
 	@SerializedName("is_baby")
 	public Boolean isBaby;
+	@SerializedName("spawner_behaviour")
+	public SpawnerBehaviour spawnerBehaviour;
+	@SerializedName("structure_behaviour")
+	public StructureBehaviour structureBehaviour;
 	public String nbt;
 	public transient CompoundNBT _nbt;
 
 	@Override
 	public void validate(File file) throws InvalidJsonException {
+		if (this.spawnerBehaviour == null)
+			this.spawnerBehaviour = SpawnerBehaviour.NONE;
+
+		if (this.structureBehaviour == null)
+			this.structureBehaviour = StructureBehaviour.NONE;
+
 		if (this.nbt != null) {
 			try {
 				this._nbt = JsonToNBT.parseTag(this.nbt);
@@ -40,11 +51,32 @@ public class MPRConditions implements IMPRObject {
 			mobEntity.addAdditionalSaveData(mobNBT);
 			result = MPRUtils.compareNBT(this._nbt, mobNBT);
 		}
+
+		CompoundNBT mobPersistentData = mobEntity.getPersistentData();
+		boolean spawnedFromSpawner = mobPersistentData.getBoolean(Strings.Tags.SPAWNED_FROM_SPAWNER);
+		boolean spawnedFromStructure = mobPersistentData.getBoolean(Strings.Tags.SPAWNED_FROM_STRUCTURE);
+		if ((!spawnedFromSpawner && this.spawnerBehaviour == SpawnerBehaviour.SPAWNER_ONLY) || (spawnedFromSpawner && this.spawnerBehaviour == SpawnerBehaviour.NATURAL_ONLY))
+			result = false;
+		if ((!spawnedFromStructure && this.structureBehaviour == StructureBehaviour.STRUCTURE_ONLY) || (spawnedFromStructure && this.structureBehaviour == StructureBehaviour.NATURAL_ONLY))
+			result = false;
+
 		return result;
 	}
 
 	@Override
 	public String toString() {
-		return String.format("Conditions{is_baby: %s, nbt: %s}", isBaby, nbt);
+		return String.format("Conditions{is_baby: %s, nbt: %s, spawner_behaviour: %s, structure_behaviour: %s}", isBaby, nbt, spawnerBehaviour, structureBehaviour);
+	}
+
+	public enum SpawnerBehaviour {
+		NONE,
+		SPAWNER_ONLY,
+		NATURAL_ONLY
+	}
+
+	public enum StructureBehaviour {
+		NONE,
+		STRUCTURE_ONLY,
+		NATURAL_ONLY
 	}
 }

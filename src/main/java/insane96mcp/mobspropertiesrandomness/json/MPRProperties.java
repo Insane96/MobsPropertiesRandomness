@@ -9,9 +9,7 @@ import insane96mcp.mobspropertiesrandomness.json.utils.MPRConditions;
 import insane96mcp.mobspropertiesrandomness.json.utils.MPRCustomName;
 import insane96mcp.mobspropertiesrandomness.json.utils.MPRModifiableValue;
 import insane96mcp.mobspropertiesrandomness.json.utils.attribute.MPRMobAttribute;
-import insane96mcp.mobspropertiesrandomness.setup.Strings;
 import net.minecraft.entity.MobEntity;
-import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.world.World;
 
 import java.io.File;
@@ -19,12 +17,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 public abstract class MPRProperties implements IMPRObject {
-
-	//TODO move to conditions
-	@SerializedName("spawner_behaviour")
-	public SpawnerBehaviour spawnerBehaviour;
-	@SerializedName("structure_behaviour")
-	public StructureBehaviour structureBehaviour;
 
 	public MPRConditions conditions;
 
@@ -46,12 +38,6 @@ public abstract class MPRProperties implements IMPRObject {
 
 	@Override
 	public void validate(File file) throws InvalidJsonException {
-		if (this.spawnerBehaviour == null)
-			this.spawnerBehaviour = SpawnerBehaviour.NONE;
-
-		if (this.structureBehaviour == null)
-			this.structureBehaviour = StructureBehaviour.NONE;
-
 		if (this.conditions != null)
 			this.conditions.validate(file);
 
@@ -88,17 +74,9 @@ public abstract class MPRProperties implements IMPRObject {
 			this.phantom.validate(file);
 	}
 
-	public void apply(MobEntity mobEntity, World world) {
-		CompoundNBT tags = mobEntity.getPersistentData();
-		boolean spawnedFromSpawner = tags.getBoolean(Strings.Tags.SPAWNED_FROM_SPAWNER);
-		boolean spawnedFromStructure = tags.getBoolean(Strings.Tags.SPAWNED_FROM_STRUCTURE);
-
-		if ((!spawnedFromSpawner && this.spawnerBehaviour == SpawnerBehaviour.SPAWNER_ONLY) || (spawnedFromSpawner && this.spawnerBehaviour == SpawnerBehaviour.NATURAL_ONLY))
-			return;
-		if ((!spawnedFromStructure && this.structureBehaviour == StructureBehaviour.STRUCTURE_ONLY) || (spawnedFromStructure && this.structureBehaviour == StructureBehaviour.NATURAL_ONLY))
-			return;
+	public boolean apply(MobEntity mobEntity, World world) {
 		if (this.conditions != null && !this.conditions.conditionsApply(mobEntity))
-			return;
+			return false;
 		for (MPRPotionEffect potionEffect : this.potionEffects) {
 			potionEffect.apply(mobEntity, world);
 		}
@@ -119,17 +97,7 @@ public abstract class MPRProperties implements IMPRObject {
 			this.ghast.apply(mobEntity, world);
 		if (this.phantom != null)
 			this.phantom.apply(mobEntity, world);
-	}
 
-	public enum SpawnerBehaviour {
-		NONE,
-		SPAWNER_ONLY,
-		NATURAL_ONLY
-	}
-
-	public enum StructureBehaviour {
-		NONE,
-		STRUCTURE_ONLY,
-		NATURAL_ONLY
+		return true;
 	}
 }

@@ -14,6 +14,6 @@ public class MPRPreset extends MPRProperties implements IMPRObject {
 
 	@Override
 	public String toString() {
-		return String.format("Preset{name: %s, spawner_behaviour: %s, structure_behaviour: %s, potion_effects: %s, attributes: %s, equipment: %s, creeper: %s, ghast: %s}", name, spawnerBehaviour, structureBehaviour, potionEffects, attributes, equipment, creeper, ghast);
+		return String.format("Preset{name: %s, conditions: %s, potion_effects: %s, attributes: %s, equipment: %s, creeper: %s, ghast: %s}", name, this.conditions, potionEffects, attributes, equipment, creeper, ghast);
 	}
 }
