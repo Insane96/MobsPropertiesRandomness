@@ -1,10 +1,13 @@
 package insane96mcp.mobspropertiesrandomness.json.utils;
 
 import com.google.gson.annotations.SerializedName;
+import com.mojang.brigadier.exceptions.CommandSyntaxException;
 import insane96mcp.mobspropertiesrandomness.exception.InvalidJsonException;
 import insane96mcp.mobspropertiesrandomness.json.IMPRObject;
 import insane96mcp.mobspropertiesrandomness.json.utils.attribute.MPRItemAttribute;
 import net.minecraft.entity.MobEntity;
+import net.minecraft.nbt.CompoundNBT;
+import net.minecraft.nbt.JsonToNBT;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.WeightedRandom;
 import net.minecraft.world.World;
@@ -23,6 +26,7 @@ public class MPRItem extends WeightedRandom.Item implements IMPRObject {
 	public List<MPREnchantment> enchantments;
 	public List<MPRItemAttribute> attributes;
 	public String nbt;
+	private transient CompoundNBT _nbt;
 
 	@SerializedName("world_whitelist")
 	public MPRWorldWhitelist worldWhitelist;
@@ -53,6 +57,13 @@ public class MPRItem extends WeightedRandom.Item implements IMPRObject {
 			for (MPRItemAttribute itemAttribute : attributes)
 				itemAttribute.validate(file);
 
+		try {
+			this._nbt = JsonToNBT.getTagFromJson(this.nbt);
+		}
+		catch (CommandSyntaxException e) {
+			throw new InvalidJsonException("Invalid nbt for Item: " + this.nbt, file);
+		}
+
 		if (worldWhitelist != null)
 			worldWhitelist.validate(file);
 	}
@@ -74,6 +85,10 @@ public class MPRItem extends WeightedRandom.Item implements IMPRObject {
 		return item2;
 	}
 
+	public CompoundNBT getNBT() {
+		return this._nbt;
+	}
+
 	protected MPRItem copy() {
 		MPRItem mprItem = new MPRItem(this.itemWeight);
 		mprItem.attributes = this.attributes;
@@ -81,12 +96,13 @@ public class MPRItem extends WeightedRandom.Item implements IMPRObject {
 		mprItem.enchantments = this.enchantments;
 		mprItem.id = this.id;
 		mprItem.nbt = this.nbt;
+		mprItem._nbt = this._nbt;
 		mprItem.weight = this.weight;
 		return mprItem;
 	}
 
 	@Override
 	public String toString() {
-		return String.format("Item{id: %s, weight: %s, drop_chance: %s, enchantments: %s, attributes: %s, world_whitelist: %s, nbt: %s}", id, weight, dropChance, enchantments, attributes, worldWhitelist, nbt);
+		return String.format("Item{id: %s, weight: %s, drop_chance: %s, enchantments: %s, attributes: %s, world_whitelist: %s, nbt: %s}", id, weight, dropChance, enchantments, attributes, worldWhitelist, _nbt);
 	}
 }

@@ -1,5 +1,10 @@
 # Changelog
 
+## Upcoming
+* NBT for items is now parsed on load.  
+  This should make the applying of items faster due to not having to parse the NBT each time an item is set
+* 
+
 ## 3.1.3
 * Mobs with EXCLUSIVE presets now correctly apply normal properties if no preset is chosen
 

@@ -1,18 +1,14 @@
 package insane96mcp.mobspropertiesrandomness.json;
 
 import com.google.gson.annotations.SerializedName;
-import com.mojang.brigadier.exceptions.CommandSyntaxException;
 import insane96mcp.mobspropertiesrandomness.exception.InvalidJsonException;
 import insane96mcp.mobspropertiesrandomness.json.utils.MPREnchantment;
 import insane96mcp.mobspropertiesrandomness.json.utils.MPRItem;
 import insane96mcp.mobspropertiesrandomness.json.utils.MPRSlot;
 import insane96mcp.mobspropertiesrandomness.json.utils.attribute.MPRItemAttribute;
-import insane96mcp.mobspropertiesrandomness.utils.Logger;
 import net.minecraft.entity.MobEntity;
 import net.minecraft.inventory.EquipmentSlotType;
 import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.CompoundNBT;
-import net.minecraft.nbt.JsonToNBT;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.world.World;
 import net.minecraftforge.registries.ForgeRegistries;
@@ -78,20 +74,8 @@ public class MPREquipment implements IMPRObject, IMPRAppliable {
 
 		ItemStack itemStack = new ItemStack(ForgeRegistries.ITEMS.getValue(new ResourceLocation(choosenItem.id)), 1);
 
-		CompoundNBT tag;
-
 		if (choosenItem.nbt != null) {
-			try {
-				tag = JsonToNBT.getTagFromJson(choosenItem.nbt);
-
-				CompoundNBT tagCompound = new CompoundNBT();
-				tagCompound.put("tag", tag);
-				itemStack.deserializeNBT(tagCompound);
-			}
-			catch (CommandSyntaxException e) {
-				Logger.error("Failed to parse NBT " + choosenItem.nbt + " for " + choosenItem);
-				e.printStackTrace();
-			}
+			itemStack.deserializeNBT(choosenItem.getNBT());
 		}
 
 		if (choosenItem.enchantments != null) {
