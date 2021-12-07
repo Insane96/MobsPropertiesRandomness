@@ -31,6 +31,7 @@ public class MPRItemAttribute extends MPRAttribute implements IMPRObject {
 		EquipmentSlotType modifierSlot = this.slot == null ? equipmentSlotType : this.slot;
 		MCUtils.addAttributeModifierToItemStack(itemStack, attribute, modifier, modifierSlot);
 
+		//TODO Bug, doesn't work as getAttributes doesn't take into account item modifiers
 		this.fixHealth(entity);
 	}
 

@@ -69,6 +69,7 @@ public abstract class MPRAttribute implements IMPRObject {
 			ModifiableAttributeInstance attributeInstance = entity.getAttribute(Attributes.MAX_HEALTH);
 			if (attributeInstance != null)
 				entity.setHealth((float) attributeInstance.getValue());
+			entity.setHealth((float) entity.getAttributeValue(Attributes.MAX_HEALTH));
 		}
 	}
 
