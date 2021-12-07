@@ -60,7 +60,7 @@ public class MPRGroupReloadListener extends ReloadListener<Void> {
 			} catch (Exception e) {
 				correctlyReloaded = false;
 				//Logger.error("Failed to parse file with name " + file.getName());
-				Logger.error(e.toString());
+				Logger.error(e.getMessage());
 				e.printStackTrace();
 			}
 		}

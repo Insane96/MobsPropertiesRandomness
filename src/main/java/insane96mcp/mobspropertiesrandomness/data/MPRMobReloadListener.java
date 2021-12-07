@@ -57,7 +57,7 @@ public class MPRMobReloadListener extends ReloadListener<Void> {
 				MPR_MOBS.add(mob);
 			} catch (Exception e) {
 				correctlyReloaded = false;
-				Logger.error(e.toString());
+				Logger.error(e.getMessage());
 				e.printStackTrace();
 			}
 		}

@@ -59,7 +59,7 @@ public class MPRPresetReloadListener extends ReloadListener<Void> {
 				MPR_PRESETS.add(preset);
 			} catch (Exception e) {
 				correctlyReloaded = false;
-				Logger.error(e.toString());
+				Logger.error(e.getMessage());
 				e.printStackTrace();
 			}
 		}
