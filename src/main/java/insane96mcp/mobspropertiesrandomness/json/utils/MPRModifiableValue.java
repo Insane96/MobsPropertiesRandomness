@@ -9,6 +9,7 @@ import insane96mcp.mobspropertiesrandomness.exception.InvalidJsonException;
 import insane96mcp.mobspropertiesrandomness.json.IMPRObject;
 import insane96mcp.mobspropertiesrandomness.json.utils.modifier.MPRModifiable;
 import insane96mcp.mobspropertiesrandomness.json.utils.modifier.MPRPosModifier;
+import insane96mcp.mobspropertiesrandomness.json.utils.modifier.MPRTimeExistedModifier;
 import insane96mcp.mobspropertiesrandomness.json.utils.modifier.difficulty.MPRDifficultyModifier;
 import net.minecraft.entity.MobEntity;
 import net.minecraft.world.World;
@@ -22,12 +23,12 @@ public class MPRModifiableValue extends MPRModifiable implements IMPRObject {
 	private Float value;
 
 	public MPRModifiableValue(float value) {
-		super(null, null, null);
+		super(null, null, null, null);
 		this.value = value;
 	}
 
-	public MPRModifiableValue(float value, @Nullable MPRDifficultyModifier difficultyModifier, @Nullable MPRPosModifier posModifier, @Nullable Integer round) {
-		super(difficultyModifier, posModifier, round);
+	public MPRModifiableValue(float value, @Nullable MPRDifficultyModifier difficultyModifier, @Nullable MPRPosModifier posModifier, @Nullable MPRTimeExistedModifier timeExistedModifier, @Nullable Integer round) {
+		super(difficultyModifier, posModifier, timeExistedModifier, round);
 		this.value = value;
 	}
 
@@ -47,6 +48,9 @@ public class MPRModifiableValue extends MPRModifiable implements IMPRObject {
 		if (this.posModifier != null)
 			value = this.posModifier.applyModifier(world, entity.position(), value);
 
+		if (this.timeExistedModifier != null)
+			value = this.timeExistedModifier.applyModifier(world, entity, value);
+
 		return this.round(value);
 	}
 
@@ -60,7 +64,7 @@ public class MPRModifiableValue extends MPRModifiable implements IMPRObject {
 		public MPRModifiableValue deserialize(JsonElement json, Type typeOfT, JsonDeserializationContext context) throws JsonParseException {
 			if (json.isJsonPrimitive())
 				return new MPRModifiableValue(json.getAsFloat());
-			return new MPRModifiableValue(json.getAsJsonObject().get("value").getAsFloat(), context.deserialize(json.getAsJsonObject().get("difficulty_modifier"), MPRDifficultyModifier.class), context.deserialize(json.getAsJsonObject().get("pos_modifier"), MPRPosModifier.class), context.deserialize(json.getAsJsonObject().get("round"), Integer.class));
+			return new MPRModifiableValue(json.getAsJsonObject().get("value").getAsFloat(), context.deserialize(json.getAsJsonObject().get("difficulty_modifier"), MPRDifficultyModifier.class), context.deserialize(json.getAsJsonObject().get("pos_modifier"), MPRPosModifier.class), context.deserialize(json.getAsJsonObject().get("time_existed_modifier"), MPRTimeExistedModifier.class), context.deserialize(json.getAsJsonObject().get("round"), Integer.class));
 		}
 	}
 }

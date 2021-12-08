@@ -1,7 +1,6 @@
 package insane96mcp.mobspropertiesrandomness.json;
 
 import com.google.gson.annotations.SerializedName;
-import insane96mcp.insanelib.utils.LogHelper;
 import insane96mcp.mobspropertiesrandomness.exception.InvalidJsonException;
 import insane96mcp.mobspropertiesrandomness.json.utils.MPRPresets;
 import insane96mcp.mobspropertiesrandomness.setup.Strings;
@@ -91,7 +90,7 @@ public class MPRMob extends MPRProperties implements IMPRObject {
 			}
 		}
 
-		LogHelper.info("" + mobEntity.getHealth() + " " + mobEntity.getMaxHealth());
+		//LogHelper.info("" + mobEntity.getHealth() + " " + mobEntity.getMaxHealth());
 		tags.putBoolean(Strings.Tags.PROCESSED, true);
 	}
 

@@ -1,6 +1,7 @@
 # Changelog
 
 ## Upcoming
+* Added `time_existed_modifier` which increases modifiable values based off time played by nearby players (128 blocks)
 * Added `conditions` tag to mobs and presets. `spawner_behaviour` and `structure_behaviour` have been moved into `conditions`  
   Currently contains `is_baby` which checks if the mob is baby and `nbt` to check for raw nbt of the mob.  
   This also fixes presets counting as applied even if spawner or structure behaviour prevented the preset from applying.
