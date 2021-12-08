@@ -49,6 +49,7 @@ public class MPRConditions implements IMPRObject {
 		if (nbt != null) {
 			CompoundNBT mobNBT = new CompoundNBT();
 			mobEntity.addAdditionalSaveData(mobNBT);
+			mobNBT.put("ForgeData", mobEntity.getPersistentData());
 			result = MPRUtils.compareNBT(this._nbt, mobNBT);
 		}
 

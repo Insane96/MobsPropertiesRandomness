@@ -1,5 +1,8 @@
 # Changelog
 
+## Upcoming
+* Fixed nbt condition not working for ForgeData tag
+
 ## Alpha 3.2.0
 * Added `time_existed_modifier` which increases modifiable values based off time played by nearby players (128 blocks).  
   Has 3 modes:  
