@@ -1,13 +1,13 @@
 # Changelog
 
-## Upcoming
+## Alpha 3.2.0
 * Added `time_existed_modifier` which increases modifiable values based off time played by nearby players (128 blocks).  
   Has 3 modes:  
   * AVERAGE: Bonus is given by the average of all the nearby players' bonuses
   * SUM: Bonus is given by the sum of all the nearby players' bonuses
   * NEAREST: Bonus is given by the nearest player to the mob spawned
 * Added `conditions` tag to mobs and presets. `spawner_behaviour` and `structure_behaviour` have been moved into `conditions`.  
-  Currently contains `is_baby` which checks if the mob is baby and `nbt` to check for raw nbt of the mob.  
+  Currently, contains `is_baby` which checks if the mob is baby and `nbt` to check for raw nbt of the mob.  
   This also fixes presets counting as applied even if spawner or structure behaviour prevented the preset from applying
 * Added `loot_table` to set a mob's loot table. Pretty useful with presets
 * NBT for items is now parsed on load  
