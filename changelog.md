@@ -1,15 +1,16 @@
 # Changelog
 
 ## Upcoming
-* Added `time_existed_modifier` which increases modifiable values based off time played by nearby players (128 blocks)  
+* Added `time_existed_modifier` which increases modifiable values based off time played by nearby players (128 blocks).  
   Has 3 modes:  
   * AVERAGE: Bonus is given by the average of all the nearby players' bonuses
   * SUM: Bonus is given by the sum of all the nearby players' bonuses
   * NEAREST: Bonus is given by the nearest player to the mob spawned
-* Added `conditions` tag to mobs and presets. `spawner_behaviour` and `structure_behaviour` have been moved into `conditions`  
+* Added `conditions` tag to mobs and presets. `spawner_behaviour` and `structure_behaviour` have been moved into `conditions`.  
   Currently contains `is_baby` which checks if the mob is baby and `nbt` to check for raw nbt of the mob.  
-  This also fixes presets counting as applied even if spawner or structure behaviour prevented the preset from applying.
-* NBT for items is now parsed on load.  
+  This also fixes presets counting as applied even if spawner or structure behaviour prevented the preset from applying
+* Added `loot_table` to set a mob's loot table. Pretty useful with presets
+* NBT for items is now parsed on load  
   This should make the applying of items faster due to not having to parse the NBT each time an item is set 
 
 ## 3.1.3
@@ -93,7 +94,7 @@
 
 ## Alpha 3.0.1
 * Revamped Difficulty modifier
-The difficulty object is now `difficulty_modifier` containing a modifier for difficulty, for local difficulty and if should affect the max value only.  
+The difficulty object is now `difficulty_modifier` containing a modifier for difficulty, for local difficulty and if it should affect the max value only.  
 Weight Modifier now uses the `difficulty` object (`operation`, `easy`, `normal`, `hard`)  
 Chance and Attributes make use of the new `difficulty_modifier`
 * `override_vanilla` has been renamed to `override`

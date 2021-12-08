@@ -10,6 +10,7 @@ import insane96mcp.mobspropertiesrandomness.json.utils.MPRCustomName;
 import insane96mcp.mobspropertiesrandomness.json.utils.MPRModifiableValue;
 import insane96mcp.mobspropertiesrandomness.json.utils.attribute.MPRMobAttribute;
 import net.minecraft.entity.MobEntity;
+import net.minecraft.util.ResourceLocation;
 import net.minecraft.world.World;
 
 import java.io.File;
@@ -35,6 +36,9 @@ public abstract class MPRProperties implements IMPRObject {
 	public MPRPhantom phantom;
 
 	public MPRModifiableValue silent;
+
+	@SerializedName("loot_table")
+	public String lootTable;
 
 	@Override
 	public void validate(File file) throws InvalidJsonException {
@@ -72,6 +76,13 @@ public abstract class MPRProperties implements IMPRObject {
 
 		if (this.phantom != null)
 			this.phantom.validate(file);
+
+		if (this.lootTable != null) {
+			if (this.lootTable.equals(""))
+				throw new InvalidJsonException("\"loot_table\": \"\" is not valid. To use an empty loot_table use \"minecraft:empty\". " + this, file);
+			else if (ResourceLocation.tryParse(this.lootTable) == null)
+				throw new InvalidJsonException("\"loot_table\": \"" + this.lootTable + "\" is not valid. You must use a valid Resource Location (modid:loot_table_id). " + this, file);
+		}
 	}
 
 	public boolean apply(MobEntity mobEntity, World world) {
@@ -97,6 +108,10 @@ public abstract class MPRProperties implements IMPRObject {
 			this.ghast.apply(mobEntity, world);
 		if (this.phantom != null)
 			this.phantom.apply(mobEntity, world);
+
+		if (this.lootTable != null) {
+			mobEntity.lootTable = new ResourceLocation(this.lootTable);
+		}
 
 		return true;
 	}
