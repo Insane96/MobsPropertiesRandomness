@@ -1,7 +1,10 @@
 # Changelog
 
 ## Upcoming
+* Added `max_bonus_percentage` to `time_existed_modifier`
+* Fixed error when omitting the `max` value in a `range`
 * Fixed nbt condition not working for ForgeData tag
+* Fixed (again) errors not showing properly
 
 ## Alpha 3.2.0
 * Added `time_existed_modifier` which increases modifiable values based off time played by nearby players (128 blocks).  

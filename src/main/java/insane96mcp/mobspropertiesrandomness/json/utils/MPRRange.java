@@ -25,13 +25,14 @@ public class MPRRange extends MPRModifiable implements IMPRObject {
 	private Float min;
 	private Float max;
 
-	public MPRRange(float min, float max, @Nullable MPRDifficultyModifier difficultyModifier, @Nullable MPRPosModifier posModifier, @Nullable MPRTimeExistedModifier timeExistedModifier, @Nullable Integer round) {
+	public MPRRange(float min, @Nullable Float max, @Nullable MPRDifficultyModifier difficultyModifier, @Nullable MPRPosModifier posModifier, @Nullable MPRTimeExistedModifier timeExistedModifier, @Nullable Integer round) {
 		super(difficultyModifier, posModifier, timeExistedModifier, round);
 		this.min = min;
-		this.max = Math.max(min, max);
+		if (max != null)
+			this.max = Math.max(min, max);
 	}
 
-	public MPRRange(float min, float max) {
+	public MPRRange(float min, @Nullable Float max) {
 		this(min, max, null, null, null, null);
 	}
 
@@ -108,7 +109,7 @@ public class MPRRange extends MPRModifiable implements IMPRObject {
 		public MPRRange deserialize(JsonElement json, Type typeOfT, JsonDeserializationContext context) throws JsonParseException {
 			if (json.isJsonPrimitive())
 				return new MPRRange(json.getAsFloat());
-			return new MPRRange(json.getAsJsonObject().get("min").getAsFloat(), json.getAsJsonObject().get("max").getAsFloat(), context.deserialize(json.getAsJsonObject().get("difficulty_modifier"), MPRDifficultyModifier.class), context.deserialize(json.getAsJsonObject().get("pos_modifier"), MPRPosModifier.class), context.deserialize(json.getAsJsonObject().get("time_existed_modifier"), MPRTimeExistedModifier.class), context.deserialize(json.getAsJsonObject().get("round"), Integer.class));
+			return new MPRRange(json.getAsJsonObject().get("min").getAsFloat(), context.deserialize(json.getAsJsonObject().get("max"), Float.class), context.deserialize(json.getAsJsonObject().get("difficulty_modifier"), MPRDifficultyModifier.class), context.deserialize(json.getAsJsonObject().get("pos_modifier"), MPRPosModifier.class), context.deserialize(json.getAsJsonObject().get("time_existed_modifier"), MPRTimeExistedModifier.class), context.deserialize(json.getAsJsonObject().get("round"), Integer.class));
 		}
 	}
 }

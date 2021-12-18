@@ -18,6 +18,8 @@ public class MPRTimeExistedModifier implements IMPRObject {
 	@SerializedName("bonus_percentage")
 	public Double bonusPercentage;
 	public Integer seconds;
+	@SerializedName("max_bonus_percentage")
+	public Double maxBonusPercentage;
 	public Mode mode;
 
 	public MPRTimeExistedModifier() {
@@ -47,6 +49,9 @@ public class MPRTimeExistedModifier implements IMPRObject {
 		if (this.mode == Mode.AVERAGE)
 			bonus /= players.size();
 
+		if (this.maxBonusPercentage != null)
+			bonus = Math.min(bonus, this.maxBonusPercentage);
+
 		value += bonus * value;
 
 		return value;
@@ -54,7 +59,7 @@ public class MPRTimeExistedModifier implements IMPRObject {
 
 	@Override
 	public String toString() {
-		return String.format("TimeExistedModifier{affects_max_only: %b, bonus_percentage: %s, seconds: %s}", affectsMaxOnly, bonusPercentage, seconds);
+		return String.format("TimeExistedModifier{affects_max_only: %b, bonus_percentage: %s, seconds: %s, max_bonus_percentage: %s, mode: %s}", affectsMaxOnly, bonusPercentage, seconds, maxBonusPercentage, mode);
 	}
 
 	public enum Mode {

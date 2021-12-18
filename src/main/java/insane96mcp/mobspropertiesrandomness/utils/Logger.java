@@ -54,4 +54,15 @@ public class Logger {
 		WARN,
 		ERROR
 	}
+
+	public static String getStackTrace(Exception e) {
+		StringBuilder r = new StringBuilder();
+		r.append(e.toString());
+		r.append("\r\n");
+		StackTraceElement[] trace = e.getStackTrace();
+		for (StackTraceElement traceElement : trace)
+			r.append("\tat ").append(traceElement).append("\r\n");
+
+		return r.toString();
+	}
 }
