@@ -9,6 +9,7 @@ import insane96mcp.mobspropertiesrandomness.setup.Strings;
 import net.minecraft.entity.SpawnReason;
 import net.minecraftforge.common.ForgeConfigSpec;
 import net.minecraftforge.event.entity.EntityJoinWorldEvent;
+import net.minecraftforge.event.entity.living.LivingExperienceDropEvent;
 import net.minecraftforge.event.entity.living.LivingSpawnEvent;
 import net.minecraftforge.eventbus.api.EventPriority;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
@@ -47,13 +48,9 @@ public class BaseFeature extends Feature {
 			event.getEntityLiving().getPersistentData().putBoolean(Strings.Tags.SPAWNED_FROM_STRUCTURE, true);
 	}
 
-	/*@SubscribeEvent(priority = EventPriority.LOWEST)
-	public void onEntitySize(EntityEvent.Size event) {
-		if (event.getEntity() instanceof CreeperEntity) {
-			event.setNewSize(new EntitySize(0.3f, 0.85f, false));
-			event.setNewEyeHeight(event.getNewEyeHeight() / 2f);
-			CreeperEntity creeper = (CreeperEntity) event.getEntity();
-			creeper
-		}
-	}*/
+	@SubscribeEvent
+	public void onExperienceDrop(LivingExperienceDropEvent event) {
+		if (event.getEntityLiving().getPersistentData().contains(Strings.Tags.EXPERIENCE_MULTIPLIER))
+			event.setDroppedExperience((int) (event.getDroppedExperience() * event.getEntityLiving().getPersistentData().getDouble(Strings.Tags.EXPERIENCE_MULTIPLIER)));
+	}
 }

@@ -9,6 +9,7 @@ import insane96mcp.mobspropertiesrandomness.json.utils.MPRConditions;
 import insane96mcp.mobspropertiesrandomness.json.utils.MPRCustomName;
 import insane96mcp.mobspropertiesrandomness.json.utils.MPRModifiableValue;
 import insane96mcp.mobspropertiesrandomness.json.utils.attribute.MPRMobAttribute;
+import insane96mcp.mobspropertiesrandomness.setup.Strings;
 import net.minecraft.entity.MobEntity;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.world.World;
@@ -36,6 +37,9 @@ public abstract class MPRProperties implements IMPRObject {
 	public MPRPhantom phantom;
 
 	public MPRModifiableValue silent;
+
+	@SerializedName("experience_multiplier")
+	public MPRModifiableValue experienceMultiplier;
 
 	@SerializedName("loot_table")
 	public String lootTable;
@@ -66,6 +70,9 @@ public abstract class MPRProperties implements IMPRObject {
 
 		if (this.silent != null)
 			this.silent.validate(file);
+
+		if (this.experienceMultiplier != null)
+			this.experienceMultiplier.validate(file);
 
 		//Mob specific validations
 		if (this.creeper != null)
@@ -101,6 +108,9 @@ public abstract class MPRProperties implements IMPRObject {
 
 		if (this.silent != null && world.random.nextDouble() < this.silent.getValue(mobEntity, world))
 			mobEntity.setSilent(true);
+
+		if (this.experienceMultiplier != null)
+			mobEntity.getPersistentData().putDouble(Strings.Tags.EXPERIENCE_MULTIPLIER, this.experienceMultiplier.getValue(mobEntity, world));
 
 		if (this.creeper != null)
 			this.creeper.apply(mobEntity, world);

@@ -1,5 +1,8 @@
 # Changelog
 
+## Upcoming
+* Added `experience_multiplier`
+
 ## Alpha 3.2.1
 * Added `max_bonus_percentage` to `time_existed_modifier`
 * Fixed error when omitting the `max` value in a `range`
