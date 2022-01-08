@@ -7,7 +7,7 @@ import insane96mcp.mobspropertiesrandomness.json.IMPRObject;
 import net.minecraft.enchantment.Enchantment;
 import net.minecraft.enchantment.EnchantmentData;
 import net.minecraft.enchantment.EnchantmentHelper;
-import net.minecraft.entity.MobEntity;
+import net.minecraft.entity.LivingEntity;
 import net.minecraft.item.EnchantedBookItem;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.Items;
@@ -49,7 +49,7 @@ public class MPREnchantment implements IMPRObject {
 			this.chance.validate(file);
 	}
 
-	public void applyToStack(MobEntity entity, World world, ItemStack itemStack) {
+	public void applyToStack(LivingEntity entity, World world, ItemStack itemStack) {
 		if (this.chance != null && world.random.nextFloat() >= this.chance.getValue(entity, world))
 			return;
 

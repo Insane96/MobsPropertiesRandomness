@@ -3,7 +3,7 @@ package insane96mcp.mobspropertiesrandomness.json.utils.attribute;
 import insane96mcp.insanelib.utils.MCUtils;
 import insane96mcp.mobspropertiesrandomness.exception.InvalidJsonException;
 import insane96mcp.mobspropertiesrandomness.json.IMPRObject;
-import net.minecraft.entity.MobEntity;
+import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.ai.attributes.Attribute;
 import net.minecraft.entity.ai.attributes.AttributeModifier;
 import net.minecraft.inventory.EquipmentSlotType;
@@ -22,7 +22,7 @@ public class MPRItemAttribute extends MPRAttribute implements IMPRObject {
 		super.validate(file);
 	}
 
-	public void applyToStack(MobEntity entity, World world, ItemStack itemStack, EquipmentSlotType equipmentSlotType) {
+	public void applyToStack(LivingEntity entity, World world, ItemStack itemStack, EquipmentSlotType equipmentSlotType) {
 		if (!this.shouldApply(entity, world))
 			return;
 

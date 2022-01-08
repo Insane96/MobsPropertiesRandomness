@@ -6,7 +6,7 @@ import insane96mcp.mobspropertiesrandomness.json.utils.MPRModifiableValue;
 import insane96mcp.mobspropertiesrandomness.json.utils.MPRRange;
 import insane96mcp.mobspropertiesrandomness.json.utils.MPRWorldWhitelist;
 import insane96mcp.mobspropertiesrandomness.utils.Logger;
-import net.minecraft.entity.MobEntity;
+import net.minecraft.entity.LivingEntity;
 import net.minecraft.potion.Effect;
 import net.minecraft.potion.EffectInstance;
 import net.minecraft.util.ResourceLocation;
@@ -24,6 +24,8 @@ public class MPRPotionEffect implements IMPRObject, IMPRAppliable {
 	public boolean ambient;
 	@SerializedName("hide_particles")
 	public boolean hideParticles;
+
+	public Integer duration;
 
 	@SerializedName("world_whitelist")
 	public MPRWorldWhitelist worldWhitelist;
@@ -46,6 +48,9 @@ public class MPRPotionEffect implements IMPRObject, IMPRAppliable {
 		if (chance != null)
 			chance.validate(file);
 
+		if (this.duration == null)
+			this.duration = Integer.MAX_VALUE;
+
 		//ambient and hide particles
 		if (ambient && hideParticles)
 			Logger.info("Particles are hidden, but ambient is enabled. Ambient doesn't work if particles are hidden. " + this);
@@ -54,23 +59,23 @@ public class MPRPotionEffect implements IMPRObject, IMPRAppliable {
 			worldWhitelist.validate(file);
 	}
 
-	public void apply(MobEntity entity, World world) {
+	public void apply(LivingEntity entity, World world) {
 		if (world.isClientSide)
 			return;
 
 		if (this.chance != null && world.random.nextFloat() >= this.chance.getValue(entity, world))
 			return;
 
-		if (worldWhitelist != null && worldWhitelist.isWhitelisted(entity))
+		if (this.worldWhitelist != null && this.worldWhitelist.isWhitelisted(entity))
 			return;
 
 		Effect effect = ForgeRegistries.POTIONS.getValue(new ResourceLocation(this.id));
-		EffectInstance effectInstance = new EffectInstance(effect, 1000000, this.amplifier.getIntBetween(entity, world), this.ambient, !this.hideParticles, false);
+		EffectInstance effectInstance = new EffectInstance(effect, this.duration * 20, this.amplifier.getIntBetween(entity, world), this.ambient, !this.hideParticles, false);
 		entity.addEffect(effectInstance);
 	}
 
 	@Override
 	public String toString() {
-		return String.format("PotionEffect{id: %s, amplifier: %s, chance: %s, ambient: %s, hide_particles: %s, world_whitelist: %s}", id, amplifier, chance, ambient, hideParticles, worldWhitelist);
+		return String.format("PotionEffect{id: %s, amplifier: %s, chance: %s, duration: %s, ambient: %s, hide_particles: %s, world_whitelist: %s}", id, amplifier, chance, duration, ambient, hideParticles, worldWhitelist);
 	}
 }

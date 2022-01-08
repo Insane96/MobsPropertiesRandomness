@@ -9,7 +9,9 @@ import insane96mcp.mobspropertiesrandomness.json.utils.MPRConditions;
 import insane96mcp.mobspropertiesrandomness.json.utils.MPRCustomName;
 import insane96mcp.mobspropertiesrandomness.json.utils.MPRModifiableValue;
 import insane96mcp.mobspropertiesrandomness.json.utils.attribute.MPRMobAttribute;
+import insane96mcp.mobspropertiesrandomness.json.utils.onhit.MPROnHitEffects;
 import insane96mcp.mobspropertiesrandomness.setup.Strings;
+import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.MobEntity;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.world.World;
@@ -28,6 +30,9 @@ public abstract class MPRProperties implements IMPRObject {
 	public List<MPRMobAttribute> attributes;
 
 	public MPREquipment equipment;
+
+	@SerializedName("on_hit_effects")
+	public MPROnHitEffects onHitEffects;
 
 	@SerializedName("custom_name")
 	public MPRCustomName customName;
@@ -65,6 +70,9 @@ public abstract class MPRProperties implements IMPRObject {
 			this.equipment = new MPREquipment();
 		this.equipment.validate(file);
 
+		if (this.onHitEffects != null)
+			this.onHitEffects.validate(file);
+
 		if (this.customName != null)
 			this.customName.validate(file);
 
@@ -92,35 +100,38 @@ public abstract class MPRProperties implements IMPRObject {
 		}
 	}
 
-	public boolean apply(MobEntity mobEntity, World world) {
-		if (this.conditions != null && !this.conditions.conditionsApply(mobEntity))
+	public boolean apply(LivingEntity livingEntity, World world) {
+		if (this.conditions != null && !this.conditions.conditionsApply(livingEntity))
 			return false;
 		for (MPRPotionEffect potionEffect : this.potionEffects) {
-			potionEffect.apply(mobEntity, world);
+			potionEffect.apply(livingEntity, world);
 		}
 		for (MPRMobAttribute attribute : this.attributes) {
-			attribute.apply(mobEntity, world);
+			attribute.apply(livingEntity, world);
 		}
-		this.equipment.apply(mobEntity, world);
+		this.equipment.apply(livingEntity, world);
+
+		if (this.onHitEffects != null)
+			this.onHitEffects.addToNBT(livingEntity);
 
 		if (this.customName != null)
-			this.customName.applyCustomName(mobEntity, world);
+			this.customName.applyCustomName(livingEntity, world);
 
-		if (this.silent != null && world.random.nextDouble() < this.silent.getValue(mobEntity, world))
-			mobEntity.setSilent(true);
+		if (this.silent != null && world.random.nextDouble() < this.silent.getValue(livingEntity, world))
+			livingEntity.setSilent(true);
 
 		if (this.experienceMultiplier != null)
-			mobEntity.getPersistentData().putDouble(Strings.Tags.EXPERIENCE_MULTIPLIER, this.experienceMultiplier.getValue(mobEntity, world));
+			livingEntity.getPersistentData().putDouble(Strings.Tags.EXPERIENCE_MULTIPLIER, this.experienceMultiplier.getValue(livingEntity, world));
 
 		if (this.creeper != null)
-			this.creeper.apply(mobEntity, world);
+			this.creeper.apply(livingEntity, world);
 		if (this.ghast != null)
-			this.ghast.apply(mobEntity, world);
+			this.ghast.apply(livingEntity, world);
 		if (this.phantom != null)
-			this.phantom.apply(mobEntity, world);
+			this.phantom.apply(livingEntity, world);
 
-		if (this.lootTable != null) {
-			mobEntity.lootTable = new ResourceLocation(this.lootTable);
+		if (this.lootTable != null && livingEntity instanceof MobEntity) {
+			((MobEntity) livingEntity).lootTable = new ResourceLocation(this.lootTable);
 		}
 
 		return true;

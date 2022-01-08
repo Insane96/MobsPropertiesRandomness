@@ -1,14 +1,18 @@
 package insane96mcp.mobspropertiesrandomness.module.base.feature;
 
+import com.google.gson.Gson;
 import insane96mcp.insanelib.base.Feature;
 import insane96mcp.insanelib.base.Label;
 import insane96mcp.insanelib.base.Module;
 import insane96mcp.mobspropertiesrandomness.json.MPRMob;
+import insane96mcp.mobspropertiesrandomness.json.utils.onhit.MPROnHitEffects;
 import insane96mcp.mobspropertiesrandomness.setup.Config;
 import insane96mcp.mobspropertiesrandomness.setup.Strings;
+import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.SpawnReason;
 import net.minecraftforge.common.ForgeConfigSpec;
 import net.minecraftforge.event.entity.EntityJoinWorldEvent;
+import net.minecraftforge.event.entity.living.LivingAttackEvent;
 import net.minecraftforge.event.entity.living.LivingExperienceDropEvent;
 import net.minecraftforge.event.entity.living.LivingSpawnEvent;
 import net.minecraftforge.eventbus.api.EventPriority;
@@ -35,7 +39,7 @@ public class BaseFeature extends Feature {
 		this.debug = this.debugConfig.get();
 	}
 
-	@SubscribeEvent(priority = EventPriority.LOWEST)
+	@SubscribeEvent(priority = EventPriority.LOW)
 	public void onEntityJoinWorld(EntityJoinWorldEvent event) {
 		MPRMob.apply(event);
 	}
@@ -52,5 +56,36 @@ public class BaseFeature extends Feature {
 	public void onExperienceDrop(LivingExperienceDropEvent event) {
 		if (event.getEntityLiving().getPersistentData().contains(Strings.Tags.EXPERIENCE_MULTIPLIER))
 			event.setDroppedExperience((int) (event.getDroppedExperience() * event.getEntityLiving().getPersistentData().getDouble(Strings.Tags.EXPERIENCE_MULTIPLIER)));
+	}
+
+	@SubscribeEvent
+	public void onHit(LivingAttackEvent event) {
+		if (!(event.getSource().getEntity() instanceof LivingEntity))
+			return;
+
+		attacker(event);
+		attacked(event);
+	}
+
+	private void attacker(LivingAttackEvent event) {
+		LivingEntity attacker = (LivingEntity) event.getSource().getEntity();
+		if (!attacker.getPersistentData().contains(Strings.Tags.ON_HIT_EFFECTS))
+			return;
+
+		//TODO Validate the MPROnHitEffects as if invalid can crash the game
+		MPROnHitEffects onHitEffects = new Gson().fromJson(attacker.getPersistentData().getString(Strings.Tags.ON_HIT_EFFECTS), MPROnHitEffects.class);
+
+		onHitEffects.applyOnAttack(attacker, event.getEntityLiving());
+	}
+
+	private void attacked(LivingAttackEvent event) {
+		LivingEntity attacked = event.getEntityLiving();
+		if (!attacked.getPersistentData().contains(Strings.Tags.ON_HIT_EFFECTS))
+			return;
+
+		//TODO Validate the MPROnHitEffects as if invalid can crash the game
+		MPROnHitEffects onHitEffects = new Gson().fromJson(attacked.getPersistentData().getString(Strings.Tags.ON_HIT_EFFECTS), MPROnHitEffects.class);
+
+		onHitEffects.applyOnAttacked(attacked, (LivingEntity) event.getSource().getEntity());
 	}
 }

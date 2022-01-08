@@ -2,7 +2,7 @@ package insane96mcp.mobspropertiesrandomness.json.utils;
 
 import insane96mcp.mobspropertiesrandomness.exception.InvalidJsonException;
 import insane96mcp.mobspropertiesrandomness.json.IMPRObject;
-import net.minecraft.entity.MobEntity;
+import net.minecraft.entity.LivingEntity;
 import net.minecraft.util.text.StringTextComponent;
 import net.minecraft.world.World;
 
@@ -20,7 +20,7 @@ public class MPRCustomName implements IMPRObject {
 			chance.validate(file);
 	}
 
-	public void applyCustomName(MobEntity entity, World world) {
+	public void applyCustomName(LivingEntity entity, World world) {
 		if (this.chance != null && world.random.nextDouble() >= this.chance.getValue(entity, world))
 			return;
 

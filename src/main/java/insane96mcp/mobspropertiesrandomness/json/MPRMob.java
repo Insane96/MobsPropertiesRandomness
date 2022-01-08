@@ -7,7 +7,7 @@ import insane96mcp.mobspropertiesrandomness.setup.Strings;
 import insane96mcp.mobspropertiesrandomness.utils.Logger;
 import insane96mcp.mobspropertiesrandomness.utils.MPRUtils;
 import net.minecraft.entity.Entity;
-import net.minecraft.entity.MobEntity;
+import net.minecraft.entity.LivingEntity;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.world.World;
@@ -57,34 +57,34 @@ public class MPRMob extends MPRProperties implements IMPRObject {
 		if (world.isClientSide)
 			return;
 
-		if (!(entity instanceof MobEntity))
+		if (!(entity instanceof LivingEntity))
 			return;
 
-		MobEntity mobEntity = (MobEntity) entity;
+		LivingEntity livingEntity = (LivingEntity) entity;
 
-		CompoundNBT tags = mobEntity.getPersistentData();
+		CompoundNBT tags = livingEntity.getPersistentData();
 		boolean isAlreadyChecked = tags.getBoolean(Strings.Tags.PROCESSED);
 		if (isAlreadyChecked)
 			return;
 
 		for (MPRMob mprMob : MPR_MOBS) {
-			if (!MPRUtils.matchesEntity(mobEntity, mprMob))
+			if (!MPRUtils.matchesEntity(livingEntity, mprMob))
 				continue;
 			if (mprMob.presets == null)
-				mprMob.apply(mobEntity, world);
+				mprMob.apply(livingEntity, world);
 			else {
 				switch (mprMob.presets.mode) {
 					case EXCLUSIVE:
-						if (!mprMob.presets.apply(mobEntity, world))
-							mprMob.apply(mobEntity, world);
+						if (!mprMob.presets.apply(livingEntity, world))
+							mprMob.apply(livingEntity, world);
 						break;
 					case BEFORE:
-						mprMob.presets.apply(mobEntity, world);
-						mprMob.apply(mobEntity, world);
+						mprMob.presets.apply(livingEntity, world);
+						mprMob.apply(livingEntity, world);
 						break;
 					case AFTER:
-						mprMob.apply(mobEntity, world);
-						mprMob.presets.apply(mobEntity, world);
+						mprMob.apply(livingEntity, world);
+						mprMob.presets.apply(livingEntity, world);
 						break;
 				}
 			}

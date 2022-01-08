@@ -6,6 +6,7 @@ import insane96mcp.mobspropertiesrandomness.json.utils.MPREnchantment;
 import insane96mcp.mobspropertiesrandomness.json.utils.MPRItem;
 import insane96mcp.mobspropertiesrandomness.json.utils.MPRSlot;
 import insane96mcp.mobspropertiesrandomness.json.utils.attribute.MPRItemAttribute;
+import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.MobEntity;
 import net.minecraft.inventory.EquipmentSlotType;
 import net.minecraft.item.ItemStack;
@@ -43,7 +44,7 @@ public class MPREquipment implements IMPRObject, IMPRAppliable {
 	}
 
 	@Override
-	public void apply(MobEntity entity, World world) {
+	public void apply(LivingEntity entity, World world) {
 		if (world.isClientSide)
 			return;
 
@@ -55,7 +56,7 @@ public class MPREquipment implements IMPRObject, IMPRAppliable {
 		applyEquipmentToSlot(entity, world, this.offHand, EquipmentSlotType.OFFHAND);
 	}
 
-	private void applyEquipmentToSlot(MobEntity entity, World world, MPRSlot slot, EquipmentSlotType equipmentSlotType) {
+	private void applyEquipmentToSlot(LivingEntity entity, World world, MPRSlot slot, EquipmentSlotType equipmentSlotType) {
 		if (slot == null)
 			return;
 
@@ -91,8 +92,8 @@ public class MPREquipment implements IMPRObject, IMPRAppliable {
 		entity.setItemSlot(equipmentSlotType, itemStack);
 
 		//Drop Chance
-		if (choosenItem.dropChance != null)
-			entity.setDropChance(equipmentSlotType, choosenItem.dropChance.getValue(entity, world));
+		if (choosenItem.dropChance != null && entity instanceof MobEntity)
+			((MobEntity) entity).setDropChance(equipmentSlotType, choosenItem.dropChance.getValue(entity, world));
 
 	}
 

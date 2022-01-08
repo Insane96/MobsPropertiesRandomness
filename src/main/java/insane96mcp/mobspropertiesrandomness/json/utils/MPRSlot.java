@@ -5,7 +5,7 @@ import insane96mcp.mobspropertiesrandomness.exception.InvalidJsonException;
 import insane96mcp.mobspropertiesrandomness.json.IMPRObject;
 import insane96mcp.mobspropertiesrandomness.utils.Logger;
 import insane96mcp.mobspropertiesrandomness.utils.weightedrandom.WeightedRandom;
-import net.minecraft.entity.MobEntity;
+import net.minecraft.entity.LivingEntity;
 import net.minecraft.world.World;
 
 import java.io.File;
@@ -41,7 +41,7 @@ public class MPRSlot implements IMPRObject {
 		}
 	}
 
-	private List<MPRItem> getItems(MobEntity entity, World world){
+	private List<MPRItem> getItems(LivingEntity entity, World world){
 		ArrayList<MPRItem> items = new ArrayList<>();
 		for (MPRItem item : this.items) {
 			MPRItem mprItem = item.computeAndGet(entity, world);
@@ -57,7 +57,7 @@ public class MPRSlot implements IMPRObject {
 	 * @param world
 	 * @return an Item or null if no items were available
 	 */
-	public MPRItem getRandomItem(MobEntity entity, World world) {
+	public MPRItem getRandomItem(LivingEntity entity, World world) {
 		List<MPRItem> items = getItems(entity, world);
 		if (items.isEmpty())
 			return null;

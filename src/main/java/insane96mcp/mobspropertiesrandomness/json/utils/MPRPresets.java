@@ -4,7 +4,7 @@ import insane96mcp.mobspropertiesrandomness.exception.InvalidJsonException;
 import insane96mcp.mobspropertiesrandomness.json.IMPRObject;
 import insane96mcp.mobspropertiesrandomness.json.MPRPreset;
 import insane96mcp.mobspropertiesrandomness.utils.weightedrandom.WeightedRandom;
-import net.minecraft.entity.MobEntity;
+import net.minecraft.entity.LivingEntity;
 import net.minecraft.world.World;
 
 import javax.annotation.Nullable;
@@ -30,7 +30,7 @@ public class MPRPresets implements IMPRObject {
 			throw new InvalidJsonException("Missing list in Presets. " + this, file);
 	}
 
-	public boolean apply(MobEntity entity, World world) {
+	public boolean apply(LivingEntity entity, World world) {
 		if (this.chance != null && world.random.nextDouble() >= this.chance.getValue(entity, world))
 			return false;
 
@@ -46,7 +46,7 @@ public class MPRPresets implements IMPRObject {
 		return false;
 	}
 
-	private List<MPRWeightedPreset> getPresets(MobEntity entity, World world){
+	private List<MPRWeightedPreset> getPresets(LivingEntity entity, World world){
 		ArrayList<MPRWeightedPreset> weightedPresets = new ArrayList<>();
 		for (MPRWeightedPreset weightedPreset : this.list) {
 			MPRWeightedPreset mprWeightedPreset = weightedPreset.computeAndGet(entity, world);
@@ -63,7 +63,7 @@ public class MPRPresets implements IMPRObject {
 	 * @return a WeightedPreset or null if no items were available
 	 */
 	@Nullable
-	public MPRWeightedPreset getRandomPreset(MobEntity entity, World world) {
+	public MPRWeightedPreset getRandomPreset(LivingEntity entity, World world) {
 		List<MPRWeightedPreset> items = getPresets(entity, world);
 		if (items.isEmpty())
 			return null;

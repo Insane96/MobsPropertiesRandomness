@@ -3,7 +3,7 @@ package insane96mcp.mobspropertiesrandomness.json.utils.modifier;
 import com.google.gson.annotations.SerializedName;
 import insane96mcp.mobspropertiesrandomness.exception.InvalidJsonException;
 import insane96mcp.mobspropertiesrandomness.json.IMPRObject;
-import net.minecraft.entity.MobEntity;
+import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.player.ServerPlayerEntity;
 import net.minecraft.stats.Stats;
 import net.minecraft.world.World;
@@ -34,7 +34,7 @@ public class MPRTimeExistedModifier implements IMPRObject {
 			throw new InvalidJsonException("Time Existed Modifier is missing seconds. " + this, file);
 	}
 
-	public float applyModifier(World world, MobEntity entity, float value) {
+	public float applyModifier(World world, LivingEntity entity, float value) {
 		List<ServerPlayerEntity> players = new ArrayList<>();
 		if (this.mode == Mode.NEAREST)
 			players.add((ServerPlayerEntity) world.getNearestPlayer(entity, 128d));

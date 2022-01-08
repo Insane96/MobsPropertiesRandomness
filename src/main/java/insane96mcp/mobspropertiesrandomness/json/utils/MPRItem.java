@@ -6,7 +6,7 @@ import insane96mcp.mobspropertiesrandomness.exception.InvalidJsonException;
 import insane96mcp.mobspropertiesrandomness.json.IMPRObject;
 import insane96mcp.mobspropertiesrandomness.json.utils.attribute.MPRItemAttribute;
 import insane96mcp.mobspropertiesrandomness.utils.weightedrandom.IWeightedRandom;
-import net.minecraft.entity.MobEntity;
+import net.minecraft.entity.LivingEntity;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.nbt.JsonToNBT;
 import net.minecraft.util.ResourceLocation;
@@ -75,7 +75,7 @@ public class MPRItem implements IMPRObject, IWeightedRandom {
 	 * Returns this MPRItem with the weight calculated based off the modifiers, or null if the world whitelist doesn't match
 	 */
 	@Nullable
-	public MPRItem computeAndGet(MobEntity entity, World world) {
+	public MPRItem computeAndGet(LivingEntity entity, World world) {
 		if (worldWhitelist != null && !worldWhitelist.isWhitelisted(entity))
 			return null;
 

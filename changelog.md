@@ -1,7 +1,9 @@
 # Changelog
 
 ## Upcoming
+* Added `on_hit_effects`. An object that currently contains two objects: `on_attack` and `on_attacked`, both containing a target and a list of potion effects to apply either to the attacker or to the attacked. 
 * Added `experience_multiplier`
+* Added `duration` to PotionEffect, mostly used for on hit effects
 
 ## Alpha 3.2.1
 * Added `max_bonus_percentage` to `time_existed_modifier`

@@ -6,7 +6,7 @@ import insane96mcp.mobspropertiesrandomness.json.IMPRObject;
 import insane96mcp.mobspropertiesrandomness.json.MPRPreset;
 import insane96mcp.mobspropertiesrandomness.utils.Logger;
 import insane96mcp.mobspropertiesrandomness.utils.weightedrandom.IWeightedRandom;
-import net.minecraft.entity.MobEntity;
+import net.minecraft.entity.LivingEntity;
 import net.minecraft.world.World;
 
 import javax.annotation.Nullable;
@@ -51,7 +51,7 @@ public class MPRWeightedPreset implements IMPRObject, IWeightedRandom {
 	 * Returns this MPRWeightedPreset with the weight calculated based off the modifiers, or null if the world whitelist doesn't match
 	 */
 	@Nullable
-	public MPRWeightedPreset computeAndGet(MobEntity entity, World world) {
+	public MPRWeightedPreset computeAndGet(LivingEntity entity, World world) {
 		if (worldWhitelist != null && !worldWhitelist.isWhitelisted(entity))
 			return null;
 

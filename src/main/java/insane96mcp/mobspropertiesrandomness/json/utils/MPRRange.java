@@ -13,7 +13,7 @@ import insane96mcp.mobspropertiesrandomness.json.utils.modifier.MPRPosModifier;
 import insane96mcp.mobspropertiesrandomness.json.utils.modifier.MPRTimeExistedModifier;
 import insane96mcp.mobspropertiesrandomness.json.utils.modifier.difficulty.MPRDifficultyModifier;
 import insane96mcp.mobspropertiesrandomness.utils.Logger;
-import net.minecraft.entity.MobEntity;
+import net.minecraft.entity.LivingEntity;
 import net.minecraft.world.World;
 
 import javax.annotation.Nullable;
@@ -55,7 +55,7 @@ public class MPRRange extends MPRModifiable implements IMPRObject {
 		super.validate(file);
 	}
 
-	public float getMin(MobEntity entity, World world) {
+	public float getMin(LivingEntity entity, World world) {
 		float min = this.min;
 
 		if (this.difficultyModifier != null && !this.difficultyModifier.affectsMaxOnly)
@@ -70,7 +70,7 @@ public class MPRRange extends MPRModifiable implements IMPRObject {
 		return min;
 	}
 
-	public float getMax(MobEntity entity, World world) {
+	public float getMax(LivingEntity entity, World world) {
 		float max = this.max;
 
 		if (this.difficultyModifier != null)
@@ -88,14 +88,14 @@ public class MPRRange extends MPRModifiable implements IMPRObject {
 	/**
 	 * Returns a random float value between min and max
 	 */
-	public float getFloatBetween(MobEntity entity, World world) {
+	public float getFloatBetween(LivingEntity entity, World world) {
 		return this.round(RandomHelper.getFloat(world.random, this.getMin(entity, world), this.getMax(entity, world)));
 	}
 
 	/**
 	 * Returns a random int value between min and max
 	 */
-	public int getIntBetween(MobEntity entity, World world) {
+	public int getIntBetween(LivingEntity entity, World world) {
 		return RandomHelper.getInt(world.random, (int) this.getMin(entity, world), (int) this.getMax(entity, world) + 1);
 	}
 

@@ -4,7 +4,7 @@ import insane96mcp.mobspropertiesrandomness.exception.InvalidJsonException;
 import insane96mcp.mobspropertiesrandomness.json.IMPRAppliable;
 import insane96mcp.mobspropertiesrandomness.json.IMPRObject;
 import insane96mcp.mobspropertiesrandomness.utils.Logger;
-import net.minecraft.entity.MobEntity;
+import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.ai.attributes.Attribute;
 import net.minecraft.entity.ai.attributes.AttributeModifier;
 import net.minecraft.entity.ai.attributes.ModifiableAttributeInstance;
@@ -22,7 +22,7 @@ public class MPRMobAttribute extends MPRAttribute implements IMPRObject, IMPRApp
 	}
 
 	@Override
-	public void apply(MobEntity entity, World world) {
+	public void apply(LivingEntity entity, World world) {
 		if (!this.shouldApply(entity, world))
 			return;
 

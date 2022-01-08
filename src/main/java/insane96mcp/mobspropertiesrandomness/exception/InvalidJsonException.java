@@ -2,6 +2,7 @@ package insane96mcp.mobspropertiesrandomness.exception;
 
 import java.io.File;
 
+//TODO Probably scrap this
 public class InvalidJsonException extends Exception {
 	private final String message;
 	private final File file;

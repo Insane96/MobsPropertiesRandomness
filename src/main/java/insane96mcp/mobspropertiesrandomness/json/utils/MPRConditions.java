@@ -6,7 +6,7 @@ import insane96mcp.mobspropertiesrandomness.exception.InvalidJsonException;
 import insane96mcp.mobspropertiesrandomness.json.IMPRObject;
 import insane96mcp.mobspropertiesrandomness.setup.Strings;
 import insane96mcp.mobspropertiesrandomness.utils.MPRUtils;
-import net.minecraft.entity.MobEntity;
+import net.minecraft.entity.LivingEntity;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.nbt.JsonToNBT;
 
@@ -41,19 +41,19 @@ public class MPRConditions implements IMPRObject {
 		}
 	}
 
-	public boolean conditionsApply(MobEntity mobEntity) {
+	public boolean conditionsApply(LivingEntity livingEntity) {
 		boolean result = true;
 		if (isBaby != null)
-			result = (isBaby && mobEntity.isBaby()) || (!isBaby && !mobEntity.isBaby());
+			result = (isBaby && livingEntity.isBaby()) || (!isBaby && !livingEntity.isBaby());
 
 		if (nbt != null) {
 			CompoundNBT mobNBT = new CompoundNBT();
-			mobEntity.addAdditionalSaveData(mobNBT);
-			mobNBT.put("ForgeData", mobEntity.getPersistentData());
+			livingEntity.addAdditionalSaveData(mobNBT);
+			mobNBT.put("ForgeData", livingEntity.getPersistentData());
 			result = MPRUtils.compareNBT(this._nbt, mobNBT);
 		}
 
-		CompoundNBT mobPersistentData = mobEntity.getPersistentData();
+		CompoundNBT mobPersistentData = livingEntity.getPersistentData();
 		boolean spawnedFromSpawner = mobPersistentData.getBoolean(Strings.Tags.SPAWNED_FROM_SPAWNER);
 		boolean spawnedFromStructure = mobPersistentData.getBoolean(Strings.Tags.SPAWNED_FROM_STRUCTURE);
 		if ((!spawnedFromSpawner && this.spawnerBehaviour == SpawnerBehaviour.SPAWNER_ONLY) || (spawnedFromSpawner && this.spawnerBehaviour == SpawnerBehaviour.NATURAL_ONLY))

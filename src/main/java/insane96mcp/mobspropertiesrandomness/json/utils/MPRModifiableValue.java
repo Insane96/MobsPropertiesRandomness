@@ -11,7 +11,7 @@ import insane96mcp.mobspropertiesrandomness.json.utils.modifier.MPRModifiable;
 import insane96mcp.mobspropertiesrandomness.json.utils.modifier.MPRPosModifier;
 import insane96mcp.mobspropertiesrandomness.json.utils.modifier.MPRTimeExistedModifier;
 import insane96mcp.mobspropertiesrandomness.json.utils.modifier.difficulty.MPRDifficultyModifier;
-import net.minecraft.entity.MobEntity;
+import net.minecraft.entity.LivingEntity;
 import net.minecraft.world.World;
 
 import javax.annotation.Nullable;
@@ -39,7 +39,7 @@ public class MPRModifiableValue extends MPRModifiable implements IMPRObject {
 		super.validate(file);
 	}
 
-	public float getValue(MobEntity entity, World world) {
+	public float getValue(LivingEntity entity, World world) {
 		float value = this.value;
 
 		if (this.difficultyModifier != null)
