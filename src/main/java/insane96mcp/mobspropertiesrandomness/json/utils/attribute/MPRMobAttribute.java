@@ -33,7 +33,7 @@ public class MPRMobAttribute extends MPRAttribute implements IMPRObject, IMPRApp
 			return;
 		}
 
-		AttributeModifier modifier = new AttributeModifier(UUID.randomUUID(), this.modifierName, this.amount.getFloatBetween(entity, world), operation);
+		AttributeModifier modifier = new AttributeModifier(UUID.randomUUID(), this.modifierName, this.amount.getFloatBetween(entity, world), this.operation.get());
 		attributeInstance.addPermanentModifier(modifier);
 
 		this.fixHealth(entity);

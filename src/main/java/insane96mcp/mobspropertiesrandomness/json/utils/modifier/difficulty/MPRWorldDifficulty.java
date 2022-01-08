@@ -1,5 +1,6 @@
 package insane96mcp.mobspropertiesrandomness.json.utils.modifier.difficulty;
 
+import com.google.gson.annotations.SerializedName;
 import insane96mcp.mobspropertiesrandomness.exception.InvalidJsonException;
 import insane96mcp.mobspropertiesrandomness.json.IMPRObject;
 import net.minecraft.world.Difficulty;
@@ -68,7 +69,9 @@ public class MPRWorldDifficulty implements IMPRObject {
 	}
 
 	public enum Operation {
+		@SerializedName("add")
 		ADD,
+		@SerializedName("multiply")
 		MULTIPLY
 	}
 }

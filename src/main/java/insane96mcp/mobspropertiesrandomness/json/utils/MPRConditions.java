@@ -70,14 +70,20 @@ public class MPRConditions implements IMPRObject {
 	}
 
 	public enum SpawnerBehaviour {
+		@SerializedName("none")
 		NONE,
+		@SerializedName("spawner_only")
 		SPAWNER_ONLY,
+		@SerializedName("natural_only")
 		NATURAL_ONLY
 	}
 
 	public enum StructureBehaviour {
+		@SerializedName("none")
 		NONE,
+		@SerializedName("structure_only")
 		STRUCTURE_ONLY,
+		@SerializedName("natural_only")
 		NATURAL_ONLY
 	}
 }

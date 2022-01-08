@@ -1,5 +1,6 @@
 package insane96mcp.mobspropertiesrandomness.json.utils;
 
+import com.google.gson.annotations.SerializedName;
 import insane96mcp.mobspropertiesrandomness.exception.InvalidJsonException;
 import insane96mcp.mobspropertiesrandomness.json.IMPRObject;
 import insane96mcp.mobspropertiesrandomness.json.MPRPreset;
@@ -71,8 +72,11 @@ public class MPRPresets implements IMPRObject {
 	}
 
 	public enum Mode {
+		@SerializedName("exclusive")
 		EXCLUSIVE,
+		@SerializedName("before")
 		BEFORE,
+		@SerializedName("after")
 		AFTER
 	}
 

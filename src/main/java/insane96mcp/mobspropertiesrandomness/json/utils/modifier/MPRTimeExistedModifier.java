@@ -63,8 +63,11 @@ public class MPRTimeExistedModifier implements IMPRObject {
 	}
 
 	public enum Mode {
+		@SerializedName("average")
 		AVERAGE,
+		@SerializedName("sum")
 		SUM,
+		@SerializedName("nearest")
 		NEAREST
 	}
 }

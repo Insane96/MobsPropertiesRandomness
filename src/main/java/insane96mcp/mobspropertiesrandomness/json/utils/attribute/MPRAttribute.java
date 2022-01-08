@@ -21,7 +21,7 @@ public abstract class MPRAttribute implements IMPRObject {
 	@SerializedName("modifier_name")
 	public String modifierName;
 	public MPRRange amount;
-	public AttributeModifier.Operation operation;
+	public Operation operation;
 	public MPRModifiableValue chance;
 	@SerializedName("world_whitelist")
 	public MPRWorldWhitelist worldWhitelist;
@@ -76,5 +76,23 @@ public abstract class MPRAttribute implements IMPRObject {
 	@Override
 	public String toString() {
 		return String.format("Attribute{uuid: %s, id: %s, modifier_name: %s, amount: %s, operation: %s, world_whitelist: %s}", uuid, id, modifierName, amount, operation, worldWhitelist);
+	}
+
+	public enum Operation {
+		@SerializedName("addition")
+		ADDITION(AttributeModifier.Operation.ADDITION),
+		@SerializedName("multiply_base")
+		MULTIPLY_BASE(AttributeModifier.Operation.MULTIPLY_BASE),
+		@SerializedName("multiply_total")
+		MULTIPLY_TOTAL(AttributeModifier.Operation.MULTIPLY_TOTAL);
+
+		AttributeModifier.Operation operation;
+		public AttributeModifier.Operation get() {
+			return this.operation;
+		}
+
+		private Operation(AttributeModifier.Operation operation) {
+			this.operation = operation;
+		}
 	}
 }
