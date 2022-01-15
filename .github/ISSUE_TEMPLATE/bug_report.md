@@ -28,5 +28,5 @@ E.g. https://pastebin.com/1AbCDEFG
 **Config Folder**:  
 E.g. MobsPropertiesRandomness.zip
 
-**Can be reproduced with Mobs Properties Randomness + InsaneLib only?**:  
+**Can be reproduced with Mobs Properties Randomness only? (InsaneLib is mandatory in 1.16+)**:  
 Yes/No
