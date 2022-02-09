@@ -49,7 +49,7 @@ public class MPRPotionEffect implements IMPRObject, IMPRAppliable {
 			chance.validate(file);
 
 		if (this.duration == null)
-			this.duration = Integer.MAX_VALUE;
+			this.duration = Integer.MAX_VALUE / 20;
 
 		//ambient and hide particles
 		if (ambient && hideParticles)

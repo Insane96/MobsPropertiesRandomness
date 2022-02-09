@@ -1,5 +1,8 @@
 # Changelog
 
+## Upcoming
+* Fixed potion effects no longer applying
+
 ## Beta 3.2.2
 * All the enum values (such as Attribute's ADDITION, MULTIPLY_BASE, etc.) are now all lowercase
 * Added `on_hit_effects`. An object that currently contains two objects: `on_attack` and `on_attacked`, both containing a target and a list of potion effects to apply either to the mob or to the "other"

@@ -16,6 +16,7 @@ public class MPRConditions implements IMPRObject {
 
 	@SerializedName("is_baby")
 	public Boolean isBaby;
+	//TODO Change these two to be like isBaby, without the need of a enum
 	@SerializedName("spawner_behaviour")
 	public SpawnerBehaviour spawnerBehaviour;
 	@SerializedName("structure_behaviour")
