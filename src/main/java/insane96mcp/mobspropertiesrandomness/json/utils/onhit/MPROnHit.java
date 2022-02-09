@@ -11,11 +11,16 @@ import java.util.List;
 
 public class MPROnHit implements IMPRObject {
 
-	//TODO Conditions such as mobs only attack and health remaining
 	@SerializedName("potion_effects")
 	public List<MPRPotionEffect> potionEffects;
 
 	public Target target;
+
+	@SerializedName("damage_type")
+	public DamageType damageType;
+
+	@SerializedName("health_left")
+	public Double healthLeft;
 
 	@Override
 	public void validate(File file) throws InvalidJsonException {
@@ -25,18 +30,31 @@ public class MPROnHit implements IMPRObject {
 		if (potionEffects == null)
 			throw new InvalidJsonException("Missing potion_effects for OnHit object: " + this, file);
 		else
-			for (MPRPotionEffect potionEffect : this.potionEffects) {
+			for (MPRPotionEffect potionEffect : this.potionEffects)
 				potionEffect.validate(file);
-			}
 	}
 
-	public void apply(LivingEntity entity, LivingEntity other) {
+	public void apply(LivingEntity entity, LivingEntity other, float damage, boolean isDirectDamage) {
+		if (this.damageType != null && ((isDirectDamage && this.damageType == DamageType.INDIRECT) || (!isDirectDamage && this.damageType == DamageType.DIRECT)))
+			return;
 		if (this.target == Target.ENTITY) {
+			if (this.healthLeft != null) {
+				float health = (entity.getHealth() - damage) / entity.getMaxHealth();
+				if (health > this.healthLeft || health <= 0f)
+					return;
+			}
+
 			for (MPRPotionEffect potionEffect : this.potionEffects) {
 				potionEffect.apply(entity, entity.level);
 			}
 		}
 		else if (this.target == Target.OTHER) {
+			if (this.healthLeft != null) {
+				float health = (other.getHealth() - damage) / other.getMaxHealth();
+				if (health > this.healthLeft || health <= 0f)
+					return;
+			}
+
 			for (MPRPotionEffect potionEffect : this.potionEffects) {
 				potionEffect.apply(other, other.level);
 			}
@@ -48,6 +66,13 @@ public class MPROnHit implements IMPRObject {
 		ENTITY,
 		@SerializedName("other")
 		OTHER
+	}
+
+	public enum DamageType {
+		@SerializedName("direct")
+		DIRECT,
+		@SerializedName("indirect")
+		INDIRECT
 	}
 
 	@Override

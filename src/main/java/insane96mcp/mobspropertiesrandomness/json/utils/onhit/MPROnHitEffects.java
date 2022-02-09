@@ -30,14 +30,14 @@ public class MPROnHitEffects implements IMPRObject {
 		entity.getPersistentData().putString(Strings.Tags.ON_HIT_EFFECTS, new Gson().toJson(this));
 	}
 
-	public void applyOnAttack(LivingEntity entity, LivingEntity other) {
+	public void applyOnAttack(LivingEntity entity, LivingEntity other, float damage, boolean isDirectDamage) {
 		if (this.onAttack != null)
-			this.onAttack.apply(entity, other);
+			this.onAttack.apply(entity, other, damage, isDirectDamage);
 	}
 
-	public void applyOnAttacked(LivingEntity entity, LivingEntity other) {
+	public void applyOnAttacked(LivingEntity entity, LivingEntity other, float damage, boolean isDirectDamage) {
 		if (this.onAttacked != null)
-			this.onAttacked.apply(entity, other);
+			this.onAttacked.apply(entity, other, damage, isDirectDamage);
 	}
 
 	@Override

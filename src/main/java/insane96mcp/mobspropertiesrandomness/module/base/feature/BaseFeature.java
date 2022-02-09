@@ -12,7 +12,7 @@ import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.SpawnReason;
 import net.minecraftforge.common.ForgeConfigSpec;
 import net.minecraftforge.event.entity.EntityJoinWorldEvent;
-import net.minecraftforge.event.entity.living.LivingAttackEvent;
+import net.minecraftforge.event.entity.living.LivingDamageEvent;
 import net.minecraftforge.event.entity.living.LivingExperienceDropEvent;
 import net.minecraftforge.event.entity.living.LivingSpawnEvent;
 import net.minecraftforge.eventbus.api.EventPriority;
@@ -59,15 +59,15 @@ public class BaseFeature extends Feature {
 	}
 
 	@SubscribeEvent
-	public void onHit(LivingAttackEvent event) {
+	public void onLivingAttack(LivingDamageEvent event) {
 		if (!(event.getSource().getEntity() instanceof LivingEntity))
 			return;
 
-		attacker(event);
-		attacked(event);
+		onAttack(event);
+		onAttacked(event);
 	}
 
-	private void attacker(LivingAttackEvent event) {
+	private void onAttack(LivingDamageEvent event) {
 		LivingEntity attacker = (LivingEntity) event.getSource().getEntity();
 		if (!attacker.getPersistentData().contains(Strings.Tags.ON_HIT_EFFECTS))
 			return;
@@ -75,10 +75,10 @@ public class BaseFeature extends Feature {
 		//TODO Validate the MPROnHitEffects as if invalid can crash the game
 		MPROnHitEffects onHitEffects = new Gson().fromJson(attacker.getPersistentData().getString(Strings.Tags.ON_HIT_EFFECTS), MPROnHitEffects.class);
 
-		onHitEffects.applyOnAttack(attacker, event.getEntityLiving());
+		onHitEffects.applyOnAttack(attacker, event.getEntityLiving(), event.getAmount(), event.getSource().getDirectEntity() == event.getSource().getEntity());
 	}
 
-	private void attacked(LivingAttackEvent event) {
+	private void onAttacked(LivingDamageEvent event) {
 		LivingEntity attacked = event.getEntityLiving();
 		if (!attacked.getPersistentData().contains(Strings.Tags.ON_HIT_EFFECTS))
 			return;
@@ -86,6 +86,6 @@ public class BaseFeature extends Feature {
 		//TODO Validate the MPROnHitEffects as if invalid can crash the game
 		MPROnHitEffects onHitEffects = new Gson().fromJson(attacked.getPersistentData().getString(Strings.Tags.ON_HIT_EFFECTS), MPROnHitEffects.class);
 
-		onHitEffects.applyOnAttacked(attacked, (LivingEntity) event.getSource().getEntity());
+		onHitEffects.applyOnAttacked(attacked, (LivingEntity) event.getSource().getEntity(), event.getAmount(), event.getSource().getDirectEntity() == event.getSource().getEntity());
 	}
 }
