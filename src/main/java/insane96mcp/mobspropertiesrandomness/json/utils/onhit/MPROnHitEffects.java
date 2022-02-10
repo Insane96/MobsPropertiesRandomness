@@ -8,22 +8,25 @@ import insane96mcp.mobspropertiesrandomness.setup.Strings;
 import net.minecraft.entity.LivingEntity;
 
 import java.io.File;
+import java.util.List;
 
 public class MPROnHitEffects implements IMPRObject {
 
 	@SerializedName("on_attack")
-	public MPROnHit onAttack;
+	public List<MPROnHit> onAttack;
 
 	@SerializedName("on_attacked")
-	public MPROnHit onAttacked;
+	public List<MPROnHit> onAttacked;
 
 	@Override
 	public void validate(File file) throws InvalidJsonException {
 		if (this.onAttack != null)
-			this.onAttack.validate(file);
+			for (MPROnHit onHit : this.onAttack)
+				onHit.validate(file);
 
 		if (this.onAttacked != null)
-			this.onAttacked.validate(file);
+			for (MPROnHit onHit : this.onAttacked)
+				onHit.validate(file);
 	}
 
 	public void addToNBT(LivingEntity entity) {
@@ -32,12 +35,14 @@ public class MPROnHitEffects implements IMPRObject {
 
 	public void applyOnAttack(LivingEntity entity, LivingEntity other, float damage, boolean isDirectDamage) {
 		if (this.onAttack != null)
-			this.onAttack.apply(entity, other, damage, isDirectDamage);
+			for (MPROnHit onHit : this.onAttack)
+				onHit.apply(entity, other, damage, isDirectDamage);
 	}
 
 	public void applyOnAttacked(LivingEntity entity, LivingEntity other, float damage, boolean isDirectDamage) {
 		if (this.onAttacked != null)
-			this.onAttacked.apply(entity, other, damage, isDirectDamage);
+			for (MPROnHit onHit : this.onAttacked)
+				onHit.apply(entity, other, damage, isDirectDamage);
 	}
 
 	@Override
