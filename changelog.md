@@ -1,6 +1,6 @@
 # Changelog
 
-## Upcoming
+## 3.2.3
 * Added `damage_type` and `health_left` conditions to `on_attack` and `on_attacked`
   * `damage_type` specifies if the effects should apply only if the damage is "direct" or "indirect". If omitted the effects will be applied in both cases
   * `health_left` specifies a percentage health where the effect will be applied when `target` is below that health
