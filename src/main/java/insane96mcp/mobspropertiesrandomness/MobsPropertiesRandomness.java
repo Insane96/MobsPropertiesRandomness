@@ -58,8 +58,8 @@ public class MobsPropertiesRandomness
     }
 
     public void preInit(FMLCommonSetupEvent event) {
-        insane96mcp.mobspropertiesrandomness.utils.Logger.init("logs/MobsPropertiesRandomness.log");
-        insane96mcp.mobspropertiesrandomness.utils.Logger.debug("Initialized!");
+        insane96mcp.mobspropertiesrandomness.util.Logger.init("logs/MobsPropertiesRandomness.log");
+        insane96mcp.mobspropertiesrandomness.util.Logger.debug("Initialized!");
         NetworkHandler.init();
     }
 }

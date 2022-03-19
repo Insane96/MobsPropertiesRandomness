@@ -2,10 +2,10 @@ package insane96mcp.mobspropertiesrandomness.json;
 
 import com.google.gson.annotations.SerializedName;
 import insane96mcp.mobspropertiesrandomness.exception.InvalidJsonException;
-import insane96mcp.mobspropertiesrandomness.json.utils.MPRModifiableValue;
-import insane96mcp.mobspropertiesrandomness.json.utils.MPRRange;
-import insane96mcp.mobspropertiesrandomness.json.utils.MPRWorldWhitelist;
-import insane96mcp.mobspropertiesrandomness.utils.Logger;
+import insane96mcp.mobspropertiesrandomness.json.util.MPRModifiableValue;
+import insane96mcp.mobspropertiesrandomness.json.util.MPRRange;
+import insane96mcp.mobspropertiesrandomness.json.util.MPRWorldWhitelist;
+import insane96mcp.mobspropertiesrandomness.util.Logger;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.potion.Effect;
 import net.minecraft.potion.EffectInstance;

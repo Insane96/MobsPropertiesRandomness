@@ -2,10 +2,10 @@ package insane96mcp.mobspropertiesrandomness.json;
 
 import com.google.gson.annotations.SerializedName;
 import insane96mcp.mobspropertiesrandomness.exception.InvalidJsonException;
-import insane96mcp.mobspropertiesrandomness.json.utils.MPREnchantment;
-import insane96mcp.mobspropertiesrandomness.json.utils.MPRItem;
-import insane96mcp.mobspropertiesrandomness.json.utils.MPRSlot;
-import insane96mcp.mobspropertiesrandomness.json.utils.attribute.MPRItemAttribute;
+import insane96mcp.mobspropertiesrandomness.json.util.MPREnchantment;
+import insane96mcp.mobspropertiesrandomness.json.util.MPRItem;
+import insane96mcp.mobspropertiesrandomness.json.util.MPRSlot;
+import insane96mcp.mobspropertiesrandomness.json.util.attribute.MPRItemAttribute;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.MobEntity;
 import net.minecraft.inventory.EquipmentSlotType;
