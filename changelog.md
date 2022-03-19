@@ -1,6 +1,6 @@
 # Changelog
 
-## Upcoming
+## 3.3.0
 * Added `advancements` condition
   * Contains a list of advancement objects which contain a list of `advancements` and a `player_mode`.  
     player_mode can either be "nearest" (default) or "any". Nearest checks advancements from the nearests player, while any checks for any player nearby to meet the advancement criteria
