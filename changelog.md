@@ -1,5 +1,11 @@
 # Changelog
 
+## Upcoming
+* Added `advancements` condition
+  * Contains a list of advancement objects which contain a list of `advancements` and a `player_mode`.  
+    player_mode can either be "nearest" (default) or "any". Nearest checks advancements from the nearests player, while any checks for any player nearby to meet the advancement criteria
+* Fixed a potential crash with presets not getting validated
+
 ## 3.2.3
 * `on_attack` and `on_attacked` now are lists instead of a single on-hit effect
 * Added `damage_type` and `health_left` conditions to `on_attack` and `on_attacked`. Also added `play_sound`.

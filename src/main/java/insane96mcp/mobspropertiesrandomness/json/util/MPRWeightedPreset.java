@@ -62,7 +62,7 @@ public class MPRWeightedPreset implements IMPRObject, IWeightedRandom {
 
 	@Override
 	public String toString() {
-		return String.format("WeightedPreset{name: %s, weight: %s, world_whitelist}", name, modifiableWeight, worldWhitelist, worldWhitelist);
+		return String.format("WeightedPreset{name: %s, weight: %s, world_whitelist: %s}", name, modifiableWeight, worldWhitelist);
 	}
 
 	@Override

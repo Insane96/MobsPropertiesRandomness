@@ -27,8 +27,13 @@ public class MPRPresets implements IMPRObject {
 			this.chance.validate(file);
 		if (this.mode == null)
 			this.mode = Mode.EXCLUSIVE;
-		if (list == null)
-			throw new InvalidJsonException("Missing list in Presets. " + this, file);
+		if (list == null || list.size() == 0)
+			throw new InvalidJsonException("Missing or empty list in Presets. " + this, file);
+		else {
+			for (MPRWeightedPreset weightedPreset : this.list) {
+				weightedPreset.validate(file);
+			}
+		}
 	}
 
 	public boolean apply(LivingEntity entity, World world) {
