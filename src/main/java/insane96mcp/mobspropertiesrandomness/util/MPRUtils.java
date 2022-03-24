@@ -42,7 +42,7 @@ public class MPRUtils {
 	}
 
 	/**
-	 * Checks if nbt1 tags are all present and match nbt2
+	 * Checks if nbt1 tags are all present in and match nbt2
 	 * @param nbt1
 	 * @param nbt2
 	 * @return
