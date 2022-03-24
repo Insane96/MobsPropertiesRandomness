@@ -4,6 +4,7 @@ import com.google.gson.annotations.SerializedName;
 import insane96mcp.mobspropertiesrandomness.exception.InvalidJsonException;
 import insane96mcp.mobspropertiesrandomness.json.IMPRObject;
 import insane96mcp.mobspropertiesrandomness.json.MPRPotionEffect;
+import insane96mcp.mobspropertiesrandomness.json.util.MPRModifiableValue;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.SoundCategory;
@@ -23,6 +24,8 @@ public class MPROnHit implements IMPRObject {
 	@SerializedName("damage_type")
 	public DamageType damageType;
 
+	public MPRModifiableValue chance;
+
 	@SerializedName("health_left")
 	public Double healthLeft;
 
@@ -34,11 +37,16 @@ public class MPROnHit implements IMPRObject {
 		if (target == null)
 			throw new InvalidJsonException("Missing target for OnHit object: " + this, file);
 
-		if (potionEffects == null)
+		if (potionEffects == null) {
 			throw new InvalidJsonException("Missing potion_effects for OnHit object: " + this, file);
-		else
+		}
+		else {
 			for (MPRPotionEffect potionEffect : this.potionEffects)
 				potionEffect.validate(file);
+		}
+
+		if (this.chance != null)
+			this.chance.validate(file);
 
 		if (this.playSound != null) {
 			ResourceLocation rl = ResourceLocation.tryParse(this.playSound);
@@ -58,6 +66,9 @@ public class MPROnHit implements IMPRObject {
 			if (health > this.healthLeft || health <= 0f)
 				return;
 		}
+
+		if (this.chance != null && entity.getRandom().nextDouble() >= this.chance.getValue(entity, entity.level))
+			return;
 
 		SoundEvent sound = null;
 		if (this.playSound != null)

@@ -4,6 +4,7 @@
 * Added `advancements` condition
   * Contains a list of advancement objects which contain a list of `advancements` and a `player_mode`.  
     player_mode can either be "nearest" (default) or "any". Nearest checks advancements from the nearests player, while any checks for any player nearby to meet the advancement criteria
+* Added `chance` to on-hit effect
 * Fixed a potential crash with presets not getting validated
 
 ## 3.2.3
