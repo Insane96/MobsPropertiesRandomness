@@ -46,7 +46,7 @@ public class MPRPresetReloadListener extends ReloadListener<Void> {
 
 		for (File file : jsonFiles) {
 			//Ignore files that start with underscore '_'
-			if (file.getName().startsWith("_"))
+			if (file.getName().startsWith("_") || file.getName().startsWith("."))
 				continue;
 
 			try {
