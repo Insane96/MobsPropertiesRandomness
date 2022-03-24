@@ -22,6 +22,7 @@ public class MPRConditions implements IMPRObject {
 	public SpawnerBehaviour spawnerBehaviour;
 	@SerializedName("structure_behaviour")
 	public StructureBehaviour structureBehaviour;
+	@SerializedName("advancements_done")
 	public List<MPRAdvancement> advancements;
 	public String nbt;
 	public transient CompoundNBT _nbt;
@@ -72,8 +73,10 @@ public class MPRConditions implements IMPRObject {
 
 		boolean advancementCondition = false;
 		for (MPRAdvancement advancement : this.advancements) {
-			if (advancement.conditionApplies(livingEntity))
+			if (advancement.conditionApplies(livingEntity)) {
 				advancementCondition = true;
+				break;
+			}
 		}
 		if (!advancementCondition)
 			result = false;

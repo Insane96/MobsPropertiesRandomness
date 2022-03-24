@@ -1,9 +1,12 @@
 # Changelog
 
 ## Upcoming
-* Added `advancements` condition
+* Added `advancements_done` condition
   * Contains a list of advancement objects which contain a list of `advancements` and a `player_mode`.  
-    player_mode can either be "nearest" (default) or "any". Nearest checks advancements from the nearests player, while any checks for any player nearby to meet the advancement criteria
+    player_mode can either be "nearest" (default) or "any". Nearest checks advancements from the nearests player, while any checks for any player nearby to meet the advancement criteria.  
+    Inner list (`advancements`) is threated as an AND while the outer list (`advancements_done`) is treated as an OR.
+* Added `prefixes` and `suffixes` to `custom_name`. Also renamed `list` in into `overrides`.
+  * They prepend or append a string to the mobs name (or to the override).
 * Added `chance` to on-hit effect
 * Files starting with a comma will now be ignored
 * Fixed a potential crash with presets not getting validated
