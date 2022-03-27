@@ -3,32 +3,32 @@ package insane96mcp.mobspropertiesrandomness.json.util.attribute;
 import insane96mcp.insanelib.utils.MCUtils;
 import insane96mcp.mobspropertiesrandomness.exception.InvalidJsonException;
 import insane96mcp.mobspropertiesrandomness.json.IMPRObject;
-import net.minecraft.entity.LivingEntity;
-import net.minecraft.entity.ai.attributes.Attribute;
-import net.minecraft.entity.ai.attributes.AttributeModifier;
-import net.minecraft.inventory.EquipmentSlotType;
-import net.minecraft.item.ItemStack;
-import net.minecraft.util.ResourceLocation;
-import net.minecraft.world.World;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.entity.EquipmentSlot;
+import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.entity.ai.attributes.Attribute;
+import net.minecraft.world.entity.ai.attributes.AttributeModifier;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.level.Level;
 import net.minecraftforge.registries.ForgeRegistries;
 
 import java.io.File;
 
 public class MPRItemAttribute extends MPRAttribute implements IMPRObject {
-	public EquipmentSlotType slot;
+	public EquipmentSlot slot;
 
 	@Override
 	public void validate(File file) throws InvalidJsonException {
 		super.validate(file);
 	}
 
-	public void applyToStack(LivingEntity entity, World world, ItemStack itemStack, EquipmentSlotType equipmentSlotType) {
+	public void applyToStack(LivingEntity entity, Level world, ItemStack itemStack, EquipmentSlot equipmentSlotType) {
 		if (!this.shouldApply(entity, world))
 			return;
 
 		Attribute attribute = ForgeRegistries.ATTRIBUTES.getValue(new ResourceLocation(this.id));
 		AttributeModifier modifier = new AttributeModifier(this.modifierName, this.amount.getFloatBetween(entity, world), this.operation.get());
-		EquipmentSlotType modifierSlot = this.slot == null ? equipmentSlotType : this.slot;
+		EquipmentSlot modifierSlot = this.slot == null ? equipmentSlotType : this.slot;
 		MCUtils.addAttributeModifierToItemStack(itemStack, attribute, modifier, modifierSlot);
 
 		//TODO Bug, doesn't work as getAttributes doesn't take into account item modifiers

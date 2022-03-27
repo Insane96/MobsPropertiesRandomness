@@ -6,11 +6,11 @@ import insane96mcp.mobspropertiesrandomness.exception.InvalidJsonException;
 import insane96mcp.mobspropertiesrandomness.json.IMPRObject;
 import insane96mcp.mobspropertiesrandomness.json.util.attribute.MPRItemAttribute;
 import insane96mcp.mobspropertiesrandomness.util.weightedrandom.IWeightedRandom;
-import net.minecraft.entity.LivingEntity;
-import net.minecraft.nbt.CompoundNBT;
-import net.minecraft.nbt.JsonToNBT;
-import net.minecraft.util.ResourceLocation;
-import net.minecraft.world.World;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.nbt.TagParser;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.level.Level;
 import net.minecraftforge.registries.ForgeRegistries;
 
 import javax.annotation.Nullable;
@@ -31,7 +31,7 @@ public class MPRItem implements IMPRObject, IWeightedRandom {
 	public List<MPREnchantment> enchantments;
 	public List<MPRItemAttribute> attributes;
 	public String nbt;
-	private transient CompoundNBT _nbt;
+	private transient CompoundTag _nbt;
 
 	@SerializedName("world_whitelist")
 	public MPRWorldWhitelist worldWhitelist;
@@ -60,7 +60,7 @@ public class MPRItem implements IMPRObject, IWeightedRandom {
 
 		if (this.nbt != null) {
 			try {
-				this._nbt = JsonToNBT.parseTag(this.nbt);
+				this._nbt = TagParser.parseTag(this.nbt);
 			}
 			catch (CommandSyntaxException e) {
 				throw new InvalidJsonException("Invalid nbt for Item: " + this.nbt, file);
@@ -75,7 +75,7 @@ public class MPRItem implements IMPRObject, IWeightedRandom {
 	 * Returns this MPRItem with the weight calculated based off the modifiers, or null if the world whitelist doesn't match
 	 */
 	@Nullable
-	public MPRItem computeAndGet(LivingEntity entity, World world) {
+	public MPRItem computeAndGet(LivingEntity entity, Level world) {
 		if (worldWhitelist != null && !worldWhitelist.isWhitelisted(entity))
 			return null;
 
@@ -84,7 +84,7 @@ public class MPRItem implements IMPRObject, IWeightedRandom {
 		return this;
 	}
 
-	public CompoundNBT getNBT() {
+	public CompoundTag getNBT() {
 		return this._nbt;
 	}
 

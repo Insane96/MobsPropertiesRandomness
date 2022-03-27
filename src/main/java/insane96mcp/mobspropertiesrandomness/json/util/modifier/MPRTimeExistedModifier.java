@@ -3,10 +3,10 @@ package insane96mcp.mobspropertiesrandomness.json.util.modifier;
 import com.google.gson.annotations.SerializedName;
 import insane96mcp.mobspropertiesrandomness.exception.InvalidJsonException;
 import insane96mcp.mobspropertiesrandomness.json.IMPRObject;
-import net.minecraft.entity.LivingEntity;
-import net.minecraft.entity.player.ServerPlayerEntity;
+import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.stats.Stats;
-import net.minecraft.world.World;
+import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.level.Level;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -34,15 +34,15 @@ public class MPRTimeExistedModifier implements IMPRObject {
 			throw new InvalidJsonException("Time Existed Modifier is missing seconds. " + this, file);
 	}
 
-	public float applyModifier(World world, LivingEntity entity, float value) {
-		List<ServerPlayerEntity> players = new ArrayList<>();
+	public float applyModifier(Level world, LivingEntity entity, float value) {
+		List<ServerPlayer> players = new ArrayList<>();
 		if (this.mode == Mode.NEAREST)
-			players.add((ServerPlayerEntity) world.getNearestPlayer(entity, 128d));
+			players.add((ServerPlayer) world.getNearestPlayer(entity, 128d));
 		else
-			players = world.getLoadedEntitiesOfClass(ServerPlayerEntity.class, entity.getBoundingBox().inflate(128d));
+			players = world.getEntitiesOfClass(ServerPlayer.class, entity.getBoundingBox().inflate(128d));
 		double bonus = 0d;
-		for (ServerPlayerEntity player : players) {
-			int ticksPlayed = player.getStats().getValue(Stats.CUSTOM.get(Stats.PLAY_ONE_MINUTE));
+		for (ServerPlayer player : players) {
+			int ticksPlayed = player.getStats().getValue(Stats.CUSTOM.get(Stats.PLAY_TIME));
 			bonus += ((ticksPlayed / 20d) / seconds) * bonusPercentage;
 		}
 

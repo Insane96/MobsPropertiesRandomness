@@ -11,10 +11,10 @@ import insane96mcp.mobspropertiesrandomness.json.util.MPRModifiableValue;
 import insane96mcp.mobspropertiesrandomness.json.util.attribute.MPRMobAttribute;
 import insane96mcp.mobspropertiesrandomness.json.util.onhit.MPROnHitEffects;
 import insane96mcp.mobspropertiesrandomness.setup.Strings;
-import net.minecraft.entity.LivingEntity;
-import net.minecraft.entity.MobEntity;
-import net.minecraft.util.ResourceLocation;
-import net.minecraft.world.World;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.entity.Mob;
+import net.minecraft.world.level.Level;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -100,7 +100,7 @@ public abstract class MPRProperties implements IMPRObject {
 		}
 	}
 
-	public boolean apply(LivingEntity livingEntity, World world) {
+	public boolean apply(LivingEntity livingEntity, Level world) {
 		if (this.conditions != null && !this.conditions.conditionsApply(livingEntity))
 			return false;
 		for (MPRPotionEffect potionEffect : this.potionEffects) {
@@ -130,8 +130,8 @@ public abstract class MPRProperties implements IMPRObject {
 		if (this.phantom != null)
 			this.phantom.apply(livingEntity, world);
 
-		if (this.lootTable != null && livingEntity instanceof MobEntity) {
-			((MobEntity) livingEntity).lootTable = new ResourceLocation(this.lootTable);
+		if (this.lootTable != null && livingEntity instanceof Mob) {
+			((Mob) livingEntity).lootTable = new ResourceLocation(this.lootTable);
 		}
 
 		return true;

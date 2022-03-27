@@ -4,10 +4,10 @@ import insane96mcp.mobspropertiesrandomness.data.MPRGroupReloadListener;
 import insane96mcp.mobspropertiesrandomness.json.MPRGroup;
 import insane96mcp.mobspropertiesrandomness.json.MPRMob;
 import net.minecraft.advancements.Advancement;
-import net.minecraft.entity.LivingEntity;
-import net.minecraft.entity.player.ServerPlayerEntity;
-import net.minecraft.nbt.CompoundNBT;
-import net.minecraft.util.ResourceLocation;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.world.entity.LivingEntity;
 
 public class MPRUtils {
 	/**
@@ -47,12 +47,12 @@ public class MPRUtils {
 	 * @param nbt2
 	 * @return
 	 */
-	public static boolean compareNBT(CompoundNBT nbt1, CompoundNBT nbt2) {
+	public static boolean compareNBT(CompoundTag nbt1, CompoundTag nbt2) {
 		for (String key : nbt1.getAllKeys()) {
 			if (!nbt2.contains(key))
 				return false;
 
-			if (nbt1.get(key) instanceof CompoundNBT && nbt2.get(key) instanceof CompoundNBT) {
+			if (nbt1.get(key) instanceof CompoundTag && nbt2.get(key) instanceof CompoundTag) {
 				if (!compareNBT(nbt1.getCompound(key), nbt2.getCompound(key)))
 					return false;
 			}
@@ -62,7 +62,7 @@ public class MPRUtils {
 		return true;
 	}
 
-	public static boolean isAdvancementDone(ServerPlayerEntity player, ResourceLocation advancementRL) {
+	public static boolean isAdvancementDone(ServerPlayer player, ResourceLocation advancementRL) {
 		Advancement advancement = player.server.getAdvancements().getAdvancement(advancementRL);
 		if (advancement == null)
 			return false;

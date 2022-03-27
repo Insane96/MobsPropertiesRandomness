@@ -1,6 +1,6 @@
 package insane96mcp.mobspropertiesrandomness.util.weightedrandom;
 
-import net.minecraft.util.Util;
+import net.minecraft.Util;
 
 import javax.annotation.Nullable;
 import java.util.List;

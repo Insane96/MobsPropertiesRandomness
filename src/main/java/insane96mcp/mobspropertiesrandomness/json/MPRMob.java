@@ -6,11 +6,11 @@ import insane96mcp.mobspropertiesrandomness.json.util.MPRPresets;
 import insane96mcp.mobspropertiesrandomness.setup.Strings;
 import insane96mcp.mobspropertiesrandomness.util.Logger;
 import insane96mcp.mobspropertiesrandomness.util.MPRUtils;
-import net.minecraft.entity.Entity;
-import net.minecraft.entity.LivingEntity;
-import net.minecraft.nbt.CompoundNBT;
-import net.minecraft.util.ResourceLocation;
-import net.minecraft.world.World;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.entity.Entity;
+import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.level.Level;
 import net.minecraftforge.event.entity.EntityJoinWorldEvent;
 import net.minecraftforge.registries.ForgeRegistries;
 
@@ -52,7 +52,7 @@ public class MPRMob extends MPRProperties implements IMPRObject {
 			return;
 
 		Entity entity = event.getEntity();
-		World world = event.getWorld();
+		Level world = event.getWorld();
 
 		if (world.isClientSide)
 			return;
@@ -62,7 +62,7 @@ public class MPRMob extends MPRProperties implements IMPRObject {
 
 		LivingEntity livingEntity = (LivingEntity) entity;
 
-		CompoundNBT tags = livingEntity.getPersistentData();
+		CompoundTag tags = livingEntity.getPersistentData();
 		boolean isAlreadyChecked = tags.getBoolean(Strings.Tags.PROCESSED);
 		if (isAlreadyChecked)
 			return;

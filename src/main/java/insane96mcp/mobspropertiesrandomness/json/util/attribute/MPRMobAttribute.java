@@ -4,12 +4,12 @@ import insane96mcp.mobspropertiesrandomness.exception.InvalidJsonException;
 import insane96mcp.mobspropertiesrandomness.json.IMPRAppliable;
 import insane96mcp.mobspropertiesrandomness.json.IMPRObject;
 import insane96mcp.mobspropertiesrandomness.util.Logger;
-import net.minecraft.entity.LivingEntity;
-import net.minecraft.entity.ai.attributes.Attribute;
-import net.minecraft.entity.ai.attributes.AttributeModifier;
-import net.minecraft.entity.ai.attributes.ModifiableAttributeInstance;
-import net.minecraft.util.ResourceLocation;
-import net.minecraft.world.World;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.entity.ai.attributes.Attribute;
+import net.minecraft.world.entity.ai.attributes.AttributeInstance;
+import net.minecraft.world.entity.ai.attributes.AttributeModifier;
+import net.minecraft.world.level.Level;
 import net.minecraftforge.registries.ForgeRegistries;
 
 import java.io.File;
@@ -22,12 +22,12 @@ public class MPRMobAttribute extends MPRAttribute implements IMPRObject, IMPRApp
 	}
 
 	@Override
-	public void apply(LivingEntity entity, World world) {
+	public void apply(LivingEntity entity, Level world) {
 		if (!this.shouldApply(entity, world))
 			return;
 
 		Attribute attribute = ForgeRegistries.ATTRIBUTES.getValue(new ResourceLocation(this.id));
-		ModifiableAttributeInstance attributeInstance = entity.getAttribute(attribute);
+		AttributeInstance attributeInstance = entity.getAttribute(attribute);
 		if (attributeInstance == null) {
 			Logger.warn("Attribute " + this.id + " not found for the entity, skipping the attribute");
 			return;

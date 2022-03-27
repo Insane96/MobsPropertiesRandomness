@@ -6,11 +6,11 @@ import insane96mcp.mobspropertiesrandomness.json.IMPRObject;
 import insane96mcp.mobspropertiesrandomness.json.util.MPRModifiableValue;
 import insane96mcp.mobspropertiesrandomness.json.util.MPRRange;
 import insane96mcp.mobspropertiesrandomness.json.util.MPRWorldWhitelist;
-import net.minecraft.entity.LivingEntity;
-import net.minecraft.entity.ai.attributes.AttributeModifier;
-import net.minecraft.entity.ai.attributes.Attributes;
-import net.minecraft.entity.ai.attributes.ModifiableAttributeInstance;
-import net.minecraft.world.World;
+import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.entity.ai.attributes.AttributeInstance;
+import net.minecraft.world.entity.ai.attributes.AttributeModifier;
+import net.minecraft.world.entity.ai.attributes.Attributes;
+import net.minecraft.world.level.Level;
 
 import java.io.File;
 import java.util.UUID;
@@ -51,7 +51,7 @@ public abstract class MPRAttribute implements IMPRObject {
 			this.worldWhitelist.validate(file);
 	}
 
-	public boolean shouldApply(LivingEntity entity, World world) {
+	public boolean shouldApply(LivingEntity entity, Level world) {
 		if (world.isClientSide)
 			return false;
 
@@ -66,7 +66,7 @@ public abstract class MPRAttribute implements IMPRObject {
 
 	protected void fixHealth(LivingEntity entity) {
 		if (this.id.contains("generic.max_health")) {
-			ModifiableAttributeInstance attributeInstance = entity.getAttribute(Attributes.MAX_HEALTH);
+			AttributeInstance attributeInstance = entity.getAttribute(Attributes.MAX_HEALTH);
 			if (attributeInstance != null)
 				entity.setHealth((float) attributeInstance.getValue());
 			entity.setHealth((float) entity.getAttributeValue(Attributes.MAX_HEALTH));

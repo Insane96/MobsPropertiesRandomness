@@ -9,13 +9,13 @@ import insane96mcp.mobspropertiesrandomness.json.util.MPRModifiableValue;
 import insane96mcp.mobspropertiesrandomness.json.util.MPRRange;
 import insane96mcp.mobspropertiesrandomness.network.MessageCreeperFuseSync;
 import insane96mcp.mobspropertiesrandomness.network.NetworkHandler;
-import net.minecraft.entity.LivingEntity;
-import net.minecraft.entity.monster.CreeperEntity;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.entity.player.ServerPlayerEntity;
-import net.minecraft.nbt.CompoundNBT;
-import net.minecraft.world.World;
-import net.minecraftforge.fml.network.NetworkDirection;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.entity.monster.Creeper;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.level.Level;
+import net.minecraftforge.network.NetworkDirection;
 
 import java.io.File;
 
@@ -44,13 +44,11 @@ public class MPRCreeper implements IMPRObject, IMPRAppliable {
 	}
 
 	@Override
-	public void apply(LivingEntity entity, World world) {
-		if (!(entity instanceof CreeperEntity))
+	public void apply(LivingEntity entity, Level world) {
+		if (!(entity instanceof Creeper creeper))
 			return;
 
-		CreeperEntity creeper = (CreeperEntity) entity;
-
-		CompoundNBT compound = new CompoundNBT();
+		CompoundTag compound = new CompoundTag();
 		creeper.addAdditionalSaveData(compound);
 
 		if (world.isClientSide)
@@ -64,8 +62,8 @@ public class MPRCreeper implements IMPRObject, IMPRAppliable {
 		}
 
 		Object msg = new MessageCreeperFuseSync(creeper.getId(), (short) fuse);
-		for (PlayerEntity player : world.players()) {
-			NetworkHandler.CHANNEL.sendTo(msg, ((ServerPlayerEntity) player).connection.connection, NetworkDirection.PLAY_TO_CLIENT);
+		for (Player player : world.players()) {
+			NetworkHandler.CHANNEL.sendTo(msg, ((ServerPlayer) player).connection.connection, NetworkDirection.PLAY_TO_CLIENT);
 		}
 
 		//Explosion Radius

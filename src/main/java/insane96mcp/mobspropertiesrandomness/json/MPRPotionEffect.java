@@ -6,11 +6,11 @@ import insane96mcp.mobspropertiesrandomness.json.util.MPRModifiableValue;
 import insane96mcp.mobspropertiesrandomness.json.util.MPRRange;
 import insane96mcp.mobspropertiesrandomness.json.util.MPRWorldWhitelist;
 import insane96mcp.mobspropertiesrandomness.util.Logger;
-import net.minecraft.entity.LivingEntity;
-import net.minecraft.potion.Effect;
-import net.minecraft.potion.EffectInstance;
-import net.minecraft.util.ResourceLocation;
-import net.minecraft.world.World;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.effect.MobEffect;
+import net.minecraft.world.effect.MobEffectInstance;
+import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.level.Level;
 import net.minecraftforge.registries.ForgeRegistries;
 
 import java.io.File;
@@ -34,7 +34,7 @@ public class MPRPotionEffect implements IMPRObject, IMPRAppliable {
 		//Potion Id
 		if (id == null)
 			throw new InvalidJsonException("Missing Potion Effect Id in PotionEffect Object. " + this, file);
-		else if (!ForgeRegistries.POTIONS.containsKey(new ResourceLocation(id)))
+		else if (!ForgeRegistries.MOB_EFFECTS.containsKey(new ResourceLocation(id)))
 			throw new InvalidJsonException("Invalid Potion Effect Id in PotionEffect Object. " + this, file);
 
 		//Amplifier
@@ -59,7 +59,7 @@ public class MPRPotionEffect implements IMPRObject, IMPRAppliable {
 			worldWhitelist.validate(file);
 	}
 
-	public void apply(LivingEntity entity, World world) {
+	public void apply(LivingEntity entity, Level world) {
 		if (world.isClientSide)
 			return;
 
@@ -69,8 +69,8 @@ public class MPRPotionEffect implements IMPRObject, IMPRAppliable {
 		if (this.worldWhitelist != null && this.worldWhitelist.isWhitelisted(entity))
 			return;
 
-		Effect effect = ForgeRegistries.POTIONS.getValue(new ResourceLocation(this.id));
-		EffectInstance effectInstance = new EffectInstance(effect, this.duration * 20, this.amplifier.getIntBetween(entity, world), this.ambient, !this.hideParticles, false);
+		MobEffect effect = ForgeRegistries.MOB_EFFECTS.getValue(new ResourceLocation(this.id));
+		MobEffectInstance effectInstance = new MobEffectInstance(effect, this.duration * 20, this.amplifier.getIntBetween(entity, world), this.ambient, !this.hideParticles, false);
 		entity.addEffect(effectInstance);
 	}
 

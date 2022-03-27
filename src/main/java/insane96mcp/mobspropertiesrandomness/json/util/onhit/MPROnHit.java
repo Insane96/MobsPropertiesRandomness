@@ -5,10 +5,10 @@ import insane96mcp.mobspropertiesrandomness.exception.InvalidJsonException;
 import insane96mcp.mobspropertiesrandomness.json.IMPRObject;
 import insane96mcp.mobspropertiesrandomness.json.MPRPotionEffect;
 import insane96mcp.mobspropertiesrandomness.json.util.MPRModifiableValue;
-import net.minecraft.entity.LivingEntity;
-import net.minecraft.util.ResourceLocation;
-import net.minecraft.util.SoundCategory;
-import net.minecraft.util.SoundEvent;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.sounds.SoundEvent;
+import net.minecraft.sounds.SoundSource;
+import net.minecraft.world.entity.LivingEntity;
 import net.minecraftforge.registries.ForgeRegistries;
 
 import java.io.File;
@@ -79,14 +79,14 @@ public class MPROnHit implements IMPRObject {
 				potionEffect.apply(entity, entity.level);
 			}
 			if (sound != null)
-				entity.level.playSound(null, entity, sound, SoundCategory.HOSTILE, 1.0f, 1f);
+				entity.level.playSound(null, entity, sound, SoundSource.HOSTILE, 1.0f, 1f);
 		}
 		else if (this.target == Target.OTHER) {
 			for (MPRPotionEffect potionEffect : this.potionEffects) {
 				potionEffect.apply(other, other.level);
 			}
 			if (sound != null)
-				other.level.playSound(null, other, sound, SoundCategory.HOSTILE, 1.0f, 1f);
+				other.level.playSound(null, other, sound, SoundSource.HOSTILE, 1.0f, 1f);
 		}
 	}
 

@@ -4,9 +4,9 @@ import insane96mcp.mobspropertiesrandomness.exception.InvalidJsonException;
 import insane96mcp.mobspropertiesrandomness.json.IMPRAppliable;
 import insane96mcp.mobspropertiesrandomness.json.IMPRObject;
 import insane96mcp.mobspropertiesrandomness.json.util.MPRRange;
-import net.minecraft.entity.LivingEntity;
-import net.minecraft.entity.monster.PhantomEntity;
-import net.minecraft.world.World;
+import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.entity.monster.Phantom;
+import net.minecraft.world.level.Level;
 
 import java.io.File;
 
@@ -20,11 +20,11 @@ public class MPRPhantom implements IMPRObject, IMPRAppliable {
 	}
 
 	@Override
-	public void apply(LivingEntity entity, World world) {
-		if (!(entity instanceof PhantomEntity))
+	public void apply(LivingEntity entity, Level world) {
+		if (!(entity instanceof Phantom))
 			return;
 
-		PhantomEntity phantom = (PhantomEntity) entity;
+		Phantom phantom = (Phantom) entity;
 
 		phantom.setPhantomSize(this.size.getIntBetween(phantom, world));
 	}

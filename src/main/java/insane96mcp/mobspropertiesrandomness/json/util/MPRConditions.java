@@ -7,9 +7,9 @@ import insane96mcp.mobspropertiesrandomness.json.IMPRObject;
 import insane96mcp.mobspropertiesrandomness.json.util.condition.MPRAdvancement;
 import insane96mcp.mobspropertiesrandomness.setup.Strings;
 import insane96mcp.mobspropertiesrandomness.util.MPRUtils;
-import net.minecraft.entity.LivingEntity;
-import net.minecraft.nbt.CompoundNBT;
-import net.minecraft.nbt.JsonToNBT;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.nbt.TagParser;
+import net.minecraft.world.entity.LivingEntity;
 
 import java.io.File;
 import java.util.List;
@@ -25,7 +25,7 @@ public class MPRConditions implements IMPRObject {
 	@SerializedName("advancements_done")
 	public List<MPRAdvancement> advancements;
 	public String nbt;
-	public transient CompoundNBT _nbt;
+	public transient CompoundTag _nbt;
 
 	@Override
 	public void validate(File file) throws InvalidJsonException {
@@ -37,7 +37,7 @@ public class MPRConditions implements IMPRObject {
 
 		if (this.nbt != null) {
 			try {
-				this._nbt = JsonToNBT.parseTag(this.nbt);
+				this._nbt = TagParser.parseTag(this.nbt);
 			}
 			catch (CommandSyntaxException e) {
 				throw new InvalidJsonException("Invalid nbt for Conditions: " + this.nbt, file);
@@ -57,13 +57,13 @@ public class MPRConditions implements IMPRObject {
 			result = (isBaby && livingEntity.isBaby()) || (!isBaby && !livingEntity.isBaby());
 
 		if (nbt != null) {
-			CompoundNBT mobNBT = new CompoundNBT();
+			CompoundTag mobNBT = new CompoundTag();
 			livingEntity.addAdditionalSaveData(mobNBT);
 			mobNBT.put("ForgeData", livingEntity.getPersistentData());
 			result = MPRUtils.compareNBT(this._nbt, mobNBT);
 		}
 
-		CompoundNBT mobPersistentData = livingEntity.getPersistentData();
+		CompoundTag mobPersistentData = livingEntity.getPersistentData();
 		boolean spawnedFromSpawner = mobPersistentData.getBoolean(Strings.Tags.SPAWNED_FROM_SPAWNER);
 		boolean spawnedFromStructure = mobPersistentData.getBoolean(Strings.Tags.SPAWNED_FROM_STRUCTURE);
 		if ((!spawnedFromSpawner && this.spawnerBehaviour == SpawnerBehaviour.SPAWNER_ONLY) || (spawnedFromSpawner && this.spawnerBehaviour == SpawnerBehaviour.NATURAL_ONLY))

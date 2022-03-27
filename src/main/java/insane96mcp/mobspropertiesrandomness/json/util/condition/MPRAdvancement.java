@@ -4,9 +4,9 @@ import com.google.gson.annotations.SerializedName;
 import insane96mcp.mobspropertiesrandomness.exception.InvalidJsonException;
 import insane96mcp.mobspropertiesrandomness.json.IMPRObject;
 import insane96mcp.mobspropertiesrandomness.util.MPRUtils;
-import net.minecraft.entity.LivingEntity;
-import net.minecraft.entity.player.ServerPlayerEntity;
-import net.minecraft.util.ResourceLocation;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.world.entity.LivingEntity;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -37,13 +37,13 @@ public class MPRAdvancement implements IMPRObject {
 	}
 
 	public boolean conditionApplies(LivingEntity livingEntity) {
-		List<ServerPlayerEntity> players = new ArrayList<>();
+		List<ServerPlayer> players = new ArrayList<>();
 		if (this.playerMode == PlayerMode.NEAREST)
-			players.add((ServerPlayerEntity) livingEntity.level.getNearestPlayer(livingEntity, 128d));
+			players.add((ServerPlayer) livingEntity.level.getNearestPlayer(livingEntity, 128d));
 		else
-			players = livingEntity.level.getLoadedEntitiesOfClass(ServerPlayerEntity.class, livingEntity.getBoundingBox().inflate(128d));
+			players = livingEntity.level.getEntitiesOfClass(ServerPlayer.class, livingEntity.getBoundingBox().inflate(128d));
 
-		for (ServerPlayerEntity player : players) {
+		for (ServerPlayer player : players) {
 			boolean allAdvancementDone = true;
 			for (String adv : this.advancements) {
 				if (!MPRUtils.isAdvancementDone(player, new ResourceLocation(adv))) {

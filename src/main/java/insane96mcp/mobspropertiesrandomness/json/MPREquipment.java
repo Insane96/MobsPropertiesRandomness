@@ -6,12 +6,12 @@ import insane96mcp.mobspropertiesrandomness.json.util.MPREnchantment;
 import insane96mcp.mobspropertiesrandomness.json.util.MPRItem;
 import insane96mcp.mobspropertiesrandomness.json.util.MPRSlot;
 import insane96mcp.mobspropertiesrandomness.json.util.attribute.MPRItemAttribute;
-import net.minecraft.entity.LivingEntity;
-import net.minecraft.entity.MobEntity;
-import net.minecraft.inventory.EquipmentSlotType;
-import net.minecraft.item.ItemStack;
-import net.minecraft.util.ResourceLocation;
-import net.minecraft.world.World;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.entity.EquipmentSlot;
+import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.entity.Mob;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.level.Level;
 import net.minecraftforge.registries.ForgeRegistries;
 
 import java.io.File;
@@ -44,19 +44,19 @@ public class MPREquipment implements IMPRObject, IMPRAppliable {
 	}
 
 	@Override
-	public void apply(LivingEntity entity, World world) {
+	public void apply(LivingEntity entity, Level world) {
 		if (world.isClientSide)
 			return;
 
-		applyEquipmentToSlot(entity, world, this.head, EquipmentSlotType.HEAD);
-		applyEquipmentToSlot(entity, world, this.chest, EquipmentSlotType.CHEST);
-		applyEquipmentToSlot(entity, world, this.legs, EquipmentSlotType.LEGS);
-		applyEquipmentToSlot(entity, world, this.feets, EquipmentSlotType.FEET);
-		applyEquipmentToSlot(entity, world, this.mainHand, EquipmentSlotType.MAINHAND);
-		applyEquipmentToSlot(entity, world, this.offHand, EquipmentSlotType.OFFHAND);
+		applyEquipmentToSlot(entity, world, this.head, EquipmentSlot.HEAD);
+		applyEquipmentToSlot(entity, world, this.chest, EquipmentSlot.CHEST);
+		applyEquipmentToSlot(entity, world, this.legs, EquipmentSlot.LEGS);
+		applyEquipmentToSlot(entity, world, this.feets, EquipmentSlot.FEET);
+		applyEquipmentToSlot(entity, world, this.mainHand, EquipmentSlot.MAINHAND);
+		applyEquipmentToSlot(entity, world, this.offHand, EquipmentSlot.OFFHAND);
 	}
 
-	private void applyEquipmentToSlot(LivingEntity entity, World world, MPRSlot slot, EquipmentSlotType equipmentSlotType) {
+	private void applyEquipmentToSlot(LivingEntity entity, Level world, MPRSlot slot, EquipmentSlot equipmentSlotType) {
 		if (slot == null)
 			return;
 
@@ -92,8 +92,8 @@ public class MPREquipment implements IMPRObject, IMPRAppliable {
 		entity.setItemSlot(equipmentSlotType, itemStack);
 
 		//Drop Chance
-		if (choosenItem.dropChance != null && entity instanceof MobEntity)
-			((MobEntity) entity).setDropChance(equipmentSlotType, choosenItem.dropChance.getValue(entity, world));
+		if (choosenItem.dropChance != null && entity instanceof Mob)
+			((Mob) entity).setDropChance(equipmentSlotType, choosenItem.dropChance.getValue(entity, world));
 
 	}
 

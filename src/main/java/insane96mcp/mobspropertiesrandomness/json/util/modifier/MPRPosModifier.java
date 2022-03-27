@@ -3,8 +3,8 @@ package insane96mcp.mobspropertiesrandomness.json.util.modifier;
 import com.google.gson.annotations.SerializedName;
 import insane96mcp.mobspropertiesrandomness.exception.InvalidJsonException;
 import insane96mcp.mobspropertiesrandomness.json.IMPRObject;
-import net.minecraft.util.math.vector.Vector3d;
-import net.minecraft.world.World;
+import net.minecraft.world.level.Level;
+import net.minecraft.world.phys.Vec3;
 
 import java.io.File;
 
@@ -45,9 +45,9 @@ public class MPRPosModifier implements IMPRObject {
 			throw new InvalidJsonException("depth_bonus and depth_step are required for eachother. " + this, file);
 	}
 
-	public float applyModifier(World world, Vector3d pos, float value) {
+	public float applyModifier(Level world, Vec3 pos, float value) {
 		//Distance from Spawn
-		Vector3d spawnPos = new Vector3d(world.getLevelData().getXSpawn(), world.getLevelData().getYSpawn(), world.getLevelData().getZSpawn());
+		Vec3 spawnPos = new Vec3(world.getLevelData().getXSpawn(), world.getLevelData().getYSpawn(), world.getLevelData().getZSpawn());
 		float distance = (float) spawnPos.distanceTo(pos);
 		float distancePercentage = (distance / distanceFromSpawnStep) * distanceFromSpawnBonus;
 

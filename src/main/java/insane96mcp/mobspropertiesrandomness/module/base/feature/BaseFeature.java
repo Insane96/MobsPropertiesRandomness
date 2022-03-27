@@ -8,8 +8,8 @@ import insane96mcp.mobspropertiesrandomness.json.MPRMob;
 import insane96mcp.mobspropertiesrandomness.json.util.onhit.MPROnHitEffects;
 import insane96mcp.mobspropertiesrandomness.setup.Config;
 import insane96mcp.mobspropertiesrandomness.setup.Strings;
-import net.minecraft.entity.LivingEntity;
-import net.minecraft.entity.SpawnReason;
+import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.entity.MobSpawnType;
 import net.minecraftforge.common.ForgeConfigSpec;
 import net.minecraftforge.event.entity.EntityJoinWorldEvent;
 import net.minecraftforge.event.entity.living.LivingDamageEvent;
@@ -46,9 +46,9 @@ public class BaseFeature extends Feature {
 
 	@SubscribeEvent
 	public void onSpawnFromSpawner(LivingSpawnEvent.CheckSpawn event) {
-		if (event.getSpawnReason() == SpawnReason.SPAWNER)
+		if (event.getSpawnReason() == MobSpawnType.SPAWNER)
 			event.getEntityLiving().getPersistentData().putBoolean(Strings.Tags.SPAWNED_FROM_SPAWNER, true);
-		if (event.getSpawnReason() == SpawnReason.STRUCTURE)
+		if (event.getSpawnReason() == MobSpawnType.STRUCTURE)
 			event.getEntityLiving().getPersistentData().putBoolean(Strings.Tags.SPAWNED_FROM_STRUCTURE, true);
 	}
 

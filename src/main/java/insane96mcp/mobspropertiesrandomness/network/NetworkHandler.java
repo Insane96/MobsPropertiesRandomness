@@ -1,10 +1,9 @@
 package insane96mcp.mobspropertiesrandomness.network;
 
 import insane96mcp.mobspropertiesrandomness.MobsPropertiesRandomness;
-import net.minecraft.util.ResourceLocation;
-import net.minecraftforge.common.MinecraftForge;
-import net.minecraftforge.fml.network.NetworkRegistry;
-import net.minecraftforge.fml.network.simple.SimpleChannel;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraftforge.network.NetworkRegistry;
+import net.minecraftforge.network.simple.SimpleChannel;
 
 public class NetworkHandler {
 	private static final String PROTOCOL_VERSION = Integer.toString(1);
@@ -17,6 +16,5 @@ public class NetworkHandler {
 
 	public static void init() {
 		CHANNEL.registerMessage(1, MessageCreeperFuseSync.class, MessageCreeperFuseSync::encode, MessageCreeperFuseSync::decode, MessageCreeperFuseSync::handle);
-		MinecraftForge.EVENT_BUS.register(new NetworkHandler());
 	}
 }

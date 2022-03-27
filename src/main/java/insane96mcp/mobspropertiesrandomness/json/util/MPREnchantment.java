@@ -4,15 +4,15 @@ import com.google.gson.annotations.SerializedName;
 import insane96mcp.insanelib.utils.RandomHelper;
 import insane96mcp.mobspropertiesrandomness.exception.InvalidJsonException;
 import insane96mcp.mobspropertiesrandomness.json.IMPRObject;
-import net.minecraft.enchantment.Enchantment;
-import net.minecraft.enchantment.EnchantmentData;
-import net.minecraft.enchantment.EnchantmentHelper;
-import net.minecraft.entity.LivingEntity;
-import net.minecraft.item.EnchantedBookItem;
-import net.minecraft.item.ItemStack;
-import net.minecraft.item.Items;
-import net.minecraft.util.ResourceLocation;
-import net.minecraft.world.World;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.item.EnchantedBookItem;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.Items;
+import net.minecraft.world.item.enchantment.Enchantment;
+import net.minecraft.world.item.enchantment.EnchantmentHelper;
+import net.minecraft.world.item.enchantment.EnchantmentInstance;
+import net.minecraft.world.level.Level;
 import net.minecraftforge.registries.ForgeRegistries;
 
 import java.io.File;
@@ -49,7 +49,7 @@ public class MPREnchantment implements IMPRObject {
 			this.chance.validate(file);
 	}
 
-	public void applyToStack(LivingEntity entity, World world, ItemStack itemStack) {
+	public void applyToStack(LivingEntity entity, Level world, ItemStack itemStack) {
 		if (this.chance != null && world.random.nextFloat() >= this.chance.getValue(entity, world))
 			return;
 
@@ -76,7 +76,7 @@ public class MPREnchantment implements IMPRObject {
 
 	private static void addEnchantmentToItemStack(ItemStack itemStack, Enchantment enchantment, int level) {
 		if (itemStack.getItem() == Items.ENCHANTED_BOOK)
-			EnchantedBookItem.addEnchantment(itemStack, new EnchantmentData(enchantment, level));
+			EnchantedBookItem.addEnchantment(itemStack, new EnchantmentInstance(enchantment, level));
 		else
 			itemStack.enchant(enchantment, level);
 	}

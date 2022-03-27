@@ -1,16 +1,16 @@
 package insane96mcp.mobspropertiesrandomness.mixin;
 
-import net.minecraft.entity.AreaEffectCloudEntity;
-import net.minecraft.potion.EffectInstance;
+import net.minecraft.world.effect.MobEffectInstance;
+import net.minecraft.world.entity.AreaEffectCloud;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
-@Mixin(AreaEffectCloudEntity.class)
+@Mixin(AreaEffectCloud.class)
 public class AreaEffectCloudEntityMixin {
-	@Inject(at = @At("HEAD"), method = "addEffect(Lnet/minecraft/potion/EffectInstance;)V", cancellable = true)
-	public void getUseDuration(EffectInstance effect, CallbackInfo callbackInfo) {
+	@Inject(at = @At("HEAD"), method = "addEffect", cancellable = true)
+	public void getUseDuration(MobEffectInstance effect, CallbackInfo callbackInfo) {
 		if (!effect.showIcon())
 			callbackInfo.cancel();
 	}

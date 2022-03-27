@@ -4,9 +4,9 @@ import com.google.gson.Gson;
 import insane96mcp.mobspropertiesrandomness.json.MPRPreset;
 import insane96mcp.mobspropertiesrandomness.util.FileUtils;
 import insane96mcp.mobspropertiesrandomness.util.Logger;
-import net.minecraft.client.resources.ReloadListener;
-import net.minecraft.profiler.IProfiler;
-import net.minecraft.resources.IResourceManager;
+import net.minecraft.server.packs.resources.ResourceManager;
+import net.minecraft.server.packs.resources.SimplePreparableReloadListener;
+import net.minecraft.util.profiling.ProfilerFiller;
 import org.apache.commons.io.FilenameUtils;
 
 import java.io.File;
@@ -14,7 +14,7 @@ import java.io.FileReader;
 import java.util.ArrayList;
 import java.util.List;
 
-public class MPRPresetReloadListener extends ReloadListener<Void> {
+public class MPRPresetReloadListener extends SimplePreparableReloadListener<Void> {
 	public static final List<MPRPreset> MPR_PRESETS = new ArrayList<>();
 
 	public static final MPRPresetReloadListener INSTANCE;
@@ -26,7 +26,7 @@ public class MPRPresetReloadListener extends ReloadListener<Void> {
 	}
 
 	@Override
-	protected Void prepare(IResourceManager iResourceManager, IProfiler iProfiler) {
+	protected Void prepare(ResourceManager iResourceManager, ProfilerFiller iProfiler) {
 		return null;
 	}
 
@@ -35,7 +35,7 @@ public class MPRPresetReloadListener extends ReloadListener<Void> {
 	}
 
 	@Override
-	protected void apply(Void objectIn, IResourceManager iResourceManager, IProfiler iProfiler) {
+	protected void apply(Void objectIn, ResourceManager iResourceManager, ProfilerFiller iProfiler) {
 		Logger.info("Reloading Presets");
 		MPR_PRESETS.clear();
 

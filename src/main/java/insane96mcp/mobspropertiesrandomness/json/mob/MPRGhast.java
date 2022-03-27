@@ -5,10 +5,10 @@ import insane96mcp.mobspropertiesrandomness.exception.InvalidJsonException;
 import insane96mcp.mobspropertiesrandomness.json.IMPRAppliable;
 import insane96mcp.mobspropertiesrandomness.json.IMPRObject;
 import insane96mcp.mobspropertiesrandomness.json.util.MPRRange;
-import net.minecraft.entity.LivingEntity;
-import net.minecraft.entity.monster.GhastEntity;
-import net.minecraft.nbt.CompoundNBT;
-import net.minecraft.world.World;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.entity.monster.Ghast;
+import net.minecraft.world.level.Level;
 
 import java.io.File;
 
@@ -23,13 +23,13 @@ public class MPRGhast implements IMPRObject, IMPRAppliable {
 	}
 
 	@Override
-	public void apply(LivingEntity entity, World world) {
-		if (!(entity instanceof GhastEntity))
+	public void apply(LivingEntity entity, Level world) {
+		if (!(entity instanceof Ghast))
 			return;
 
-		GhastEntity ghast = (GhastEntity) entity;
+		Ghast ghast = (Ghast) entity;
 
-		CompoundNBT compound = new CompoundNBT();
+		CompoundTag compound = new CompoundTag();
 		ghast.addAdditionalSaveData(compound);
 
 		//Explosion Radius

@@ -2,9 +2,9 @@ package insane96mcp.mobspropertiesrandomness.json.util;
 
 import insane96mcp.mobspropertiesrandomness.exception.InvalidJsonException;
 import insane96mcp.mobspropertiesrandomness.json.IMPRObject;
-import net.minecraft.entity.Entity;
-import net.minecraft.entity.LivingEntity;
-import net.minecraft.util.ResourceLocation;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.entity.Entity;
+import net.minecraft.world.entity.LivingEntity;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -54,7 +54,7 @@ public class MPRWorldWhitelist implements IMPRObject {
 		if (biomesList.isEmpty())
 			return true;
 
-		ResourceLocation entityBiome = entity.level.getBiome(entity.blockPosition()).getRegistryName();
+		ResourceLocation entityBiome = entity.level.getBiome(entity.blockPosition()).value().getRegistryName();
 		return biomesList.contains(entityBiome);
 	}
 
