@@ -20,32 +20,32 @@ public class Logger {
 		}
 	}
 
-	public static void log(LogType logType, String message) {
+	public static void log(LogType logType, String message, Object... params) {
 		try {
-			writer.write(String.format("[%s] %s %s", logType, message, System.lineSeparator()));
+			writer.write(String.format("[%s] %s %s", logType, String.format(message, params), System.lineSeparator()));
 			writer.flush();
 		} catch (IOException e) {
 			throw new RuntimeException(e);
 		}
 	}
 
-	public static void debug(String message) {
+	public static void debug(String message, Object... params) {
 		if (!Modules.base.base.debug)
 			return;
 
-		log(LogType.DEBUG, message);
+		log(LogType.DEBUG, message, params);
 	}
 
-	public static void info(String message) {
-		log(LogType.INFO, message);
+	public static void info(String message, Object... params) {
+		log(LogType.INFO, message, params);
 	}
 
-	public static void warn(String message) {
-		log(LogType.WARN, message);
+	public static void warn(String message, Object... params) {
+		log(LogType.WARN, message, params);
 	}
 
-	public static void error(String message) {
-		log(LogType.ERROR, message);
+	public static void error(String message, Object... params) {
+		log(LogType.ERROR, message, params);
 	}
 
 	public enum LogType {
