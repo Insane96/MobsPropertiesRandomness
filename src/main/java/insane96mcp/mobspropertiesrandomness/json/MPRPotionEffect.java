@@ -1,7 +1,7 @@
 package insane96mcp.mobspropertiesrandomness.json;
 
 import com.google.gson.annotations.SerializedName;
-import insane96mcp.mobspropertiesrandomness.exception.InvalidJsonException;
+import insane96mcp.insanelib.exception.JsonValidationException;
 import insane96mcp.mobspropertiesrandomness.json.util.MPRModifiableValue;
 import insane96mcp.mobspropertiesrandomness.json.util.MPRRange;
 import insane96mcp.mobspropertiesrandomness.json.util.MPRWorldWhitelist;
@@ -12,8 +12,6 @@ import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.level.Level;
 import net.minecraftforge.registries.ForgeRegistries;
-
-import java.io.File;
 
 public class MPRPotionEffect implements IMPRObject, IMPRAppliable {
 	public String id;
@@ -30,23 +28,23 @@ public class MPRPotionEffect implements IMPRObject, IMPRAppliable {
 	@SerializedName("world_whitelist")
 	public MPRWorldWhitelist worldWhitelist;
 
-	public void validate(final File file) throws InvalidJsonException {
+	public void validate() throws JsonValidationException {
 		//Potion Id
 		if (id == null)
-			throw new InvalidJsonException("Missing Potion Effect Id in PotionEffect Object. " + this, file);
+			throw new JsonValidationException("Missing Potion Effect Id in PotionEffect Object. " + this);
 		else if (!ForgeRegistries.MOB_EFFECTS.containsKey(new ResourceLocation(id)))
-			throw new InvalidJsonException("Invalid Potion Effect Id in PotionEffect Object. " + this, file);
+			throw new JsonValidationException("Invalid Potion Effect Id in PotionEffect Object. " + this);
 
 		//Amplifier
 		if (amplifier == null) {
 			Logger.info("Missing Amplifier in PotionEffect object. " + this + ". Will default to 0 (I)");
 			amplifier = new MPRRange(0);
 		}
-		amplifier.validate(file);
+		amplifier.validate();
 
 		//Chance
 		if (chance != null)
-			chance.validate(file);
+			chance.validate();
 
 		if (this.duration == null)
 			this.duration = Integer.MAX_VALUE / 20;
@@ -56,7 +54,7 @@ public class MPRPotionEffect implements IMPRObject, IMPRAppliable {
 			Logger.info("Particles are hidden, but ambient is enabled. Ambient doesn't work if particles are hidden. " + this);
 
 		if (worldWhitelist != null)
-			worldWhitelist.validate(file);
+			worldWhitelist.validate();
 	}
 
 	public void apply(LivingEntity entity, Level world) {

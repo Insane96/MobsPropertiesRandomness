@@ -1,13 +1,12 @@
 package insane96mcp.mobspropertiesrandomness.json.util;
 
-import insane96mcp.mobspropertiesrandomness.exception.InvalidJsonException;
+import insane96mcp.insanelib.exception.JsonValidationException;
 import insane96mcp.mobspropertiesrandomness.json.IMPRObject;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.TextComponent;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.level.Level;
 
-import java.io.File;
 import java.util.List;
 
 public class MPRCustomName implements IMPRObject {
@@ -18,11 +17,11 @@ public class MPRCustomName implements IMPRObject {
 	public List<String> suffixes;
 
 	@Override
-	public void validate(File file) throws InvalidJsonException {
+	public void validate() throws JsonValidationException {
 		if (chance != null)
-			chance.validate(file);
+			chance.validate();
 		if ((this.overrides == null || this.overrides.size() == 0) && (this.prefixes == null || this.prefixes.size() == 0) && (this.suffixes == null || this.suffixes.size() == 0))
-			throw new InvalidJsonException("No overrides, prefixes or suffixes specified for Custom Name", file);
+			throw new JsonValidationException("No overrides, prefixes or suffixes specified for Custom Name");
 	}
 
 	public void applyCustomName(LivingEntity entity, Level world) {

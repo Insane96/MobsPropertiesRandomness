@@ -1,15 +1,14 @@
 package insane96mcp.mobspropertiesrandomness.json.util;
 
 import com.google.gson.annotations.SerializedName;
+import insane96mcp.insanelib.exception.JsonValidationException;
 import insane96mcp.insanelib.util.weightedrandom.WeightedRandom;
-import insane96mcp.mobspropertiesrandomness.exception.InvalidJsonException;
 import insane96mcp.mobspropertiesrandomness.json.IMPRObject;
 import insane96mcp.mobspropertiesrandomness.json.MPRPreset;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.level.Level;
 
 import javax.annotation.Nullable;
-import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -22,16 +21,16 @@ public class MPRPresets implements IMPRObject {
 	public List<MPRWeightedPreset> list;
 
 	@Override
-	public void validate(File file) throws InvalidJsonException {
+	public void validate() throws JsonValidationException {
 		if (this.chance != null)
-			this.chance.validate(file);
+			this.chance.validate();
 		if (this.mode == null)
 			this.mode = Mode.EXCLUSIVE;
 		if (list == null || list.size() == 0)
-			throw new InvalidJsonException("Missing or empty list in Presets. " + this, file);
+			throw new JsonValidationException("Missing or empty list in Presets. " + this);
 		else {
 			for (MPRWeightedPreset weightedPreset : this.list) {
-				weightedPreset.validate(file);
+				weightedPreset.validate();
 			}
 		}
 	}

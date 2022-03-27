@@ -1,14 +1,13 @@
 package insane96mcp.mobspropertiesrandomness.json.util;
 
 import com.google.gson.annotations.SerializedName;
+import insane96mcp.insanelib.exception.JsonValidationException;
 import insane96mcp.insanelib.util.weightedrandom.WeightedRandom;
-import insane96mcp.mobspropertiesrandomness.exception.InvalidJsonException;
 import insane96mcp.mobspropertiesrandomness.json.IMPRObject;
 import insane96mcp.mobspropertiesrandomness.util.Logger;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.level.Level;
 
-import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -22,9 +21,9 @@ public class MPRSlot implements IMPRObject {
 	public List<MPRItem> items;
 
 	@Override
-	public void validate(File file) throws InvalidJsonException {
+	public void validate() throws JsonValidationException {
 		if (chance != null)
-			chance.validate(file);
+			chance.validate();
 
 		if (replaceOnly && !override)
 		{
@@ -33,10 +32,10 @@ public class MPRSlot implements IMPRObject {
 		}
 
 		if (items == null || items.isEmpty())
-			throw new InvalidJsonException("Missing items. " + this, file);
+			throw new JsonValidationException("Missing items. " + this);
 		else {
 			for (MPRItem item : items) {
-				item.validate(file);
+				item.validate();
 			}
 		}
 	}

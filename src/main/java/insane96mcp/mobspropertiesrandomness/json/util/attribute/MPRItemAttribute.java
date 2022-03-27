@@ -1,7 +1,7 @@
 package insane96mcp.mobspropertiesrandomness.json.util.attribute;
 
+import insane96mcp.insanelib.exception.JsonValidationException;
 import insane96mcp.insanelib.util.MCUtils;
-import insane96mcp.mobspropertiesrandomness.exception.InvalidJsonException;
 import insane96mcp.mobspropertiesrandomness.json.IMPRObject;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.EquipmentSlot;
@@ -12,14 +12,12 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
 import net.minecraftforge.registries.ForgeRegistries;
 
-import java.io.File;
-
 public class MPRItemAttribute extends MPRAttribute implements IMPRObject {
 	public EquipmentSlot slot;
 
 	@Override
-	public void validate(File file) throws InvalidJsonException {
-		super.validate(file);
+	public void validate() throws JsonValidationException {
+		super.validate();
 	}
 
 	public void applyToStack(LivingEntity entity, Level world, ItemStack itemStack, EquipmentSlot equipmentSlotType) {

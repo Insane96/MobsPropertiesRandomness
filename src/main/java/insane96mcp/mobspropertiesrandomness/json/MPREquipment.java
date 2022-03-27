@@ -1,7 +1,7 @@
 package insane96mcp.mobspropertiesrandomness.json;
 
 import com.google.gson.annotations.SerializedName;
-import insane96mcp.mobspropertiesrandomness.exception.InvalidJsonException;
+import insane96mcp.insanelib.exception.JsonValidationException;
 import insane96mcp.mobspropertiesrandomness.json.util.MPREnchantment;
 import insane96mcp.mobspropertiesrandomness.json.util.MPRItem;
 import insane96mcp.mobspropertiesrandomness.json.util.MPRSlot;
@@ -13,8 +13,6 @@ import net.minecraft.world.entity.Mob;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
 import net.minecraftforge.registries.ForgeRegistries;
-
-import java.io.File;
 
 public class MPREquipment implements IMPRObject, IMPRAppliable {
 
@@ -28,19 +26,19 @@ public class MPREquipment implements IMPRObject, IMPRAppliable {
 	public MPRSlot offHand;
 	
 	@Override
-	public void validate(File file) throws InvalidJsonException {
+	public void validate() throws JsonValidationException {
 		if (head != null)
-			head.validate(file);
+			head.validate();
 		if (chest != null)
-			chest.validate(file);
+			chest.validate();
 		if (legs != null)
-			legs.validate(file);
+			legs.validate();
 		if (feets != null)
-			feets.validate(file);
+			feets.validate();
 		if (mainHand != null)
-			mainHand.validate(file);
+			mainHand.validate();
 		if (offHand != null)
-			offHand.validate(file);
+			offHand.validate();
 	}
 
 	@Override

@@ -1,6 +1,6 @@
 package insane96mcp.mobspropertiesrandomness.json.mob;
 
-import insane96mcp.mobspropertiesrandomness.exception.InvalidJsonException;
+import insane96mcp.insanelib.exception.JsonValidationException;
 import insane96mcp.mobspropertiesrandomness.json.IMPRAppliable;
 import insane96mcp.mobspropertiesrandomness.json.IMPRObject;
 import insane96mcp.mobspropertiesrandomness.json.util.MPRRange;
@@ -8,15 +8,13 @@ import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.monster.Phantom;
 import net.minecraft.world.level.Level;
 
-import java.io.File;
-
 public class MPRPhantom implements IMPRObject, IMPRAppliable {
 	public MPRRange size;
 
 	@Override
-	public void validate(File file) throws InvalidJsonException {
+	public void validate() throws JsonValidationException {
 		if (size != null)
-			size.validate(file);
+			size.validate();
 	}
 
 	@Override

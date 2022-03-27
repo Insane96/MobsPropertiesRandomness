@@ -1,14 +1,13 @@
 package insane96mcp.mobspropertiesrandomness.json.util.modifier;
 
 import com.google.gson.annotations.SerializedName;
-import insane96mcp.mobspropertiesrandomness.exception.InvalidJsonException;
+import insane96mcp.insanelib.exception.JsonValidationException;
 import insane96mcp.mobspropertiesrandomness.json.IMPRObject;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.stats.Stats;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.level.Level;
 
-import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -27,11 +26,11 @@ public class MPRTimeExistedModifier implements IMPRObject {
 	}
 
 	@Override
-	public void validate(File file) throws InvalidJsonException {
+	public void validate() throws JsonValidationException {
 		if (bonusPercentage == null || bonusPercentage == 0d)
-			throw new InvalidJsonException("Time Existed Modifier is missing bonus_percentage. " + this, file);
+			throw new JsonValidationException("Time Existed Modifier is missing bonus_percentage. " + this);
 		if (seconds == null || seconds == 0)
-			throw new InvalidJsonException("Time Existed Modifier is missing seconds. " + this, file);
+			throw new JsonValidationException("Time Existed Modifier is missing seconds. " + this);
 	}
 
 	public float applyModifier(Level world, LivingEntity entity, float value) {

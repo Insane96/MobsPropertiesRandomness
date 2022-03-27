@@ -5,7 +5,7 @@ import com.google.gson.JsonDeserializer;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonParseException;
 import com.google.gson.annotations.JsonAdapter;
-import insane96mcp.mobspropertiesrandomness.exception.InvalidJsonException;
+import insane96mcp.insanelib.exception.JsonValidationException;
 import insane96mcp.mobspropertiesrandomness.json.IMPRObject;
 import insane96mcp.mobspropertiesrandomness.json.util.modifier.MPRModifiable;
 import insane96mcp.mobspropertiesrandomness.json.util.modifier.MPRPosModifier;
@@ -15,7 +15,6 @@ import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.level.Level;
 
 import javax.annotation.Nullable;
-import java.io.File;
 import java.lang.reflect.Type;
 
 @JsonAdapter(MPRModifiableValue.Deserializer.class)
@@ -32,11 +31,11 @@ public class MPRModifiableValue extends MPRModifiable implements IMPRObject {
 		this.value = value;
 	}
 
-	public void validate(final File file) throws InvalidJsonException {
+	public void validate() throws JsonValidationException {
 		if (this.value == null)
-			throw new InvalidJsonException("Missing value. " + this, file);
+			throw new JsonValidationException("Missing value. " + this);
 
-		super.validate(file);
+		super.validate();
 	}
 
 	public float getValue(LivingEntity entity, Level world) {

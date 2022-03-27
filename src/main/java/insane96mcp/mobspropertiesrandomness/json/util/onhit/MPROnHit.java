@@ -1,7 +1,7 @@
 package insane96mcp.mobspropertiesrandomness.json.util.onhit;
 
 import com.google.gson.annotations.SerializedName;
-import insane96mcp.mobspropertiesrandomness.exception.InvalidJsonException;
+import insane96mcp.insanelib.exception.JsonValidationException;
 import insane96mcp.mobspropertiesrandomness.json.IMPRObject;
 import insane96mcp.mobspropertiesrandomness.json.MPRPotionEffect;
 import insane96mcp.mobspropertiesrandomness.json.util.MPRModifiableValue;
@@ -11,7 +11,6 @@ import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraftforge.registries.ForgeRegistries;
 
-import java.io.File;
 import java.util.List;
 
 public class MPROnHit implements IMPRObject {
@@ -33,27 +32,27 @@ public class MPROnHit implements IMPRObject {
 	public String playSound;
 
 	@Override
-	public void validate(File file) throws InvalidJsonException {
+	public void validate() throws JsonValidationException {
 		if (target == null)
-			throw new InvalidJsonException("Missing target for OnHit object: " + this, file);
+			throw new JsonValidationException("Missing target for OnHit object: " + this);
 
 		if (potionEffects == null) {
-			throw new InvalidJsonException("Missing potion_effects for OnHit object: " + this, file);
+			throw new JsonValidationException("Missing potion_effects for OnHit object: " + this);
 		}
 		else {
 			for (MPRPotionEffect potionEffect : this.potionEffects)
-				potionEffect.validate(file);
+				potionEffect.validate();
 		}
 
 		if (this.chance != null)
-			this.chance.validate(file);
+			this.chance.validate();
 
 		if (this.playSound != null) {
 			ResourceLocation rl = ResourceLocation.tryParse(this.playSound);
 			if (rl == null)
-				throw new InvalidJsonException("Invalid resource location for On Hit playSound: " + this, file);
+				throw new JsonValidationException("Invalid resource location for On Hit playSound: " + this);
 			if (ForgeRegistries.SOUND_EVENTS.getValue(rl) == null)
-				throw new InvalidJsonException("Sound doesn not exist for On Hit playSound: " + this, file);
+				throw new JsonValidationException("Sound doesn not exist for On Hit playSound: " + this);
 		}
 	}
 

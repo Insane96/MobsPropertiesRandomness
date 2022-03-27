@@ -1,7 +1,7 @@
 package insane96mcp.mobspropertiesrandomness.json.mob;
 
 import com.google.gson.annotations.SerializedName;
-import insane96mcp.mobspropertiesrandomness.exception.InvalidJsonException;
+import insane96mcp.insanelib.exception.JsonValidationException;
 import insane96mcp.mobspropertiesrandomness.json.IMPRAppliable;
 import insane96mcp.mobspropertiesrandomness.json.IMPRObject;
 import insane96mcp.mobspropertiesrandomness.json.util.MPRRange;
@@ -10,24 +10,20 @@ import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.monster.Ghast;
 import net.minecraft.world.level.Level;
 
-import java.io.File;
-
 public class MPRGhast implements IMPRObject, IMPRAppliable {
 	@SerializedName("explosion_power")
 	public MPRRange explosionPower;
 
 	@Override
-	public void validate(File file) throws InvalidJsonException {
+	public void validate() throws JsonValidationException {
 		if (explosionPower != null)
-			explosionPower.validate(file);
+			explosionPower.validate();
 	}
 
 	@Override
 	public void apply(LivingEntity entity, Level world) {
-		if (!(entity instanceof Ghast))
+		if (!(entity instanceof Ghast ghast))
 			return;
-
-		Ghast ghast = (Ghast) entity;
 
 		CompoundTag compound = new CompoundTag();
 		ghast.addAdditionalSaveData(compound);

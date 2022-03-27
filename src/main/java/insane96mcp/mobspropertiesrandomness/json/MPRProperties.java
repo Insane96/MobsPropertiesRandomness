@@ -1,8 +1,8 @@
 package insane96mcp.mobspropertiesrandomness.json;
 
 import com.google.gson.annotations.SerializedName;
+import insane96mcp.insanelib.exception.JsonValidationException;
 import insane96mcp.insanelib.setup.ILStrings;
-import insane96mcp.mobspropertiesrandomness.exception.InvalidJsonException;
 import insane96mcp.mobspropertiesrandomness.json.mob.MPRCreeper;
 import insane96mcp.mobspropertiesrandomness.json.mob.MPRGhast;
 import insane96mcp.mobspropertiesrandomness.json.mob.MPRPhantom;
@@ -16,7 +16,6 @@ import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.Mob;
 import net.minecraft.world.level.Level;
 
-import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -50,53 +49,53 @@ public abstract class MPRProperties implements IMPRObject {
 	public String lootTable;
 
 	@Override
-	public void validate(File file) throws InvalidJsonException {
+	public void validate() throws JsonValidationException {
 		if (this.conditions != null)
-			this.conditions.validate(file);
+			this.conditions.validate();
 
 		if (this.potionEffects == null)
 			this.potionEffects = new ArrayList<>();
 		for (MPRPotionEffect potionEffect : this.potionEffects) {
-			potionEffect.validate(file);
+			potionEffect.validate();
 		}
 
 		if (this.attributes == null)
 			this.attributes = new ArrayList<>();
 		for (MPRMobAttribute attribute : this.attributes) {
-			attribute.validate(file);
+			attribute.validate();
 		}
 
 		if (this.equipment == null)
 			this.equipment = new MPREquipment();
-		this.equipment.validate(file);
+		this.equipment.validate();
 
 		if (this.onHitEffects != null)
-			this.onHitEffects.validate(file);
+			this.onHitEffects.validate();
 
 		if (this.customName != null)
-			this.customName.validate(file);
+			this.customName.validate();
 
 		if (this.silent != null)
-			this.silent.validate(file);
+			this.silent.validate();
 
 		if (this.experienceMultiplier != null)
-			this.experienceMultiplier.validate(file);
+			this.experienceMultiplier.validate();
 
 		//Mob specific validations
 		if (this.creeper != null)
-			this.creeper.validate(file);
+			this.creeper.validate();
 
 		if (this.ghast != null)
-			this.ghast.validate(file);
+			this.ghast.validate();
 
 		if (this.phantom != null)
-			this.phantom.validate(file);
+			this.phantom.validate();
 
 		if (this.lootTable != null) {
 			if (this.lootTable.equals(""))
-				throw new InvalidJsonException("\"loot_table\": \"\" is not valid. To use an empty loot_table use \"minecraft:empty\". " + this, file);
+				throw new JsonValidationException("\"loot_table\": \"\" is not valid. To use an empty loot_table use \"minecraft:empty\". " + this);
 			else if (ResourceLocation.tryParse(this.lootTable) == null)
-				throw new InvalidJsonException("\"loot_table\": \"" + this.lootTable + "\" is not valid. You must use a valid Resource Location (modid:loot_table_id). " + this, file);
+				throw new JsonValidationException("\"loot_table\": \"" + this.lootTable + "\" is not valid. You must use a valid Resource Location (modid:loot_table_id). " + this);
 		}
 	}
 

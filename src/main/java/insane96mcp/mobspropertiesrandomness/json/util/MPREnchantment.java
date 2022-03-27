@@ -1,8 +1,8 @@
 package insane96mcp.mobspropertiesrandomness.json.util;
 
 import com.google.gson.annotations.SerializedName;
+import insane96mcp.insanelib.exception.JsonValidationException;
 import insane96mcp.insanelib.util.RandomHelper;
-import insane96mcp.mobspropertiesrandomness.exception.InvalidJsonException;
 import insane96mcp.mobspropertiesrandomness.json.IMPRObject;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.LivingEntity;
@@ -15,7 +15,6 @@ import net.minecraft.world.item.enchantment.EnchantmentInstance;
 import net.minecraft.world.level.Level;
 import net.minecraftforge.registries.ForgeRegistries;
 
-import java.io.File;
 import java.util.Map;
 
 public class MPREnchantment implements IMPRObject {
@@ -32,21 +31,21 @@ public class MPREnchantment implements IMPRObject {
 	}
 
 	@Override
-	public void validate(File file) throws InvalidJsonException {
+	public void validate() throws JsonValidationException {
 		if (this.id == null && this.random == null)
-			throw new InvalidJsonException("Missing Enchantment ID or Random Object for " + this, file);
+			throw new JsonValidationException("Missing Enchantment ID or Random Object for " + this);
 
 		if (this.id != null && ForgeRegistries.ENCHANTMENTS.getValue(new ResourceLocation(this.id)) == null)
-			throw new InvalidJsonException("Invalid Enchantment ID " + this.id + " for " + this, file);
+			throw new JsonValidationException("Invalid Enchantment ID " + this.id + " for " + this);
 
 		if (this.level != null)
-			this.level.validate(file);
+			this.level.validate();
 
 		if (this.random != null)
-			this.random.validate(file);
+			this.random.validate();
 
 		if (this.chance != null)
-			this.chance.validate(file);
+			this.chance.validate();
 	}
 
 	public void applyToStack(LivingEntity entity, Level world, ItemStack itemStack) {

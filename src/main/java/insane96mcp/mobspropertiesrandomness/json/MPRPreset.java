@@ -1,15 +1,13 @@
 package insane96mcp.mobspropertiesrandomness.json;
 
-import insane96mcp.mobspropertiesrandomness.exception.InvalidJsonException;
-
-import java.io.File;
+import insane96mcp.insanelib.exception.JsonValidationException;
 
 public class MPRPreset extends MPRProperties implements IMPRObject {
 	public transient String name;
 
 	@Override
-	public void validate(File file) throws InvalidJsonException {
-		super.validate(file);
+	public void validate() throws JsonValidationException {
+		super.validate();
 	}
 
 	@Override

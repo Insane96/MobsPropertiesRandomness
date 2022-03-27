@@ -1,12 +1,15 @@
 package insane96mcp.mobspropertiesrandomness.data;
 
 import com.google.gson.Gson;
+import com.google.gson.JsonSyntaxException;
+import insane96mcp.insanelib.exception.JsonValidationException;
 import insane96mcp.insanelib.util.FileUtils;
 import insane96mcp.mobspropertiesrandomness.json.MPRMob;
 import insane96mcp.mobspropertiesrandomness.util.Logger;
 import net.minecraft.server.packs.resources.ResourceManager;
 import net.minecraft.server.packs.resources.SimplePreparableReloadListener;
 import net.minecraft.util.profiling.ProfilerFiller;
+import org.apache.commons.io.FilenameUtils;
 
 import java.io.File;
 import java.io.FileReader;
@@ -38,33 +41,32 @@ public class MPRMobReloadListener extends SimplePreparableReloadListener<Void> {
 		Logger.info("Reloading Mobs");
 		MPR_MOBS.clear();
 
-		boolean correctlyReloaded = true;
 		Gson gson = new Gson();
 
 		ArrayList<File> jsonFiles = FileUtils.ListFilesForFolder(mobsFolder);
 
 		for (File file : jsonFiles) {
-			//Ignore files that start with underscore '_'
+			//Ignore files that start with underscore '_' or comma '.'
 			if (file.getName().startsWith("_") || file.getName().startsWith("."))
 				continue;
 
 			try {
-				Logger.info(file.getName());
 				FileReader fileReader = new FileReader(file);
 				MPRMob mob = gson.fromJson(fileReader, MPRMob.class);
-				Logger.debug(mob.toString());
-				mob.validate(file);
+				mob.validate();
 				MPR_MOBS.add(mob);
-			} catch (Exception e) {
-				correctlyReloaded = false;
-				Logger.error(Logger.getStackTrace(e));
-				e.printStackTrace();
+			}
+			catch (JsonValidationException e) {
+				Logger.error("Validation error loading Mob %s: %s", FilenameUtils.removeExtension(file.getName()), e.getMessage());
+			}
+			catch (JsonSyntaxException e) {
+				Logger.error("Parsing error loading Mob %s: %s", FilenameUtils.removeExtension(file.getName()), e.getMessage());
+			}
+			catch (Exception e) {
+				Logger.error("Failed loading Mob %s: %s", FilenameUtils.removeExtension(file.getName()), e.getMessage());
 			}
 		}
 
-		if (correctlyReloaded)
-			Logger.info("Correctly reloaded all Mobs");
-		else
-			Logger.warn("Reloaded all Mobs with error(s)");
+		Logger.warn("Loaded %s Mobs", MPR_MOBS.size());
 	}
 }

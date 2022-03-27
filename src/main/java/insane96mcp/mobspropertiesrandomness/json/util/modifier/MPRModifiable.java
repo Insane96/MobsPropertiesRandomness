@@ -1,12 +1,10 @@
 package insane96mcp.mobspropertiesrandomness.json.util.modifier;
 
 import com.google.gson.annotations.SerializedName;
+import insane96mcp.insanelib.exception.JsonValidationException;
 import insane96mcp.insanelib.util.MathHelper;
-import insane96mcp.mobspropertiesrandomness.exception.InvalidJsonException;
 import insane96mcp.mobspropertiesrandomness.json.IMPRObject;
 import insane96mcp.mobspropertiesrandomness.json.util.modifier.difficulty.MPRDifficultyModifier;
-
-import java.io.File;
 
 public abstract class MPRModifiable implements IMPRObject {
 	@SerializedName("difficulty_modifier")
@@ -30,15 +28,15 @@ public abstract class MPRModifiable implements IMPRObject {
 		this.round = round;
 	}
 
-	public void validate(final File file) throws InvalidJsonException {
+	public void validate() throws JsonValidationException {
 		if (this.difficultyModifier != null)
-			this.difficultyModifier.validate(file);
+			this.difficultyModifier.validate();
 
 		if (this.posModifier != null)
-			this.posModifier.validate(file);
+			this.posModifier.validate();
 
 		if (this.timeExistedModifier != null)
-			this.timeExistedModifier.validate(file);
+			this.timeExistedModifier.validate();
 	}
 
 	public float round(float value) {

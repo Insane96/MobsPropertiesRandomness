@@ -1,12 +1,11 @@
 package insane96mcp.mobspropertiesrandomness.json.util;
 
-import insane96mcp.mobspropertiesrandomness.exception.InvalidJsonException;
+import insane96mcp.insanelib.exception.JsonValidationException;
 import insane96mcp.mobspropertiesrandomness.json.IMPRObject;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
 
-import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -21,7 +20,7 @@ public class MPRWorldWhitelist implements IMPRObject {
 	protected MPRRange deepness;
 
 	@Override
-	public void validate(File file) throws InvalidJsonException {
+	public void validate() throws JsonValidationException {
 		dimensionsList.clear();
 		if (dimensions != null) {
 			for (String dimension : dimensions) {
@@ -39,7 +38,7 @@ public class MPRWorldWhitelist implements IMPRObject {
 		}
 
 		if (deepness != null)
-			deepness.validate(file);
+			deepness.validate();
 	}
 
 	public boolean doesDimensionMatch(Entity entity) {

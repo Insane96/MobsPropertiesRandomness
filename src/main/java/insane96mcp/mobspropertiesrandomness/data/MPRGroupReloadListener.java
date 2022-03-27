@@ -1,6 +1,8 @@
 package insane96mcp.mobspropertiesrandomness.data;
 
 import com.google.gson.Gson;
+import com.google.gson.JsonSyntaxException;
+import insane96mcp.insanelib.exception.JsonValidationException;
 import insane96mcp.insanelib.util.FileUtils;
 import insane96mcp.mobspropertiesrandomness.json.MPRGroup;
 import insane96mcp.mobspropertiesrandomness.util.Logger;
@@ -39,36 +41,34 @@ public class MPRGroupReloadListener extends SimplePreparableReloadListener<Void>
 		Logger.info("Reloading Groups");
 		MPR_GROUPS.clear();
 
-		boolean correctlyReloaded = true;
 		Gson gson = new Gson();
 
 		ArrayList<File> jsonFiles = FileUtils.ListFilesForFolder(groupsFolder);
 
 		for (File file : jsonFiles) {
-			//Ignore files that start with underscore '_'
+			//Ignore files that start with underscore '_' or comma '.'
 			if (file.getName().startsWith("_") || file.getName().startsWith("."))
 				continue;
 
 			try {
-				Logger.info(file.getName());
 				FileReader fileReader = new FileReader(file);
 				MPRGroup group = gson.fromJson(fileReader, MPRGroup.class);
 				group.name = FilenameUtils.removeExtension(file.getName());
-				Logger.debug(group.toString());
-				group.validate(file);
+				group.validate();
 				MPR_GROUPS.add(group);
-			} catch (Exception e) {
-				correctlyReloaded = false;
-				//Logger.error("Failed to parse file with name " + file.getName());
-				Logger.error(Logger.getStackTrace(e));
-				e.printStackTrace();
+			}
+			catch (JsonValidationException e) {
+				Logger.error("Validation error loading Group %s: %s", FilenameUtils.removeExtension(file.getName()), e.getMessage());
+			}
+			catch (JsonSyntaxException e) {
+				Logger.error("Parsing error loading Group %s: %s", FilenameUtils.removeExtension(file.getName()), e.getMessage());
+			}
+			catch (Exception e) {
+				Logger.error("Failed loading Group %s: %s", FilenameUtils.removeExtension(file.getName()), e.getMessage());
 			}
 		}
 
-		if (correctlyReloaded)
-			Logger.info("Correctly reloaded all Groups");
-		else
-			Logger.warn("Reloaded all Groups with error(s)");
+		Logger.warn("Loaded %s Groups", MPR_GROUPS.size());
 	}
 
 	public boolean doesGroupExist(String name) {

@@ -1,8 +1,7 @@
 package insane96mcp.mobspropertiesrandomness.json;
 
-import insane96mcp.mobspropertiesrandomness.exception.InvalidJsonException;
+import insane96mcp.insanelib.exception.JsonValidationException;
 
-import java.io.File;
 import java.util.List;
 
 public class MPRGroup implements IMPRObject {
@@ -11,9 +10,9 @@ public class MPRGroup implements IMPRObject {
 	public List<String> mobs;
 
 	@Override
-	public void validate(File file) throws InvalidJsonException {
+	public void validate() throws JsonValidationException {
 		if (mobs == null || mobs.isEmpty()) {
-			throw new InvalidJsonException("Group " + this.name + " is missing mobs or has no mobs in the list", file);
+			throw new JsonValidationException("Group " + this.name + " is missing mobs or has no mobs in the list");
 		}
 	}
 

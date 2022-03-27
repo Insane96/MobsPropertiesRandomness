@@ -1,11 +1,9 @@
 package insane96mcp.mobspropertiesrandomness.json.util.modifier.difficulty;
 
 import com.google.gson.annotations.SerializedName;
-import insane96mcp.mobspropertiesrandomness.exception.InvalidJsonException;
+import insane96mcp.insanelib.exception.JsonValidationException;
 import insane96mcp.mobspropertiesrandomness.json.IMPRObject;
 import net.minecraft.world.Difficulty;
-
-import java.io.File;
 
 public class MPRDifficultyModifier implements IMPRObject {
 	@SerializedName("affects_max_only")
@@ -20,15 +18,15 @@ public class MPRDifficultyModifier implements IMPRObject {
 	}
 
 	@Override
-	public void validate(File file) throws InvalidJsonException {
+	public void validate() throws JsonValidationException {
 		if (worldDifficulty == null && localDifficulty == null)
-			throw new InvalidJsonException("Difficulty Modifier is missing both difficulty and local_difficulty objects. " + this, file);
+			throw new JsonValidationException("Difficulty Modifier is missing both difficulty and local_difficulty objects. " + this);
 
 		if (worldDifficulty != null)
-			worldDifficulty.validate(file);
+			worldDifficulty.validate();
 
 		if (localDifficulty != null)
-			localDifficulty.validate(file);
+			localDifficulty.validate();
 	}
 
 	public float applyModifier(Difficulty worldDifficulty, float worldLocalDiff, float value) {

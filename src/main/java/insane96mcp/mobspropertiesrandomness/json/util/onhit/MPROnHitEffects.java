@@ -2,12 +2,11 @@ package insane96mcp.mobspropertiesrandomness.json.util.onhit;
 
 import com.google.gson.Gson;
 import com.google.gson.annotations.SerializedName;
-import insane96mcp.mobspropertiesrandomness.exception.InvalidJsonException;
+import insane96mcp.insanelib.exception.JsonValidationException;
 import insane96mcp.mobspropertiesrandomness.json.IMPRObject;
 import insane96mcp.mobspropertiesrandomness.setup.Strings;
 import net.minecraft.world.entity.LivingEntity;
 
-import java.io.File;
 import java.util.List;
 
 public class MPROnHitEffects implements IMPRObject {
@@ -19,14 +18,14 @@ public class MPROnHitEffects implements IMPRObject {
 	public List<MPROnHit> onAttacked;
 
 	@Override
-	public void validate(File file) throws InvalidJsonException {
+	public void validate() throws JsonValidationException {
 		if (this.onAttack != null)
 			for (MPROnHit onHit : this.onAttack)
-				onHit.validate(file);
+				onHit.validate();
 
 		if (this.onAttacked != null)
 			for (MPROnHit onHit : this.onAttacked)
-				onHit.validate(file);
+				onHit.validate();
 	}
 
 	public void addToNBT(LivingEntity entity) {

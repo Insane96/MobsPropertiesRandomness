@@ -1,6 +1,8 @@
 package insane96mcp.mobspropertiesrandomness.data;
 
 import com.google.gson.Gson;
+import com.google.gson.JsonSyntaxException;
+import insane96mcp.insanelib.exception.JsonValidationException;
 import insane96mcp.insanelib.util.FileUtils;
 import insane96mcp.mobspropertiesrandomness.json.MPRPreset;
 import insane96mcp.mobspropertiesrandomness.util.Logger;
@@ -39,34 +41,33 @@ public class MPRPresetReloadListener extends SimplePreparableReloadListener<Void
 		Logger.info("Reloading Presets");
 		MPR_PRESETS.clear();
 
-		boolean correctlyReloaded = true;
 		Gson gson = new Gson();
 
 		ArrayList<File> jsonFiles = FileUtils.ListFilesForFolder(presetsFolder);
 
 		for (File file : jsonFiles) {
-			//Ignore files that start with underscore '_'
+			//Ignore files that start with underscore '_' or comma '.'
 			if (file.getName().startsWith("_") || file.getName().startsWith("."))
 				continue;
 
 			try {
-				Logger.info(file.getName());
 				FileReader fileReader = new FileReader(file);
 				MPRPreset preset = gson.fromJson(fileReader, MPRPreset.class);
 				preset.name = FilenameUtils.removeExtension(file.getName());
-				Logger.debug(preset.toString());
-				preset.validate(file);
+				preset.validate();
 				MPR_PRESETS.add(preset);
-			} catch (Exception e) {
-				correctlyReloaded = false;
-				Logger.error(Logger.getStackTrace(e));
-				e.printStackTrace();
+			}
+			catch (JsonValidationException e) {
+				Logger.error("Validation error loading Preset %s: %s", FilenameUtils.removeExtension(file.getName()), e.getMessage());
+			}
+			catch (JsonSyntaxException e) {
+				Logger.error("Parsing error loading Preset %s: %s", FilenameUtils.removeExtension(file.getName()), e.getMessage());
+			}
+			catch (Exception e) {
+				Logger.error("Failed loading Preset %s: %s", FilenameUtils.removeExtension(file.getName()), e.getMessage());
 			}
 		}
 
-		if (correctlyReloaded)
-			Logger.info("Correctly reloaded all Presets");
-		else
-			Logger.warn("Reloaded all Presets with error(s)");
+		Logger.warn("Loaded %s Mobs", MPR_PRESETS.size());
 	}
 }

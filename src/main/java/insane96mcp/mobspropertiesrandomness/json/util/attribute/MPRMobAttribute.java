@@ -1,6 +1,6 @@
 package insane96mcp.mobspropertiesrandomness.json.util.attribute;
 
-import insane96mcp.mobspropertiesrandomness.exception.InvalidJsonException;
+import insane96mcp.insanelib.exception.JsonValidationException;
 import insane96mcp.mobspropertiesrandomness.json.IMPRAppliable;
 import insane96mcp.mobspropertiesrandomness.json.IMPRObject;
 import insane96mcp.mobspropertiesrandomness.util.Logger;
@@ -12,13 +12,12 @@ import net.minecraft.world.entity.ai.attributes.AttributeModifier;
 import net.minecraft.world.level.Level;
 import net.minecraftforge.registries.ForgeRegistries;
 
-import java.io.File;
 import java.util.UUID;
 
 public class MPRMobAttribute extends MPRAttribute implements IMPRObject, IMPRAppliable {
 	@Override
-	public void validate(File file) throws InvalidJsonException {
-		super.validate(file);
+	public void validate() throws JsonValidationException {
+		super.validate();
 	}
 
 	@Override

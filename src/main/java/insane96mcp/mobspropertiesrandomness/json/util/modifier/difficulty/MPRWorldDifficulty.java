@@ -1,11 +1,9 @@
 package insane96mcp.mobspropertiesrandomness.json.util.modifier.difficulty;
 
 import com.google.gson.annotations.SerializedName;
-import insane96mcp.mobspropertiesrandomness.exception.InvalidJsonException;
+import insane96mcp.insanelib.exception.JsonValidationException;
 import insane96mcp.mobspropertiesrandomness.json.IMPRObject;
 import net.minecraft.world.Difficulty;
-
-import java.io.File;
 
 public class MPRWorldDifficulty implements IMPRObject {
 
@@ -15,9 +13,9 @@ public class MPRWorldDifficulty implements IMPRObject {
 	public Float hard;
 
 	@Override
-	public void validate(File file) throws InvalidJsonException {
+	public void validate() throws JsonValidationException {
 		if (operation == null)
-			throw new InvalidJsonException("Missing Operation for Difficulty object. " + this, file);
+			throw new JsonValidationException("Missing Operation for Difficulty object. " + this);
 
 		if (operation == Operation.ADD) {
 			if (easy == null)

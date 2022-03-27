@@ -2,8 +2,8 @@ package insane96mcp.mobspropertiesrandomness.json.util;
 
 import com.google.gson.annotations.SerializedName;
 import com.mojang.brigadier.exceptions.CommandSyntaxException;
+import insane96mcp.insanelib.exception.JsonValidationException;
 import insane96mcp.insanelib.util.weightedrandom.IWeightedRandom;
-import insane96mcp.mobspropertiesrandomness.exception.InvalidJsonException;
 import insane96mcp.mobspropertiesrandomness.json.IMPRObject;
 import insane96mcp.mobspropertiesrandomness.json.util.attribute.MPRItemAttribute;
 import net.minecraft.nbt.CompoundTag;
@@ -14,7 +14,6 @@ import net.minecraft.world.level.Level;
 import net.minecraftforge.registries.ForgeRegistries;
 
 import javax.annotation.Nullable;
-import java.io.File;
 import java.util.List;
 
 public class MPRItem implements IMPRObject, IWeightedRandom {
@@ -37,38 +36,38 @@ public class MPRItem implements IMPRObject, IWeightedRandom {
 	public MPRWorldWhitelist worldWhitelist;
 
 	@Override
-	public void validate(File file) throws InvalidJsonException {
+	public void validate() throws JsonValidationException {
 		if (id == null)
-			throw new InvalidJsonException("Missing id. " + this, file);
+			throw new JsonValidationException("Missing id. " + this);
 		else if (ForgeRegistries.ITEMS.getValue(new ResourceLocation(this.id)) == null)
-			throw new InvalidJsonException("Invalid id. " + this, file);
+			throw new JsonValidationException("Invalid id. " + this);
 
 		if (modifiableWeight == null)
-			throw new InvalidJsonException("Missing weight. " + this, file);
-		modifiableWeight.validate(file);
+			throw new JsonValidationException("Missing weight. " + this);
+		modifiableWeight.validate();
 
 		if (dropChance != null)
-			dropChance.validate(file);
+			dropChance.validate();
 
 		if (enchantments != null)
 			for (MPREnchantment enchantment : enchantments)
-				enchantment.validate(file);
+				enchantment.validate();
 
 		if (attributes != null)
 			for (MPRItemAttribute itemAttribute : attributes)
-				itemAttribute.validate(file);
+				itemAttribute.validate();
 
 		if (this.nbt != null) {
 			try {
 				this._nbt = TagParser.parseTag(this.nbt);
 			}
 			catch (CommandSyntaxException e) {
-				throw new InvalidJsonException("Invalid nbt for Item: " + this.nbt, file);
+				throw new JsonValidationException("Invalid nbt for Item: " + this.nbt);
 			}
 		}
 
 		if (worldWhitelist != null)
-			worldWhitelist.validate(file);
+			worldWhitelist.validate();
 	}
 
 	/**

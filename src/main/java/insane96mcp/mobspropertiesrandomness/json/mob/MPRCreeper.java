@@ -1,8 +1,8 @@
 package insane96mcp.mobspropertiesrandomness.json.mob;
 
 import com.google.gson.annotations.SerializedName;
+import insane96mcp.insanelib.exception.JsonValidationException;
 import insane96mcp.insanelib.setup.ILStrings;
-import insane96mcp.mobspropertiesrandomness.exception.InvalidJsonException;
 import insane96mcp.mobspropertiesrandomness.json.IMPRAppliable;
 import insane96mcp.mobspropertiesrandomness.json.IMPRObject;
 import insane96mcp.mobspropertiesrandomness.json.util.MPRModifiableValue;
@@ -17,8 +17,6 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.Level;
 import net.minecraftforge.network.NetworkDirection;
 
-import java.io.File;
-
 public class MPRCreeper implements IMPRObject, IMPRAppliable {
 	public MPRRange fuse;
 	@SerializedName("explosion_radius")
@@ -29,18 +27,18 @@ public class MPRCreeper implements IMPRObject, IMPRAppliable {
 	public MPRModifiableValue fireChance;
 
 	@Override
-	public void validate(File file) throws InvalidJsonException {
+	public void validate() throws JsonValidationException {
 		if (fuse != null)
-			fuse.validate(file);
+			fuse.validate();
 
 		if (explosionRadius != null)
-			explosionRadius.validate(file);
+			explosionRadius.validate();
 
 		if (poweredChance != null)
-			poweredChance.validate(file);
+			poweredChance.validate();
 
 		if (fireChance != null)
-			fireChance.validate(file);
+			fireChance.validate();
 	}
 
 	@Override

@@ -1,9 +1,7 @@
 package insane96mcp.mobspropertiesrandomness.json;
 
-import insane96mcp.mobspropertiesrandomness.exception.InvalidJsonException;
-
-import java.io.File;
+import insane96mcp.insanelib.exception.JsonValidationException;
 
 public interface IMPRObject {
-	public void validate(final File file) throws InvalidJsonException;
+	public void validate() throws JsonValidationException;
 }

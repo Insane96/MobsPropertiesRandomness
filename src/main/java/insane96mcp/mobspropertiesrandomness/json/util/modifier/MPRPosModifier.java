@@ -1,12 +1,10 @@
 package insane96mcp.mobspropertiesrandomness.json.util.modifier;
 
 import com.google.gson.annotations.SerializedName;
-import insane96mcp.mobspropertiesrandomness.exception.InvalidJsonException;
+import insane96mcp.insanelib.exception.JsonValidationException;
 import insane96mcp.mobspropertiesrandomness.json.IMPRObject;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.Vec3;
-
-import java.io.File;
 
 public class MPRPosModifier implements IMPRObject {
 
@@ -37,12 +35,12 @@ public class MPRPosModifier implements IMPRObject {
 	}
 
 	@Override
-	public void validate(File file) throws InvalidJsonException {
+	public void validate() throws JsonValidationException {
 		if (this.distanceFromSpawnBonus != null && this.distanceFromSpawnStep == null || this.distanceFromSpawnBonus == null && this.distanceFromSpawnStep != null)
-			throw new InvalidJsonException("distance_from_spawn_bonus and distance_from_spawn_step are required for eachother. " + this, file);
+			throw new JsonValidationException("distance_from_spawn_bonus and distance_from_spawn_step are required for eachother. " + this);
 
 		if (this.depthBonus != null && this.depthStep == null || this.depthBonus == null && this.depthStep != null)
-			throw new InvalidJsonException("depth_bonus and depth_step are required for eachother. " + this, file);
+			throw new JsonValidationException("depth_bonus and depth_step are required for eachother. " + this);
 	}
 
 	public float applyModifier(Level world, Vec3 pos, float value) {

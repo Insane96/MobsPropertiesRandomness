@@ -1,8 +1,8 @@
 package insane96mcp.mobspropertiesrandomness.json.util;
 
 import com.google.gson.annotations.SerializedName;
+import insane96mcp.insanelib.exception.JsonValidationException;
 import insane96mcp.insanelib.util.weightedrandom.IWeightedRandom;
-import insane96mcp.mobspropertiesrandomness.exception.InvalidJsonException;
 import insane96mcp.mobspropertiesrandomness.json.IMPRObject;
 import insane96mcp.mobspropertiesrandomness.json.MPRPreset;
 import insane96mcp.mobspropertiesrandomness.util.Logger;
@@ -10,7 +10,6 @@ import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.level.Level;
 
 import javax.annotation.Nullable;
-import java.io.File;
 
 import static insane96mcp.mobspropertiesrandomness.data.MPRPresetReloadListener.MPR_PRESETS;
 
@@ -26,9 +25,9 @@ public class MPRWeightedPreset implements IMPRObject, IWeightedRandom {
 	public MPRWorldWhitelist worldWhitelist;
 
 	@Override
-	public void validate(File file) throws InvalidJsonException {
+	public void validate() throws JsonValidationException {
 		if (this.name == null)
-			throw new InvalidJsonException("Missing name in Weighted Preset. " + this, file);
+			throw new JsonValidationException("Missing name in Weighted Preset. " + this);
 		boolean found = false;
 		for (MPRPreset preset : MPR_PRESETS) {
 			if (preset.name.equals(this.name)) {
@@ -40,11 +39,11 @@ public class MPRWeightedPreset implements IMPRObject, IWeightedRandom {
 			Logger.info("Preset " + this.name + " does not exist");
 
 		if (this.modifiableWeight == null)
-			throw new InvalidJsonException("Missing weight in Weighted Preset. " + this, file);
-		this.modifiableWeight.validate(file);
+			throw new JsonValidationException("Missing weight in Weighted Preset. " + this);
+		this.modifiableWeight.validate();
 
 		if (worldWhitelist != null)
-			worldWhitelist.validate(file);
+			worldWhitelist.validate();
 	}
 
 	/**

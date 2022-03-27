@@ -1,7 +1,7 @@
 package insane96mcp.mobspropertiesrandomness.json;
 
 import com.google.gson.annotations.SerializedName;
-import insane96mcp.mobspropertiesrandomness.exception.InvalidJsonException;
+import insane96mcp.insanelib.exception.JsonValidationException;
 import insane96mcp.mobspropertiesrandomness.json.util.MPRPresets;
 import insane96mcp.mobspropertiesrandomness.setup.Strings;
 import insane96mcp.mobspropertiesrandomness.util.Logger;
@@ -14,8 +14,6 @@ import net.minecraft.world.level.Level;
 import net.minecraftforge.event.entity.EntityJoinWorldEvent;
 import net.minecraftforge.registries.ForgeRegistries;
 
-import java.io.File;
-
 import static insane96mcp.mobspropertiesrandomness.data.MPRMobReloadListener.MPR_MOBS;
 
 public class MPRMob extends MPRProperties implements IMPRObject {
@@ -26,25 +24,25 @@ public class MPRMob extends MPRProperties implements IMPRObject {
 	public MPRPresets presets;
 
 	@Override
-	public void validate(File file) throws InvalidJsonException {
-		super.validate(file);
+	public void validate() throws JsonValidationException {
+		super.validate();
 		if (this.mobId == null && this.group == null)
-			throw new InvalidJsonException("Missing mob_id or group. " + this, file);
+			throw new JsonValidationException("Missing mob_id or group. " + this);
 		else if (this.mobId != null && this.group != null)
 			Logger.info("mob_id and group are both present, mob_id will be ignored");
 
 		if (this.mobId != null) {
 			String[] splitId = this.mobId.split(":");
 			if (splitId.length != 2)
-				throw new InvalidJsonException("Invalid mob_id " + this.mobId, file);
+				throw new JsonValidationException("Invalid mob_id " + this.mobId);
 
 			ResourceLocation resourceLocation = new ResourceLocation(this.mobId);
 			if (!ForgeRegistries.ENTITIES.containsKey(resourceLocation) && !this.mobId.endsWith("*"))
-				throw new InvalidJsonException("Mob with ID " + this.mobId + " does not exist", file);
+				throw new JsonValidationException("Mob with ID " + this.mobId + " does not exist");
 		}
 
 		if (this.presets != null)
-			this.presets.validate(file);
+			this.presets.validate();
 	}
 
 	public static void apply(EntityJoinWorldEvent event) {
@@ -57,10 +55,8 @@ public class MPRMob extends MPRProperties implements IMPRObject {
 		if (world.isClientSide)
 			return;
 
-		if (!(entity instanceof LivingEntity))
+		if (!(entity instanceof LivingEntity livingEntity))
 			return;
-
-		LivingEntity livingEntity = (LivingEntity) entity;
 
 		CompoundTag tags = livingEntity.getPersistentData();
 		boolean isAlreadyChecked = tags.getBoolean(Strings.Tags.PROCESSED);

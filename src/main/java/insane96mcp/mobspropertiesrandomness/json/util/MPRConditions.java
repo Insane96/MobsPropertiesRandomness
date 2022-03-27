@@ -2,16 +2,15 @@ package insane96mcp.mobspropertiesrandomness.json.util;
 
 import com.google.gson.annotations.SerializedName;
 import com.mojang.brigadier.exceptions.CommandSyntaxException;
+import insane96mcp.insanelib.exception.JsonValidationException;
 import insane96mcp.insanelib.setup.ILStrings;
 import insane96mcp.insanelib.util.MCUtils;
-import insane96mcp.mobspropertiesrandomness.exception.InvalidJsonException;
 import insane96mcp.mobspropertiesrandomness.json.IMPRObject;
 import insane96mcp.mobspropertiesrandomness.json.util.condition.MPRAdvancement;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.TagParser;
 import net.minecraft.world.entity.LivingEntity;
 
-import java.io.File;
 import java.util.List;
 
 public class MPRConditions implements IMPRObject {
@@ -28,7 +27,7 @@ public class MPRConditions implements IMPRObject {
 	public transient CompoundTag _nbt;
 
 	@Override
-	public void validate(File file) throws InvalidJsonException {
+	public void validate() throws JsonValidationException {
 		if (this.spawnerBehaviour == null)
 			this.spawnerBehaviour = SpawnerBehaviour.NONE;
 
@@ -40,13 +39,13 @@ public class MPRConditions implements IMPRObject {
 				this._nbt = TagParser.parseTag(this.nbt);
 			}
 			catch (CommandSyntaxException e) {
-				throw new InvalidJsonException("Invalid nbt for Conditions: " + this.nbt, file);
+				throw new JsonValidationException("Invalid nbt for Conditions: " + this.nbt);
 			}
 		}
 
 		if (this.advancements != null) {
 			for (MPRAdvancement advancement : this.advancements) {
-				advancement.validate(file);
+				advancement.validate();
 			}
 		}
 	}

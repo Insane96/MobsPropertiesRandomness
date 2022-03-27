@@ -1,7 +1,7 @@
 package insane96mcp.mobspropertiesrandomness.json.util.attribute;
 
 import com.google.gson.annotations.SerializedName;
-import insane96mcp.mobspropertiesrandomness.exception.InvalidJsonException;
+import insane96mcp.insanelib.exception.JsonValidationException;
 import insane96mcp.mobspropertiesrandomness.json.IMPRObject;
 import insane96mcp.mobspropertiesrandomness.json.util.MPRModifiableValue;
 import insane96mcp.mobspropertiesrandomness.json.util.MPRRange;
@@ -12,7 +12,6 @@ import net.minecraft.world.entity.ai.attributes.AttributeModifier;
 import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.minecraft.world.level.Level;
 
-import java.io.File;
 import java.util.UUID;
 
 public abstract class MPRAttribute implements IMPRObject {
@@ -27,28 +26,28 @@ public abstract class MPRAttribute implements IMPRObject {
 	public MPRWorldWhitelist worldWhitelist;
 
 	@Override
-	public void validate(File file) throws InvalidJsonException {
+	public void validate() throws JsonValidationException {
 		if (this.uuid == null)
 			this.uuid = UUID.randomUUID().toString();
 
 		if (this.id == null)
-			throw new InvalidJsonException("Missing Id. " + this, file);
+			throw new JsonValidationException("Missing Id. " + this);
 
 		if (this.modifierName == null)
-			throw new InvalidJsonException("Missing Modifier Name. " + this, file);
+			throw new JsonValidationException("Missing Modifier Name. " + this);
 
 		if (this.amount == null)
-			throw new InvalidJsonException("Missing Amount. " + this, file);
-		this.amount.validate(file);
+			throw new JsonValidationException("Missing Amount. " + this);
+		this.amount.validate();
 
 		if (this.operation == null)
-			throw new InvalidJsonException("Missing Operation. " + this, file);
+			throw new JsonValidationException("Missing Operation. " + this);
 
 		if (this.chance != null)
-			this.chance.validate(file);
+			this.chance.validate();
 
 		if (this.worldWhitelist != null)
-			this.worldWhitelist.validate(file);
+			this.worldWhitelist.validate();
 	}
 
 	public boolean shouldApply(LivingEntity entity, Level world) {

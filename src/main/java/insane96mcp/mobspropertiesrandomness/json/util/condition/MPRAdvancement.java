@@ -1,14 +1,13 @@
 package insane96mcp.mobspropertiesrandomness.json.util.condition;
 
 import com.google.gson.annotations.SerializedName;
+import insane96mcp.insanelib.exception.JsonValidationException;
 import insane96mcp.insanelib.util.MCUtils;
-import insane96mcp.mobspropertiesrandomness.exception.InvalidJsonException;
 import insane96mcp.mobspropertiesrandomness.json.IMPRObject;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.entity.LivingEntity;
 
-import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -23,14 +22,14 @@ public class MPRAdvancement implements IMPRObject {
 	}
 
 	@Override
-	public void validate(File file) throws InvalidJsonException {
+	public void validate() throws JsonValidationException {
 		if (this.advancements == null || this.advancements.size() == 0) {
-			throw new InvalidJsonException(String.format("Missing or empty advancements list. %s", this), file);
+			throw new JsonValidationException(String.format("Missing or empty advancements list. %s", this));
 		}
 		else {
 			for (String s : this.advancements) {
 				if (ResourceLocation.tryParse(s) == null) {
-					throw new InvalidJsonException(String.format("Invalid advancement %s in advancements list. %s", s, this), file);
+					throw new JsonValidationException(String.format("Invalid advancement %s in advancements list. %s", s, this));
 				}
 			}
 		}
