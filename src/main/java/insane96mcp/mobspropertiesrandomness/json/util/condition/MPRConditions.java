@@ -1,4 +1,4 @@
-package insane96mcp.mobspropertiesrandomness.json.util;
+package insane96mcp.mobspropertiesrandomness.json.util.condition;
 
 import com.google.gson.annotations.SerializedName;
 import com.mojang.brigadier.exceptions.CommandSyntaxException;
@@ -6,7 +6,6 @@ import insane96mcp.insanelib.exception.JsonValidationException;
 import insane96mcp.insanelib.setup.ILStrings;
 import insane96mcp.insanelib.util.MCUtils;
 import insane96mcp.mobspropertiesrandomness.json.IMPRObject;
-import insane96mcp.mobspropertiesrandomness.json.util.condition.MPRAdvancement;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.TagParser;
 import net.minecraft.world.entity.LivingEntity;
