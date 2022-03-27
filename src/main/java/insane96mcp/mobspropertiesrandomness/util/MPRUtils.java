@@ -3,10 +3,7 @@ package insane96mcp.mobspropertiesrandomness.util;
 import insane96mcp.mobspropertiesrandomness.data.MPRGroupReloadListener;
 import insane96mcp.mobspropertiesrandomness.json.MPRGroup;
 import insane96mcp.mobspropertiesrandomness.json.MPRMob;
-import net.minecraft.advancements.Advancement;
-import net.minecraft.nbt.CompoundTag;
 import net.minecraft.resources.ResourceLocation;
-import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.entity.LivingEntity;
 
 public class MPRUtils {
@@ -38,35 +35,5 @@ public class MPRUtils {
 		}
 
 		return entity.getType().getRegistryName().equals(new ResourceLocation(mob.mobId));
-
-	}
-
-	/**
-	 * Checks if nbt1 tags are all present in and match nbt2
-	 * @param nbt1
-	 * @param nbt2
-	 * @return
-	 */
-	public static boolean compareNBT(CompoundTag nbt1, CompoundTag nbt2) {
-		for (String key : nbt1.getAllKeys()) {
-			if (!nbt2.contains(key))
-				return false;
-
-			if (nbt1.get(key) instanceof CompoundTag && nbt2.get(key) instanceof CompoundTag) {
-				if (!compareNBT(nbt1.getCompound(key), nbt2.getCompound(key)))
-					return false;
-			}
-			else if (!nbt1.get(key).equals(nbt2.get(key)))
-				return false;
-		}
-		return true;
-	}
-
-	public static boolean isAdvancementDone(ServerPlayer player, ResourceLocation advancementRL) {
-		Advancement advancement = player.server.getAdvancements().getAdvancement(advancementRL);
-		if (advancement == null)
-			return false;
-
-		return player.getAdvancements().getOrStartProgress(advancement).isDone();
 	}
 }
