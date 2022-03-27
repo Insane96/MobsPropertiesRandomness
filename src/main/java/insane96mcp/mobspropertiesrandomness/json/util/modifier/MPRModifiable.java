@@ -1,10 +1,10 @@
 package insane96mcp.mobspropertiesrandomness.json.util.modifier;
 
 import com.google.gson.annotations.SerializedName;
+import insane96mcp.insanelib.util.MathHelper;
 import insane96mcp.mobspropertiesrandomness.exception.InvalidJsonException;
 import insane96mcp.mobspropertiesrandomness.json.IMPRObject;
 import insane96mcp.mobspropertiesrandomness.json.util.modifier.difficulty.MPRDifficultyModifier;
-import insane96mcp.mobspropertiesrandomness.util.MathHelper;
 
 import java.io.File;
 

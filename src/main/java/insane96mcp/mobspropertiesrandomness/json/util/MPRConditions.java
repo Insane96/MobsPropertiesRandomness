@@ -2,11 +2,11 @@ package insane96mcp.mobspropertiesrandomness.json.util;
 
 import com.google.gson.annotations.SerializedName;
 import com.mojang.brigadier.exceptions.CommandSyntaxException;
+import insane96mcp.insanelib.setup.ILStrings;
+import insane96mcp.insanelib.util.MCUtils;
 import insane96mcp.mobspropertiesrandomness.exception.InvalidJsonException;
 import insane96mcp.mobspropertiesrandomness.json.IMPRObject;
 import insane96mcp.mobspropertiesrandomness.json.util.condition.MPRAdvancement;
-import insane96mcp.mobspropertiesrandomness.setup.Strings;
-import insane96mcp.mobspropertiesrandomness.util.MPRUtils;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.TagParser;
 import net.minecraft.world.entity.LivingEntity;
@@ -60,12 +60,12 @@ public class MPRConditions implements IMPRObject {
 			CompoundTag mobNBT = new CompoundTag();
 			livingEntity.addAdditionalSaveData(mobNBT);
 			mobNBT.put("ForgeData", livingEntity.getPersistentData());
-			result = MPRUtils.compareNBT(this._nbt, mobNBT);
+			result = MCUtils.compareNBT(this._nbt, mobNBT);
 		}
 
 		CompoundTag mobPersistentData = livingEntity.getPersistentData();
-		boolean spawnedFromSpawner = mobPersistentData.getBoolean(Strings.Tags.SPAWNED_FROM_SPAWNER);
-		boolean spawnedFromStructure = mobPersistentData.getBoolean(Strings.Tags.SPAWNED_FROM_STRUCTURE);
+		boolean spawnedFromSpawner = mobPersistentData.getBoolean(ILStrings.Tags.SPAWNED_FROM_SPAWNER);
+		boolean spawnedFromStructure = mobPersistentData.getBoolean(ILStrings.Tags.SPAWNED_FROM_STRUCTURE);
 		if ((!spawnedFromSpawner && this.spawnerBehaviour == SpawnerBehaviour.SPAWNER_ONLY) || (spawnedFromSpawner && this.spawnerBehaviour == SpawnerBehaviour.NATURAL_ONLY))
 			result = false;
 		if ((!spawnedFromStructure && this.structureBehaviour == StructureBehaviour.STRUCTURE_ONLY) || (spawnedFromStructure && this.structureBehaviour == StructureBehaviour.NATURAL_ONLY))

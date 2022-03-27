@@ -1,6 +1,6 @@
 package insane96mcp.mobspropertiesrandomness.json.util.attribute;
 
-import insane96mcp.insanelib.utils.MCUtils;
+import insane96mcp.insanelib.util.MCUtils;
 import insane96mcp.mobspropertiesrandomness.exception.InvalidJsonException;
 import insane96mcp.mobspropertiesrandomness.json.IMPRObject;
 import net.minecraft.resources.ResourceLocation;

@@ -5,7 +5,7 @@ import com.google.gson.JsonDeserializer;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonParseException;
 import com.google.gson.annotations.JsonAdapter;
-import insane96mcp.insanelib.utils.RandomHelper;
+import insane96mcp.insanelib.util.RandomHelper;
 import insane96mcp.mobspropertiesrandomness.exception.InvalidJsonException;
 import insane96mcp.mobspropertiesrandomness.json.IMPRObject;
 import insane96mcp.mobspropertiesrandomness.json.util.modifier.MPRModifiable;

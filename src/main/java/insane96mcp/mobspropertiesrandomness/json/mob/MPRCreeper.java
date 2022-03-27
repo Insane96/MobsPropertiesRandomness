@@ -1,7 +1,7 @@
 package insane96mcp.mobspropertiesrandomness.json.mob;
 
 import com.google.gson.annotations.SerializedName;
-import insane96mcp.insanelib.setup.Strings;
+import insane96mcp.insanelib.setup.ILStrings;
 import insane96mcp.mobspropertiesrandomness.exception.InvalidJsonException;
 import insane96mcp.mobspropertiesrandomness.json.IMPRAppliable;
 import insane96mcp.mobspropertiesrandomness.json.IMPRObject;
@@ -78,7 +78,7 @@ public class MPRCreeper implements IMPRObject, IMPRAppliable {
 
 		//Causes fire on explosion
 		if(this.fireChance != null && world.random.nextFloat() < this.fireChance.getValue(creeper, world))
-			creeper.getPersistentData().putBoolean(Strings.Tags.EXPLOSION_CAUSES_FIRE, true);
+			creeper.getPersistentData().putBoolean(ILStrings.Tags.EXPLOSION_CAUSES_FIRE, true);
 
 		creeper.readAdditionalSaveData(compound);
 	}

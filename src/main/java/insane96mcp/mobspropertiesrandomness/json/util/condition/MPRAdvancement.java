@@ -1,9 +1,9 @@
 package insane96mcp.mobspropertiesrandomness.json.util.condition;
 
 import com.google.gson.annotations.SerializedName;
+import insane96mcp.insanelib.util.MCUtils;
 import insane96mcp.mobspropertiesrandomness.exception.InvalidJsonException;
 import insane96mcp.mobspropertiesrandomness.json.IMPRObject;
-import insane96mcp.mobspropertiesrandomness.util.MPRUtils;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.entity.LivingEntity;
@@ -46,7 +46,7 @@ public class MPRAdvancement implements IMPRObject {
 		for (ServerPlayer player : players) {
 			boolean allAdvancementDone = true;
 			for (String adv : this.advancements) {
-				if (!MPRUtils.isAdvancementDone(player, new ResourceLocation(adv))) {
+				if (!MCUtils.isAdvancementDone(player, new ResourceLocation(adv))) {
 					allAdvancementDone = false;
 				}
 			}

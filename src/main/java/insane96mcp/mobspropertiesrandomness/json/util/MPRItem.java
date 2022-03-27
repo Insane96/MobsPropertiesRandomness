@@ -2,10 +2,10 @@ package insane96mcp.mobspropertiesrandomness.json.util;
 
 import com.google.gson.annotations.SerializedName;
 import com.mojang.brigadier.exceptions.CommandSyntaxException;
+import insane96mcp.insanelib.util.weightedrandom.IWeightedRandom;
 import insane96mcp.mobspropertiesrandomness.exception.InvalidJsonException;
 import insane96mcp.mobspropertiesrandomness.json.IMPRObject;
 import insane96mcp.mobspropertiesrandomness.json.util.attribute.MPRItemAttribute;
-import insane96mcp.mobspropertiesrandomness.util.weightedrandom.IWeightedRandom;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.TagParser;
 import net.minecraft.resources.ResourceLocation;

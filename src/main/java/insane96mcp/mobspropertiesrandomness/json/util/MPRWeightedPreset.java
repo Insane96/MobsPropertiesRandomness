@@ -1,11 +1,11 @@
 package insane96mcp.mobspropertiesrandomness.json.util;
 
 import com.google.gson.annotations.SerializedName;
+import insane96mcp.insanelib.util.weightedrandom.IWeightedRandom;
 import insane96mcp.mobspropertiesrandomness.exception.InvalidJsonException;
 import insane96mcp.mobspropertiesrandomness.json.IMPRObject;
 import insane96mcp.mobspropertiesrandomness.json.MPRPreset;
 import insane96mcp.mobspropertiesrandomness.util.Logger;
-import insane96mcp.mobspropertiesrandomness.util.weightedrandom.IWeightedRandom;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.level.Level;
 

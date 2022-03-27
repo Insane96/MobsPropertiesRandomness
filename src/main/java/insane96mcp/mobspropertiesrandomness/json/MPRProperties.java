@@ -1,6 +1,7 @@
 package insane96mcp.mobspropertiesrandomness.json;
 
 import com.google.gson.annotations.SerializedName;
+import insane96mcp.insanelib.setup.ILStrings;
 import insane96mcp.mobspropertiesrandomness.exception.InvalidJsonException;
 import insane96mcp.mobspropertiesrandomness.json.mob.MPRCreeper;
 import insane96mcp.mobspropertiesrandomness.json.mob.MPRGhast;
@@ -10,7 +11,6 @@ import insane96mcp.mobspropertiesrandomness.json.util.MPRCustomName;
 import insane96mcp.mobspropertiesrandomness.json.util.MPRModifiableValue;
 import insane96mcp.mobspropertiesrandomness.json.util.attribute.MPRMobAttribute;
 import insane96mcp.mobspropertiesrandomness.json.util.onhit.MPROnHitEffects;
-import insane96mcp.mobspropertiesrandomness.setup.Strings;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.Mob;
@@ -121,7 +121,7 @@ public abstract class MPRProperties implements IMPRObject {
 			livingEntity.setSilent(true);
 
 		if (this.experienceMultiplier != null)
-			livingEntity.getPersistentData().putDouble(Strings.Tags.EXPERIENCE_MULTIPLIER, this.experienceMultiplier.getValue(livingEntity, world));
+			livingEntity.getPersistentData().putDouble(ILStrings.Tags.EXPERIENCE_MULTIPLIER, this.experienceMultiplier.getValue(livingEntity, world));
 
 		if (this.creeper != null)
 			this.creeper.apply(livingEntity, world);
