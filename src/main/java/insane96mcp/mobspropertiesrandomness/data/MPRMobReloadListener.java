@@ -67,6 +67,6 @@ public class MPRMobReloadListener extends SimplePreparableReloadListener<Void> {
 			}
 		}
 
-		Logger.warn("Loaded %s Mobs", MPR_MOBS.size());
+		Logger.info("Loaded %s Mobs", MPR_MOBS.size());
 	}
 }

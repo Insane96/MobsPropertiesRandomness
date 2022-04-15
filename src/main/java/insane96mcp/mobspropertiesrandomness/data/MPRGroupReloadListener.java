@@ -68,7 +68,7 @@ public class MPRGroupReloadListener extends SimplePreparableReloadListener<Void>
 			}
 		}
 
-		Logger.warn("Loaded %s Groups", MPR_GROUPS.size());
+		Logger.info("Loaded %s Groups", MPR_GROUPS.size());
 	}
 
 	public boolean doesGroupExist(String name) {
