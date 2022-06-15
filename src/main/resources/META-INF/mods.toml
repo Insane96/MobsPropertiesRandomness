@@ -28,6 +28,6 @@ Randomize (or just set) mobs Attributes, Equipment and Potion Effects on spawn
 [[dependencies.mobspropertiesrandomness]]
     modId="insanelib"
     mandatory=true
-    versionRange="[1.4.6,)"
+    versionRange="[1.5.1,)"
     ordering="NONE"
     side="BOTH"
