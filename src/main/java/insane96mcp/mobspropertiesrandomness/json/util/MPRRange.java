@@ -6,13 +6,13 @@ import com.google.gson.JsonElement;
 import com.google.gson.JsonParseException;
 import com.google.gson.annotations.JsonAdapter;
 import insane96mcp.insanelib.exception.JsonValidationException;
-import insane96mcp.insanelib.util.RandomHelper;
 import insane96mcp.mobspropertiesrandomness.json.IMPRObject;
 import insane96mcp.mobspropertiesrandomness.json.util.modifier.MPRModifiable;
 import insane96mcp.mobspropertiesrandomness.json.util.modifier.MPRPosModifier;
 import insane96mcp.mobspropertiesrandomness.json.util.modifier.MPRTimeExistedModifier;
 import insane96mcp.mobspropertiesrandomness.json.util.modifier.difficulty.MPRDifficultyModifier;
 import insane96mcp.mobspropertiesrandomness.util.Logger;
+import net.minecraft.util.Mth;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.level.Level;
 
@@ -88,14 +88,14 @@ public class MPRRange extends MPRModifiable implements IMPRObject {
 	 * Returns a random float value between min and max
 	 */
 	public float getFloatBetween(LivingEntity entity, Level world) {
-		return this.round(RandomHelper.getFloat(world.random, this.getMin(entity, world), this.getMax(entity, world)));
+		return this.round(Mth.nextFloat(world.random, this.getMin(entity, world), this.getMax(entity, world)));
 	}
 
 	/**
 	 * Returns a random int value between min and max
 	 */
 	public int getIntBetween(LivingEntity entity, Level world) {
-		return RandomHelper.getInt(world.random, (int) this.getMin(entity, world), (int) this.getMax(entity, world) + 1);
+		return Mth.nextInt(world.random, (int) this.getMin(entity, world), (int) this.getMax(entity, world));
 	}
 
 	@Override

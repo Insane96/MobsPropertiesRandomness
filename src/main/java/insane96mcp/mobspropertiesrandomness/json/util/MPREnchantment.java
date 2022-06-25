@@ -2,9 +2,9 @@ package insane96mcp.mobspropertiesrandomness.json.util;
 
 import com.google.gson.annotations.SerializedName;
 import insane96mcp.insanelib.exception.JsonValidationException;
-import insane96mcp.insanelib.util.RandomHelper;
 import insane96mcp.mobspropertiesrandomness.json.IMPRObject;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.util.Mth;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.item.EnchantedBookItem;
 import net.minecraft.world.item.ItemStack;
@@ -68,7 +68,7 @@ public class MPREnchantment implements IMPRObject {
 
 		int minLevel = this.level != null ? (int) this.level.getMin(entity, world) : enchantment.getMinLevel();
 		int maxLevel = this.level != null ? (int) this.level.getMax(entity, world) : enchantment.getMaxLevel();
-		int level = RandomHelper.getInt(world.random, minLevel, maxLevel);
+		int level = Mth.nextInt(world.random, minLevel, maxLevel);
 
 		addEnchantmentToItemStack(itemStack, enchantment, level);
 	}
