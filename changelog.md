@@ -1,5 +1,8 @@
 # Changelog
 
+## Upcoming
+* Added `world_whitelist` to the mob object, so you don't have to write the whitelist into every object
+
 ## 3.3.3
 * Fixed a bug where World whitelist was not checked correctly for potion effects and attributes
 * Fixed a crash when deepness in World whitelist is not specified

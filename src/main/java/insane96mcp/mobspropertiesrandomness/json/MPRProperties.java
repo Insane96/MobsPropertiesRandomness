@@ -8,6 +8,7 @@ import insane96mcp.mobspropertiesrandomness.json.mob.MPRGhast;
 import insane96mcp.mobspropertiesrandomness.json.mob.MPRPhantom;
 import insane96mcp.mobspropertiesrandomness.json.util.MPRCustomName;
 import insane96mcp.mobspropertiesrandomness.json.util.MPRModifiableValue;
+import insane96mcp.mobspropertiesrandomness.json.util.MPRWorldWhitelist;
 import insane96mcp.mobspropertiesrandomness.json.util.attribute.MPRMobAttribute;
 import insane96mcp.mobspropertiesrandomness.json.util.condition.MPRConditions;
 import insane96mcp.mobspropertiesrandomness.json.util.onhit.MPROnHitEffects;
@@ -22,6 +23,8 @@ import java.util.List;
 public abstract class MPRProperties implements IMPRObject {
 
 	public MPRConditions conditions;
+	@SerializedName("world_whitelist")
+	public MPRWorldWhitelist worldWhitelist;
 
 	@SerializedName("potion_effects")
 	public List<MPRPotionEffect> potionEffects;
@@ -52,6 +55,8 @@ public abstract class MPRProperties implements IMPRObject {
 	public void validate() throws JsonValidationException {
 		if (this.conditions != null)
 			this.conditions.validate();
+		if (this.worldWhitelist != null)
+			this.worldWhitelist.validate();
 
 		if (this.potionEffects == null)
 			this.potionEffects = new ArrayList<>();
@@ -101,6 +106,8 @@ public abstract class MPRProperties implements IMPRObject {
 
 	public boolean apply(LivingEntity livingEntity, Level world) {
 		if (this.conditions != null && !this.conditions.conditionsApply(livingEntity))
+			return false;
+		if (this.worldWhitelist != null && !this.worldWhitelist.isWhitelisted(livingEntity))
 			return false;
 		for (MPRPotionEffect potionEffect : this.potionEffects) {
 			potionEffect.apply(livingEntity, world);
