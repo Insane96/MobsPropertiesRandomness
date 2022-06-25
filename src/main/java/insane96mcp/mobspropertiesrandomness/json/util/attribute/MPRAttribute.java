@@ -57,7 +57,7 @@ public abstract class MPRAttribute implements IMPRObject {
 		if (this.chance != null && world.random.nextFloat() >= this.chance.getValue(entity, world))
 			return false;
 
-		if (worldWhitelist != null && worldWhitelist.isWhitelisted(entity))
+		if (worldWhitelist != null && !worldWhitelist.isWhitelisted(entity))
 			return false;
 
 		return true;

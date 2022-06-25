@@ -64,7 +64,7 @@ public class MPRPotionEffect implements IMPRObject, IMPRAppliable {
 		if (this.chance != null && world.random.nextFloat() >= this.chance.getValue(entity, world))
 			return;
 
-		if (this.worldWhitelist != null && this.worldWhitelist.isWhitelisted(entity))
+		if (this.worldWhitelist != null && !this.worldWhitelist.isWhitelisted(entity))
 			return;
 
 		MobEffect effect = ForgeRegistries.MOB_EFFECTS.getValue(new ResourceLocation(this.id));
