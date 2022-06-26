@@ -1,7 +1,8 @@
 # Changelog
 
-## Upcoming
+## 3.3.4
 * Added `world_whitelist` to the mob object, so you don't have to write the whitelist into every object
+* Fixed presets not loading before mobs
 
 ## 3.3.3
 * Fixed a bug where World whitelist was not checked correctly for potion effects and attributes
