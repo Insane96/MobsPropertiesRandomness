@@ -52,6 +52,9 @@ public class BaseFeature extends Feature {
 
 	private void onAttack(LivingDamageEvent event) {
 		LivingEntity attacker = (LivingEntity) event.getSource().getEntity();
+		if (attacker == null)
+			return;
+
 		if (!attacker.getPersistentData().contains(Strings.Tags.ON_HIT_EFFECTS))
 			return;
 
@@ -63,6 +66,9 @@ public class BaseFeature extends Feature {
 
 	private void onAttacked(LivingDamageEvent event) {
 		LivingEntity attacked = event.getEntityLiving();
+		if (attacked == null)
+			return;
+
 		if (!attacked.getPersistentData().contains(Strings.Tags.ON_HIT_EFFECTS))
 			return;
 
