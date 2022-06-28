@@ -42,7 +42,7 @@ public class MPRModifiableValue extends MPRModifiable implements IMPRObject {
 		float value = this.value;
 
 		if (this.difficultyModifier != null)
-			value = this.difficultyModifier.applyModifier(world.getDifficulty(), world.getCurrentDifficultyAt(entity.blockPosition()).getEffectiveDifficulty(), value);
+			value = this.difficultyModifier.applyModifier(world.getDifficulty(), value);
 
 		if (this.posModifier != null)
 			value = this.posModifier.applyModifier(world, entity.position(), value);

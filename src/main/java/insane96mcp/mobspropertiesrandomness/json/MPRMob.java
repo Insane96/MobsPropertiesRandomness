@@ -37,7 +37,7 @@ public class MPRMob extends MPRProperties implements IMPRObject {
 				throw new JsonValidationException("Invalid mob_id " + this.mobId);
 
 			ResourceLocation resourceLocation = new ResourceLocation(this.mobId);
-			if (!ForgeRegistries.ENTITIES.containsKey(resourceLocation) && !this.mobId.endsWith("*"))
+			if (!ForgeRegistries.ENTITIES.containsKey(resourceLocation))
 				throw new JsonValidationException("Mob with ID " + this.mobId + " does not exist");
 		}
 

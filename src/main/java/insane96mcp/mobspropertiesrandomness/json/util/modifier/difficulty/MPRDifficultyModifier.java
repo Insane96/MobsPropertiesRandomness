@@ -10,8 +10,6 @@ public class MPRDifficultyModifier implements IMPRObject {
 	public boolean affectsMaxOnly;
 	@SerializedName("world_difficulty")
 	public MPRWorldDifficulty worldDifficulty;
-	@SerializedName("local_difficulty")
-	public MPRLocalDifficulty localDifficulty;
 
 	public MPRDifficultyModifier() {
 		affectsMaxOnly = false;
@@ -19,26 +17,19 @@ public class MPRDifficultyModifier implements IMPRObject {
 
 	@Override
 	public void validate() throws JsonValidationException {
-		if (worldDifficulty == null && localDifficulty == null)
-			throw new JsonValidationException("Difficulty Modifier is missing both difficulty and local_difficulty objects. " + this);
-
-		if (worldDifficulty != null)
-			worldDifficulty.validate();
-
-		if (localDifficulty != null)
-			localDifficulty.validate();
+		if (worldDifficulty == null)
+			throw new JsonValidationException("Difficulty Modifier is missing world_difficulty objects. " + this);
+		worldDifficulty.validate();
 	}
 
-	public float applyModifier(Difficulty worldDifficulty, float worldLocalDiff, float value) {
+	public float applyModifier(Difficulty worldDifficulty, float value) {
 		if (this.worldDifficulty != null)
 			value = this.worldDifficulty.applyModifier(worldDifficulty, value);
-		if (localDifficulty != null)
-			value = localDifficulty.applyModifier(worldLocalDiff, value);
 		return value;
 	}
 
 	@Override
 	public String toString() {
-		return String.format("DifficultyModifier{affects_max_only: %b, difficulty: %s, local_difficulty: %s}", affectsMaxOnly, worldDifficulty, localDifficulty);
+		return String.format("DifficultyModifier{affects_max_only: %b, difficulty: %s}", affectsMaxOnly, worldDifficulty);
 	}
 }

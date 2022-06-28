@@ -1,5 +1,9 @@
 # Changelog
 
+## Upcoming
+* Removed `local_difficulty` modifier as could hang the game
+* Removed namespace wide mobs (e.g. `quark:*` is no longer valid as a mob)
+
 ## 3.3.4
 * Added `world_whitelist` to the mob object, so you don't have to write the whitelist into every object
 * Fixed presets not loading before mobs
