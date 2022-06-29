@@ -62,7 +62,7 @@ public class MPRItem implements IMPRObject, IWeightedRandom {
 				this._nbt = TagParser.parseTag(this.nbt);
 			}
 			catch (CommandSyntaxException e) {
-				throw new JsonValidationException("Invalid nbt for Item: " + this.nbt);
+				throw new JsonValidationException("Invalid nbt for Item (" + e.getMessage() + "): " + this.nbt);
 			}
 		}
 
