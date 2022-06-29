@@ -8,8 +8,7 @@ import net.minecraft.world.Difficulty;
 public class MPRDifficultyModifier implements IMPRObject {
 	@SerializedName("affects_max_only")
 	public boolean affectsMaxOnly;
-	@SerializedName("world_difficulty")
-	public MPRWorldDifficulty worldDifficulty;
+	public MPRWorldDifficulty world;
 
 	public MPRDifficultyModifier() {
 		affectsMaxOnly = false;
@@ -17,19 +16,19 @@ public class MPRDifficultyModifier implements IMPRObject {
 
 	@Override
 	public void validate() throws JsonValidationException {
-		if (worldDifficulty == null)
-			throw new JsonValidationException("Difficulty Modifier is missing world_difficulty objects. " + this);
-		worldDifficulty.validate();
+		if (world == null)
+			throw new JsonValidationException("Difficulty Modifier is missing world objects. " + this);
+		world.validate();
 	}
 
 	public float applyModifier(Difficulty worldDifficulty, float value) {
-		if (this.worldDifficulty != null)
-			value = this.worldDifficulty.applyModifier(worldDifficulty, value);
+		if (this.world != null)
+			value = this.world.applyModifier(worldDifficulty, value);
 		return value;
 	}
 
 	@Override
 	public String toString() {
-		return String.format("DifficultyModifier{affects_max_only: %b, difficulty: %s}", affectsMaxOnly, worldDifficulty);
+		return String.format("DifficultyModifier{affects_max_only: %b, world: %s}", affectsMaxOnly, world);
 	}
 }
