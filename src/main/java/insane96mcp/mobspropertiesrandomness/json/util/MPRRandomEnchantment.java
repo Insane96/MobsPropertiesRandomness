@@ -43,7 +43,6 @@ public class MPRRandomEnchantment implements IMPRObject {
 
 	@Nullable
 	public Enchantment getEnchantment(Random rand, ItemStack itemStack, boolean allowIncompatible) {
-
 		Map<Enchantment, Integer> enchantmentsOnStack = EnchantmentHelper.getEnchantments(itemStack);
 
 		boolean isBook = itemStack.getItem() == Items.ENCHANTED_BOOK;

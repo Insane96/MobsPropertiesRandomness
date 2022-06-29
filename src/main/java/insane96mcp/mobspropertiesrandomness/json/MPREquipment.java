@@ -72,7 +72,7 @@ public class MPREquipment implements IMPRObject, IMPRAppliable {
 		ItemStack itemStack = new ItemStack(ForgeRegistries.ITEMS.getValue(new ResourceLocation(choosenItem.id)), 1);
 
 		if (choosenItem.nbt != null) {
-			itemStack.deserializeNBT(choosenItem.getNBT());
+			itemStack.setTag(choosenItem.getNBT());
 		}
 
 		if (choosenItem.enchantments != null) {
