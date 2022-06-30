@@ -5,6 +5,7 @@
 * Removed namespace wide mobs (e.g. `quark:*` is no longer valid as a mob)
 * Added more infos when invalid NBT is used
 * Fixed nbt tag not being applied on items
+* Fixed error/crash when using depth bonus and distance from spawn modifier was not present
 
 ## 3.3.4
 * Added `world_whitelist` to the mob object, so you don't have to write the whitelist into every object
