@@ -30,7 +30,7 @@ public class MPRGhast implements IMPRObject, IMPRAppliable {
 
 		//Explosion Radius
 		if (this.explosionPower != null && compound.getByte("ExplosionPower") == 1) {
-			int power = this.explosionPower.getIntBetween(ghast, world);
+			int power = this.explosionPower.getInt(ghast, world);
 			compound.putInt("ExplosionPower", power);
 		}
 

@@ -38,17 +38,17 @@ public class MPRModifiableValue extends MPRModifiable implements IMPRObject {
 		super.validate();
 	}
 
-	public float getValue(LivingEntity entity, Level world) {
+	public float getValue(LivingEntity entity, Level level) {
 		float value = this.value;
 
 		if (this.difficultyModifier != null)
-			value = this.difficultyModifier.applyModifier(world.getDifficulty(), value);
+			value = this.difficultyModifier.applyModifier(level.getDifficulty(), value);
 
 		if (this.posModifier != null)
-			value = this.posModifier.applyModifier(world, entity.position(), value);
+			value = this.posModifier.applyModifier(level, entity.position(), value);
 
 		if (this.timeExistedModifier != null)
-			value = this.timeExistedModifier.applyModifier(world, entity, value);
+			value = this.timeExistedModifier.applyModifier(level, entity, value);
 
 		return this.round(value);
 	}

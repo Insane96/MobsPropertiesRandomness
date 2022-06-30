@@ -55,7 +55,7 @@ public class MPRCreeper implements IMPRObject, IMPRAppliable {
 		//Fuse
 		int fuse = 30;
 		if (this.fuse != null && compound.getShort("Fuse") == 30) {
-			fuse = this.fuse.getIntBetween(creeper, world);
+			fuse = this.fuse.getInt(creeper, world);
 			compound.putShort("Fuse", (short)fuse);
 		}
 
@@ -66,7 +66,7 @@ public class MPRCreeper implements IMPRObject, IMPRAppliable {
 
 		//Explosion Radius
 		if (this.explosionRadius != null && compound.getByte("ExplosionRadius") == 3) {
-			int explosionRadius = this.explosionRadius.getIntBetween(creeper, world);
+			int explosionRadius = this.explosionRadius.getInt(creeper, world);
 			compound.putByte("ExplosionRadius", (byte) explosionRadius);
 		}
 

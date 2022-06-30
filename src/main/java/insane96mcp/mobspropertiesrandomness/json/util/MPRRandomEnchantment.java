@@ -16,7 +16,6 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.Random;
-import java.util.stream.Collectors;
 
 public class MPRRandomEnchantment implements IMPRObject {
 
@@ -35,8 +34,9 @@ public class MPRRandomEnchantment implements IMPRObject {
 	public void validate() throws JsonValidationException {
 		if (this.list != null) {
 			for (String enchantment : this.list) {
-				if (ForgeRegistries.ENCHANTMENTS.getValue(new ResourceLocation(enchantment)) == null)
+				if (ForgeRegistries.ENCHANTMENTS.getValue(new ResourceLocation(enchantment)) == null) {
 					throw new JsonValidationException("Invalid Enchantment ID " + enchantment + " for " + this);
+				}
 			}
 		}
 	}
@@ -67,7 +67,7 @@ public class MPRRandomEnchantment implements IMPRObject {
 			}
 
 			return isBook || enchantment.canEnchant(itemStack);
-		}).collect(Collectors.toList());
+		}).toList();
 
 		if (appliableEnchantments.isEmpty()) {
 			Logger.warn("Couldn't find any compatible enchantment for " + itemStack);

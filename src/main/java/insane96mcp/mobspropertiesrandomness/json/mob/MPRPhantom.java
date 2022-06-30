@@ -24,7 +24,7 @@ public class MPRPhantom implements IMPRObject, IMPRAppliable {
 
 		Phantom phantom = (Phantom) entity;
 
-		phantom.setPhantomSize(this.size.getIntBetween(phantom, world));
+		phantom.setPhantomSize(this.size.getInt(phantom, world));
 	}
 
 

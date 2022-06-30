@@ -54,32 +54,32 @@ public class MPRRange extends MPRModifiable implements IMPRObject {
 		super.validate();
 	}
 
-	public float getMin(LivingEntity entity, Level world) {
+	public float getMin(LivingEntity entity, Level level) {
 		float min = this.min;
 
 		if (this.difficultyModifier != null && !this.difficultyModifier.affectsMaxOnly)
-			min = this.difficultyModifier.applyModifier(world.getDifficulty(), min);
+			min = this.difficultyModifier.applyModifier(level.getDifficulty(), min);
 
 		if (this.posModifier != null)
-			min = this.posModifier.applyModifier(world, entity.position(), min);
+			min = this.posModifier.applyModifier(level, entity.position(), min);
 
 		if (this.timeExistedModifier != null && !this.timeExistedModifier.affectsMaxOnly)
-			min = this.timeExistedModifier.applyModifier(world, entity, min);
+			min = this.timeExistedModifier.applyModifier(level, entity, min);
 
 		return min;
 	}
 
-	public float getMax(LivingEntity entity, Level world) {
+	public float getMax(LivingEntity entity, Level level) {
 		float max = this.max;
 
 		if (this.difficultyModifier != null)
-			max = this.difficultyModifier.applyModifier(world.getDifficulty(), max);
+			max = this.difficultyModifier.applyModifier(level.getDifficulty(), max);
 
 		if (this.posModifier != null)
-			max = this.posModifier.applyModifier(world, entity.position(), max);
+			max = this.posModifier.applyModifier(level, entity.position(), max);
 
 		if (this.timeExistedModifier != null)
-			max = this.timeExistedModifier.applyModifier(world, entity, max);
+			max = this.timeExistedModifier.applyModifier(level, entity, max);
 
 		return max;
 	}
@@ -87,15 +87,15 @@ public class MPRRange extends MPRModifiable implements IMPRObject {
 	/**
 	 * Returns a random float value between min and max
 	 */
-	public float getFloatBetween(LivingEntity entity, Level world) {
-		return this.round(Mth.nextFloat(world.random, this.getMin(entity, world), this.getMax(entity, world)));
+	public float getFloat(LivingEntity entity, Level level) {
+		return this.round(Mth.nextFloat(level.random, this.getMin(entity, level), this.getMax(entity, level)));
 	}
 
 	/**
 	 * Returns a random int value between min and max
 	 */
-	public int getIntBetween(LivingEntity entity, Level world) {
-		return Mth.nextInt(world.random, (int) this.getMin(entity, world), (int) this.getMax(entity, world));
+	public int getInt(LivingEntity entity, Level level) {
+		return Mth.nextInt(level.random, (int) this.getMin(entity, level), (int) this.getMax(entity, level));
 	}
 
 	@Override
