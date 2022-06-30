@@ -11,6 +11,7 @@ import net.minecraft.nbt.TagParser;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.level.Level;
+import net.minecraftforge.fml.ModList;
 import net.minecraftforge.registries.ForgeRegistries;
 
 import javax.annotation.Nullable;
@@ -28,6 +29,8 @@ public class MPRItem implements IMPRObject, IWeightedRandom {
 	@SerializedName("drop_chance")
 	public MPRModifiableValue dropChance;
 	public List<MPREnchantment> enchantments;
+	@SerializedName("ticon_modifiers")
+	public List<MPRTiConModifier> ticonModifiers;
 	public List<MPRItemAttribute> attributes;
 	public String nbt;
 	private transient CompoundTag _nbt;
@@ -52,6 +55,16 @@ public class MPRItem implements IMPRObject, IWeightedRandom {
 		if (enchantments != null)
 			for (MPREnchantment enchantment : enchantments)
 				enchantment.validate();
+
+		if (this.ticonModifiers != null) {
+			if (!ModList.get().isLoaded("tconstruct")) {
+				throw new JsonValidationException("Tinkers' Construct is not installed");
+			}
+			else {
+				for (MPRTiConModifier tiConModifier : this.ticonModifiers)
+					tiConModifier.validate();
+			}
+		}
 
 		if (attributes != null)
 			for (MPRItemAttribute itemAttribute : attributes)

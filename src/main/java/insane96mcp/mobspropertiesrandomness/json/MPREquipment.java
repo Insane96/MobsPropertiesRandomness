@@ -5,6 +5,7 @@ import insane96mcp.insanelib.exception.JsonValidationException;
 import insane96mcp.mobspropertiesrandomness.json.util.MPREnchantment;
 import insane96mcp.mobspropertiesrandomness.json.util.MPRItem;
 import insane96mcp.mobspropertiesrandomness.json.util.MPRSlot;
+import insane96mcp.mobspropertiesrandomness.json.util.MPRTiConModifier;
 import insane96mcp.mobspropertiesrandomness.json.util.attribute.MPRItemAttribute;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.EquipmentSlot;
@@ -78,6 +79,12 @@ public class MPREquipment implements IMPRObject, IMPRAppliable {
 		if (choosenItem.enchantments != null) {
 			for (MPREnchantment enchantment : choosenItem.enchantments) {
 				enchantment.applyToStack(entity, world, itemStack);
+			}
+		}
+
+		if (choosenItem.ticonModifiers != null) {
+			for (MPRTiConModifier tiConModifier : choosenItem.ticonModifiers) {
+				itemStack = tiConModifier.applyToStack(entity, world, itemStack);
 			}
 		}
 
