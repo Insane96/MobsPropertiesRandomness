@@ -1,6 +1,7 @@
 # Changelog
 
-## Upcoming
+## 3.3.5
+* Added `with_levels` to `enchantments`
 * Removed `local_difficulty` modifier as could hang the game. Also renamed `world_difficulty` to `world`
 * Removed namespace wide mobs (e.g. `quark:*` is no longer valid as a mob)
 * Added more infos when invalid NBT is used
