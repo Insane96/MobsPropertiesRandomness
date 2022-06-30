@@ -55,7 +55,7 @@ public class MPREquipment implements IMPRObject, IMPRAppliable {
 		applyEquipmentToSlot(entity, world, this.offHand, EquipmentSlot.OFFHAND);
 	}
 
-	private void applyEquipmentToSlot(LivingEntity entity, Level world, MPRSlot slot, EquipmentSlot equipmentSlotType) {
+	private void applyEquipmentToSlot(LivingEntity entity, Level level, MPRSlot slot, EquipmentSlot equipmentSlotType) {
 		if (slot == null)
 			return;
 
@@ -63,10 +63,10 @@ public class MPREquipment implements IMPRObject, IMPRAppliable {
 			|| (slot.replaceOnly && entity.getItemBySlot(equipmentSlotType).isEmpty()))
 			return;
 
-		if (slot.chance != null && world.random.nextFloat() >= slot.chance.getValue(entity, world))
+		if (slot.chance != null && level.random.nextFloat() >= slot.chance.getValue(entity, level))
 			return;
 
-		MPRItem choosenItem = slot.getRandomItem(entity, world);
+		MPRItem choosenItem = slot.getRandomItem(entity, level);
 		if (choosenItem == null)
 			return;
 
@@ -78,19 +78,23 @@ public class MPREquipment implements IMPRObject, IMPRAppliable {
 
 		if (choosenItem.enchantments != null) {
 			for (MPREnchantment enchantment : choosenItem.enchantments) {
-				enchantment.applyToStack(entity, world, itemStack);
+				enchantment.applyToStack(entity, level, itemStack);
 			}
 		}
 
 		if (choosenItem.ticonModifiers != null) {
 			for (MPRTiConModifier tiConModifier : choosenItem.ticonModifiers) {
-				itemStack = tiConModifier.applyToStack(entity, world, itemStack);
+				itemStack = tiConModifier.applyToStack(entity, level, itemStack);
 			}
+		}
+
+		if (choosenItem.ticonMaterials != null) {
+			itemStack = choosenItem.ticonMaterials.applyToStack(entity, level, itemStack);
 		}
 
 		if (choosenItem.attributes != null) {
 			for (MPRItemAttribute itemAttribute : choosenItem.attributes) {
-				itemAttribute.applyToStack(entity, world, itemStack, equipmentSlotType);
+				itemAttribute.applyToStack(entity, level, itemStack, equipmentSlotType);
 			}
 		}
 
@@ -98,7 +102,7 @@ public class MPREquipment implements IMPRObject, IMPRAppliable {
 
 		//Drop Chance
 		if (choosenItem.dropChance != null && entity instanceof Mob)
-			((Mob) entity).setDropChance(equipmentSlotType, choosenItem.dropChance.getValue(entity, world));
+			((Mob) entity).setDropChance(equipmentSlotType, choosenItem.dropChance.getValue(entity, level));
 
 	}
 
