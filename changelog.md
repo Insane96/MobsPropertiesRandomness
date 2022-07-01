@@ -1,12 +1,12 @@
 # Changelog
 
 ## Upcoming
-* `tic_modifiers`' `level` can now be omitted and will default to 1
+* `ticon_modifiers`' `level` can now be omitted and will default to 1
 
 ## Alpha 3.4.0
 * Added Tinkers Construct Materials and Modifiers setters
-    * `tic_modifiers` is a list of TiConModifier object, containing the modifier `id`, `level` as Range object and `chance` as Modifiable Value object
-    * `tic_materials` is a TiConMaterials object, containing either a list of `material` ids, or a Random TiConMaterial object `random`, containing the `max_tier` for the materials to apply 
+    * `ticon_modifiers` is a list of TiConModifier object, containing the modifier `id`, `level` as Range object and `chance` as Modifiable Value object
+    * `ticon_materials` is a TiConMaterials object, containing either a list of `material` ids, or a Random TiConMaterial object `random`, containing the `max_tier` for the materials to apply 
 
 ## 3.3.5
 * Added `with_levels` to `enchantments`
