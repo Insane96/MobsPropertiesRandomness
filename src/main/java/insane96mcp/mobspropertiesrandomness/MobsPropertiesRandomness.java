@@ -7,6 +7,7 @@ import insane96mcp.mobspropertiesrandomness.network.NetworkHandler;
 import insane96mcp.mobspropertiesrandomness.setup.Config;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.event.AddReloadListenerEvent;
+import net.minecraftforge.eventbus.api.EventPriority;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.ModLoadingContext;
 import net.minecraftforge.fml.common.Mod;
@@ -50,7 +51,7 @@ public class MobsPropertiesRandomness
 
     }
 
-    @SubscribeEvent
+    @SubscribeEvent(priority = EventPriority.LOW)
     public void onAddReloadListener(AddReloadListenerEvent event) {
         event.addListener(MPRGroupReloadListener.INSTANCE);
         event.addListener(MPRPresetReloadListener.INSTANCE);
