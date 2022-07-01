@@ -15,15 +15,20 @@ import net.minecraftforge.event.entity.living.LivingDamageEvent;
 import net.minecraftforge.eventbus.api.EventPriority;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 
-@Label(name = "Base", description = "Base feature of the mod")
+@Label(name = "Base")
 public class BaseFeature extends Feature {
+	private final ForgeConfigSpec.BooleanValue tiConAttackConfig;
 	private final ForgeConfigSpec.ConfigValue<Boolean> debugConfig;
 
+	public boolean ticonAttack = true;
 	public boolean debug = false;
 
 	public BaseFeature(Module module) {
 		super(Config.builder, module, true, false);
-		Config.builder.comment(this.getDescription()).push(this.getName());
+		this.pushConfig(Config.builder);
+		this.tiConAttackConfig = Config.builder
+				.comment("If true mob attacks with Tinker tools will use the Tinker attack method. Might have side effects")
+				.define("TiCon Attack", this.ticonAttack);
 		this.debugConfig = Config.builder
 				.comment("If true, all the loaded JSONs will be logged in the mobspropertiesrandomness.log file.")
 				.define("Debug", this.debug);
@@ -33,6 +38,7 @@ public class BaseFeature extends Feature {
 	@Override
 	public void loadConfig() {
 		super.loadConfig();
+		this.ticonAttack = this.tiConAttackConfig.get();
 		this.debug = this.debugConfig.get();
 	}
 
@@ -42,7 +48,7 @@ public class BaseFeature extends Feature {
 	}
 
 	@SubscribeEvent
-	public void onLivingAttack(LivingDamageEvent event) {
+	public void onLivingDamage(LivingDamageEvent event) {
 		if (!(event.getSource().getEntity() instanceof LivingEntity))
 			return;
 
