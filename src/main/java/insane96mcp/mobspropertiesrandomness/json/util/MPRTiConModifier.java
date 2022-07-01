@@ -38,9 +38,9 @@ public class MPRTiConModifier implements IMPRObject {
 			throw new JsonValidationException("Missing id for TiCon Modifier %s".formatted(this));
 		this.modifierId = ModifierId.tryParse(this.id);
 		if (modifierId == null)
-			throw new JsonValidationException("Invalid id for TiCon Modifier %s".formatted(this));
+			throw new JsonValidationException("Invalid id for TiCon Modifier %s".formatted(this.id));
 		if (!ModifierManager.INSTANCE.contains(this.modifierId))
-			throw new JsonValidationException("Modifier does not exist. %s".formatted(this));
+			throw new JsonValidationException("Modifier does not exist. %s".formatted(this.id));
 
 		if (this.level != null)
 			this.level.validate();
