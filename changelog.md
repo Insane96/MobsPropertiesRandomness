@@ -1,5 +1,8 @@
 # Changelog
 
+## Upcoming
+* `tic_modifiers`' `level` can now be omitted and will default to 1
+
 ## Alpha 3.4.0
 * Added Tinkers Construct Materials and Modifiers setters
     * `tic_modifiers` is a list of TiConModifier object, containing the modifier `id`, `level` as Range object and `chance` as Modifiable Value object

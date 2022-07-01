@@ -1,10 +1,10 @@
 package insane96mcp.mobspropertiesrandomness.json.util;
 
-import com.google.gson.*;
+import com.google.gson.JsonDeserializationContext;
+import com.google.gson.JsonDeserializer;
+import com.google.gson.JsonElement;
+import com.google.gson.JsonParseException;
 import com.google.gson.annotations.JsonAdapter;
-import com.google.gson.reflect.TypeToken;
-import com.google.gson.stream.JsonReader;
-import com.google.gson.stream.JsonWriter;
 import insane96mcp.insanelib.exception.JsonValidationException;
 import insane96mcp.mobspropertiesrandomness.json.IMPRObject;
 import net.minecraft.world.entity.LivingEntity;
@@ -15,7 +15,6 @@ import slimeknights.tconstruct.library.modifiers.ModifierId;
 import slimeknights.tconstruct.library.modifiers.ModifierManager;
 import slimeknights.tconstruct.library.tools.nbt.ToolStack;
 
-import java.io.IOException;
 import java.lang.reflect.Type;
 
 @JsonAdapter(MPRTiConModifier.Deserializer.class)
@@ -45,6 +44,8 @@ public class MPRTiConModifier implements IMPRObject {
 
 		if (this.level != null)
 			this.level.validate();
+		else
+			this.level = new MPRRange(1);
 
 		if (this.chance != null)
 			this.chance.validate();
@@ -57,25 +58,6 @@ public class MPRTiConModifier implements IMPRObject {
 		ToolStack toolStack = ToolStack.copyFrom(itemStack);
 		toolStack.addModifier(this.modifierId, this.level.getInt(entity, level));
 		return toolStack.createStack();
-	}
-
-	public static class SafeTypeAdapterFactory implements TypeAdapterFactory {
-		@Override
-		public <T> TypeAdapter<T> create(Gson gson, TypeToken<T> type) {
-			final TypeAdapter<T> delegate = gson.getDelegateAdapter(this, type);
-			return new TypeAdapter<T>() {
-				@Override
-				public void write(JsonWriter out, T value) throws IOException { }
-
-				@Override
-				public T read(JsonReader jsonReader) throws IOException {
-					if (!ModList.get().isLoaded("tconstruct"))
-						return null;
-
-					return delegate.read(jsonReader);
-				}
-			};
-		}
 	}
 
 	public static class Deserializer implements JsonDeserializer<MPRTiConModifier> {
