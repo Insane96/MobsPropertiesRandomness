@@ -52,7 +52,8 @@ public class TiConstruct {
     /**
      * Same as ToolAttackUtil but:
      *      targetEntity.setDeltaMovement(originalTargetMotion) commented out, as prevents the player from taking knockback
-     *      All player attacking parts removed
+     *      All player attacking parts removed.
+     *      Removed heart particles
      */
     public static boolean attackEntity(IToolStackView tool, LivingEntity attackerLiving, InteractionHand hand, Entity targetEntity, DoubleSupplier cooldownFunction, boolean isExtraAttack) {
         EquipmentSlot sourceSlot = Util.getSlotType(hand);

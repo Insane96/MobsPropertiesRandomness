@@ -1,7 +1,7 @@
 # Changelog
 
-## Upcoming
-* Added TiCon Attack config option. When enable mobs will be able to use some of the Tinker tools modifiers when attacking (e.g. Sharpness, Fiery, Conducting when on fire, etc.)
+## Alpha 3.4.1
+* Added TiCon Attack config option. When enabled, mobs will be able to use some of the Tinker tools modifiers when attacking (e.g. Sharpness, Fiery, Conducting when on fire, etc.)
 * `ticon_modifiers`' `level` can now be omitted and will default to 1
 
 ## Alpha 3.4.0
