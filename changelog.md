@@ -1,5 +1,18 @@
 # Changelog
 
+## Upcoming
+* Merged `world` difficulty modifier into `difficulty_modifier`
+  * Now this is how the difficulty modifier is used:  
+    ```json
+      {
+        "value": 0.5,
+        "difficulty_modifier": {
+          "operation": "add",
+          "hard": 0.5
+        }   
+      }
+    ```
+
 ## Alpha 3.4.1
 * Added TiCon Attack config option. When enabled, mobs will be able to use some of the Tinker tools modifiers when attacking (e.g. Sharpness, Fiery, Conducting when on fire, etc.)
 * `ticon_modifiers`' `level` can now be omitted and will default to 1

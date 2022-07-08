@@ -4,7 +4,6 @@ import com.google.gson.annotations.SerializedName;
 import insane96mcp.insanelib.exception.JsonValidationException;
 import insane96mcp.insanelib.util.MathHelper;
 import insane96mcp.mobspropertiesrandomness.json.IMPRObject;
-import insane96mcp.mobspropertiesrandomness.json.util.modifier.difficulty.MPRDifficultyModifier;
 
 public abstract class MPRModifiable implements IMPRObject {
 	@SerializedName("difficulty_modifier")

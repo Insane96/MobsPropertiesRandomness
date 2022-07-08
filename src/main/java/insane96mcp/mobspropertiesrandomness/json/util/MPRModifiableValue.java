@@ -7,10 +7,10 @@ import com.google.gson.JsonParseException;
 import com.google.gson.annotations.JsonAdapter;
 import insane96mcp.insanelib.exception.JsonValidationException;
 import insane96mcp.mobspropertiesrandomness.json.IMPRObject;
+import insane96mcp.mobspropertiesrandomness.json.util.modifier.MPRDifficultyModifier;
 import insane96mcp.mobspropertiesrandomness.json.util.modifier.MPRModifiable;
 import insane96mcp.mobspropertiesrandomness.json.util.modifier.MPRPosModifier;
 import insane96mcp.mobspropertiesrandomness.json.util.modifier.MPRTimeExistedModifier;
-import insane96mcp.mobspropertiesrandomness.json.util.modifier.difficulty.MPRDifficultyModifier;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.level.Level;
 
