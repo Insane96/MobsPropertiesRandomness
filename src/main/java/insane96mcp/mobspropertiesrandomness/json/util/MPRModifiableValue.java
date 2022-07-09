@@ -22,8 +22,7 @@ public class MPRModifiableValue extends MPRModifiable implements IMPRObject {
 	private Float value;
 
 	public MPRModifiableValue(Float value) {
-		super(null, null, null, null);
-		this.value = value;
+		this(value, null, null, null, null);
 	}
 
 	public MPRModifiableValue(Float value, @Nullable MPRDifficultyModifier difficultyModifier, @Nullable MPRPosModifier posModifier, @Nullable MPRTimeExistedModifier timeExistedModifier, @Nullable Integer round) {
@@ -33,7 +32,7 @@ public class MPRModifiableValue extends MPRModifiable implements IMPRObject {
 
 	public void validate() throws JsonValidationException {
 		if (this.value == null)
-			throw new JsonValidationException("Missing value. " + this);
+			throw new JsonValidationException("Missing value for Modifiable Value. " + this);
 
 		super.validate();
 	}

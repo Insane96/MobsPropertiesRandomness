@@ -1,5 +1,8 @@
 # Changelog
 
+## Beta 3.4.3
+* Fixed crash with Range object
+
 ## Beta 3.4.2
 * Merged `world` difficulty modifier into `difficulty_modifier`
   * Now this is how the difficulty modifier is used:  

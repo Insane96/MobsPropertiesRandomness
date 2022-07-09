@@ -36,7 +36,7 @@ public class MPRRange extends MPRModifiable implements IMPRObject {
 	}
 
 	public MPRRange(float min) {
-		this(min, null);
+		this(min, min);
 	}
 
 	public void validate() throws JsonValidationException {
