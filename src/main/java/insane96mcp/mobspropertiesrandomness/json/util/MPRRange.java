@@ -60,7 +60,7 @@ public class MPRRange extends MPRModifiable implements IMPRObject {
 		if (this.difficultyModifier != null && !this.difficultyModifier.affectsMaxOnly)
 			min = this.difficultyModifier.applyModifier(level.getDifficulty(), min);
 
-		if (this.posModifier != null)
+		if (this.posModifier != null && !this.posModifier.affectsMaxOnly)
 			min = this.posModifier.applyModifier(level, entity.position(), min);
 
 		if (this.timeExistedModifier != null && !this.timeExistedModifier.affectsMaxOnly)

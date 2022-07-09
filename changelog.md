@@ -5,14 +5,16 @@
   * Now this is how the difficulty modifier is used:  
     ```json
       {
-        "value": 0.5,
+        "value": 2,
         "difficulty_modifier": {
           "operation": "add",
-          "hard": 0.5
+          "hard": 1
         }   
       }
     ```
 * Potions duration is now a range Min Max value instead of a fixed value
+* Added `affect_max_only` to `pos_modifier`
+* Fixed crash when `affects_max_only` was missing from `time_existed_multiplier`
 * Fixed Range and Modifiable Value Objects giving wrong error when `min` or `value` were missing
 
 ## Alpha 3.4.1

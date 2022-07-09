@@ -30,6 +30,9 @@ public class MPRPosModifier implements IMPRObject {
 	The two bonuses are summed up, so in the example the result would be a +43%
 	 */
 
+	@SerializedName("affects_max_only")
+	public Boolean affectsMaxOnly;
+
 	public MPRPosModifier() {
 		this.depthStartingLevel = 64f;
 	}
@@ -41,6 +44,9 @@ public class MPRPosModifier implements IMPRObject {
 
 		if (this.depthBonus != null && this.depthStep == null || this.depthBonus == null && this.depthStep != null)
 			throw new JsonValidationException("depth_bonus and depth_step are required for eachother. " + this);
+
+		if (this.affectsMaxOnly == null)
+			this.affectsMaxOnly = false;
 	}
 
 	public float applyModifier(Level world, Vec3 pos, float value) {

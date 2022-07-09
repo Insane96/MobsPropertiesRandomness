@@ -12,11 +12,7 @@ public class MPRDifficultyModifier implements IMPRObject {
 	public Float hard;
 
 	@SerializedName("affects_max_only")
-	public boolean affectsMaxOnly;
-
-	public MPRDifficultyModifier() {
-		affectsMaxOnly = false;
-	}
+	public Boolean affectsMaxOnly;
 
 	@Override
 	public void validate() throws JsonValidationException {
@@ -39,6 +35,9 @@ public class MPRDifficultyModifier implements IMPRObject {
 			if (hard == null)
 				hard = 1f;
 		}
+
+		if (this.affectsMaxOnly == null)
+			this.affectsMaxOnly = false;
 	}
 
 	public float applyModifier(Difficulty worldDifficulty, float value) {

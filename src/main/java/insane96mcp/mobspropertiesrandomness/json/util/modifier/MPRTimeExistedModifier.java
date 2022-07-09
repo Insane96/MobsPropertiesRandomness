@@ -12,14 +12,14 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class MPRTimeExistedModifier implements IMPRObject {
-	@SerializedName("affects_max_only")
-	public Boolean affectsMaxOnly;
 	@SerializedName("bonus_percentage")
 	public Double bonusPercentage;
 	public Integer seconds;
 	@SerializedName("max_bonus_percentage")
 	public Double maxBonusPercentage;
 	public Mode mode;
+	@SerializedName("affects_max_only")
+	public Boolean affectsMaxOnly;
 
 	public MPRTimeExistedModifier() {
 		this.mode = Mode.AVERAGE;
@@ -31,6 +31,9 @@ public class MPRTimeExistedModifier implements IMPRObject {
 			throw new JsonValidationException("Time Existed Modifier is missing bonus_percentage. " + this);
 		if (seconds == null || seconds == 0)
 			throw new JsonValidationException("Time Existed Modifier is missing seconds. " + this);
+
+		if (this.affectsMaxOnly == null)
+			this.affectsMaxOnly = false;
 	}
 
 	public float applyModifier(Level world, LivingEntity entity, float value) {
