@@ -23,7 +23,7 @@ public class MPRPotionEffect implements IMPRObject, IMPRAppliable {
 	@SerializedName("hide_particles")
 	public boolean hideParticles;
 
-	public Integer duration;
+	public MPRRange duration;
 
 	@SerializedName("world_whitelist")
 	public MPRWorldWhitelist worldWhitelist;
@@ -47,7 +47,7 @@ public class MPRPotionEffect implements IMPRObject, IMPRAppliable {
 			chance.validate();
 
 		if (this.duration == null)
-			this.duration = Integer.MAX_VALUE / 20;
+			this.duration = new MPRRange(Integer.MAX_VALUE);
 
 		//ambient and hide particles
 		if (ambient && hideParticles)
@@ -57,18 +57,18 @@ public class MPRPotionEffect implements IMPRObject, IMPRAppliable {
 			worldWhitelist.validate();
 	}
 
-	public void apply(LivingEntity entity, Level world) {
-		if (world.isClientSide)
+	public void apply(LivingEntity entity, Level level) {
+		if (level.isClientSide)
 			return;
 
-		if (this.chance != null && world.random.nextFloat() >= this.chance.getValue(entity, world))
+		if (this.chance != null && level.random.nextFloat() >= this.chance.getValue(entity, level))
 			return;
 
 		if (this.worldWhitelist != null && !this.worldWhitelist.isWhitelisted(entity))
 			return;
 
 		MobEffect effect = ForgeRegistries.MOB_EFFECTS.getValue(new ResourceLocation(this.id));
-		MobEffectInstance effectInstance = new MobEffectInstance(effect, this.duration * 20, this.amplifier.getInt(entity, world), this.ambient, !this.hideParticles, false);
+		MobEffectInstance effectInstance = new MobEffectInstance(effect, this.duration.getInt(entity, level) * 20, this.amplifier.getInt(entity, level), this.ambient, !this.hideParticles, false);
 		entity.addEffect(effectInstance);
 	}
 
