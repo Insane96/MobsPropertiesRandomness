@@ -1,5 +1,8 @@
 # Changelog
 
+## Upcoming
+* Fixed crash with `potion effects` `duration` when Range object is used
+
 ## Beta 3.4.3
 * Fixed crash with Range object
 

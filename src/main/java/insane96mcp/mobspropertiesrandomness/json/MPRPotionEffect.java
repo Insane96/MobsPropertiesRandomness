@@ -48,6 +48,8 @@ public class MPRPotionEffect implements IMPRObject, IMPRAppliable {
 
 		if (this.duration == null)
 			this.duration = new MPRRange(Integer.MAX_VALUE);
+		else
+			this.duration.validate();
 
 		//ambient and hide particles
 		if (ambient && hideParticles)
