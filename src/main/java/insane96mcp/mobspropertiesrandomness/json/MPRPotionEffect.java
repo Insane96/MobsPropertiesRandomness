@@ -68,6 +68,7 @@ public class MPRPotionEffect implements IMPRObject, IMPRAppliable {
 			return;
 
 		MobEffect effect = ForgeRegistries.MOB_EFFECTS.getValue(new ResourceLocation(this.id));
+		//noinspection ConstantConditions
 		MobEffectInstance effectInstance = new MobEffectInstance(effect, this.duration.getInt(entity, level) * 20, this.amplifier.getInt(entity, level), this.ambient, !this.hideParticles, false);
 		entity.addEffect(effectInstance);
 	}

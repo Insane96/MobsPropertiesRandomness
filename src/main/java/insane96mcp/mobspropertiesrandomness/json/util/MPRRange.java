@@ -24,31 +24,31 @@ public class MPRRange extends MPRModifiable implements IMPRObject {
 	private Float min;
 	private Float max;
 
-	public MPRRange(float min, @Nullable Float max, @Nullable MPRDifficultyModifier difficultyModifier, @Nullable MPRPosModifier posModifier, @Nullable MPRTimeExistedModifier timeExistedModifier, @Nullable Integer round) {
+	public MPRRange(Float min, @Nullable Float max, @Nullable MPRDifficultyModifier difficultyModifier, @Nullable MPRPosModifier posModifier, @Nullable MPRTimeExistedModifier timeExistedModifier, @Nullable Integer round) {
 		super(difficultyModifier, posModifier, timeExistedModifier, round);
 		this.min = min;
 		if (max != null)
 			this.max = Math.max(min, max);
 	}
 
-	public MPRRange(float min, @Nullable Float max) {
+	public MPRRange(Float min, @Nullable Float max) {
 		this(min, max, null, null, null, null);
 	}
 
 	public MPRRange(float min) {
-		this(min, min);
+		this(min, null);
 	}
 
 	public void validate() throws JsonValidationException {
-		if (min == null)
+		if (this.min == null)
 			throw new JsonValidationException("Missing min. " + this);
 
-		if (max == null) {
+		if (this.max == null) {
 			Logger.info("Missing max for " + this + ". Max will be equal to min.");
-			max = min;
+			this.max = this.min;
 		}
 
-		if (max < min)
+		if (this.max < this.min)
 			throw new JsonValidationException("Min cannot be greater than max. " + this);
 
 		super.validate();
@@ -108,7 +108,7 @@ public class MPRRange extends MPRModifiable implements IMPRObject {
 		public MPRRange deserialize(JsonElement json, Type typeOfT, JsonDeserializationContext context) throws JsonParseException {
 			if (json.isJsonPrimitive())
 				return new MPRRange(json.getAsFloat());
-			return new MPRRange(json.getAsJsonObject().get("min").getAsFloat(), context.deserialize(json.getAsJsonObject().get("max"), Float.class), context.deserialize(json.getAsJsonObject().get("difficulty_modifier"), MPRDifficultyModifier.class), context.deserialize(json.getAsJsonObject().get("pos_modifier"), MPRPosModifier.class), context.deserialize(json.getAsJsonObject().get("time_existed_modifier"), MPRTimeExistedModifier.class), context.deserialize(json.getAsJsonObject().get("round"), Integer.class));
+			return new MPRRange(context.deserialize(json.getAsJsonObject().get("min"), Float.class), context.deserialize(json.getAsJsonObject().get("max"), Float.class), context.deserialize(json.getAsJsonObject().get("difficulty_modifier"), MPRDifficultyModifier.class), context.deserialize(json.getAsJsonObject().get("pos_modifier"), MPRPosModifier.class), context.deserialize(json.getAsJsonObject().get("time_existed_modifier"), MPRTimeExistedModifier.class), context.deserialize(json.getAsJsonObject().get("round"), Integer.class));
 		}
 	}
 }
