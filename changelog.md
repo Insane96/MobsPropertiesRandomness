@@ -13,7 +13,7 @@
       }
     ```
 * Potions duration is now a range Min Max value instead of a fixed value
-* Fixed Range Object giving wrong error when min was missing
+* Fixed Range and Modifiable Value Objects giving wrong error when `min` or `value` were missing
 
 ## Alpha 3.4.1
 * Added TiCon Attack config option. When enabled, mobs will be able to use some of the Tinker tools modifiers when attacking (e.g. Sharpness, Fiery, Conducting when on fire, etc.)

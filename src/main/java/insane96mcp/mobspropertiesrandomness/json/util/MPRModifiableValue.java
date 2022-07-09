@@ -21,12 +21,12 @@ import java.lang.reflect.Type;
 public class MPRModifiableValue extends MPRModifiable implements IMPRObject {
 	private Float value;
 
-	public MPRModifiableValue(float value) {
+	public MPRModifiableValue(Float value) {
 		super(null, null, null, null);
 		this.value = value;
 	}
 
-	public MPRModifiableValue(float value, @Nullable MPRDifficultyModifier difficultyModifier, @Nullable MPRPosModifier posModifier, @Nullable MPRTimeExistedModifier timeExistedModifier, @Nullable Integer round) {
+	public MPRModifiableValue(Float value, @Nullable MPRDifficultyModifier difficultyModifier, @Nullable MPRPosModifier posModifier, @Nullable MPRTimeExistedModifier timeExistedModifier, @Nullable Integer round) {
 		super(difficultyModifier, posModifier, timeExistedModifier, round);
 		this.value = value;
 	}
