@@ -1,5 +1,8 @@
 # Changelog
 
+## Upcoming
+* Fixed `time_existed_modifier` spawning glitched mobs when the mob was spawned on world generation: [NaN](https://youtu.be/Z3utiqgtFGo) 
+
 ## Beta 3.4.4
 * Fixed crash with `potion effects` `duration` when Range object is used
 
@@ -20,7 +23,7 @@
     ```
 * Potions duration is now a range Min Max value instead of a fixed value
 * Added `affect_max_only` to `pos_modifier`
-* Fixed crash when `affects_max_only` was missing from `time_existed_multiplier`
+* Fixed crash when `affects_max_only` was missing from `time_existed_modifier`
 * Fixed Range and Modifiable Value Objects giving wrong error when `min` or `value` were missing
 
 ## Alpha 3.4.1

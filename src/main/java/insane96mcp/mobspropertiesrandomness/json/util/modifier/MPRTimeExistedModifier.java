@@ -3,6 +3,7 @@ package insane96mcp.mobspropertiesrandomness.json.util.modifier;
 import com.google.gson.annotations.SerializedName;
 import insane96mcp.insanelib.exception.JsonValidationException;
 import insane96mcp.mobspropertiesrandomness.json.IMPRObject;
+import insane96mcp.mobspropertiesrandomness.util.Logger;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.stats.Stats;
 import net.minecraft.world.entity.LivingEntity;
@@ -42,6 +43,10 @@ public class MPRTimeExistedModifier implements IMPRObject {
 			players.add((ServerPlayer) world.getNearestPlayer(entity, 128d));
 		else
 			players = world.getEntitiesOfClass(ServerPlayer.class, entity.getBoundingBox().inflate(128d));
+		if (players.size() == 0) {
+			Logger.warn("No player found when applying Time Existed Modifier.");
+			return value;
+		}
 		double bonus = 0d;
 		for (ServerPlayer player : players) {
 			int ticksPlayed = player.getStats().getValue(Stats.CUSTOM.get(Stats.PLAY_TIME));
