@@ -1,6 +1,26 @@
 # Changelog
 
 ## Upcoming
+* Added `nbt` to mob properties.  
+  Lets you set dynamically a mob nbt by specifying the nbt tag, the type and the value (which is a Range Object).  
+  E.g. you can add a randomized amount of absorption to a mob with
+    ```json
+    {
+      "mob_id": "minecraft:zombie",
+      "nbt": [
+        {
+          "nbt_tag": "AbsorptionAmount",
+          "type": "double",
+          "value": {
+            "min": 10,
+            "max": 20
+          }
+        }
+      ]
+    }
+    ```
+* Added `raw_nbt` to mob properties.  
+  Lets you set the nbt of the mob directly
 * Fixed `time_existed_modifier` spawning glitched mobs when the mob was spawned on world generation: [NaN](https://youtu.be/Z3utiqgtFGo) 
 
 ## Beta 3.4.4
