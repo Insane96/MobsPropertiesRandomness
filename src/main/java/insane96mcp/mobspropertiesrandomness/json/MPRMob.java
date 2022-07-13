@@ -2,7 +2,7 @@ package insane96mcp.mobspropertiesrandomness.json;
 
 import com.google.gson.annotations.SerializedName;
 import insane96mcp.insanelib.exception.JsonValidationException;
-import insane96mcp.mobspropertiesrandomness.json.util.MPRPresets;
+import insane96mcp.mobspropertiesrandomness.json.properties.MPRPresets;
 import insane96mcp.mobspropertiesrandomness.setup.Strings;
 import insane96mcp.mobspropertiesrandomness.util.Logger;
 import insane96mcp.mobspropertiesrandomness.util.MPRUtils;

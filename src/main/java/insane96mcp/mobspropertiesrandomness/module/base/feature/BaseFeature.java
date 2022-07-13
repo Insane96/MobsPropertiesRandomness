@@ -5,7 +5,7 @@ import insane96mcp.insanelib.base.Feature;
 import insane96mcp.insanelib.base.Label;
 import insane96mcp.insanelib.base.Module;
 import insane96mcp.mobspropertiesrandomness.json.MPRMob;
-import insane96mcp.mobspropertiesrandomness.json.util.onhit.MPROnHitEffects;
+import insane96mcp.mobspropertiesrandomness.json.properties.onhit.MPROnHitEffects;
 import insane96mcp.mobspropertiesrandomness.setup.Config;
 import insane96mcp.mobspropertiesrandomness.setup.Strings;
 import net.minecraft.world.entity.LivingEntity;

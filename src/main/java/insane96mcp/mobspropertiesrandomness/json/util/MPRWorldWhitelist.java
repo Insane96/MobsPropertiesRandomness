@@ -2,6 +2,7 @@ package insane96mcp.mobspropertiesrandomness.json.util;
 
 import insane96mcp.insanelib.exception.JsonValidationException;
 import insane96mcp.mobspropertiesrandomness.json.IMPRObject;
+import insane96mcp.mobspropertiesrandomness.json.util.modifiable.MPRRange;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;

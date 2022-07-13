@@ -5,6 +5,7 @@ import insane96mcp.insanelib.exception.JsonValidationException;
 import insane96mcp.insanelib.util.weightedrandom.IWeightedRandom;
 import insane96mcp.mobspropertiesrandomness.json.IMPRObject;
 import insane96mcp.mobspropertiesrandomness.json.MPRPreset;
+import insane96mcp.mobspropertiesrandomness.json.util.modifiable.MPRModifiableValue;
 import insane96mcp.mobspropertiesrandomness.util.Logger;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.level.Level;
