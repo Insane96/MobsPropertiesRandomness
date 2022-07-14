@@ -1,6 +1,6 @@
 # Changelog
 
-## Upcoming
+## Beta 3.5.0
 * Added `nbt` to mob properties.  
   Lets you set dynamically a mob nbt by specifying the nbt tag, the type and the value (which is a Range Object).  
   E.g. you can add a randomized amount of absorption to a mob with
