@@ -1,5 +1,8 @@
 # Changelog
 
+## Upcoming
+* Fix error if `advancements_done` were missing from `conditions`
+
 ## Beta 3.5.0
 * Added `nbt` to mob properties.  
   Lets you set dynamically a mob nbt by specifying the nbt tag, the type and the value (which is a Range Object).  

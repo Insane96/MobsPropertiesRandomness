@@ -69,15 +69,17 @@ public class MPRConditions implements IMPRObject {
 		if ((!spawnedFromStructure && this.structureBehaviour == StructureBehaviour.STRUCTURE_ONLY) || (spawnedFromStructure && this.structureBehaviour == StructureBehaviour.NATURAL_ONLY))
 			result = false;
 
-		boolean advancementCondition = false;
-		for (MPRAdvancement advancement : this.advancements) {
-			if (advancement.conditionApplies(livingEntity)) {
-				advancementCondition = true;
-				break;
+		if (this.advancements != null) {
+			boolean advancementCondition = false;
+			for (MPRAdvancement advancement : this.advancements) {
+				if (advancement.conditionApplies(livingEntity)) {
+					advancementCondition = true;
+					break;
+				}
 			}
+			if (!advancementCondition)
+				result = false;
 		}
-		if (!advancementCondition)
-			result = false;
 
 		return result;
 	}
