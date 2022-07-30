@@ -28,7 +28,7 @@ public class MPRModifiableValue extends MPRModifiable implements IMPRObject {
 
 	public void validate() throws JsonValidationException {
 		if (this.value == null)
-			throw new JsonValidationException("Missing value for Modifiable Value. " + this);
+			throw new JsonValidationException("Missing \"value\" in Modifiable Value. " + this);
 
 		super.validate();
 	}

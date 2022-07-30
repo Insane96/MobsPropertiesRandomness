@@ -1,8 +1,10 @@
 # Changelog
 
+## 3.5.2
+* Fixed exception when missing `value` from modifiable value
+
 ## Beta 3.5.1
 * Fix error if `advancements_done` were missing from `conditions`
-* Fixed exception when missing `value` from modifiable value
 
 ## Beta 3.5.0
 * Added `nbt` to mob properties.  

@@ -34,10 +34,10 @@ public class MPROnHit implements IMPRObject {
 	@Override
 	public void validate() throws JsonValidationException {
 		if (target == null)
-			throw new JsonValidationException("Missing target for OnHit object: " + this);
+			throw new JsonValidationException("Missing \"target\" for OnHit object: %s".formatted(this));
 
 		if (potionEffects == null) {
-			throw new JsonValidationException("Missing potion_effects for OnHit object: " + this);
+			throw new JsonValidationException("Missing \"potion_effects\" for OnHit object: %s".formatted(this));
 		}
 		else {
 			for (MPRPotionEffect potionEffect : this.potionEffects)
