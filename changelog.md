@@ -1,6 +1,6 @@
 # Changelog
 
-## Upcoming
+## Beta 3.5.1
 * Fix error if `advancements_done` were missing from `conditions`
 * Fixed exception when missing `value` from modifiable value
 
