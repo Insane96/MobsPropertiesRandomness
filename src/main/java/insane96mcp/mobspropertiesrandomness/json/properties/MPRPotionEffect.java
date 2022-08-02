@@ -49,7 +49,7 @@ public class MPRPotionEffect implements IMPRObject, IMPRAppliable {
 			chance.validate();
 
 		if (this.duration == null)
-			this.duration = new MPRRange(Integer.MAX_VALUE);
+			this.duration = new MPRRange(100000000);
 		else
 			this.duration.validate();
 

@@ -1,5 +1,8 @@
 # Changelog
 
+## 3.5.3
+* Fixed potion effects not being applied due to duration overflowing
+
 ## 3.5.2
 * Fixed exception when missing `value` from modifiable value
 
