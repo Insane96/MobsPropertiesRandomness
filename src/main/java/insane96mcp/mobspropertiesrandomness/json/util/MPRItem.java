@@ -85,7 +85,7 @@ public class MPRItem implements IMPRObject, IWeightedRandom {
 	}
 
 	public CompoundNBT getNBT() {
-		return this._nbt;
+		return this._nbt.copy();
 	}
 
 	@Override

@@ -1,5 +1,8 @@
 # Changelog
 
+## 3.3.0b
+* Fixed nbt tag not being applied on items
+
 ## 3.3.0
 * Added `advancements_done` condition
   * Contains a list of advancement objects which contain a list of `advancements` and a `player_mode`.  
