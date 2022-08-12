@@ -54,6 +54,7 @@ public class BaseFeature extends Feature {
 
 		onAttack(event);
 		onAttacked(event);
+
 	}
 
 	private void onAttack(LivingDamageEvent event) {
@@ -67,7 +68,7 @@ public class BaseFeature extends Feature {
 		//TODO Validate the MPROnHitEffects as if invalid can crash the game
 		MPROnHitEffects onHitEffects = new Gson().fromJson(attacker.getPersistentData().getString(Strings.Tags.ON_HIT_EFFECTS), MPROnHitEffects.class);
 
-		onHitEffects.applyOnAttack(attacker, event.getEntityLiving(), event.getAmount(), event.getSource().getDirectEntity() == event.getSource().getEntity());
+		onHitEffects.applyOnAttack(attacker, event.getEntityLiving(), event.getSource().getDirectEntity() == event.getSource().getEntity(), event);
 	}
 
 	private void onAttacked(LivingDamageEvent event) {
@@ -81,6 +82,6 @@ public class BaseFeature extends Feature {
 		//TODO Validate the MPROnHitEffects as if invalid can crash the game
 		MPROnHitEffects onHitEffects = new Gson().fromJson(attacked.getPersistentData().getString(Strings.Tags.ON_HIT_EFFECTS), MPROnHitEffects.class);
 
-		onHitEffects.applyOnAttacked(attacked, (LivingEntity) event.getSource().getEntity(), event.getAmount(), event.getSource().getDirectEntity() == event.getSource().getEntity());
+		onHitEffects.applyOnAttacked(attacked, (LivingEntity) event.getSource().getEntity(), event.getSource().getDirectEntity() == event.getSource().getEntity(), event);
 	}
 }

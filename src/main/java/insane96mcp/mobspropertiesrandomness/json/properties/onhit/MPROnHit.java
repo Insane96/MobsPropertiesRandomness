@@ -5,10 +5,12 @@ import insane96mcp.insanelib.exception.JsonValidationException;
 import insane96mcp.mobspropertiesrandomness.json.IMPRObject;
 import insane96mcp.mobspropertiesrandomness.json.properties.MPRPotionEffect;
 import insane96mcp.mobspropertiesrandomness.json.util.modifiable.MPRModifiableValue;
+import insane96mcp.mobspropertiesrandomness.json.util.modifiable.MPRModifier;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.sounds.SoundEvent;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.entity.LivingEntity;
+import net.minecraftforge.event.entity.living.LivingDamageEvent;
 import net.minecraftforge.registries.ForgeRegistries;
 
 import java.util.List;
@@ -17,6 +19,11 @@ public class MPROnHit implements IMPRObject {
 
 	@SerializedName("potion_effects")
 	public List<MPRPotionEffect> potionEffects;
+
+	@SerializedName("damage_modifier_operation")
+	public MPRModifier.Operation damageModifierOperation;
+	@SerializedName("damage_modifier")
+	public MPRModifiableValue damageModifier;
 
 	public Target target;
 
@@ -44,6 +51,13 @@ public class MPROnHit implements IMPRObject {
 				potionEffect.validate();
 		}
 
+		if (this.damageModifier != null) {
+			if (this.damageModifierOperation == null)
+				throw new JsonValidationException("Missing 'damage_modifier_operation' for OnHit object: %s".formatted(this));
+			else
+				this.damageModifier.validate();
+		}
+
 		if (this.chance != null)
 			this.chance.validate();
 
@@ -52,16 +66,23 @@ public class MPROnHit implements IMPRObject {
 			if (rl == null)
 				throw new JsonValidationException("Invalid resource location for On Hit playSound: " + this);
 			if (ForgeRegistries.SOUND_EVENTS.getValue(rl) == null)
-				throw new JsonValidationException("Sound doesn not exist for On Hit playSound: " + this);
+				throw new JsonValidationException("Sound does not exist for On Hit playSound: " + this);
 		}
 	}
 
-	public void apply(LivingEntity entity, LivingEntity other, float damage, boolean isDirectDamage) {
+	public void apply(LivingEntity entity, LivingEntity other, boolean isDirectDamage, LivingDamageEvent event, boolean attacked) {
 		if (this.damageType != null && ((isDirectDamage && this.damageType == DamageType.INDIRECT) || (!isDirectDamage && this.damageType == DamageType.DIRECT)))
 			return;
 
-		if (this.healthLeft != null) {
-			float health = (entity.getHealth() - damage) / entity.getMaxHealth();
+		if (this.damageModifier != null) {
+			if (this.damageModifierOperation == MPRModifier.Operation.ADD)
+				event.setAmount(event.getAmount() + this.damageModifier.getValue(entity, entity.level));
+			else
+				event.setAmount(event.getAmount() * this.damageModifier.getValue(entity, entity.level));
+		}
+
+		if (this.healthLeft != null & attacked) {
+			float health = (entity.getHealth() - event.getAmount()) / entity.getMaxHealth();
 			if (health > this.healthLeft || health <= 0f)
 				return;
 		}

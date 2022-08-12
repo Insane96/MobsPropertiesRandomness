@@ -6,6 +6,7 @@ import insane96mcp.insanelib.exception.JsonValidationException;
 import insane96mcp.mobspropertiesrandomness.json.IMPRObject;
 import insane96mcp.mobspropertiesrandomness.setup.Strings;
 import net.minecraft.world.entity.LivingEntity;
+import net.minecraftforge.event.entity.living.LivingDamageEvent;
 
 import java.util.List;
 
@@ -32,16 +33,16 @@ public class MPROnHitEffects implements IMPRObject {
 		entity.getPersistentData().putString(Strings.Tags.ON_HIT_EFFECTS, new Gson().toJson(this));
 	}
 
-	public void applyOnAttack(LivingEntity entity, LivingEntity other, float damage, boolean isDirectDamage) {
+	public void applyOnAttack(LivingEntity entity, LivingEntity other, boolean isDirectDamage, LivingDamageEvent event) {
 		if (this.onAttack != null)
 			for (MPROnHit onHit : this.onAttack)
-				onHit.apply(entity, other, damage, isDirectDamage);
+				onHit.apply(entity, other, isDirectDamage, event, false);
 	}
 
-	public void applyOnAttacked(LivingEntity entity, LivingEntity other, float damage, boolean isDirectDamage) {
+	public void applyOnAttacked(LivingEntity entity, LivingEntity other, boolean isDirectDamage, LivingDamageEvent event) {
 		if (this.onAttacked != null)
 			for (MPROnHit onHit : this.onAttacked)
-				onHit.apply(entity, other, damage, isDirectDamage);
+				onHit.apply(entity, other, isDirectDamage, event, true);
 	}
 
 	@Override

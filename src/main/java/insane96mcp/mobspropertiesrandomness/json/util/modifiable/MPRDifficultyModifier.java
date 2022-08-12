@@ -1,6 +1,5 @@
 package insane96mcp.mobspropertiesrandomness.json.util.modifiable;
 
-import com.google.gson.annotations.SerializedName;
 import insane96mcp.insanelib.exception.JsonValidationException;
 import insane96mcp.mobspropertiesrandomness.json.IMPRObject;
 import net.minecraft.world.Difficulty;
@@ -65,12 +64,5 @@ public class MPRDifficultyModifier extends MPRModifier implements IMPRObject {
 	@Override
 	public String toString() {
 		return String.format("DifficultyModifier{operation: %s, easy: %f, normal: %f, hard: %f, affects_max_only: %b}", operation, easy, normal, hard, this.doesAffectMaxOnly());
-	}
-
-	public enum Operation {
-		@SerializedName("add")
-		ADD,
-		@SerializedName("multiply")
-		MULTIPLY
 	}
 }
