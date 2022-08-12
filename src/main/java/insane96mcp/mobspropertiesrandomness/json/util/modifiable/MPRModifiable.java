@@ -5,6 +5,8 @@ import insane96mcp.insanelib.exception.JsonValidationException;
 import insane96mcp.insanelib.util.MathHelper;
 import insane96mcp.mobspropertiesrandomness.json.IMPRObject;
 
+import java.util.List;
+
 public abstract class MPRModifiable implements IMPRObject {
 	@SerializedName("difficulty_modifier")
 	public MPRDifficultyModifier difficultyModifier;
@@ -17,13 +19,18 @@ public abstract class MPRModifiable implements IMPRObject {
 	@SerializedName("time_existed_modifier")
 	public MPRTimeExistedModifier timeExistedModifier;
 
+	//Applied after time existed modifier
+	@SerializedName("conditions_modifier")
+	public List<MPRConditionModifier> conditionModifiers;
+
 	//Rounds the final result to this value
 	public Integer round;
 
-	public MPRModifiable(MPRDifficultyModifier difficultyModifier, MPRPosModifier posModifier, MPRTimeExistedModifier timeExistedModifier, Integer round) {
+	public MPRModifiable(MPRDifficultyModifier difficultyModifier, MPRPosModifier posModifier, MPRTimeExistedModifier timeExistedModifier, List<MPRConditionModifier> conditionModifiers, Integer round) {
 		this.difficultyModifier = difficultyModifier;
 		this.posModifier = posModifier;
 		this.timeExistedModifier = timeExistedModifier;
+		this.conditionModifiers = conditionModifiers;
 		this.round = round;
 	}
 
@@ -36,6 +43,12 @@ public abstract class MPRModifiable implements IMPRObject {
 
 		if (this.timeExistedModifier != null)
 			this.timeExistedModifier.validate();
+
+		if (this.conditionModifiers != null) {
+			for (MPRConditionModifier conditionModifier : this.conditionModifiers) {
+				conditionModifier.validate();
+			}
+		}
 	}
 
 	public float round(float value) {
@@ -46,6 +59,6 @@ public abstract class MPRModifiable implements IMPRObject {
 
 	@Override
 	public String toString() {
-		return String.format("difficulty_modifier: %s, pos_modifier: %s, time_existed_modifier: %s, round: %s", difficultyModifier, posModifier, timeExistedModifier, round);
+		return String.format("difficulty_modifier: %s, pos_modifier: %s, time_existed_modifier: %s, conditionModifiers: %s, round: %s", difficultyModifier, posModifier, timeExistedModifier, conditionModifiers, round);
 	}
 }

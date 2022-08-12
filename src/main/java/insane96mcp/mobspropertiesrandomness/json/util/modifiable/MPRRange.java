@@ -5,6 +5,7 @@ import com.google.gson.JsonDeserializer;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonParseException;
 import com.google.gson.annotations.JsonAdapter;
+import com.google.gson.reflect.TypeToken;
 import insane96mcp.insanelib.exception.JsonValidationException;
 import insane96mcp.mobspropertiesrandomness.json.IMPRObject;
 import insane96mcp.mobspropertiesrandomness.util.Logger;
@@ -14,21 +15,22 @@ import net.minecraft.world.level.Level;
 
 import javax.annotation.Nullable;
 import java.lang.reflect.Type;
+import java.util.List;
 
 @JsonAdapter(MPRRange.Deserializer.class)
 public class MPRRange extends MPRModifiable implements IMPRObject {
 	private Float min;
 	private Float max;
 
-	public MPRRange(Float min, @Nullable Float max, @Nullable MPRDifficultyModifier difficultyModifier, @Nullable MPRPosModifier posModifier, @Nullable MPRTimeExistedModifier timeExistedModifier, @Nullable Integer round) {
-		super(difficultyModifier, posModifier, timeExistedModifier, round);
+	public MPRRange(Float min, @Nullable Float max, @Nullable MPRDifficultyModifier difficultyModifier, @Nullable MPRPosModifier posModifier, @Nullable MPRTimeExistedModifier timeExistedModifier, @Nullable List<MPRConditionModifier> conditionsModifier, @Nullable Integer round) {
+		super(difficultyModifier, posModifier, timeExistedModifier, conditionsModifier, round);
 		this.min = min;
 		if (max != null)
 			this.max = Math.max(min, max);
 	}
 
 	public MPRRange(Float min, @Nullable Float max) {
-		this(min, max, null, null, null, null);
+		this(min, max, null, null, null, null, null);
 	}
 
 	public MPRRange(float min) {
@@ -62,6 +64,14 @@ public class MPRRange extends MPRModifiable implements IMPRObject {
 		if (this.timeExistedModifier != null && !this.timeExistedModifier.affectsMaxOnly)
 			min = this.timeExistedModifier.applyModifier(level, entity, min);
 
+		if (this.conditionModifiers != null) {
+			for (MPRConditionModifier conditionModifier : this.conditionModifiers) {
+				if (!conditionModifier.affectsMaxOnly()) {
+					min = conditionModifier.applyModifier(entity, min);
+				}
+			}
+		}
+
 		return min;
 	}
 
@@ -76,6 +86,12 @@ public class MPRRange extends MPRModifiable implements IMPRObject {
 
 		if (this.timeExistedModifier != null)
 			max = this.timeExistedModifier.applyModifier(level, entity, max);
+
+		if (this.conditionModifiers != null) {
+			for (MPRConditionModifier conditionModifier : this.conditionModifiers) {
+				max = conditionModifier.applyModifier(entity, max);
+			}
+		}
 
 		return max;
 	}
@@ -104,7 +120,13 @@ public class MPRRange extends MPRModifiable implements IMPRObject {
 		public MPRRange deserialize(JsonElement json, Type typeOfT, JsonDeserializationContext context) throws JsonParseException {
 			if (json.isJsonPrimitive())
 				return new MPRRange(json.getAsFloat());
-			return new MPRRange(context.deserialize(json.getAsJsonObject().get("min"), Float.class), context.deserialize(json.getAsJsonObject().get("max"), Float.class), context.deserialize(json.getAsJsonObject().get("difficulty_modifier"), MPRDifficultyModifier.class), context.deserialize(json.getAsJsonObject().get("pos_modifier"), MPRPosModifier.class), context.deserialize(json.getAsJsonObject().get("time_existed_modifier"), MPRTimeExistedModifier.class), context.deserialize(json.getAsJsonObject().get("round"), Integer.class));
+			return new MPRRange(context.deserialize(json.getAsJsonObject().get("min"), Float.class),
+					context.deserialize(json.getAsJsonObject().get("max"), Float.class),
+					context.deserialize(json.getAsJsonObject().get("difficulty_modifier"), MPRDifficultyModifier.class),
+					context.deserialize(json.getAsJsonObject().get("pos_modifier"), MPRPosModifier.class),
+					context.deserialize(json.getAsJsonObject().get("time_existed_modifier"), MPRTimeExistedModifier.class),
+					context.deserialize(json.getAsJsonObject().get("conditions_modifier"), new TypeToken<List<MPRConditionModifier>>() {}.getType()),
+					context.deserialize(json.getAsJsonObject().get("round"), Integer.class));
 		}
 	}
 }
