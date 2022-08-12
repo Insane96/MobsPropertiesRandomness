@@ -1,5 +1,10 @@
 # Changelog
 
+## Upcoming
+* Added Condition Modifier
+  * In a ModifiableValue or Range you can specify a `conditions_modifier` list, containing ConditionModifiers
+    * A condition modifier contains `condition` (same as the mob's one), `operation` (the operation to apply to the value) and `amount`.
+
 ## 3.5.3
 * Fixed potion effects not being applied due to duration overflowing
 
