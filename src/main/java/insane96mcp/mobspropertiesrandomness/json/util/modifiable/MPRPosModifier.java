@@ -6,7 +6,7 @@ import insane96mcp.mobspropertiesrandomness.json.IMPRObject;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.Vec3;
 
-public class MPRPosModifier implements IMPRObject {
+public class MPRPosModifier extends MPRModifier implements IMPRObject {
 
 	/*
 	 Each 'distance_from_spawn_step' blocks from spawn will increase the value to modify by 'distance_from_spawn_bonus'%. The formula is 'bonus * (distance_from_spawn / step)'. E.g. with step = 100 and bonus = 0.02 when a mob spawns 150 blocks from spawn will have the value modified as '0.02 * (150 / 100)' = '0.02 * 1.5' = '+3%'
@@ -30,9 +30,6 @@ public class MPRPosModifier implements IMPRObject {
 	The two bonuses are summed up, so in the example the result would be a +43%
 	 */
 
-	@SerializedName("affects_max_only")
-	public Boolean affectsMaxOnly;
-
 	public MPRPosModifier() {
 		this.depthStartingLevel = 64f;
 	}
@@ -40,13 +37,12 @@ public class MPRPosModifier implements IMPRObject {
 	@Override
 	public void validate() throws JsonValidationException {
 		if (this.distanceFromSpawnBonus != null && this.distanceFromSpawnStep == null || this.distanceFromSpawnBonus == null && this.distanceFromSpawnStep != null)
-			throw new JsonValidationException("distance_from_spawn_bonus and distance_from_spawn_step are required for eachother. " + this);
+			throw new JsonValidationException("distance_from_spawn_bonus and distance_from_spawn_step are required for each other. " + this);
 
 		if (this.depthBonus != null && this.depthStep == null || this.depthBonus == null && this.depthStep != null)
-			throw new JsonValidationException("depth_bonus and depth_step are required for eachother. " + this);
+			throw new JsonValidationException("depth_bonus and depth_step are required for each other. " + this);
 
-		if (this.affectsMaxOnly == null)
-			this.affectsMaxOnly = false;
+		super.validate();
 	}
 
 	public float applyModifier(Level world, Vec3 pos, float value) {
@@ -68,6 +64,6 @@ public class MPRPosModifier implements IMPRObject {
 
 	@Override
 	public String toString() {
-		return String.format("PosModifier{distance_from_spawn_bonus: %s, distance_from_spawn_step: %s, depth_bonus: %s, depth_step: %s, depth_starting_level: %s}", distanceFromSpawnBonus, distanceFromSpawnStep, depthBonus, depthStep, depthStartingLevel);
+		return String.format("PosModifier{distance_from_spawn_bonus: %s, distance_from_spawn_step: %s, depth_bonus: %s, depth_step: %s, depth_starting_level: %s, affects_max_only: %s}", distanceFromSpawnBonus, distanceFromSpawnStep, depthBonus, depthStep, depthStartingLevel, this.doesAffectMaxOnly());
 	}
 }

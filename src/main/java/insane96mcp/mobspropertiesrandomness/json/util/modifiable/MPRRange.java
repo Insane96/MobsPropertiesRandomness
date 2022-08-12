@@ -55,18 +55,18 @@ public class MPRRange extends MPRModifiable implements IMPRObject {
 	public float getMin(LivingEntity entity, Level level) {
 		float min = this.min;
 
-		if (this.difficultyModifier != null && !this.difficultyModifier.affectsMaxOnly)
+		if (this.difficultyModifier != null && !this.difficultyModifier.doesAffectMaxOnly())
 			min = this.difficultyModifier.applyModifier(level.getDifficulty(), min);
 
-		if (this.posModifier != null && !this.posModifier.affectsMaxOnly)
+		if (this.posModifier != null && !this.posModifier.doesAffectMaxOnly())
 			min = this.posModifier.applyModifier(level, entity.position(), min);
 
-		if (this.timeExistedModifier != null && !this.timeExistedModifier.affectsMaxOnly)
+		if (this.timeExistedModifier != null && !this.timeExistedModifier.doesAffectMaxOnly())
 			min = this.timeExistedModifier.applyModifier(level, entity, min);
 
 		if (this.conditionModifiers != null) {
 			for (MPRConditionModifier conditionModifier : this.conditionModifiers) {
-				if (!conditionModifier.affectsMaxOnly()) {
+				if (!conditionModifier.doesAffectMaxOnly()) {
 					min = conditionModifier.applyModifier(entity, min);
 				}
 			}

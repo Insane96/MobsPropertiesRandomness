@@ -5,14 +5,11 @@ import insane96mcp.insanelib.exception.JsonValidationException;
 import insane96mcp.mobspropertiesrandomness.json.IMPRObject;
 import net.minecraft.world.Difficulty;
 
-public class MPRDifficultyModifier implements IMPRObject {
+public class MPRDifficultyModifier extends MPRModifier implements IMPRObject {
 	public Operation operation;
 	public Float easy;
 	public Float normal;
 	public Float hard;
-
-	@SerializedName("affects_max_only")
-	public Boolean affectsMaxOnly;
 
 	@Override
 	public void validate() throws JsonValidationException {
@@ -36,8 +33,7 @@ public class MPRDifficultyModifier implements IMPRObject {
 				hard = 1f;
 		}
 
-		if (this.affectsMaxOnly == null)
-			this.affectsMaxOnly = false;
+		super.validate();
 	}
 
 	public float applyModifier(Difficulty worldDifficulty, float value) {
@@ -68,7 +64,7 @@ public class MPRDifficultyModifier implements IMPRObject {
 
 	@Override
 	public String toString() {
-		return String.format("DifficultyModifier{operation: %s, easy: %f, normal: %f, hard: %f, affects_max_only: %b}", operation, easy, normal, hard, affectsMaxOnly);
+		return String.format("DifficultyModifier{operation: %s, easy: %f, normal: %f, hard: %f, affects_max_only: %b}", operation, easy, normal, hard, this.doesAffectMaxOnly());
 	}
 
 	public enum Operation {

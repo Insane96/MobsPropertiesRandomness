@@ -14,7 +14,7 @@ public abstract class MPRModifier implements IMPRObject {
 			this.affectsMaxOnly = false;
 	}
 
-	public boolean affectsMaxOnly() {
+	public boolean doesAffectMaxOnly() {
 		return this.affectsMaxOnly;
 	}
 

@@ -12,15 +12,13 @@ import net.minecraft.world.level.Level;
 import java.util.ArrayList;
 import java.util.List;
 
-public class MPRTimeExistedModifier implements IMPRObject {
+public class MPRTimeExistedModifier extends MPRModifier implements IMPRObject {
 	@SerializedName("bonus_percentage")
 	public Double bonusPercentage;
 	public Integer seconds;
 	@SerializedName("max_bonus_percentage")
 	public Double maxBonusPercentage;
 	public Mode mode;
-	@SerializedName("affects_max_only")
-	public Boolean affectsMaxOnly;
 
 	public MPRTimeExistedModifier() {
 		this.mode = Mode.AVERAGE;
@@ -33,8 +31,7 @@ public class MPRTimeExistedModifier implements IMPRObject {
 		if (seconds == null || seconds == 0)
 			throw new JsonValidationException("Time Existed Modifier is missing seconds. " + this);
 
-		if (this.affectsMaxOnly == null)
-			this.affectsMaxOnly = false;
+		super.validate();
 	}
 
 	public float applyModifier(Level world, LivingEntity entity, float value) {
@@ -66,7 +63,7 @@ public class MPRTimeExistedModifier implements IMPRObject {
 
 	@Override
 	public String toString() {
-		return String.format("TimeExistedModifier{affects_max_only: %b, bonus_percentage: %s, seconds: %s, max_bonus_percentage: %s, mode: %s}", affectsMaxOnly, bonusPercentage, seconds, maxBonusPercentage, mode);
+		return String.format("TimeExistedModifier{affects_max_only: %b, bonus_percentage: %s, seconds: %s, max_bonus_percentage: %s, mode: %s}", this.doesAffectMaxOnly(), bonusPercentage, seconds, maxBonusPercentage, mode);
 	}
 
 	public enum Mode {
