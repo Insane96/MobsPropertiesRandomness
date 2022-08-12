@@ -8,10 +8,13 @@ public abstract class MPRModifier implements IMPRObject {
 	@SerializedName("affects_max_only")
 	private Boolean affectsMaxOnly;
 
+	public MPRModifier() {
+		this.affectsMaxOnly = false;
+	}
+
 	@Override
 	public void validate() throws JsonValidationException {
-		if (this.affectsMaxOnly == null)
-			this.affectsMaxOnly = false;
+
 	}
 
 	public boolean doesAffectMaxOnly() {
