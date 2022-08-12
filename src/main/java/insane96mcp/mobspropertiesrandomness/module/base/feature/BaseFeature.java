@@ -25,14 +25,14 @@ public class BaseFeature extends Feature {
 
 	public BaseFeature(Module module) {
 		super(Config.builder, module, true, false);
-		this.pushConfig(Config.builder);
+		//this.pushConfig(Config.builder);
 		this.tiConAttackConfig = Config.builder
 				.comment("If true mob attacks with Tinker tools will use the Tinker attack method. Might have side effects")
 				.define("TiCon Attack", this.ticonAttack);
 		this.debugConfig = Config.builder
 				.comment("If true, all the loaded JSONs will be logged in the mobspropertiesrandomness.log file.")
 				.define("Debug", this.debug);
-		Config.builder.pop();
+		//Config.builder.pop();
 	}
 
 	@Override
