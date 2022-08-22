@@ -1,5 +1,8 @@
 # Changelog
 
+## 3.3.0c
+* Fixed presets loading after mobs thus not begin recognized
+
 ## 3.3.0b
 * Fixed nbt tag not being applied on items
 

@@ -53,8 +53,8 @@ public class MobsPropertiesRandomness
     @SubscribeEvent
     public void onAddReloadListener(AddReloadListenerEvent event) {
         event.addListener(MPRGroupReloadListener.INSTANCE);
-        event.addListener(MPRMobReloadListener.INSTANCE);
         event.addListener(MPRPresetReloadListener.INSTANCE);
+        event.addListener(MPRMobReloadListener.INSTANCE);
     }
 
     public void preInit(FMLCommonSetupEvent event) {
