@@ -68,6 +68,6 @@ public class MPRPresetReloadListener extends SimplePreparableReloadListener<Void
 			}
 		}
 
-		Logger.info("Loaded %s Mobs", MPR_PRESETS.size());
+		Logger.info("Loaded %s Presets", MPR_PRESETS.size());
 	}
 }

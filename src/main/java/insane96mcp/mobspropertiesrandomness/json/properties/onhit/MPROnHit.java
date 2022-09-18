@@ -81,7 +81,7 @@ public class MPROnHit implements IMPRObject {
 				event.setAmount(event.getAmount() * this.damageModifier.getValue(entity, entity.level));
 		}
 
-		if (this.healthLeft != null & attacked) {
+		if (this.healthLeft != null && attacked) {
 			float health = (entity.getHealth() - event.getAmount()) / entity.getMaxHealth();
 			if (health > this.healthLeft || health <= 0f)
 				return;
