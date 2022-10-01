@@ -1,6 +1,6 @@
 # Changelog
 
-## Upcoming
+## 3.6.0
 * Added `game_stages_unlocked` condition
   * Works like advancements condition
 * Added Condition Modifier
