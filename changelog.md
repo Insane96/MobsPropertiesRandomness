@@ -1,12 +1,14 @@
 # Changelog
 
 ## Upcoming
+* Added `game_stages_unlocked` condition
+  * Works like advancements condition
 * Added Condition Modifier
   * In a ModifiableValue or Range you can specify a `conditions_modifier` list, containing ConditionModifiers
-    * A condition modifier contains `condition` (same as the mob's one), `operation` (the operation to apply to the value) and `amount`.
+    * A condition modifier contains `condition` (same as the mob's one), `operation` (the operation to apply to the value) and `amount` to apply to the value if the `condition`s are met
 * Added `damage_modifier` and `damage_modifier_operation` to on hit effects
   * Can be used to increase/decrease damage taken/dealt
-* `health_left` in on hit effects now only applies if the mob has been attacked.
+* `health_left` in on hit effects now only applies if the mob has been attacked
 
 ## 3.5.3
 * Fixed potion effects not being applied due to duration overflowing

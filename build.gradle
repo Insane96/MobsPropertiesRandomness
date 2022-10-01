@@ -80,6 +80,7 @@ repositories {
         name 'DVS1 Maven FS'
         url 'https://dvs1.progwml6.com/files/maven'
     }
+    maven { url 'https://maven.blamejared.com' }
     flatDir {
         dirs "libs"
     }
@@ -99,6 +100,9 @@ dependencies {
     // Copypasted from materialis. Still no shame.
     implementation fg.deobf("slimeknights.mantle:Mantle:${mc_version}-${mantle_version}")
     implementation fg.deobf("slimeknights.tconstruct:TConstruct:${mc_version}-${tic_version}")
+
+    implementation fg.deobf("net.darkhax.bookshelf:Bookshelf-Forge-${mc_version}:${bookshelf_version}")
+    implementation fg.deobf("net.darkhax.gamestages:GameStages-Forge-${mc_version}:${gamestages_version}")
 }
 
 // Example for how to get properties into the manifest for reading by the runtime..

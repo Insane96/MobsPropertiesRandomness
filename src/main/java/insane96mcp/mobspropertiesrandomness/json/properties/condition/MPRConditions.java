@@ -9,6 +9,7 @@ import insane96mcp.mobspropertiesrandomness.json.IMPRObject;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.TagParser;
 import net.minecraft.world.entity.LivingEntity;
+import net.minecraftforge.fml.ModList;
 
 import java.util.List;
 
@@ -22,6 +23,8 @@ public class MPRConditions implements IMPRObject {
 	public StructureBehaviour structureBehaviour;
 	@SerializedName("advancements_done")
 	public List<MPRAdvancement> advancements;
+	@SerializedName("game_stages_unlocked")
+	public List<MPRGameStage> gameStages;
 	public String nbt;
 	public transient CompoundTag _nbt;
 
@@ -45,6 +48,17 @@ public class MPRConditions implements IMPRObject {
 		if (this.advancements != null) {
 			for (MPRAdvancement advancement : this.advancements) {
 				advancement.validate();
+			}
+		}
+
+		if (this.gameStages != null) {
+			if (!ModList.get().isLoaded("gamestages")) {
+				throw new JsonValidationException("game_stages_unlocked present in file but no Game Stages mod installed: " + this.nbt);
+			}
+			else {
+				for (MPRGameStage gameStage : this.gameStages) {
+					gameStage.validate();
+				}
 			}
 		}
 	}
@@ -78,6 +92,18 @@ public class MPRConditions implements IMPRObject {
 				}
 			}
 			if (!advancementCondition)
+				result = false;
+		}
+
+		if (this.gameStages != null) {
+			boolean gameStagesCondition = false;
+			for (MPRGameStage gameStage : this.gameStages) {
+				if (gameStage.conditionApplies(livingEntity)) {
+					gameStagesCondition = true;
+					break;
+				}
+			}
+			if (!gameStagesCondition)
 				result = false;
 		}
 
