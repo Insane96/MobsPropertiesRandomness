@@ -4,10 +4,18 @@
 * Renamed `on_hit_effect` to `events`
 * Added generic event object, which OnHit and OnDeath inherits
   * This object contains: 
-    * `chance`: Chance to apply the effects
-    * `play_sound`: Sound to play as the event happens
-    * `function`: A function executed when the event happens
-* On hit event now inherits from the generic event object, so it now contains the aforementioned properties (the only new property is `function`)
+    * `chance`: Chance to trigger the event
+    * `play_sound`: Sound to play as the event triggers
+    * `function`: A function executed when the event triggers. The function is executed as the mob and at the mob's position (unless specified otherwise)
+* `on_attack` and `on_damaged` events now inherit from the generic event object, so it now contains the aforementioned properties (the only new property is `function`).  
+  The `function` property is executed at (and at) the "entity" or the "other" specified `target`
+* Added `on_death` event, triggered when the entity dies. 
+  * Properties:
+    * `target`: Same as `on_attack` and `on_damaged`
+    * `damage_type`: Same as `on_attack` and `on_damaged`
+* Added `on_tick` event, triggered every 20 ticks (1 second).
+  * Properties:
+    * `update_speed`: Defaults to 20, every many ticks is the event triggered
 
 ## 3.6.0
 * Added `game_stages_unlocked` condition

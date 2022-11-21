@@ -20,6 +20,9 @@ public class MPREvents implements IMPRObject {
 	@SerializedName("on_death")
 	public List<MPROnDeath> onDeath;
 
+	@SerializedName("on_tick")
+	public List<MPROnTick> onTick;
+
 	@Override
 	public void validate() throws JsonValidationException {
 		if (this.onAttack != null)
@@ -33,16 +36,21 @@ public class MPREvents implements IMPRObject {
 		if (this.onDeath != null)
 			for (MPROnDeath mprOnDeath : this.onDeath)
 				mprOnDeath.validate();
+
+		if (this.onTick != null)
+			for (MPROnTick mprOnTick : this.onTick)
+				mprOnTick.validate();
 	}
 
 	public void addToNBT(LivingEntity entity) {
 		entity.getPersistentData().putString(Strings.Tags.ON_ATTACK, new Gson().toJson(this.onAttack));
 		entity.getPersistentData().putString(Strings.Tags.ON_ATTACKED, new Gson().toJson(this.onAttacked));
 		entity.getPersistentData().putString(Strings.Tags.ON_DEATH, new Gson().toJson(this.onDeath));
+		entity.getPersistentData().putString(Strings.Tags.ON_TICK, new Gson().toJson(this.onTick));
 	}
 
 	@Override
 	public String toString() {
-		return String.format("OnHitEffects{on_attack: %s, on_attacked: %s, on_death: %s}", this.onAttack, this.onAttacked, this.onDeath);
+		return String.format("OnHitEffects{on_attack: %s, on_attacked: %s, on_death: %s, on_tick: %s}", this.onAttack, this.onAttacked, this.onDeath, this.onTick);
 	}
 }

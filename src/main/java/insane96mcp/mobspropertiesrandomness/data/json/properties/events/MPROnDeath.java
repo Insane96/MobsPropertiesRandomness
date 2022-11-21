@@ -4,6 +4,8 @@ import com.google.gson.annotations.SerializedName;
 import insane96mcp.insanelib.exception.JsonValidationException;
 import net.minecraft.world.entity.LivingEntity;
 
+import javax.annotation.Nullable;
+
 public class MPROnDeath extends MPREvent {
 
 	public Target target;
@@ -15,10 +17,10 @@ public class MPROnDeath extends MPREvent {
 	public void validate() throws JsonValidationException {
 		super.validate();
 		if (target == null)
-			throw new JsonValidationException("Missing \"target\" for OnHit object: %s".formatted(this));
+			throw new JsonValidationException("Missing \"target\" for OnDeath object: %s".formatted(this));
 	}
 
-	public void apply(LivingEntity entity, LivingEntity other, boolean isDirectDamage) {
+	public void apply(LivingEntity entity, @Nullable LivingEntity other, boolean isDirectDamage) {
 		if (!super.shouldApply(entity))
 			return;
 
@@ -27,9 +29,11 @@ public class MPROnDeath extends MPREvent {
 
 		if (this.target == Target.ENTITY) {
 			this.tryPlaySound(entity);
+			this.tryExecuteFunction(entity);
 		}
-		else if (this.target == Target.OTHER) {
+		else if (this.target == Target.OTHER && other != null) {
 			this.tryPlaySound(other);
+			this.tryExecuteFunction(other);
 		}
 	}
 

@@ -7,7 +7,9 @@ import insane96mcp.insanelib.base.Label;
 import insane96mcp.insanelib.base.Module;
 import insane96mcp.insanelib.exception.JsonValidationException;
 import insane96mcp.mobspropertiesrandomness.data.json.MPRMob;
+import insane96mcp.mobspropertiesrandomness.data.json.properties.events.MPROnDeath;
 import insane96mcp.mobspropertiesrandomness.data.json.properties.events.MPROnHit;
+import insane96mcp.mobspropertiesrandomness.data.json.properties.events.MPROnTick;
 import insane96mcp.mobspropertiesrandomness.setup.Config;
 import insane96mcp.mobspropertiesrandomness.setup.Strings;
 import insane96mcp.mobspropertiesrandomness.util.Logger;
@@ -15,6 +17,8 @@ import net.minecraft.world.entity.LivingEntity;
 import net.minecraftforge.common.ForgeConfigSpec;
 import net.minecraftforge.event.entity.EntityJoinWorldEvent;
 import net.minecraftforge.event.entity.living.LivingDamageEvent;
+import net.minecraftforge.event.entity.living.LivingDeathEvent;
+import net.minecraftforge.event.entity.living.LivingEvent;
 import net.minecraftforge.eventbus.api.EventPriority;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 
@@ -60,7 +64,47 @@ public class BaseFeature extends Feature {
 
 		onAttack(event);
 		onAttacked(event);
+	}
 
+	public static final java.lang.reflect.Type MPR_ON_DEATH_LIST_TYPE = new TypeToken<ArrayList<MPROnDeath>>(){}.getType();
+	@SubscribeEvent
+	public void onLivingDeath(LivingDeathEvent event) {
+		if (!event.getEntityLiving().getPersistentData().contains(Strings.Tags.ON_DEATH))
+			return;
+
+		LivingEntity attacker = (LivingEntity) event.getSource().getEntity();
+		List<MPROnDeath> onDeaths = new Gson().fromJson(event.getEntityLiving().getPersistentData().getString(Strings.Tags.ON_DEATH), MPR_ON_DEATH_LIST_TYPE);
+
+		for (MPROnDeath onDeath : onDeaths) {
+			//Does it impact performance?
+			try {
+				onDeath.validate();
+			} catch (JsonValidationException e) {
+				Logger.error("Failed to validate MPROnDeath: " + e);
+				continue;
+			}
+			onDeath.apply(event.getEntityLiving(), attacker, event.getSource().getDirectEntity() == event.getSource().getEntity());
+		}
+	}
+
+	public static final java.lang.reflect.Type MPR_ON_TICK_LIST_TYPE = new TypeToken<ArrayList<MPROnTick>>(){}.getType();
+	@SubscribeEvent
+	public void onLivingTick(LivingEvent.LivingUpdateEvent event) {
+		if (!event.getEntityLiving().getPersistentData().contains(Strings.Tags.ON_TICK))
+			return;
+
+		List<MPROnTick> onTicks = new Gson().fromJson(event.getEntityLiving().getPersistentData().getString(Strings.Tags.ON_TICK), MPR_ON_TICK_LIST_TYPE);
+
+		for (MPROnTick onTick : onTicks) {
+			//Does it impact performance?
+			try {
+				onTick.validate();
+			} catch (JsonValidationException e) {
+				Logger.error("Failed to validate MPROnTick: " + e);
+				continue;
+			}
+			onTick.apply(event.getEntityLiving());
+		}
 	}
 
 	public static final java.lang.reflect.Type MPR_ON_HIT_LIST_TYPE = new TypeToken<ArrayList<MPROnHit>>(){}.getType();
@@ -78,6 +122,7 @@ public class BaseFeature extends Feature {
 				mprOnHit.validate();
 			} catch (JsonValidationException e) {
 				Logger.error("Failed to validate MPROnHit: " + e);
+				continue;
 			}
 			mprOnHit.apply(attacker, event.getEntityLiving(), event.getSource().getDirectEntity() == event.getSource().getEntity(), event, false);
 		}
@@ -97,6 +142,7 @@ public class BaseFeature extends Feature {
 				mprOnHit.validate();
 			} catch (JsonValidationException e) {
 				Logger.error("Failed to validate MPROnHit: " + e);
+				continue;
 			}
 			mprOnHit.apply(attacked, (LivingEntity) event.getSource().getEntity(), event.getSource().getDirectEntity() == event.getSource().getEntity(), event, true);
 		}

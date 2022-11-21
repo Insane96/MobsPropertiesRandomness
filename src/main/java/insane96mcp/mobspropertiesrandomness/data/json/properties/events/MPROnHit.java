@@ -75,12 +75,14 @@ public class MPROnHit extends MPREvent {
 				potionEffect.apply(entity, entity.level);
 			}
 			this.tryPlaySound(entity);
+			this.tryExecuteFunction(entity);
 		}
 		else if (this.target == Target.OTHER) {
 			for (MPRPotionEffect potionEffect : this.potionEffects) {
 				potionEffect.apply(other, other.level);
 			}
 			this.tryPlaySound(other);
+			this.tryExecuteFunction(other);
 		}
 	}
 
