@@ -1,5 +1,14 @@
 # Changelog
 
+## Upcoming
+* Renamed `on_hit_effect` to `events`
+* Added generic event object, which OnHit and OnDeath inherits
+  * This object contains: 
+    * `chance`: Chance to apply the effects
+    * `play_sound`: Sound to play as the event happens
+    * `function`: A function executed when the event happens
+* On hit event now inherits from the generic event object, so it now contains the aforementioned properties (the only new property is `function`)
+
 ## 3.6.0
 * Added `game_stages_unlocked` condition
   * Works like advancements condition

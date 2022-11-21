@@ -1,21 +1,16 @@
-package insane96mcp.mobspropertiesrandomness.data.json.properties.onhit;
+package insane96mcp.mobspropertiesrandomness.data.json.properties.events;
 
 import com.google.gson.annotations.SerializedName;
 import insane96mcp.insanelib.exception.JsonValidationException;
-import insane96mcp.mobspropertiesrandomness.data.json.IMPRObject;
 import insane96mcp.mobspropertiesrandomness.data.json.properties.MPRPotionEffect;
 import insane96mcp.mobspropertiesrandomness.data.json.util.modifiable.MPRModifiableValue;
 import insane96mcp.mobspropertiesrandomness.data.json.util.modifiable.MPRModifier;
-import net.minecraft.resources.ResourceLocation;
-import net.minecraft.sounds.SoundEvent;
-import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraftforge.event.entity.living.LivingDamageEvent;
-import net.minecraftforge.registries.ForgeRegistries;
 
 import java.util.List;
 
-public class MPROnHit implements IMPRObject {
+public class MPROnHit extends MPREvent {
 
 	@SerializedName("potion_effects")
 	public List<MPRPotionEffect> potionEffects;
@@ -30,16 +25,12 @@ public class MPROnHit implements IMPRObject {
 	@SerializedName("damage_type")
 	public DamageType damageType;
 
-	public MPRModifiableValue chance;
-
 	@SerializedName("health_left")
 	public Double healthLeft;
 
-	@SerializedName("play_sound")
-	public String playSound;
-
 	@Override
 	public void validate() throws JsonValidationException {
+		super.validate();
 		if (target == null)
 			throw new JsonValidationException("Missing \"target\" for OnHit object: %s".formatted(this));
 
@@ -57,20 +48,12 @@ public class MPROnHit implements IMPRObject {
 			else
 				this.damageModifier.validate();
 		}
-
-		if (this.chance != null)
-			this.chance.validate();
-
-		if (this.playSound != null) {
-			ResourceLocation rl = ResourceLocation.tryParse(this.playSound);
-			if (rl == null)
-				throw new JsonValidationException("Invalid resource location for On Hit playSound: " + this);
-			if (ForgeRegistries.SOUND_EVENTS.getValue(rl) == null)
-				throw new JsonValidationException("Sound does not exist for On Hit playSound: " + this);
-		}
 	}
 
 	public void apply(LivingEntity entity, LivingEntity other, boolean isDirectDamage, LivingDamageEvent event, boolean attacked) {
+		if (!super.shouldApply(entity))
+			return;
+
 		if (this.damageType != null && ((isDirectDamage && this.damageType == DamageType.INDIRECT) || (!isDirectDamage && this.damageType == DamageType.DIRECT)))
 			return;
 
@@ -87,45 +70,22 @@ public class MPROnHit implements IMPRObject {
 				return;
 		}
 
-		if (this.chance != null && entity.getRandom().nextDouble() >= this.chance.getValue(entity, entity.level))
-			return;
-
-		SoundEvent sound = null;
-		if (this.playSound != null)
-			sound = ForgeRegistries.SOUND_EVENTS.getValue(new ResourceLocation(this.playSound));
-
 		if (this.target == Target.ENTITY) {
 			for (MPRPotionEffect potionEffect : this.potionEffects) {
 				potionEffect.apply(entity, entity.level);
 			}
-			if (sound != null)
-				entity.level.playSound(null, entity, sound, SoundSource.HOSTILE, 1.0f, 1f);
+			this.tryPlaySound(entity);
 		}
 		else if (this.target == Target.OTHER) {
 			for (MPRPotionEffect potionEffect : this.potionEffects) {
 				potionEffect.apply(other, other.level);
 			}
-			if (sound != null)
-				other.level.playSound(null, other, sound, SoundSource.HOSTILE, 1.0f, 1f);
+			this.tryPlaySound(other);
 		}
-	}
-
-	public enum Target {
-		@SerializedName("entity")
-		ENTITY,
-		@SerializedName("other")
-		OTHER
-	}
-
-	public enum DamageType {
-		@SerializedName("direct")
-		DIRECT,
-		@SerializedName("indirect")
-		INDIRECT
 	}
 
 	@Override
 	public String toString() {
-		return String.format("OnHit{potion_effects: %s, target: %s}", this.potionEffects, this.target);
+		return String.format("OnHit{%s, potion_effects: %s, damage_modifier_operation: %s, damage_modifier: %s, target: %s, damage_type: %s, health_left: %s}", super.toString(), this.potionEffects, this.damageModifierOperation, this.damageModifier, this.target, this.damageType, this.healthLeft);
 	}
 }

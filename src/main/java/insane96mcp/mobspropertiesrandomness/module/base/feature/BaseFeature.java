@@ -1,19 +1,25 @@
 package insane96mcp.mobspropertiesrandomness.module.base.feature;
 
 import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
 import insane96mcp.insanelib.base.Feature;
 import insane96mcp.insanelib.base.Label;
 import insane96mcp.insanelib.base.Module;
+import insane96mcp.insanelib.exception.JsonValidationException;
 import insane96mcp.mobspropertiesrandomness.data.json.MPRMob;
-import insane96mcp.mobspropertiesrandomness.data.json.properties.onhit.MPROnHitEffects;
+import insane96mcp.mobspropertiesrandomness.data.json.properties.events.MPROnHit;
 import insane96mcp.mobspropertiesrandomness.setup.Config;
 import insane96mcp.mobspropertiesrandomness.setup.Strings;
+import insane96mcp.mobspropertiesrandomness.util.Logger;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraftforge.common.ForgeConfigSpec;
 import net.minecraftforge.event.entity.EntityJoinWorldEvent;
 import net.minecraftforge.event.entity.living.LivingDamageEvent;
 import net.minecraftforge.eventbus.api.EventPriority;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
+
+import java.util.ArrayList;
+import java.util.List;
 
 @Label(name = "Base")
 public class BaseFeature extends Feature {
@@ -57,31 +63,42 @@ public class BaseFeature extends Feature {
 
 	}
 
+	public static final java.lang.reflect.Type MPR_ON_HIT_LIST_TYPE = new TypeToken<ArrayList<MPROnHit>>(){}.getType();
 	private void onAttack(LivingDamageEvent event) {
 		LivingEntity attacker = (LivingEntity) event.getSource().getEntity();
-		if (attacker == null)
+		if (attacker == null
+				|| !attacker.getPersistentData().contains(Strings.Tags.ON_ATTACK))
 			return;
 
-		if (!attacker.getPersistentData().contains(Strings.Tags.ON_HIT_EFFECTS))
-			return;
+		List<MPROnHit> onHitEffects = new Gson().fromJson(attacker.getPersistentData().getString(Strings.Tags.ON_ATTACK), MPR_ON_HIT_LIST_TYPE);
 
-		//TODO Validate the MPROnHitEffects as if invalid can crash the game
-		MPROnHitEffects onHitEffects = new Gson().fromJson(attacker.getPersistentData().getString(Strings.Tags.ON_HIT_EFFECTS), MPROnHitEffects.class);
-
-		onHitEffects.applyOnAttack(attacker, event.getEntityLiving(), event.getSource().getDirectEntity() == event.getSource().getEntity(), event);
+		for (MPROnHit mprOnHit : onHitEffects) {
+			//Does it impact performance?
+			try {
+				mprOnHit.validate();
+			} catch (JsonValidationException e) {
+				Logger.error("Failed to validate MPROnHit: " + e);
+			}
+			mprOnHit.apply(attacker, event.getEntityLiving(), event.getSource().getDirectEntity() == event.getSource().getEntity(), event, false);
+		}
 	}
 
 	private void onAttacked(LivingDamageEvent event) {
 		LivingEntity attacked = event.getEntityLiving();
-		if (attacked == null)
+		if (attacked == null
+				|| !attacked.getPersistentData().contains(Strings.Tags.ON_ATTACKED))
 			return;
 
-		if (!attacked.getPersistentData().contains(Strings.Tags.ON_HIT_EFFECTS))
-			return;
+		List<MPROnHit> onHitEffects = new Gson().fromJson(attacked.getPersistentData().getString(Strings.Tags.ON_ATTACKED), MPR_ON_HIT_LIST_TYPE);
 
-		//TODO Validate the MPROnHitEffects as if invalid can crash the game
-		MPROnHitEffects onHitEffects = new Gson().fromJson(attacked.getPersistentData().getString(Strings.Tags.ON_HIT_EFFECTS), MPROnHitEffects.class);
-
-		onHitEffects.applyOnAttacked(attacked, (LivingEntity) event.getSource().getEntity(), event.getSource().getDirectEntity() == event.getSource().getEntity(), event);
+		for (MPROnHit mprOnHit : onHitEffects) {
+			//Does it impact performance?
+			try {
+				mprOnHit.validate();
+			} catch (JsonValidationException e) {
+				Logger.error("Failed to validate MPROnHit: " + e);
+			}
+			mprOnHit.apply(attacked, (LivingEntity) event.getSource().getEntity(), event.getSource().getDirectEntity() == event.getSource().getEntity(), event, true);
+		}
 	}
 }

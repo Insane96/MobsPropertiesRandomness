@@ -13,7 +13,7 @@ import insane96mcp.mobspropertiesrandomness.data.json.properties.MPRPotionEffect
 import insane96mcp.mobspropertiesrandomness.data.json.properties.attribute.MPRMobAttribute;
 import insane96mcp.mobspropertiesrandomness.data.json.properties.condition.MPRConditions;
 import insane96mcp.mobspropertiesrandomness.data.json.properties.equipment.MPREquipment;
-import insane96mcp.mobspropertiesrandomness.data.json.properties.onhit.MPROnHitEffects;
+import insane96mcp.mobspropertiesrandomness.data.json.properties.events.MPREvents;
 import insane96mcp.mobspropertiesrandomness.data.json.util.MPRWorldWhitelist;
 import insane96mcp.mobspropertiesrandomness.data.json.util.modifiable.MPRModifiableValue;
 import net.minecraft.nbt.CompoundTag;
@@ -39,8 +39,8 @@ public abstract class MPRProperties implements IMPRObject {
 
 	public MPREquipment equipment;
 
-	@SerializedName("on_hit_effects")
-	public MPROnHitEffects onHitEffects;
+	@SerializedName("events")
+	public MPREvents mprEvents;
 
 	@SerializedName("custom_name")
 	public MPRCustomName customName;
@@ -86,8 +86,8 @@ public abstract class MPRProperties implements IMPRObject {
 			this.equipment = new MPREquipment();
 		this.equipment.validate();
 
-		if (this.onHitEffects != null)
-			this.onHitEffects.validate();
+		if (this.mprEvents != null)
+			this.mprEvents.validate();
 
 		if (this.customName != null)
 			this.customName.validate();
@@ -144,8 +144,8 @@ public abstract class MPRProperties implements IMPRObject {
 		}
 		this.equipment.apply(livingEntity, level);
 
-		if (this.onHitEffects != null)
-			this.onHitEffects.addToNBT(livingEntity);
+		if (this.mprEvents != null)
+			this.mprEvents.addToNBT(livingEntity);
 
 		if (this.customName != null)
 			this.customName.applyCustomName(livingEntity, level);
