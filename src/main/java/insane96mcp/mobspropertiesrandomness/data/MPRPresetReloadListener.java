@@ -4,7 +4,7 @@ import com.google.gson.Gson;
 import com.google.gson.JsonSyntaxException;
 import insane96mcp.insanelib.exception.JsonValidationException;
 import insane96mcp.insanelib.util.FileUtils;
-import insane96mcp.mobspropertiesrandomness.json.MPRPreset;
+import insane96mcp.mobspropertiesrandomness.data.json.MPRPreset;
 import insane96mcp.mobspropertiesrandomness.util.Logger;
 import net.minecraft.server.packs.resources.ResourceManager;
 import net.minecraft.server.packs.resources.SimplePreparableReloadListener;

@@ -66,7 +66,7 @@
 * Fixed Range and Modifiable Value Objects giving wrong error when `min` or `value` were missing
 
 ## Alpha 3.4.1
-* Added TiCon Attack config option. When enabled, mobs will be able to use some of the Tinker tools modifiers when attacking (e.g. Sharpness, Fiery, Conducting when on fire, etc.)
+* Added TiCon Attack config option. When enabled, mobs will be able to use some Tinker tools modifiers when attacking (e.g. Sharpness, Fiery, Conducting when on fire, etc.)
 * `ticon_modifiers`' `level` can now be omitted and will default to 1
 
 ## Alpha 3.4.0
@@ -78,7 +78,7 @@
 * Added `with_levels` to `enchantments`
 * Removed `local_difficulty` modifier as could hang the game. Also renamed `world_difficulty` to `world`
 * Removed namespace wide mobs (e.g. `quark:*` is no longer valid as a mob)
-* Added more infos when invalid NBT is used
+* Added more info when invalid NBT is used
 * Fixed nbt tag not being applied on items
 * Fixed error/crash when using depth bonus and distance from spawn modifier was not present
 

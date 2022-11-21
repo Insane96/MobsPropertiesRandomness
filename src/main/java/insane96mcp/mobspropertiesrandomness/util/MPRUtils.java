@@ -1,8 +1,8 @@
 package insane96mcp.mobspropertiesrandomness.util;
 
 import insane96mcp.mobspropertiesrandomness.data.MPRGroupReloadListener;
-import insane96mcp.mobspropertiesrandomness.json.MPRGroup;
-import insane96mcp.mobspropertiesrandomness.json.MPRMob;
+import insane96mcp.mobspropertiesrandomness.data.json.MPRGroup;
+import insane96mcp.mobspropertiesrandomness.data.json.MPRMob;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.LivingEntity;
 
