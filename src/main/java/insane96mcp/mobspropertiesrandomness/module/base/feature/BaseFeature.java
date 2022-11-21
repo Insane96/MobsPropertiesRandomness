@@ -74,6 +74,8 @@ public class BaseFeature extends Feature {
 
 		LivingEntity attacker = (LivingEntity) event.getSource().getEntity();
 		List<MPROnDeath> onDeaths = new Gson().fromJson(event.getEntityLiving().getPersistentData().getString(Strings.Tags.ON_DEATH), MPR_ON_DEATH_LIST_TYPE);
+		if (onDeaths == null)
+			return;
 
 		for (MPROnDeath onDeath : onDeaths) {
 			//Does it impact performance?
@@ -94,6 +96,8 @@ public class BaseFeature extends Feature {
 			return;
 
 		List<MPROnTick> onTicks = new Gson().fromJson(event.getEntityLiving().getPersistentData().getString(Strings.Tags.ON_TICK), MPR_ON_TICK_LIST_TYPE);
+		if (onTicks == null)
+			return;
 
 		for (MPROnTick onTick : onTicks) {
 			//Does it impact performance?
@@ -115,6 +119,8 @@ public class BaseFeature extends Feature {
 			return;
 
 		List<MPROnHit> onHitEffects = new Gson().fromJson(attacker.getPersistentData().getString(Strings.Tags.ON_ATTACK), MPR_ON_HIT_LIST_TYPE);
+		if (onHitEffects == null)
+			return;
 
 		for (MPROnHit mprOnHit : onHitEffects) {
 			//Does it impact performance?
@@ -135,6 +141,8 @@ public class BaseFeature extends Feature {
 			return;
 
 		List<MPROnHit> onHitEffects = new Gson().fromJson(attacked.getPersistentData().getString(Strings.Tags.ON_ATTACKED), MPR_ON_HIT_LIST_TYPE);
+		if (onHitEffects == null)
+			return;
 
 		for (MPROnHit mprOnHit : onHitEffects) {
 			//Does it impact performance?

@@ -43,10 +43,14 @@ public class MPREvents implements IMPRObject {
 	}
 
 	public void addToNBT(LivingEntity entity) {
-		entity.getPersistentData().putString(Strings.Tags.ON_ATTACK, new Gson().toJson(this.onAttack));
-		entity.getPersistentData().putString(Strings.Tags.ON_ATTACKED, new Gson().toJson(this.onAttacked));
-		entity.getPersistentData().putString(Strings.Tags.ON_DEATH, new Gson().toJson(this.onDeath));
-		entity.getPersistentData().putString(Strings.Tags.ON_TICK, new Gson().toJson(this.onTick));
+		if (this.onAttack != null)
+			entity.getPersistentData().putString(Strings.Tags.ON_ATTACK, new Gson().toJson(this.onAttack));
+		if (this.onAttacked != null)
+			entity.getPersistentData().putString(Strings.Tags.ON_ATTACKED, new Gson().toJson(this.onAttacked));
+		if (this.onDeath != null)
+			entity.getPersistentData().putString(Strings.Tags.ON_DEATH, new Gson().toJson(this.onDeath));
+		if (this.onTick != null)
+			entity.getPersistentData().putString(Strings.Tags.ON_TICK, new Gson().toJson(this.onTick));
 	}
 
 	@Override

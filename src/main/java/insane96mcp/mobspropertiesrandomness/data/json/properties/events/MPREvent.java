@@ -59,8 +59,11 @@ public abstract class MPREvent implements IMPRObject {
     }
 
     public void tryExecuteFunction(LivingEntity entity) {
+        if (this.function == null)
+            return;
         MinecraftServer server = entity.level.getServer();
-        if (server == null) return;
+        if (server == null)
+            return;
         this.function.get(server.getFunctions()).ifPresent((commandFunction) ->
                 server.getFunctions().execute(commandFunction, server.getFunctions().getGameLoopSender().withPosition(new Vec3(entity.getX(), entity.getY(), entity.getZ())).withLevel((ServerLevel) entity.level).withEntity(entity)));
     }
