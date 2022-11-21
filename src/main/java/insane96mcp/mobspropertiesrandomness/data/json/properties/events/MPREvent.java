@@ -8,18 +8,15 @@ import net.minecraft.commands.CommandFunction;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.level.ServerLevel;
-import net.minecraft.sounds.SoundEvent;
-import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.phys.Vec3;
-import net.minecraftforge.registries.ForgeRegistries;
 
 public abstract class MPREvent implements IMPRObject {
 
     public MPRModifiableValue chance;
 
     @SerializedName("play_sound")
-    public String playSound;
+    public MPRPlaySound playSound;
 
     @SerializedName("function")
     public String _function;
@@ -30,13 +27,8 @@ public abstract class MPREvent implements IMPRObject {
         if (this.chance != null)
             this.chance.validate();
 
-        if (this.playSound != null) {
-            ResourceLocation rl = ResourceLocation.tryParse(this.playSound);
-            if (rl == null)
-                throw new JsonValidationException("Invalid resource location for On Hit playSound: " + this);
-            if (ForgeRegistries.SOUND_EVENTS.getValue(rl) == null)
-                throw new JsonValidationException("Sound does not exist for On Hit playSound: " + this);
-        }
+        if (this.playSound != null)
+            this.playSound.validate();
 
         if (this._function != null) {
             this.function = new CommandFunction.CacheableFunction(new ResourceLocation(this._function));
@@ -49,13 +41,9 @@ public abstract class MPREvent implements IMPRObject {
     }
 
     public void tryPlaySound(LivingEntity entity) {
-        SoundEvent sound;
-        if (this.playSound != null)
-            sound = ForgeRegistries.SOUND_EVENTS.getValue(new ResourceLocation(this.playSound));
-        else
+        if (this.playSound == null)
             return;
-        //noinspection ConstantConditions
-        entity.level.playSound(null, entity, sound, SoundSource.HOSTILE, 1.0f, 1f);
+        this.playSound.playSound(entity);
     }
 
     public void tryExecuteFunction(LivingEntity entity) {

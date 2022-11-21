@@ -16,6 +16,11 @@
 * Added `on_tick` event, triggered every 20 ticks (1 second).
   * Properties:
     * `update_speed`: Defaults to 20, every many ticks is the event triggered
+* `play_sound` is now a string with the sound id to play or a new PlaySound object
+  * This object contains:
+    * `sound`: the sound id
+    * `volume`: the volume of the sound played. Defaults to 1
+    * `pitch`: the pitch of the sound played. Defaults to 1
 
 ## 3.6.0
 * Added `game_stages_unlocked` condition
