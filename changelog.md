@@ -1,6 +1,6 @@
 # Changelog
 
-## Upcoming
+## Beta 3.7.0
 * Renamed `on_hit_effect` to `events`
 * Added generic event object, which OnHit and OnDeath inherits
   * This object contains: 
@@ -16,7 +16,7 @@
 * Added `on_tick` event, triggered every 20 ticks (1 second).
   * Properties:
     * `update_speed`: Defaults to 20, every many ticks is the event triggered
-* `play_sound` is now a string with the sound id to play or a new PlaySound object
+* `play_sound` is now either a string with the sound id to play or a new PlaySound object
   * This object contains:
     * `sound`: the sound id
     * `volume`: the volume of the sound played. Defaults to 1
