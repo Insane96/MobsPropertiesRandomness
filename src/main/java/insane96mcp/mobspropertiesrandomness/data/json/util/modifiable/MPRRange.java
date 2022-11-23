@@ -112,7 +112,7 @@ public class MPRRange extends MPRModifiable implements IMPRObject {
 
 	@Override
 	public String toString() {
-		return String.format("Range{min: %f, max: %f, %s}", min, max, super.toString());
+		return String.format("Range{min: %f, max: %f, %s}", this.min, this.max, super.toString());
 	}
 
 	public static class Deserializer implements JsonDeserializer<MPRRange> {
@@ -120,7 +120,10 @@ public class MPRRange extends MPRModifiable implements IMPRObject {
 		public MPRRange deserialize(JsonElement json, Type typeOfT, JsonDeserializationContext context) throws JsonParseException {
 			if (json.isJsonPrimitive())
 				return new MPRRange(json.getAsFloat());
-			return new MPRRange(context.deserialize(json.getAsJsonObject().get("min"), Float.class),
+			Float min = context.deserialize(json.getAsJsonObject().get("min"), Float.class);
+			if (min == null)
+				min = context.deserialize(json.getAsJsonObject().get("value"), Float.class);
+			return new MPRRange(min,
 					context.deserialize(json.getAsJsonObject().get("max"), Float.class),
 					context.deserialize(json.getAsJsonObject().get("difficulty_modifier"), MPRDifficultyModifier.class),
 					context.deserialize(json.getAsJsonObject().get("pos_modifier"), MPRPosModifier.class),
