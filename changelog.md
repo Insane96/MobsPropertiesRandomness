@@ -2,6 +2,7 @@
 
 ## Upcoming
 * Renamed equipment slot "feets" to "feet"
+* Weights can now be omitted and will default to 1
 
 ## Beta 3.7.0
 * Renamed `on_hit_effect` to `events`

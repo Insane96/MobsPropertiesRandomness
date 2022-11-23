@@ -32,21 +32,21 @@ public class MPRPotionEffect implements IMPRObject, IMPRAppliable {
 
 	public void validate() throws JsonValidationException {
 		//Potion Id
-		if (id == null)
+		if (this.id == null)
 			throw new JsonValidationException("Missing Potion Effect Id in PotionEffect Object. " + this);
-		else if (!ForgeRegistries.MOB_EFFECTS.containsKey(new ResourceLocation(id)))
+		else if (!ForgeRegistries.MOB_EFFECTS.containsKey(new ResourceLocation(this.id)))
 			throw new JsonValidationException("Invalid Potion Effect Id in PotionEffect Object. " + this);
 
 		//Amplifier
-		if (amplifier == null) {
+		if (this.amplifier == null) {
 			Logger.info("Missing Amplifier in PotionEffect object. " + this + ". Will default to 0 (I)");
-			amplifier = new MPRRange(0);
+			this.amplifier = new MPRRange(0);
 		}
-		amplifier.validate();
+		this.amplifier.validate();
 
 		//Chance
-		if (chance != null)
-			chance.validate();
+		if (this.chance != null)
+			this.chance.validate();
 
 		if (this.duration == null)
 			this.duration = new MPRRange(100000000);
@@ -54,11 +54,11 @@ public class MPRPotionEffect implements IMPRObject, IMPRAppliable {
 			this.duration.validate();
 
 		//ambient and hide particles
-		if (ambient && hideParticles)
+		if (this.ambient && this.hideParticles)
 			Logger.info("Particles are hidden, but ambient is enabled. Ambient doesn't work if particles are hidden. " + this);
 
-		if (worldWhitelist != null)
-			worldWhitelist.validate();
+		if (this.worldWhitelist != null)
+			this.worldWhitelist.validate();
 	}
 
 	public void apply(LivingEntity entity, Level level) {
@@ -79,6 +79,6 @@ public class MPRPotionEffect implements IMPRObject, IMPRAppliable {
 
 	@Override
 	public String toString() {
-		return String.format("PotionEffect{id: %s, amplifier: %s, chance: %s, duration: %s, ambient: %s, hide_particles: %s, world_whitelist: %s}", id, amplifier, chance, duration, ambient, hideParticles, worldWhitelist);
+		return String.format("PotionEffect{id: %s, amplifier: %s, chance: %s, duration: %s, ambient: %s, hide_particles: %s, world_whitelist: %s}", this.id, this.amplifier, this.chance, this.duration, this.ambient, this.hideParticles, this.worldWhitelist);
 	}
 }

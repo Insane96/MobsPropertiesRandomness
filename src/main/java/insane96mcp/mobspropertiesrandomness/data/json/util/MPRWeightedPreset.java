@@ -39,12 +39,14 @@ public class MPRWeightedPreset implements IMPRObject, IWeightedRandom {
 		if (!found)
 			Logger.info("Preset " + this.name + " does not exist");
 
-		if (this.modifiableWeight == null)
-			throw new JsonValidationException("Missing weight in Weighted Preset. " + this);
+		if (this.modifiableWeight == null) {
+			Logger.info("Weight value missing for %s, will default to 1", this);
+			this.modifiableWeight = new MPRModifiableValue(1f);
+		}
 		this.modifiableWeight.validate();
 
-		if (worldWhitelist != null)
-			worldWhitelist.validate();
+		if (this.worldWhitelist != null)
+			this.worldWhitelist.validate();
 	}
 
 	/**
@@ -52,7 +54,7 @@ public class MPRWeightedPreset implements IMPRObject, IWeightedRandom {
 	 */
 	@Nullable
 	public MPRWeightedPreset computeAndGet(LivingEntity entity, Level world) {
-		if (worldWhitelist != null && !worldWhitelist.isWhitelisted(entity))
+		if (this.worldWhitelist != null && !this.worldWhitelist.isWhitelisted(entity))
 			return null;
 
 		this._weight = (int) this.modifiableWeight.getValue(entity, world);
@@ -62,7 +64,7 @@ public class MPRWeightedPreset implements IMPRObject, IWeightedRandom {
 
 	@Override
 	public String toString() {
-		return String.format("WeightedPreset{name: %s, weight: %s, world_whitelist: %s}", name, modifiableWeight, worldWhitelist);
+		return String.format("WeightedPreset{name: %s, weight: %s, world_whitelist: %s}", this.name, this.modifiableWeight, this.worldWhitelist);
 	}
 
 	@Override

@@ -10,6 +10,7 @@ import insane96mcp.mobspropertiesrandomness.data.json.properties.mods.tconstruct
 import insane96mcp.mobspropertiesrandomness.data.json.properties.mods.tconstruct.MPRTiConModifier;
 import insane96mcp.mobspropertiesrandomness.data.json.util.MPRWorldWhitelist;
 import insane96mcp.mobspropertiesrandomness.data.json.util.modifiable.MPRModifiableValue;
+import insane96mcp.mobspropertiesrandomness.util.Logger;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.TagParser;
 import net.minecraft.resources.ResourceLocation;
@@ -45,20 +46,22 @@ public class MPRItem implements IMPRObject, IWeightedRandom {
 
 	@Override
 	public void validate() throws JsonValidationException {
-		if (id == null)
+		if (this.id == null)
 			throw new JsonValidationException("Missing id. " + this);
 		else if (ForgeRegistries.ITEMS.getValue(new ResourceLocation(this.id)) == null)
 			throw new JsonValidationException("Invalid id. " + this);
 
-		if (modifiableWeight == null)
-			throw new JsonValidationException("Missing weight. " + this);
-		modifiableWeight.validate();
+		if (this.modifiableWeight == null) {
+			Logger.info("Weight value missing for %s, will default to 1", this);
+			this.modifiableWeight = new MPRModifiableValue(1f);
+		}
+		this.modifiableWeight.validate();
 
-		if (dropChance != null)
-			dropChance.validate();
+		if (this.dropChance != null)
+			this.dropChance.validate();
 
-		if (enchantments != null)
-			for (MPREnchantment enchantment : enchantments)
+		if (this.enchantments != null)
+			for (MPREnchantment enchantment : this.enchantments)
 				enchantment.validate();
 
 		if (this.ticonModifiers != null)
@@ -68,8 +71,8 @@ public class MPRItem implements IMPRObject, IWeightedRandom {
 		if (this.ticonMaterials != null)
 			this.ticonMaterials.validate();
 
-		if (attributes != null)
-			for (MPRItemAttribute itemAttribute : attributes)
+		if (this.attributes != null)
+			for (MPRItemAttribute itemAttribute : this.attributes)
 				itemAttribute.validate();
 
 		if (this.nbt != null) {
@@ -77,12 +80,12 @@ public class MPRItem implements IMPRObject, IWeightedRandom {
 				this._nbt = TagParser.parseTag(this.nbt);
 			}
 			catch (CommandSyntaxException e) {
-				throw new JsonValidationException("Invalid nbt for Item (" + e.getMessage() + "): " + this.nbt);
+				throw new JsonValidationException("Invalid nbt for Item (%s): %s".formatted(e.getMessage(), this.nbt));
 			}
 		}
 
-		if (worldWhitelist != null)
-			worldWhitelist.validate();
+		if (this.worldWhitelist != null)
+			this.worldWhitelist.validate();
 	}
 
 	/**
@@ -90,7 +93,7 @@ public class MPRItem implements IMPRObject, IWeightedRandom {
 	 */
 	@Nullable
 	public MPRItem computeAndGet(LivingEntity entity, Level world) {
-		if (worldWhitelist != null && !worldWhitelist.isWhitelisted(entity))
+		if (this.worldWhitelist != null && !this.worldWhitelist.isWhitelisted(entity))
 			return null;
 
 		this._weight = (int) this.modifiableWeight.getValue(entity, world);
@@ -104,7 +107,7 @@ public class MPRItem implements IMPRObject, IWeightedRandom {
 
 	@Override
 	public String toString() {
-		return String.format("Item{id: %s, weight: %s, drop_chance: %s, enchantments: %s, attributes: %s, world_whitelist: %s, nbt: %s}", id, modifiableWeight, dropChance, enchantments, attributes, worldWhitelist, _nbt);
+		return String.format("Item{id: %s, weight: %s, drop_chance: %s, enchantments: %s, attributes: %s, world_whitelist: %s, nbt: %s}", this.id, this.modifiableWeight, this.dropChance, this.enchantments, this.attributes, this.worldWhitelist, this._nbt);
 	}
 
 	@Override
