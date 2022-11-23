@@ -19,7 +19,7 @@ public class MPREquipment implements IMPRObject, IMPRAppliable {
 	public MPRSlot head;
 	public MPRSlot chest;
 	public MPRSlot legs;
-	public MPRSlot feets;
+	public MPRSlot feet;
 	@SerializedName("main_hand")
 	public MPRSlot mainHand;
 	@SerializedName("off_hand")
@@ -33,8 +33,8 @@ public class MPREquipment implements IMPRObject, IMPRAppliable {
 			chest.validate();
 		if (legs != null)
 			legs.validate();
-		if (feets != null)
-			feets.validate();
+		if (feet != null)
+			feet.validate();
 		if (mainHand != null)
 			mainHand.validate();
 		if (offHand != null)
@@ -49,7 +49,7 @@ public class MPREquipment implements IMPRObject, IMPRAppliable {
 		applyEquipmentToSlot(entity, world, this.head, EquipmentSlot.HEAD);
 		applyEquipmentToSlot(entity, world, this.chest, EquipmentSlot.CHEST);
 		applyEquipmentToSlot(entity, world, this.legs, EquipmentSlot.LEGS);
-		applyEquipmentToSlot(entity, world, this.feets, EquipmentSlot.FEET);
+		applyEquipmentToSlot(entity, world, this.feet, EquipmentSlot.FEET);
 		applyEquipmentToSlot(entity, world, this.mainHand, EquipmentSlot.MAINHAND);
 		applyEquipmentToSlot(entity, world, this.offHand, EquipmentSlot.OFFHAND);
 	}
@@ -107,6 +107,6 @@ public class MPREquipment implements IMPRObject, IMPRAppliable {
 
 	@Override
 	public String toString() {
-		return String.format("Equipment{head: %s, chest: %s, legs: %s, feets: %s, main_hand: %s, off_hand: %s}", head, chest, legs, feets, mainHand, offHand);
+		return String.format("Equipment{head: %s, chest: %s, legs: %s, feet: %s, main_hand: %s, off_hand: %s}", head, chest, legs, feet, mainHand, offHand);
 	}
 }

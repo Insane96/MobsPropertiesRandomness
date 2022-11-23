@@ -1,5 +1,8 @@
 # Changelog
 
+## Upcoming
+* Renamed equipment slot "feets" to "feet"
+
 ## Beta 3.7.0
 * Renamed `on_hit_effect` to `events`
 * Added generic event object, which OnHit and OnDeath inherits
