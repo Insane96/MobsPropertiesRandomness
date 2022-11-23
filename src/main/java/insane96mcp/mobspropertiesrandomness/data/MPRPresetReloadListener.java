@@ -10,6 +10,7 @@ import net.minecraft.server.packs.resources.ResourceManager;
 import net.minecraft.server.packs.resources.SimplePreparableReloadListener;
 import net.minecraft.util.profiling.ProfilerFiller;
 import org.apache.commons.io.FilenameUtils;
+import org.jetbrains.annotations.NotNull;
 
 import java.io.File;
 import java.io.FileReader;
@@ -28,7 +29,7 @@ public class MPRPresetReloadListener extends SimplePreparableReloadListener<Void
 	}
 
 	@Override
-	protected Void prepare(ResourceManager iResourceManager, ProfilerFiller iProfiler) {
+	protected @NotNull Void prepare(@NotNull ResourceManager iResourceManager, @NotNull ProfilerFiller iProfiler) {
 		return null;
 	}
 
@@ -37,7 +38,7 @@ public class MPRPresetReloadListener extends SimplePreparableReloadListener<Void
 	}
 
 	@Override
-	protected void apply(Void objectIn, ResourceManager iResourceManager, ProfilerFiller iProfiler) {
+	protected void apply(@NotNull Void objectIn, @NotNull ResourceManager iResourceManager, @NotNull ProfilerFiller iProfiler) {
 		Logger.info("Reloading Presets");
 		MPR_PRESETS.clear();
 
