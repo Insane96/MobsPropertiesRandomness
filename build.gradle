@@ -81,6 +81,9 @@ repositories {
         url 'https://dvs1.progwml6.com/files/maven'
     }
     maven { url 'https://maven.blamejared.com' }
+    maven {
+        url = "https://jitpack.io"
+    }
     flatDir {
         dirs "libs"
     }
@@ -103,6 +106,8 @@ dependencies {
 
     implementation fg.deobf("net.darkhax.bookshelf:Bookshelf-Forge-${mc_version}:${bookshelf_version}")
     implementation fg.deobf("net.darkhax.gamestages:GameStages-Forge-${mc_version}:${gamestages_version}")
+
+    implementation fg.deobf("com.github.Virtuoel:Pehkui:${pehkui_version}")
 }
 
 // Example for how to get properties into the manifest for reading by the runtime..

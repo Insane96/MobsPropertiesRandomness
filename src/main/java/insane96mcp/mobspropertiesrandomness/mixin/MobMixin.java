@@ -12,7 +12,7 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 @Mixin(Mob.class)
 public class MobMixin {
 	@Inject(at = @At("HEAD"), method = "doHurtTarget", cancellable = true)
-	private void spawnLingeringCloud(Entity entity, CallbackInfoReturnable<Boolean> cir) {
+	private void onDoHurtTarget(Entity entity, CallbackInfoReturnable<Boolean> cir) {
 		Mob $this = (Mob) (Object) this;
 		if (ModList.get().isLoaded("tconstruct") && TiConstruct.tiConAttackForMobs($this, entity))
 			cir.cancel();

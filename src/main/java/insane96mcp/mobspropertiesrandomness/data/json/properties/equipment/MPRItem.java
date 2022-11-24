@@ -37,6 +37,7 @@ public class MPRItem implements IMPRObject, IWeightedRandom {
 	public List<MPRTiConModifier> ticonModifiers;
 	@SerializedName("ticon_materials")
 	public MPRTiConMaterials ticonMaterials;
+
 	public List<MPRItemAttribute> attributes;
 	public String nbt;
 	private transient CompoundTag _nbt;

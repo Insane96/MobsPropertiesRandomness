@@ -14,6 +14,7 @@ import insane96mcp.mobspropertiesrandomness.data.json.properties.attribute.MPRMo
 import insane96mcp.mobspropertiesrandomness.data.json.properties.condition.MPRConditions;
 import insane96mcp.mobspropertiesrandomness.data.json.properties.equipment.MPREquipment;
 import insane96mcp.mobspropertiesrandomness.data.json.properties.events.MPREvents;
+import insane96mcp.mobspropertiesrandomness.data.json.properties.mods.pehuki.MPRScalePehkui;
 import insane96mcp.mobspropertiesrandomness.data.json.util.MPRWorldWhitelist;
 import insane96mcp.mobspropertiesrandomness.data.json.util.modifiable.MPRModifiableValue;
 import net.minecraft.nbt.CompoundTag;
@@ -62,6 +63,8 @@ public abstract class MPRProperties implements IMPRObject {
 	@SerializedName("raw_nbt")
 	public String rawNbt;
 	public transient CompoundTag _rawNbt = null;
+
+	public MPRScalePehkui scalePehkui;
 
 	@Override
 	public void validate() throws JsonValidationException {
@@ -129,6 +132,11 @@ public abstract class MPRProperties implements IMPRObject {
 				throw new JsonValidationException("Invalid raw nbt in properties: " + this.rawNbt);
 			}
 		}
+
+		if (this.scalePehkui != null)
+		{
+			this.scalePehkui.validate();
+		}
 	}
 
 	public boolean apply(LivingEntity livingEntity, Level level) {
@@ -174,6 +182,9 @@ public abstract class MPRProperties implements IMPRObject {
 		if (this._rawNbt != null) {
 			livingEntity.readAdditionalSaveData(this._rawNbt);
 		}
+
+		if (this.scalePehkui != null)
+			this.scalePehkui.apply(livingEntity);
 
 		return true;
 	}
