@@ -32,6 +32,7 @@ public class MPRMobReloadListener extends SimpleJsonResourceReloadListener {
 
 	@Override
 	protected void apply(@NotNull Map<ResourceLocation, JsonElement> map, @NotNull ResourceManager resourceManager, @NotNull ProfilerFiller profilerFiller) {
+		MPR_MOBS.clear();
 		for (var entry : map.entrySet()) {
 			try {
 				ResourceLocation name = entry.getKey();

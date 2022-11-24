@@ -26,7 +26,8 @@ public class MPRScalePehkui implements IMPRObject {
 
     @Override
     public void validate() throws JsonValidationException {
-
+        if (this.scale == null)
+            throw new JsonValidationException("scale missing from MPRScalePehkui");
     }
 
     public void apply(LivingEntity entity) {
@@ -41,7 +42,7 @@ public class MPRScalePehkui implements IMPRObject {
             if (!ModList.get().isLoaded("pehkui"))
                 throw new JsonParseException("Pehkui is not present. This object can't be used: %s.".formatted(json));
 
-            return new MPRScalePehkui(context.deserialize(json.getAsJsonObject().get("materials"), MPRRange.class));
+            return new MPRScalePehkui(context.deserialize(json.getAsJsonObject().get("scale"), MPRRange.class));
         }
     }
 }
