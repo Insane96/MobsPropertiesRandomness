@@ -28,9 +28,11 @@ import java.util.List;
 @Label(name = "Base")
 public class BaseFeature extends Feature {
 	private final ForgeConfigSpec.BooleanValue tiConAttackConfig;
+	private final ForgeConfigSpec.BooleanValue betterCreeperLingeringConfig;
 	private final ForgeConfigSpec.ConfigValue<Boolean> debugConfig;
 
 	public boolean ticonAttack = true;
+	public boolean betterCreeperLingering = true;
 	public boolean debug = false;
 
 	public BaseFeature(Module module) {
@@ -39,6 +41,9 @@ public class BaseFeature extends Feature {
 		this.tiConAttackConfig = Config.builder
 				.comment("If true mob attacks with Tinker tools will use the Tinker attack method. Might have side effects")
 				.define("TiCon Attack", this.ticonAttack);
+		this.betterCreeperLingeringConfig = Config.builder
+				.comment("If true creeper lingering clouds size changes based off creeper explosion radius")
+				.define("Better Creeper Lingering", this.betterCreeperLingering);
 		this.debugConfig = Config.builder
 				.comment("If true, all the loaded JSONs will be logged in the mobspropertiesrandomness.log file.")
 				.define("Debug", this.debug);
@@ -49,6 +54,7 @@ public class BaseFeature extends Feature {
 	public void loadConfig() {
 		super.loadConfig();
 		this.ticonAttack = this.tiConAttackConfig.get();
+		this.betterCreeperLingering = this.betterCreeperLingeringConfig.get();
 		this.debug = this.debugConfig.get();
 	}
 
@@ -154,5 +160,9 @@ public class BaseFeature extends Feature {
 			}
 			mprOnHit.apply(attacked, (LivingEntity) event.getSource().getEntity(), event.getSource().getDirectEntity() == event.getSource().getEntity(), event, true);
 		}
+	}
+
+	public boolean isBetterCreeperLingeringActivated() {
+		return this.isEnabled() && this.betterCreeperLingering;
 	}
 }
