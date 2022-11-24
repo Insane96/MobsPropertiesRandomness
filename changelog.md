@@ -4,6 +4,7 @@
 * Renamed equipment slot "feets" to "feet"
 * Weights can now be omitted and will default to 1
 * Range object can now contain "value" instead of "min"
+* Added very basic support for pehkui. `scale_pehkui`. Contains `scale`, a Range value to set the size.
 
 ## Beta 3.7.0
 * Renamed `on_hit_effect` to `events`

@@ -6,6 +6,7 @@ import com.google.gson.JsonElement;
 import com.google.gson.JsonParseException;
 import insane96mcp.insanelib.exception.JsonValidationException;
 import insane96mcp.mobspropertiesrandomness.data.json.IMPRObject;
+import insane96mcp.mobspropertiesrandomness.data.json.util.modifiable.MPRRange;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraftforge.fml.ModList;
 import virtuoel.pehkui.api.ScaleData;
@@ -15,22 +16,20 @@ import java.lang.reflect.Type;
 
 public class MPRScalePehkui implements IMPRObject {
 
-    public Float scale;
+    public MPRRange scale;
 
-    public MPRScalePehkui(float scale) {
+    public MPRScalePehkui(MPRRange scale) {
         this.scale = scale;
     }
 
     @Override
     public void validate() throws JsonValidationException {
-        if (this.scale <= 0f) {
-            throw new JsonValidationException("Invalid scale (%s) for MPRScalePehkui".formatted(this.scale));
-        }
+
     }
 
     public void apply(LivingEntity entity) {
         ScaleData scaleData = ScaleTypes.BASE.getScaleData(entity);
-        scaleData.setScale(this.scale);
+        scaleData.setScale(this.scale.getFloat(entity, entity.level));
     }
 
     public static class Deserializer implements JsonDeserializer<MPRScalePehkui> {
@@ -40,7 +39,7 @@ public class MPRScalePehkui implements IMPRObject {
             if (!ModList.get().isLoaded("pehkui"))
                 throw new JsonParseException("Pehkui is not present. This object can't be used: %s.".formatted(json));
 
-            return new MPRScalePehkui(json.getAsJsonObject().get("materials").getAsFloat());
+            return new MPRScalePehkui(context.deserialize(json.getAsJsonObject().get("materials"), MPRRange.class));
         }
     }
 }
