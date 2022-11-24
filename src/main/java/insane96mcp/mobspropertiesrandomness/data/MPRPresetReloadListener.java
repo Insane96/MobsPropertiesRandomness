@@ -1,36 +1,29 @@
 package insane96mcp.mobspropertiesrandomness.data;
 
 import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
+import com.google.gson.JsonElement;
 import com.google.gson.JsonSyntaxException;
 import insane96mcp.insanelib.exception.JsonValidationException;
-import insane96mcp.insanelib.util.FileUtils;
 import insane96mcp.mobspropertiesrandomness.data.json.MPRPreset;
 import insane96mcp.mobspropertiesrandomness.util.Logger;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.packs.resources.ResourceManager;
-import net.minecraft.server.packs.resources.SimplePreparableReloadListener;
+import net.minecraft.server.packs.resources.SimpleJsonResourceReloadListener;
 import net.minecraft.util.profiling.ProfilerFiller;
-import org.apache.commons.io.FilenameUtils;
 import org.jetbrains.annotations.NotNull;
 
-import java.io.File;
-import java.io.FileReader;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
-public class MPRPresetReloadListener extends SimplePreparableReloadListener<Void> {
+public class MPRPresetReloadListener extends SimpleJsonResourceReloadListener {
 	public static final List<MPRPreset> MPR_PRESETS = new ArrayList<>();
-
 	public static final MPRPresetReloadListener INSTANCE;
-
-	public static File presetsFolder;
+	private static final Gson GSON = new GsonBuilder().create();
 
 	public MPRPresetReloadListener() {
-		super();
-	}
-
-	@Override
-	protected @NotNull Void prepare(@NotNull ResourceManager iResourceManager, @NotNull ProfilerFiller iProfiler) {
-		return null;
+		super(GSON, "mobs_properties_randomness/presets");
 	}
 
 	static {
@@ -38,34 +31,26 @@ public class MPRPresetReloadListener extends SimplePreparableReloadListener<Void
 	}
 
 	@Override
-	protected void apply(@NotNull Void objectIn, @NotNull ResourceManager iResourceManager, @NotNull ProfilerFiller iProfiler) {
-		Logger.info("Reloading Presets");
-		MPR_PRESETS.clear();
-
-		Gson gson = new Gson();
-
-		ArrayList<File> jsonFiles = FileUtils.ListFilesForFolder(presetsFolder);
-
-		for (File file : jsonFiles) {
-			//Ignore files that start with underscore '_' or comma '.'
-			if (file.getName().startsWith("_") || file.getName().startsWith("."))
-				continue;
-
+	protected void apply(@NotNull Map<ResourceLocation, JsonElement> map, @NotNull ResourceManager resourceManager, @NotNull ProfilerFiller profilerFiller) {
+		for (var entry : map.entrySet()) {
 			try {
-				FileReader fileReader = new FileReader(file);
-				MPRPreset preset = gson.fromJson(fileReader, MPRPreset.class);
-				preset.name = FilenameUtils.removeExtension(file.getName());
+				ResourceLocation name = entry.getKey();
+				String[] split = name.getPath().split("/");
+				if (split[split.length - 1].startsWith("_"))
+					continue;
+
+				MPRPreset preset = GSON.fromJson(entry.getValue(), MPRPreset.class);
 				preset.validate();
 				MPR_PRESETS.add(preset);
 			}
 			catch (JsonValidationException e) {
-				Logger.error("Validation error loading Preset %s: %s", FilenameUtils.removeExtension(file.getName()), e.getMessage());
+				Logger.error("Validation error loading Preset %s: %s", entry.getKey(), e.getMessage());
 			}
 			catch (JsonSyntaxException e) {
-				Logger.error("Parsing error loading Preset %s: %s", FilenameUtils.removeExtension(file.getName()), e.getMessage());
+				Logger.error("Parsing error loading Preset %s: %s", entry.getKey(), e.getMessage());
 			}
 			catch (Exception e) {
-				Logger.error("Failed loading Preset %s: %s", FilenameUtils.removeExtension(file.getName()), e.getMessage());
+				Logger.error("Failed loading Preset %s: %s", entry.getKey(), e.getMessage());
 			}
 		}
 

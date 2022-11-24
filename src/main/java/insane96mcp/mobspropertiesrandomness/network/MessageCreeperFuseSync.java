@@ -25,9 +25,7 @@ public class MessageCreeperFuseSync {
 	}
 
 	public static void handle(final MessageCreeperFuseSync message, Supplier<NetworkEvent.Context> ctx) {
-		ctx.get().enqueueWork(() -> {
-			ClientNetwork.handleCreeperFuseSyncMessage(message.id, message.fuse);
-		});
+		ctx.get().enqueueWork(() -> ClientNetwork.handleCreeperFuseSyncMessage(message.id, message.fuse));
 		ctx.get().setPacketHandled(true);
 	}
 }

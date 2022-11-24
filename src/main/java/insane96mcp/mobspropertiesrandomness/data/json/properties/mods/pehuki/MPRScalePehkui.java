@@ -37,7 +37,7 @@ public class MPRScalePehkui implements IMPRObject {
     public static class Deserializer implements JsonDeserializer<MPRScalePehkui> {
         @Override
         public MPRScalePehkui deserialize(JsonElement json, Type typeOfT, JsonDeserializationContext context) throws JsonParseException {
-            //Deserialize only if tinkers construct is loaded
+            //Deserialize only if Pehkui is loaded
             if (!ModList.get().isLoaded("pehkui"))
                 throw new JsonParseException("Pehkui is not present. This object can't be used: %s.".formatted(json));
 

@@ -1,36 +1,30 @@
 package insane96mcp.mobspropertiesrandomness.data;
 
 import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
+import com.google.gson.JsonElement;
 import com.google.gson.JsonSyntaxException;
 import insane96mcp.insanelib.exception.JsonValidationException;
-import insane96mcp.insanelib.util.FileUtils;
 import insane96mcp.mobspropertiesrandomness.data.json.MPRGroup;
 import insane96mcp.mobspropertiesrandomness.util.Logger;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.packs.resources.ResourceManager;
-import net.minecraft.server.packs.resources.SimplePreparableReloadListener;
+import net.minecraft.server.packs.resources.SimpleJsonResourceReloadListener;
 import net.minecraft.util.profiling.ProfilerFiller;
-import org.apache.commons.io.FilenameUtils;
 import org.jetbrains.annotations.NotNull;
 
-import java.io.File;
-import java.io.FileReader;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
-public class MPRGroupReloadListener extends SimplePreparableReloadListener<Void> {
-	public static final List<MPRGroup> MPR_GROUPS = new ArrayList<>();
+public class MPRGroupReloadListener extends SimpleJsonResourceReloadListener {
 
 	public static final MPRGroupReloadListener INSTANCE;
-
-	public static File groupsFolder;
+	public static final List<MPRGroup> MPR_GROUPS = new ArrayList<>();
+	private static final Gson GSON = new GsonBuilder().create();
 
 	public MPRGroupReloadListener() {
-		super();
-	}
-
-	@Override
-	protected @NotNull Void prepare(@NotNull ResourceManager iResourceManager, @NotNull ProfilerFiller iProfiler) {
-		return null;
+		super(GSON, "mobs_properties_randomness/groups");
 	}
 
 	static {
@@ -38,34 +32,28 @@ public class MPRGroupReloadListener extends SimplePreparableReloadListener<Void>
 	}
 
 	@Override
-	protected void apply(@NotNull Void objectIn, @NotNull ResourceManager iResourceManager, @NotNull ProfilerFiller iProfiler) {
-		Logger.info("Reloading Groups");
-		MPR_GROUPS.clear();
-
-		Gson gson = new Gson();
-
-		ArrayList<File> jsonFiles = FileUtils.ListFilesForFolder(groupsFolder);
-
-		for (File file : jsonFiles) {
-			//Ignore files that start with underscore '_' or comma '.'
-			if (file.getName().startsWith("_") || file.getName().startsWith("."))
-				continue;
-
+	protected void apply(@NotNull Map<ResourceLocation, JsonElement> map, @NotNull ResourceManager resourceManager, @NotNull ProfilerFiller profilerFiller) {
+		for (var entry : map.entrySet()) {
 			try {
-				FileReader fileReader = new FileReader(file);
-				MPRGroup group = gson.fromJson(fileReader, MPRGroup.class);
-				group.name = FilenameUtils.removeExtension(file.getName());
+				ResourceLocation name = entry.getKey();
+				String[] split = name.getPath().split("/");
+				if (split[split.length - 1].startsWith("_"))
+					continue;
+
+				MPRGroup group = GSON.fromJson(entry.getValue(), MPRGroup.class);
 				group.validate();
+				//TODO
+				//group.name = name;
 				MPR_GROUPS.add(group);
 			}
 			catch (JsonValidationException e) {
-				Logger.error("Validation error loading Group %s: %s", FilenameUtils.removeExtension(file.getName()), e.getMessage());
+				Logger.error("Validation error loading Group %s: %s", entry.getKey(), e.getMessage());
 			}
 			catch (JsonSyntaxException e) {
-				Logger.error("Parsing error loading Group %s: %s", FilenameUtils.removeExtension(file.getName()), e.getMessage());
+				Logger.error("Parsing error loading Group %s: %s", entry.getKey(), e.getMessage());
 			}
 			catch (Exception e) {
-				Logger.error("Failed loading Group %s: %s", FilenameUtils.removeExtension(file.getName()), e.getMessage());
+				Logger.error("Failed loading Group %s: %s", entry.getKey(), e.getMessage());
 			}
 		}
 

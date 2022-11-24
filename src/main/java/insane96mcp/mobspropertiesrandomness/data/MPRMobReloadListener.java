@@ -1,36 +1,29 @@
 package insane96mcp.mobspropertiesrandomness.data;
 
 import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
+import com.google.gson.JsonElement;
 import com.google.gson.JsonSyntaxException;
 import insane96mcp.insanelib.exception.JsonValidationException;
-import insane96mcp.insanelib.util.FileUtils;
 import insane96mcp.mobspropertiesrandomness.data.json.MPRMob;
 import insane96mcp.mobspropertiesrandomness.util.Logger;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.packs.resources.ResourceManager;
-import net.minecraft.server.packs.resources.SimplePreparableReloadListener;
+import net.minecraft.server.packs.resources.SimpleJsonResourceReloadListener;
 import net.minecraft.util.profiling.ProfilerFiller;
-import org.apache.commons.io.FilenameUtils;
 import org.jetbrains.annotations.NotNull;
 
-import java.io.File;
-import java.io.FileReader;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
-public class MPRMobReloadListener extends SimplePreparableReloadListener<Void> {
+public class MPRMobReloadListener extends SimpleJsonResourceReloadListener {
 	public static final List<MPRMob> MPR_MOBS = new ArrayList<>();
-
 	public static final MPRMobReloadListener INSTANCE;
-
-	public static File mobsFolder;
+	private static final Gson GSON = new GsonBuilder().create();
 
 	public MPRMobReloadListener() {
-		super();
-	}
-
-	@Override
-	protected @NotNull Void prepare(@NotNull ResourceManager iResourceManager, @NotNull ProfilerFiller iProfiler) {
-		return null;
+		super(GSON, "mobs_properties_randomness/mobs");
 	}
 
 	static {
@@ -38,36 +31,29 @@ public class MPRMobReloadListener extends SimplePreparableReloadListener<Void> {
 	}
 
 	@Override
-	protected void apply(@NotNull Void objectIn, @NotNull ResourceManager iResourceManager, @NotNull ProfilerFiller iProfiler) {
-		Logger.info("Reloading Mobs");
-		MPR_MOBS.clear();
-
-		Gson gson = new Gson();
-
-		ArrayList<File> jsonFiles = FileUtils.ListFilesForFolder(mobsFolder);
-
-		for (File file : jsonFiles) {
-			//Ignore files that start with underscore '_' or comma '.'
-			if (file.getName().startsWith("_") || file.getName().startsWith("."))
-				continue;
-
+	protected void apply(@NotNull Map<ResourceLocation, JsonElement> map, @NotNull ResourceManager resourceManager, @NotNull ProfilerFiller profilerFiller) {
+		for (var entry : map.entrySet()) {
 			try {
-				FileReader fileReader = new FileReader(file);
-				MPRMob mob = gson.fromJson(fileReader, MPRMob.class);
+				ResourceLocation name = entry.getKey();
+				String[] split = name.getPath().split("/");
+				if (split[split.length - 1].startsWith("_"))
+					continue;
+
+				MPRMob mob = GSON.fromJson(entry.getValue(), MPRMob.class);
 				mob.validate();
 				MPR_MOBS.add(mob);
 			}
 			catch (JsonValidationException e) {
-				Logger.error("Validation error loading Mob %s: %s", FilenameUtils.removeExtension(file.getName()), e.getMessage());
+				Logger.error("Validation error loading Mob %s: %s", entry.getKey(), e.getMessage());
 			}
 			catch (JsonSyntaxException e) {
-				Logger.error("Parsing error loading Mob %s: %s", FilenameUtils.removeExtension(file.getName()), e.getMessage());
+				Logger.error("Parsing error loading Mob %s: %s", entry.getKey(), e.getMessage());
 			}
 			catch (Exception e) {
-				Logger.error("Failed loading Mob %s: %s", FilenameUtils.removeExtension(file.getName()), e.getMessage());
+				Logger.error("Failed loading Mob %s: %s", entry.getKey(), e.getMessage());
 			}
 		}
 
-		Logger.info("Loaded %s Mobs", MPR_MOBS.size());
+		Logger.info("Loaded %s Mob(s)", MPR_MOBS.size());
 	}
 }
