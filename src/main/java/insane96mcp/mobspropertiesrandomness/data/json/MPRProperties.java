@@ -64,6 +64,7 @@ public abstract class MPRProperties implements IMPRObject {
 	public String rawNbt;
 	public transient CompoundTag _rawNbt = null;
 
+	@SerializedName("scale_pehkui")
 	public MPRScalePehkui scalePehkui;
 
 	@Override

@@ -30,7 +30,7 @@ public class MPRScalePehkui implements IMPRObject {
 
     public void apply(LivingEntity entity) {
         ScaleData scaleData = ScaleTypes.BASE.getScaleData(entity);
-        scaleData.setTargetScale(this.scale);
+        scaleData.setScale(this.scale);
     }
 
     public static class Deserializer implements JsonDeserializer<MPRScalePehkui> {
