@@ -41,6 +41,7 @@ public class MPRPresetReloadListener extends SimpleJsonResourceReloadListener {
 
 				MPRPreset preset = GSON.fromJson(entry.getValue(), MPRPreset.class);
 				preset.validate();
+				preset.id = name;
 				MPR_PRESETS.add(preset);
 			}
 			catch (JsonValidationException e) {

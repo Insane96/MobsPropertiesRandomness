@@ -1,12 +1,14 @@
 # Changelog
 
 ## Upcoming
+* The mod now works with datapacks, no more config folder.
+  * Stuff location in a datapack is `<namespace>/mobs_properties_randomness/groups`, `<namespace>/mobs_properties_randomness/presets` and `<namespace>/mobs_properties_randomness/mobs`
+  * Group and preset names are now resource locations (e.g. a group in `testmod/mobs_properties_randomness/groups/hostiles.json` will have the `"group": "testmod:hostiles"`)
+  * `name` fields have been changed to `id`
+* Added very basic support for pehkui. `scale_pehkui`. Contains `scale`, a Range value to set the size.
 * Renamed equipment slot "feets" to "feet"
 * Weights can now be omitted and will default to 1
 * Range object can now contain "value" instead of "min"
-* Added very basic support for pehkui. `scale_pehkui`. Contains `scale`, a Range value to set the size.
-
-## Beta 3.7.0
 * Renamed `on_hit_effect` to `events`
 * Added generic event object, which OnHit and OnDeath inherits
   * This object contains: 

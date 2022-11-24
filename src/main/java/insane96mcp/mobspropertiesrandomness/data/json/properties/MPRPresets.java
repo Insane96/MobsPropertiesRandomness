@@ -28,7 +28,7 @@ public class MPRPresets implements IMPRObject {
 			this.chance.validate();
 		if (this.mode == null)
 			this.mode = Mode.EXCLUSIVE;
-		if (list == null || list.size() == 0)
+		if (this.list == null || this.list.size() == 0)
 			throw new JsonValidationException("Missing or empty list in Presets. " + this);
 		else {
 			for (MPRWeightedPreset weightedPreset : this.list) {
@@ -45,7 +45,7 @@ public class MPRPresets implements IMPRObject {
 		if (weightedPreset == null)
 			return false;
 		for (MPRPreset preset : MPR_PRESETS) {
-			if (!preset.name.equals(weightedPreset.name))
+			if (!preset.id.equals(weightedPreset.id))
 				continue;
 
 			return preset.apply(entity, world);
@@ -65,13 +65,11 @@ public class MPRPresets implements IMPRObject {
 
 	/**
 	 * Returns a random item from the pool based of weights, dimensions whitelist and biomes whitelist
-	 * @param entity
-	 * @param world
 	 * @return a WeightedPreset or null if no items were available
 	 */
 	@Nullable
 	public MPRWeightedPreset getRandomPreset(LivingEntity entity, Level world) {
-		List<MPRWeightedPreset> items = getPresets(entity, world);
+		List<MPRWeightedPreset> items = this.getPresets(entity, world);
 		if (items.isEmpty())
 			return null;
 		return WeightedRandom.getRandomItem(world.random, items);
@@ -88,6 +86,6 @@ public class MPRPresets implements IMPRObject {
 
 	@Override
 	public String toString() {
-		return String.format("Presets{chance: %s, list: %s}", chance, list);
+		return String.format("Presets{chance: %s, mode: %s, list: %s}", this.chance, this.mode, this.list);
 	}
 }

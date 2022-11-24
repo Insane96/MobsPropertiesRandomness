@@ -42,8 +42,7 @@ public class MPRGroupReloadListener extends SimpleJsonResourceReloadListener {
 
 				MPRGroup group = GSON.fromJson(entry.getValue(), MPRGroup.class);
 				group.validate();
-				//TODO
-				//group.name = name;
+				group.id = name;
 				MPR_GROUPS.add(group);
 			}
 			catch (JsonValidationException e) {

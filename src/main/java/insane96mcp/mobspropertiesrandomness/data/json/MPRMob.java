@@ -1,5 +1,6 @@
 package insane96mcp.mobspropertiesrandomness.data.json;
 
+import com.google.gson.annotations.JsonAdapter;
 import com.google.gson.annotations.SerializedName;
 import insane96mcp.insanelib.exception.JsonValidationException;
 import insane96mcp.mobspropertiesrandomness.data.json.properties.MPRPresets;
@@ -18,8 +19,10 @@ import static insane96mcp.mobspropertiesrandomness.data.MPRMobReloadListener.MPR
 
 public class MPRMob extends MPRProperties implements IMPRObject {
 	@SerializedName("mob_id")
-	public String mobId;
-	public String group;
+	@JsonAdapter(ResourceLocation.Serializer.class)
+	public ResourceLocation mobId;
+	@JsonAdapter(ResourceLocation.Serializer.class)
+	public ResourceLocation group;
 
 	public MPRPresets presets;
 
@@ -32,12 +35,7 @@ public class MPRMob extends MPRProperties implements IMPRObject {
 			Logger.info("mob_id and group are both present, mob_id will be ignored");
 
 		if (this.mobId != null) {
-			String[] splitId = this.mobId.split(":");
-			if (splitId.length != 2)
-				throw new JsonValidationException("Invalid mob_id " + this.mobId);
-
-			ResourceLocation resourceLocation = new ResourceLocation(this.mobId);
-			if (!ForgeRegistries.ENTITIES.containsKey(resourceLocation))
+			if (!ForgeRegistries.ENTITIES.containsKey(this.mobId))
 				throw new JsonValidationException("Mob with ID " + this.mobId + " does not exist");
 		}
 
@@ -86,12 +84,6 @@ public class MPRMob extends MPRProperties implements IMPRObject {
 			}
 		}
 
-		//LogHelper.info("" + mobEntity.getHealth() + " " + mobEntity.getMaxHealth());
 		tags.putBoolean(Strings.Tags.PROCESSED, true);
-	}
-
-	@Override
-	public String toString() {
-		return String.format("Mob{id: %s, group: %s, conditions: %s, potion_effects: %s, attributes: %s, equipment: %s, creeper: %s, ghast: %s}", mobId, group, this.conditions, potionEffects, attributes, equipment, creeper, ghast);
 	}
 }

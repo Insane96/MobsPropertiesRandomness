@@ -1,5 +1,6 @@
 package insane96mcp.mobspropertiesrandomness.data.json.util;
 
+import com.google.gson.annotations.JsonAdapter;
 import com.google.gson.annotations.SerializedName;
 import insane96mcp.insanelib.exception.JsonValidationException;
 import insane96mcp.insanelib.util.weightedrandom.IWeightedRandom;
@@ -7,6 +8,7 @@ import insane96mcp.mobspropertiesrandomness.data.json.IMPRObject;
 import insane96mcp.mobspropertiesrandomness.data.json.MPRPreset;
 import insane96mcp.mobspropertiesrandomness.data.json.util.modifiable.MPRModifiableValue;
 import insane96mcp.mobspropertiesrandomness.util.Logger;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.level.Level;
 
@@ -15,7 +17,9 @@ import javax.annotation.Nullable;
 import static insane96mcp.mobspropertiesrandomness.data.MPRPresetReloadListener.MPR_PRESETS;
 
 public class MPRWeightedPreset implements IMPRObject, IWeightedRandom {
-	public String name;
+
+	@JsonAdapter(ResourceLocation.Serializer.class)
+	public transient ResourceLocation id;
 
 	@SerializedName("weight")
 	private MPRModifiableValue modifiableWeight;
@@ -27,17 +31,17 @@ public class MPRWeightedPreset implements IMPRObject, IWeightedRandom {
 
 	@Override
 	public void validate() throws JsonValidationException {
-		if (this.name == null)
-			throw new JsonValidationException("Missing name in Weighted Preset. " + this);
+		if (this.id == null)
+			throw new JsonValidationException("Missing id in Weighted Preset. " + this);
 		boolean found = false;
 		for (MPRPreset preset : MPR_PRESETS) {
-			if (preset.name.equals(this.name)) {
+			if (preset.id.equals(this.id)) {
 				found = true;
 				break;
 			}
 		}
 		if (!found)
-			Logger.info("Preset " + this.name + " does not exist");
+			Logger.info("Preset " + this.id + " does not exist");
 
 		if (this.modifiableWeight == null) {
 			Logger.info("Weight value missing for %s, will default to 1", this);
@@ -64,7 +68,7 @@ public class MPRWeightedPreset implements IMPRObject, IWeightedRandom {
 
 	@Override
 	public String toString() {
-		return String.format("WeightedPreset{name: %s, weight: %s, world_whitelist: %s}", this.name, this.modifiableWeight, this.worldWhitelist);
+		return String.format("WeightedPreset{id: %s, weight: %s, world_whitelist: %s}", this.id, this.modifiableWeight, this.worldWhitelist);
 	}
 
 	@Override

@@ -13,14 +13,16 @@ public class MPRUtils {
 	 */
 	public static boolean matchesEntity(LivingEntity entity, MPRMob mob) {
 		if (mob.group != null) {
-			MPRGroup group = MPRGroupReloadListener.MPR_GROUPS.stream().filter(g -> g.name.equals(mob.group)).findFirst().orElse(null);
+			MPRGroup group = MPRGroupReloadListener.MPR_GROUPS.stream().filter(g -> g.id.equals(mob.group)).findFirst().orElse(MPRGroup.EMPTY);
 			for (String mobId : group.mobs) {
+				//noinspection ConstantConditions
 				if (entity.getType().getRegistryName().equals(new ResourceLocation(mobId)))
 					return true;
 			}
 			return false;
 		}
 
-		return entity.getType().getRegistryName().equals(new ResourceLocation(mob.mobId));
+		//noinspection ConstantConditions
+		return entity.getType().getRegistryName().equals(mob.mobId);
 	}
 }
