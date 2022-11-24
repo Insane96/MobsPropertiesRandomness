@@ -4,6 +4,7 @@ import com.google.gson.JsonDeserializationContext;
 import com.google.gson.JsonDeserializer;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonParseException;
+import com.google.gson.annotations.JsonAdapter;
 import insane96mcp.insanelib.exception.JsonValidationException;
 import insane96mcp.mobspropertiesrandomness.data.json.IMPRObject;
 import insane96mcp.mobspropertiesrandomness.data.json.util.modifiable.MPRRange;
@@ -14,6 +15,7 @@ import virtuoel.pehkui.api.ScaleTypes;
 
 import java.lang.reflect.Type;
 
+@JsonAdapter(MPRScalePehkui.Deserializer.class)
 public class MPRScalePehkui implements IMPRObject {
 
     public MPRRange scale;
