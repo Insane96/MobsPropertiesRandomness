@@ -10,12 +10,12 @@
   * `scale`: a Range value to set the scale.
   * `scale_types`: a list of pehkui scale types.
 * Renamed `on_hit_effect` to `events`
-* Added generic event object, which OnHit and OnDeath inherits
+* Added generic event object, which all the events inherit (e.g. `on_attack`)
   * This object contains: 
     * `chance`: Chance to trigger the event
     * `play_sound`: Sound to play as the event triggers
     * `function`: A function executed when the event triggers. The function is executed as the mob and at the mob's position (unless specified otherwise)
-* `on_attack` and `on_damaged` events now inherit from the generic event object, so it now contains the aforementioned properties (the only new property is `function`).  
+* `on_attack` and `on_attacked` events now inherit from the generic event object, so it now contains the aforementioned properties (the only new property is `function`).  
   The `function` property is executed at (and at) the "entity" or the "other" specified `target`
 * Added `on_death` event, triggered when the entity dies. 
   * Properties:
