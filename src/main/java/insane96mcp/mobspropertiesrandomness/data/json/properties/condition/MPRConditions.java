@@ -5,7 +5,7 @@ import com.mojang.brigadier.exceptions.CommandSyntaxException;
 import insane96mcp.insanelib.exception.JsonValidationException;
 import insane96mcp.insanelib.setup.ILStrings;
 import insane96mcp.insanelib.util.MCUtils;
-import insane96mcp.mobspropertiesrandomness.data.json.IMPRObject;
+import insane96mcp.mobspropertiesrandomness.data.json.IMPRObject_old;
 import insane96mcp.mobspropertiesrandomness.data.json.util.MPRWorldWhitelist;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.TagParser;
@@ -14,7 +14,7 @@ import net.minecraftforge.fml.ModList;
 
 import java.util.List;
 
-public class MPRConditions implements IMPRObject {
+public class MPRConditions implements IMPRObject_old {
 
 	@SerializedName("is_baby")
 	public Boolean isBaby;

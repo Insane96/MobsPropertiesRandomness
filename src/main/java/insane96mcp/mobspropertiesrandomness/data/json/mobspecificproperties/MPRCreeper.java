@@ -3,8 +3,7 @@ package insane96mcp.mobspropertiesrandomness.data.json.mobspecificproperties;
 import com.google.gson.annotations.SerializedName;
 import insane96mcp.insanelib.exception.JsonValidationException;
 import insane96mcp.insanelib.setup.ILStrings;
-import insane96mcp.mobspropertiesrandomness.data.json.IMPRAppliable;
-import insane96mcp.mobspropertiesrandomness.data.json.IMPRObject;
+import insane96mcp.mobspropertiesrandomness.data.json.IMPRObject_old;
 import insane96mcp.mobspropertiesrandomness.data.json.util.modifiable.MPRModifiableValue;
 import insane96mcp.mobspropertiesrandomness.data.json.util.modifiable.MPRRange;
 import insane96mcp.mobspropertiesrandomness.network.MessageCreeperFuseSync;
@@ -17,7 +16,7 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.Level;
 import net.minecraftforge.network.NetworkDirection;
 
-public class MPRCreeper implements IMPRObject, IMPRAppliable {
+public class MPRCreeper implements IMPRObject_old {
 	public MPRRange fuse;
 	@SerializedName("explosion_radius")
 	public MPRRange explosionRadius;
@@ -28,20 +27,19 @@ public class MPRCreeper implements IMPRObject, IMPRAppliable {
 
 	@Override
 	public void validate() throws JsonValidationException {
-		if (fuse != null)
-			fuse.validate();
+		if (this.fuse != null)
+			this.fuse.validate();
 
-		if (explosionRadius != null)
-			explosionRadius.validate();
+		if (this.explosionRadius != null)
+			this.explosionRadius.validate();
 
-		if (poweredChance != null)
-			poweredChance.validate();
+		if (this.poweredChance != null)
+			this.poweredChance.validate();
 
-		if (fireChance != null)
-			fireChance.validate();
+		if (this.fireChance != null)
+			this.fireChance.validate();
 	}
 
-	@Override
 	public void apply(LivingEntity entity, Level world) {
 		if (!(entity instanceof Creeper creeper))
 			return;

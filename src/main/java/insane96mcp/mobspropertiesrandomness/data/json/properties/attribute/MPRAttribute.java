@@ -2,7 +2,7 @@ package insane96mcp.mobspropertiesrandomness.data.json.properties.attribute;
 
 import com.google.gson.annotations.SerializedName;
 import insane96mcp.insanelib.exception.JsonValidationException;
-import insane96mcp.mobspropertiesrandomness.data.json.IMPRObject;
+import insane96mcp.mobspropertiesrandomness.data.json.IMPRObject_old;
 import insane96mcp.mobspropertiesrandomness.data.json.util.MPRWorldWhitelist;
 import insane96mcp.mobspropertiesrandomness.data.json.util.modifiable.MPRModifiableValue;
 import insane96mcp.mobspropertiesrandomness.data.json.util.modifiable.MPRRange;
@@ -14,7 +14,7 @@ import net.minecraft.world.level.Level;
 
 import java.util.UUID;
 
-public abstract class MPRAttribute implements IMPRObject {
+public abstract class MPRAttribute implements IMPRObject_old {
 	public String uuid;
 	public String id;
 	@SerializedName("modifier_name")

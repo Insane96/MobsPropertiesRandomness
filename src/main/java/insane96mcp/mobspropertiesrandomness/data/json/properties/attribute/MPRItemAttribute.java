@@ -2,7 +2,7 @@ package insane96mcp.mobspropertiesrandomness.data.json.properties.attribute;
 
 import insane96mcp.insanelib.exception.JsonValidationException;
 import insane96mcp.insanelib.util.MCUtils;
-import insane96mcp.mobspropertiesrandomness.data.json.IMPRObject;
+import insane96mcp.mobspropertiesrandomness.data.json.IMPRObject_old;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.entity.LivingEntity;
@@ -12,7 +12,7 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
 import net.minecraftforge.registries.ForgeRegistries;
 
-public class MPRItemAttribute extends MPRAttribute implements IMPRObject {
+public class MPRItemAttribute extends MPRAttribute implements IMPRObject_old {
 	public EquipmentSlot slot;
 
 	@Override

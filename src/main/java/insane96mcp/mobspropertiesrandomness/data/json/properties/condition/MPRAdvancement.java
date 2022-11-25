@@ -3,7 +3,7 @@ package insane96mcp.mobspropertiesrandomness.data.json.properties.condition;
 import com.google.gson.annotations.SerializedName;
 import insane96mcp.insanelib.exception.JsonValidationException;
 import insane96mcp.insanelib.util.MCUtils;
-import insane96mcp.mobspropertiesrandomness.data.json.IMPRObject;
+import insane96mcp.mobspropertiesrandomness.data.json.IMPRObject_old;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.entity.LivingEntity;
@@ -11,7 +11,7 @@ import net.minecraft.world.entity.LivingEntity;
 import java.util.ArrayList;
 import java.util.List;
 
-public class MPRAdvancement implements IMPRObject {
+public class MPRAdvancement implements IMPRObject_old {
 
 	public List<String> advancements;
 	@SerializedName("player_mode")

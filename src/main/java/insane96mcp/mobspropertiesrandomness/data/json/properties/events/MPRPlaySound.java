@@ -6,7 +6,7 @@ import com.google.gson.JsonElement;
 import com.google.gson.JsonParseException;
 import com.google.gson.annotations.JsonAdapter;
 import insane96mcp.insanelib.exception.JsonValidationException;
-import insane96mcp.mobspropertiesrandomness.data.json.IMPRObject;
+import insane96mcp.mobspropertiesrandomness.data.json.IMPRObject_old;
 import insane96mcp.mobspropertiesrandomness.util.Logger;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.sounds.SoundEvent;
@@ -16,7 +16,7 @@ import net.minecraftforge.registries.ForgeRegistries;
 import java.lang.reflect.Type;
 
 @JsonAdapter(MPRPlaySound.Deserializer.class)
-public class MPRPlaySound implements IMPRObject {
+public class MPRPlaySound implements IMPRObject_old {
 
     public String sound;
     private transient SoundEvent cachedSound;

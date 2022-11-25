@@ -1,8 +1,7 @@
 package insane96mcp.mobspropertiesrandomness.data.json.properties.attribute;
 
 import insane96mcp.insanelib.exception.JsonValidationException;
-import insane96mcp.mobspropertiesrandomness.data.json.IMPRAppliable;
-import insane96mcp.mobspropertiesrandomness.data.json.IMPRObject;
+import insane96mcp.mobspropertiesrandomness.data.json.IMPRObject_old;
 import insane96mcp.mobspropertiesrandomness.util.Logger;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.LivingEntity;
@@ -14,13 +13,12 @@ import net.minecraftforge.registries.ForgeRegistries;
 
 import java.util.UUID;
 
-public class MPRMobAttribute extends MPRAttribute implements IMPRObject, IMPRAppliable {
+public class MPRMobAttribute extends MPRAttribute implements IMPRObject_old {
 	@Override
 	public void validate() throws JsonValidationException {
 		super.validate();
 	}
 
-	@Override
 	public void apply(LivingEntity entity, Level world) {
 		if (!this.shouldApply(entity, world))
 			return;

@@ -3,8 +3,8 @@ package insane96mcp.mobspropertiesrandomness.data.json.properties;
 import com.google.gson.annotations.SerializedName;
 import insane96mcp.insanelib.exception.JsonValidationException;
 import insane96mcp.insanelib.util.weightedrandom.WeightedRandom;
-import insane96mcp.mobspropertiesrandomness.data.json.IMPRObject;
-import insane96mcp.mobspropertiesrandomness.data.json.MPRPreset;
+import insane96mcp.mobspropertiesrandomness.data.json.IMPRObject_old;
+import insane96mcp.mobspropertiesrandomness.data.json.MPRPresetOld;
 import insane96mcp.mobspropertiesrandomness.data.json.util.MPRWeightedPreset;
 import insane96mcp.mobspropertiesrandomness.data.json.util.modifiable.MPRModifiableValue;
 import net.minecraft.world.entity.LivingEntity;
@@ -16,7 +16,7 @@ import java.util.List;
 
 import static insane96mcp.mobspropertiesrandomness.data.MPRPresetReloadListener.MPR_PRESETS;
 
-public class MPRPresets implements IMPRObject {
+public class MPRPresets implements IMPRObject_old {
 
 	public MPRModifiableValue chance;
 	public Mode mode;
@@ -44,7 +44,7 @@ public class MPRPresets implements IMPRObject {
 		MPRWeightedPreset weightedPreset = this.getRandomPreset(entity, world);
 		if (weightedPreset == null)
 			return false;
-		for (MPRPreset preset : MPR_PRESETS) {
+		for (MPRPresetOld preset : MPR_PRESETS) {
 			if (!preset.id.equals(weightedPreset.id))
 				continue;
 

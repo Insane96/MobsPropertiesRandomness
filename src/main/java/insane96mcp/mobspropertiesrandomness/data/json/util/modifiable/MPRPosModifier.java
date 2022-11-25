@@ -2,11 +2,11 @@ package insane96mcp.mobspropertiesrandomness.data.json.util.modifiable;
 
 import com.google.gson.annotations.SerializedName;
 import insane96mcp.insanelib.exception.JsonValidationException;
-import insane96mcp.mobspropertiesrandomness.data.json.IMPRObject;
+import insane96mcp.mobspropertiesrandomness.data.json.IMPRObject_old;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.Vec3;
 
-public class MPRPosModifier extends MPRModifier implements IMPRObject {
+public class MPRPosModifier extends MPRModifier implements IMPRObject_old {
 
 	/*
 	 Each 'distance_from_spawn_step' blocks from spawn will increase the value to modify by 'distance_from_spawn_bonus'%. The formula is 'bonus * (distance_from_spawn / step)'. E.g. with step = 100 and bonus = 0.02 when a mob spawns 150 blocks from spawn will have the value modified as '0.02 * (150 / 100)' = '0.02 * 1.5' = '+3%'

@@ -3,7 +3,7 @@ package insane96mcp.mobspropertiesrandomness.data.json.properties.mods.tconstruc
 import com.google.gson.*;
 import com.google.gson.annotations.SerializedName;
 import insane96mcp.insanelib.exception.JsonValidationException;
-import insane96mcp.mobspropertiesrandomness.data.json.IMPRObject;
+import insane96mcp.mobspropertiesrandomness.data.json.IMPRObject_old;
 import insane96mcp.mobspropertiesrandomness.data.json.util.modifiable.MPRModifiableValue;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.item.ItemStack;
@@ -16,7 +16,7 @@ import slimeknights.tconstruct.library.tools.nbt.ToolStack;
 import javax.annotation.Nullable;
 import java.lang.reflect.Type;
 
-public class MPRRandomTiConMaterial implements IMPRObject {
+public class MPRRandomTiConMaterial implements IMPRObject_old {
 
 	@SerializedName("max_tier")
 	public MPRModifiableValue maxTier;

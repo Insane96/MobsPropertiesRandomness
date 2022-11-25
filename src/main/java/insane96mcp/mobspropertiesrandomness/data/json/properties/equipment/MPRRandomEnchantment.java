@@ -2,7 +2,7 @@ package insane96mcp.mobspropertiesrandomness.data.json.properties.equipment;
 
 import com.google.gson.annotations.SerializedName;
 import insane96mcp.insanelib.exception.JsonValidationException;
-import insane96mcp.mobspropertiesrandomness.data.json.IMPRObject;
+import insane96mcp.mobspropertiesrandomness.data.json.IMPRObject_old;
 import insane96mcp.mobspropertiesrandomness.util.Logger;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.ItemStack;
@@ -17,7 +17,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Random;
 
-public class MPRRandomEnchantment implements IMPRObject {
+public class MPRRandomEnchantment implements IMPRObject_old {
 
 	@SerializedName("allow_curses")
 	public boolean allowCurses;

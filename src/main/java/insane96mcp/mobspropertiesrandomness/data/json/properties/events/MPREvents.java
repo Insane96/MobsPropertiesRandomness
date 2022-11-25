@@ -3,13 +3,13 @@ package insane96mcp.mobspropertiesrandomness.data.json.properties.events;
 import com.google.gson.Gson;
 import com.google.gson.annotations.SerializedName;
 import insane96mcp.insanelib.exception.JsonValidationException;
-import insane96mcp.mobspropertiesrandomness.data.json.IMPRObject;
+import insane96mcp.mobspropertiesrandomness.data.json.IMPRObject_old;
 import insane96mcp.mobspropertiesrandomness.setup.Strings;
 import net.minecraft.world.entity.LivingEntity;
 
 import java.util.List;
 
-public class MPREvents implements IMPRObject {
+public class MPREvents implements IMPRObject_old {
 
 	@SerializedName("on_attack")
 	public List<MPROnHit> onAttack;

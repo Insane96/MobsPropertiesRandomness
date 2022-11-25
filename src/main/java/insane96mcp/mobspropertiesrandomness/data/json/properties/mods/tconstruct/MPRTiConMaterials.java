@@ -6,7 +6,7 @@ import com.google.gson.JsonElement;
 import com.google.gson.JsonParseException;
 import com.google.gson.annotations.JsonAdapter;
 import insane96mcp.insanelib.exception.JsonValidationException;
-import insane96mcp.mobspropertiesrandomness.data.json.IMPRObject;
+import insane96mcp.mobspropertiesrandomness.data.json.IMPRObject_old;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
@@ -24,7 +24,7 @@ import java.util.Arrays;
 import java.util.List;
 
 @JsonAdapter(MPRTiConMaterials.Deserializer.class)
-public class MPRTiConMaterials implements IMPRObject {
+public class MPRTiConMaterials implements IMPRObject_old {
 
 	public List<String> materials;
 	public MPRRandomTiConMaterial random;

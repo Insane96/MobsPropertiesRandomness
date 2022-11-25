@@ -6,7 +6,7 @@ import com.google.gson.JsonElement;
 import com.google.gson.JsonParseException;
 import com.google.gson.annotations.JsonAdapter;
 import insane96mcp.insanelib.exception.JsonValidationException;
-import insane96mcp.mobspropertiesrandomness.data.json.IMPRObject;
+import insane96mcp.mobspropertiesrandomness.data.json.IMPRObject_old;
 import insane96mcp.mobspropertiesrandomness.data.json.util.modifiable.MPRModifiableValue;
 import insane96mcp.mobspropertiesrandomness.data.json.util.modifiable.MPRRange;
 import net.minecraft.world.entity.LivingEntity;
@@ -20,7 +20,7 @@ import slimeknights.tconstruct.library.tools.nbt.ToolStack;
 import java.lang.reflect.Type;
 
 @JsonAdapter(MPRTiConModifier.Deserializer.class)
-public class MPRTiConModifier implements IMPRObject {
+public class MPRTiConModifier implements IMPRObject_old {
 
 	public String id;
 	public MPRRange level;

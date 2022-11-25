@@ -17,7 +17,7 @@ import net.minecraftforge.registries.ForgeRegistries;
 
 import static insane96mcp.mobspropertiesrandomness.data.MPRMobReloadListener.MPR_MOBS;
 
-public class MPRMob extends MPRProperties implements IMPRObject {
+public class MPRMobOld extends MPRProperties_old implements IMPRObject_old {
 	@SerializedName("mob_id")
 	@JsonAdapter(ResourceLocation.Serializer.class)
 	public ResourceLocation mobId;
@@ -64,7 +64,7 @@ public class MPRMob extends MPRProperties implements IMPRObject {
 		if (isAlreadyChecked)
 			return;
 
-		for (MPRMob mprMob : MPR_MOBS) {
+		for (MPRMobOld mprMob : MPR_MOBS) {
 			if (!MPRUtils.matchesEntity(livingEntity, mprMob))
 				continue;
 			if (mprMob.presets == null)

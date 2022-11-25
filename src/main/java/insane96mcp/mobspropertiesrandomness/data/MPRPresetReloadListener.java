@@ -5,7 +5,7 @@ import com.google.gson.GsonBuilder;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonSyntaxException;
 import insane96mcp.insanelib.exception.JsonValidationException;
-import insane96mcp.mobspropertiesrandomness.data.json.MPRPreset;
+import insane96mcp.mobspropertiesrandomness.data.json.MPRPresetOld;
 import insane96mcp.mobspropertiesrandomness.util.Logger;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.packs.resources.ResourceManager;
@@ -18,7 +18,7 @@ import java.util.List;
 import java.util.Map;
 
 public class MPRPresetReloadListener extends SimpleJsonResourceReloadListener {
-	public static final List<MPRPreset> MPR_PRESETS = new ArrayList<>();
+	public static final List<MPRPresetOld> MPR_PRESETS = new ArrayList<>();
 	public static final MPRPresetReloadListener INSTANCE;
 	private static final Gson GSON = new GsonBuilder().create();
 
@@ -40,7 +40,7 @@ public class MPRPresetReloadListener extends SimpleJsonResourceReloadListener {
 				if (split[split.length - 1].startsWith("_"))
 					continue;
 
-				MPRPreset preset = GSON.fromJson(entry.getValue(), MPRPreset.class);
+				MPRPresetOld preset = GSON.fromJson(entry.getValue(), MPRPresetOld.class);
 				preset.validate();
 				preset.id = name;
 				MPR_PRESETS.add(preset);

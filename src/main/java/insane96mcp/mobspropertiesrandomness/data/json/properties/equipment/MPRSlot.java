@@ -3,7 +3,7 @@ package insane96mcp.mobspropertiesrandomness.data.json.properties.equipment;
 import com.google.gson.annotations.SerializedName;
 import insane96mcp.insanelib.exception.JsonValidationException;
 import insane96mcp.insanelib.util.weightedrandom.WeightedRandom;
-import insane96mcp.mobspropertiesrandomness.data.json.IMPRObject;
+import insane96mcp.mobspropertiesrandomness.data.json.IMPRObject_old;
 import insane96mcp.mobspropertiesrandomness.data.json.util.modifiable.MPRModifiableValue;
 import insane96mcp.mobspropertiesrandomness.util.Logger;
 import net.minecraft.world.entity.LivingEntity;
@@ -12,7 +12,7 @@ import net.minecraft.world.level.Level;
 import java.util.ArrayList;
 import java.util.List;
 
-public class MPRSlot implements IMPRObject {
+public class MPRSlot implements IMPRObject_old {
 
 	@SerializedName("override")
 	public boolean override;

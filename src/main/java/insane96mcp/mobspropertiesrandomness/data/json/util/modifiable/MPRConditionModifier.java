@@ -1,11 +1,11 @@
 package insane96mcp.mobspropertiesrandomness.data.json.util.modifiable;
 
 import insane96mcp.insanelib.exception.JsonValidationException;
-import insane96mcp.mobspropertiesrandomness.data.json.IMPRObject;
+import insane96mcp.mobspropertiesrandomness.data.json.IMPRObject_old;
 import insane96mcp.mobspropertiesrandomness.data.json.properties.condition.MPRConditions;
 import net.minecraft.world.entity.LivingEntity;
 
-public class MPRConditionModifier extends MPRModifier implements IMPRObject {
+public class MPRConditionModifier extends MPRModifier implements IMPRObject_old {
 	public MPRConditions condition;
 	public Operation operation;
 	public Float amount;

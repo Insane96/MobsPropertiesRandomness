@@ -4,8 +4,8 @@ import com.google.gson.annotations.JsonAdapter;
 import com.google.gson.annotations.SerializedName;
 import insane96mcp.insanelib.exception.JsonValidationException;
 import insane96mcp.insanelib.util.weightedrandom.IWeightedRandom;
-import insane96mcp.mobspropertiesrandomness.data.json.IMPRObject;
-import insane96mcp.mobspropertiesrandomness.data.json.MPRPreset;
+import insane96mcp.mobspropertiesrandomness.data.json.IMPRObject_old;
+import insane96mcp.mobspropertiesrandomness.data.json.MPRPresetOld;
 import insane96mcp.mobspropertiesrandomness.data.json.util.modifiable.MPRModifiableValue;
 import insane96mcp.mobspropertiesrandomness.util.Logger;
 import net.minecraft.resources.ResourceLocation;
@@ -16,7 +16,7 @@ import javax.annotation.Nullable;
 
 import static insane96mcp.mobspropertiesrandomness.data.MPRPresetReloadListener.MPR_PRESETS;
 
-public class MPRWeightedPreset implements IMPRObject, IWeightedRandom {
+public class MPRWeightedPreset implements IMPRObject_old, IWeightedRandom {
 
 	@JsonAdapter(ResourceLocation.Serializer.class)
 	public transient ResourceLocation id;
@@ -34,7 +34,7 @@ public class MPRWeightedPreset implements IMPRObject, IWeightedRandom {
 		if (this.id == null)
 			throw new JsonValidationException("Missing id in Weighted Preset. " + this);
 		boolean found = false;
-		for (MPRPreset preset : MPR_PRESETS) {
+		for (MPRPresetOld preset : MPR_PRESETS) {
 			if (preset.id.equals(this.id)) {
 				found = true;
 				break;

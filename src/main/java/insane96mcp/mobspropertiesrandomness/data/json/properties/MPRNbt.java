@@ -2,13 +2,13 @@ package insane96mcp.mobspropertiesrandomness.data.json.properties;
 
 import com.google.gson.annotations.SerializedName;
 import insane96mcp.insanelib.exception.JsonValidationException;
-import insane96mcp.mobspropertiesrandomness.data.json.IMPRObject;
+import insane96mcp.mobspropertiesrandomness.data.json.IMPRObject_old;
 import insane96mcp.mobspropertiesrandomness.data.json.util.modifiable.MPRRange;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.level.Level;
 
-public class MPRNbt implements IMPRObject {
+public class MPRNbt implements IMPRObject_old {
 
     @SerializedName("nbt_tag")
     public String nbtTag;

@@ -7,7 +7,7 @@ import com.google.gson.JsonParseException;
 import com.google.gson.annotations.JsonAdapter;
 import com.google.gson.reflect.TypeToken;
 import insane96mcp.insanelib.exception.JsonValidationException;
-import insane96mcp.mobspropertiesrandomness.data.json.IMPRObject;
+import insane96mcp.mobspropertiesrandomness.data.json.IMPRObject_old;
 import insane96mcp.mobspropertiesrandomness.util.Logger;
 import net.minecraft.util.Mth;
 import net.minecraft.world.entity.LivingEntity;
@@ -18,7 +18,7 @@ import java.lang.reflect.Type;
 import java.util.List;
 
 @JsonAdapter(MPRRange.Deserializer.class)
-public class MPRRange extends MPRModifiable implements IMPRObject {
+public class MPRRange extends MPRModifiable implements IMPRObject_old {
 	private Float min;
 	private Float max;
 

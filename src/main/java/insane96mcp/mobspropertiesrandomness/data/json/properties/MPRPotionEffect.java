@@ -2,8 +2,7 @@ package insane96mcp.mobspropertiesrandomness.data.json.properties;
 
 import com.google.gson.annotations.SerializedName;
 import insane96mcp.insanelib.exception.JsonValidationException;
-import insane96mcp.mobspropertiesrandomness.data.json.IMPRAppliable;
-import insane96mcp.mobspropertiesrandomness.data.json.IMPRObject;
+import insane96mcp.mobspropertiesrandomness.data.json.IMPRObject_old;
 import insane96mcp.mobspropertiesrandomness.data.json.util.MPRWorldWhitelist;
 import insane96mcp.mobspropertiesrandomness.data.json.util.modifiable.MPRModifiableValue;
 import insane96mcp.mobspropertiesrandomness.data.json.util.modifiable.MPRRange;
@@ -15,7 +14,7 @@ import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.level.Level;
 import net.minecraftforge.registries.ForgeRegistries;
 
-public class MPRPotionEffect implements IMPRObject, IMPRAppliable {
+public class MPRPotionEffect implements IMPRObject_old {
 	public String id;
 	public MPRRange amplifier;
 
