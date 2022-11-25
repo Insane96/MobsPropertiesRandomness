@@ -1,14 +1,14 @@
 # Changelog
 
 ## Upcoming
-* The mod now works with datapacks, no more config folder.
-  * Location of presets and mobs in a datapack is `<namespace>/mobs_properties_randomness/presets` and `<namespace>/mobs_properties_randomness/mobs`
+* The mod now works with data packs, no more config folder.
+  * Location of presets and mobs in a data pack is `<namespace>/mobs_properties_randomness/presets` and `<namespace>/mobs_properties_randomness/mobs`
   * Groups have been removed. Use Entity Tags. `group` has been renamed to `entity_tag`
   * Presets names are now resource locations (e.g. a preset in `testmod/mobs_properties_randomness/preset/cool_zombie.json` in the json will be referenced as `"id": "testmod:cool_zombie"`)
   * `name` fields have been changed to `id`
-* Added very basic support for pehkui: `scale_pehkui` in mob properties. 
+* Added very basic support for pehkui: `scale_pehkui` in mob properties, a list of ScalePehkui objects:
   * `scale`: a Range value to set the scale.
-  * `scale_types`: a list of pehkui scale types.
+  * `scale_types`: a list of pehkui scale types. All the scale types in the list will have the same scale
 * Renamed `on_hit_effect` to `events`
 * Added generic event object, which all the events inherit (e.g. `on_attack`)
   * This object contains: 
