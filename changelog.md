@@ -17,7 +17,8 @@
     * `play_sound`: Sound to play as the event triggers
     * `function`: A function executed when the event triggers. The function is executed as the mob and at the mob's position (unless specified otherwise)
 * `on_attack` and `on_attacked` events now inherit from the generic event object, so it now contains the aforementioned properties (the only new property is `function`).  
-  The `function` property is executed at (and at) the "entity" or the "other" specified `target`
+  The `function` property is executed at (and at) the "entity" or the "other" specified `target`.  
+  Also added `damage_taken`: a Range object defining the damage range at which the event should trigger (defaults to 0~Infinite)
 * Added `on_death` event, triggered when the entity dies. 
   * Properties:
     * `target`: Same as `on_attack` and `on_damaged`

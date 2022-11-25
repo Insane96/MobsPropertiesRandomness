@@ -5,6 +5,7 @@ import insane96mcp.insanelib.exception.JsonValidationException;
 import insane96mcp.mobspropertiesrandomness.data.json.properties.MPRPotionEffect;
 import insane96mcp.mobspropertiesrandomness.data.json.util.modifiable.MPRModifiableValue;
 import insane96mcp.mobspropertiesrandomness.data.json.util.modifiable.MPRModifier;
+import insane96mcp.mobspropertiesrandomness.data.json.util.modifiable.MPRRange;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraftforge.event.entity.living.LivingDamageEvent;
 
@@ -15,15 +16,18 @@ public class MPROnHit extends MPREvent {
 	@SerializedName("potion_effects")
 	public List<MPRPotionEffect> potionEffects;
 
-	@SerializedName("damage_modifier_operation")
-	public MPRModifier.Operation damageModifierOperation;
-	@SerializedName("damage_modifier")
-	public MPRModifiableValue damageModifier;
-
 	public Target target;
 
 	@SerializedName("damage_type")
 	public DamageType damageType;
+
+	@SerializedName("damage_amount")
+	public MPRRange damageAmount = new MPRRange(0f, Float.MAX_VALUE);
+
+	@SerializedName("damage_modifier_operation")
+	public MPRModifier.Operation damageModifierOperation;
+	@SerializedName("damage_modifier")
+	public MPRModifiableValue damageModifier;
 
 	@SerializedName("health_left")
 	public Double healthLeft;
@@ -31,10 +35,10 @@ public class MPROnHit extends MPREvent {
 	@Override
 	public void validate() throws JsonValidationException {
 		super.validate();
-		if (target == null)
+		if (this.target == null)
 			throw new JsonValidationException("Missing \"target\" for OnHit object: %s".formatted(this));
 
-		if (potionEffects == null) {
+		if (this.potionEffects == null) {
 			throw new JsonValidationException("Missing \"potion_effects\" for OnHit object: %s".formatted(this));
 		}
 		else {
@@ -55,6 +59,9 @@ public class MPROnHit extends MPREvent {
 			return;
 
 		if (this.damageType != null && ((isDirectDamage && this.damageType == DamageType.INDIRECT) || (!isDirectDamage && this.damageType == DamageType.DIRECT)))
+			return;
+
+		if (event.getAmount() < this.damageAmount.getMin(entity, entity.level) || event.getAmount() > this.damageAmount.getMax(entity, entity.level))
 			return;
 
 		if (this.damageModifier != null) {
