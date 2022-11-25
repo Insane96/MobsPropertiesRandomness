@@ -2,13 +2,11 @@
 
 ## Upcoming
 * The mod now works with datapacks, no more config folder.
-  * Stuff location in a datapack is `<namespace>/mobs_properties_randomness/groups`, `<namespace>/mobs_properties_randomness/presets` and `<namespace>/mobs_properties_randomness/mobs`
-  * Group and preset names are now resource locations (e.g. a group in `testmod/mobs_properties_randomness/groups/hostiles.json` will have the `"group": "testmod:hostiles"`)
+  * Stuff location in a datapack is `<namespace>/mobs_properties_randomness/presets` and `<namespace>/mobs_properties_randomness/mobs`
+  * Groups have been removed. Use Entity Tags. `group` has been renamed to `entity_tag`
+  * Presets names are now resource locations (e.g. a preset in `testmod/mobs_properties_randomness/preset/cool_zombie.json` in the json will be referenced as `"id": "testmod:cool_zombie"`)
   * `name` fields have been changed to `id`
 * Added very basic support for pehkui. `scale_pehkui`. Contains `scale`, a Range value to set the size.
-* Renamed equipment slot "feets" to "feet"
-* Weights can now be omitted and will default to 1
-* Range object can now contain "value" instead of "min"
 * Renamed `on_hit_effect` to `events`
 * Added generic event object, which OnHit and OnDeath inherits
   * This object contains: 
@@ -29,6 +27,9 @@
     * `sound`: the sound id
     * `volume`: the volume of the sound played. Defaults to 1
     * `pitch`: the pitch of the sound played. Defaults to 1
+* Renamed equipment slot "feets" to "feet"
+* Weights can now be omitted and will default to 1
+* Range object can now contain "value" instead of "min"
 
 ## 3.6.0
 * Added `game_stages_unlocked` condition

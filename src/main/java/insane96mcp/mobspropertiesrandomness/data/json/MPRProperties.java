@@ -65,7 +65,7 @@ public abstract class MPRProperties implements IMPRObject {
 	public transient CompoundTag _rawNbt = null;
 
 	@SerializedName("scale_pehkui")
-	public MPRScalePehkui scalePehkui;
+	public List<MPRScalePehkui> scalePehkui;
 
 	@Override
 	public void validate() throws JsonValidationException {
@@ -136,7 +136,9 @@ public abstract class MPRProperties implements IMPRObject {
 
 		if (this.scalePehkui != null)
 		{
-			this.scalePehkui.validate();
+			for (MPRScalePehkui scalePehkui1 : this.scalePehkui) {
+				scalePehkui1.validate();
+			}
 		}
 	}
 
@@ -184,8 +186,11 @@ public abstract class MPRProperties implements IMPRObject {
 			livingEntity.readAdditionalSaveData(this._rawNbt);
 		}
 
-		if (this.scalePehkui != null)
-			this.scalePehkui.apply(livingEntity);
+		if (this.scalePehkui != null) {
+			for (MPRScalePehkui scalePehkui1 : this.scalePehkui) {
+				scalePehkui1.apply(livingEntity);
+			}
+		}
 
 		return true;
 	}

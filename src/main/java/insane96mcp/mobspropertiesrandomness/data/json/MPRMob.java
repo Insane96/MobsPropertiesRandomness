@@ -21,18 +21,19 @@ public class MPRMob extends MPRProperties implements IMPRObject {
 	@SerializedName("mob_id")
 	@JsonAdapter(ResourceLocation.Serializer.class)
 	public ResourceLocation mobId;
+	@SerializedName("entity_tag")
 	@JsonAdapter(ResourceLocation.Serializer.class)
-	public ResourceLocation group;
+	public ResourceLocation entityTag;
 
 	public MPRPresets presets;
 
 	@Override
 	public void validate() throws JsonValidationException {
 		super.validate();
-		if (this.mobId == null && this.group == null)
-			throw new JsonValidationException("Missing mob_id or group. " + this);
-		else if (this.mobId != null && this.group != null)
-			Logger.info("mob_id and group are both present, mob_id will be ignored");
+		if (this.mobId == null && this.entityTag == null)
+			throw new JsonValidationException("Missing mob_id or entity_tag. " + this);
+		else if (this.mobId != null && this.entityTag != null)
+			Logger.info("mob_id and entity_tag are both present, mob_id will be ignored");
 
 		if (this.mobId != null) {
 			if (!ForgeRegistries.ENTITIES.containsKey(this.mobId))

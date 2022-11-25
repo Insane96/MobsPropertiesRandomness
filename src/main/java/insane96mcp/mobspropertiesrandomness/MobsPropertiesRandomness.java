@@ -1,6 +1,5 @@
 package insane96mcp.mobspropertiesrandomness;
 
-import insane96mcp.mobspropertiesrandomness.data.MPRGroupReloadListener;
 import insane96mcp.mobspropertiesrandomness.data.MPRMobReloadListener;
 import insane96mcp.mobspropertiesrandomness.data.MPRPresetReloadListener;
 import insane96mcp.mobspropertiesrandomness.network.NetworkHandler;
@@ -29,7 +28,6 @@ public class MobsPropertiesRandomness
 
     @SubscribeEvent(priority = EventPriority.LOW)
     public void onAddReloadListener(AddReloadListenerEvent event) {
-        event.addListener(MPRGroupReloadListener.INSTANCE);
         event.addListener(MPRPresetReloadListener.INSTANCE);
         event.addListener(MPRMobReloadListener.INSTANCE);
     }
