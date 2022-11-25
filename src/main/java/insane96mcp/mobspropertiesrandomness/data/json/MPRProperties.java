@@ -15,7 +15,6 @@ import insane96mcp.mobspropertiesrandomness.data.json.properties.condition.MPRCo
 import insane96mcp.mobspropertiesrandomness.data.json.properties.equipment.MPREquipment;
 import insane96mcp.mobspropertiesrandomness.data.json.properties.events.MPREvents;
 import insane96mcp.mobspropertiesrandomness.data.json.properties.mods.pehuki.MPRScalePehkui;
-import insane96mcp.mobspropertiesrandomness.data.json.util.MPRWorldWhitelist;
 import insane96mcp.mobspropertiesrandomness.data.json.util.modifiable.MPRModifiableValue;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.TagParser;
@@ -30,8 +29,6 @@ import java.util.List;
 public abstract class MPRProperties implements IMPRObject {
 
 	public MPRConditions conditions;
-	@SerializedName("world_whitelist")
-	public MPRWorldWhitelist worldWhitelist;
 
 	@SerializedName("potion_effects")
 	public List<MPRPotionEffect> potionEffects;
@@ -58,8 +55,10 @@ public abstract class MPRProperties implements IMPRObject {
 	@SerializedName("loot_table")
 	public String lootTable;
 
+	//TODO Change name to set_nbt or something similar
 	public List<MPRNbt> nbt;
 
+	//TODO Change name to set_raw_nbt or something similar
 	@SerializedName("raw_nbt")
 	public String rawNbt;
 	public transient CompoundTag _rawNbt = null;
@@ -71,8 +70,6 @@ public abstract class MPRProperties implements IMPRObject {
 	public void validate() throws JsonValidationException {
 		if (this.conditions != null)
 			this.conditions.validate();
-		if (this.worldWhitelist != null)
-			this.worldWhitelist.validate();
 
 		if (this.potionEffects == null)
 			this.potionEffects = new ArrayList<>();
@@ -144,8 +141,6 @@ public abstract class MPRProperties implements IMPRObject {
 
 	public boolean apply(LivingEntity livingEntity, Level level) {
 		if (this.conditions != null && !this.conditions.conditionsApply(livingEntity))
-			return false;
-		if (this.worldWhitelist != null && !this.worldWhitelist.isWhitelisted(livingEntity))
 			return false;
 		for (MPRPotionEffect potionEffect : this.potionEffects) {
 			potionEffect.apply(livingEntity, level);

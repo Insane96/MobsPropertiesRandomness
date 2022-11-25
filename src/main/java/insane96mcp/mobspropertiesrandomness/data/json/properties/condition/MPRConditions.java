@@ -6,6 +6,7 @@ import insane96mcp.insanelib.exception.JsonValidationException;
 import insane96mcp.insanelib.setup.ILStrings;
 import insane96mcp.insanelib.util.MCUtils;
 import insane96mcp.mobspropertiesrandomness.data.json.IMPRObject;
+import insane96mcp.mobspropertiesrandomness.data.json.util.MPRWorldWhitelist;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.TagParser;
 import net.minecraft.world.entity.LivingEntity;
@@ -21,15 +22,22 @@ public class MPRConditions implements IMPRObject {
 	public SpawnerBehaviour spawnerBehaviour;
 	@SerializedName("structure_behaviour")
 	public StructureBehaviour structureBehaviour;
+
+	@SerializedName("world")
+	public MPRWorldWhitelist world;
+
 	@SerializedName("advancements_done")
 	public List<MPRAdvancement> advancements;
 	@SerializedName("game_stages_unlocked")
 	public List<MPRGameStage> gameStages;
+	//TODO Add MPRNbt condition
 	public String nbt;
 	public transient CompoundTag _nbt;
 
 	@Override
 	public void validate() throws JsonValidationException {
+		if (this.world != null)
+			this.world.validate();
 		if (this.spawnerBehaviour == null)
 			this.spawnerBehaviour = SpawnerBehaviour.NONE;
 
@@ -65,10 +73,13 @@ public class MPRConditions implements IMPRObject {
 
 	public boolean conditionsApply(LivingEntity livingEntity) {
 		boolean result = true;
-		if (isBaby != null)
-			result = (isBaby && livingEntity.isBaby()) || (!isBaby && !livingEntity.isBaby());
+		if (this.isBaby != null)
+			result = (this.isBaby && livingEntity.isBaby()) || (!this.isBaby && !livingEntity.isBaby());
 
-		if (nbt != null) {
+		if (this.world != null && !this.world.isWhitelisted(livingEntity))
+			return false;
+
+		if (this.nbt != null) {
 			CompoundTag mobNBT = new CompoundTag();
 			livingEntity.addAdditionalSaveData(mobNBT);
 			mobNBT.put("ForgeData", livingEntity.getPersistentData());
@@ -112,7 +123,7 @@ public class MPRConditions implements IMPRObject {
 
 	@Override
 	public String toString() {
-		return String.format("Conditions{is_baby: %s, nbt: %s, spawner_behaviour: %s, structure_behaviour: %s, advancements: %s}", isBaby, nbt, spawnerBehaviour, structureBehaviour, advancements);
+		return String.format("Conditions{is_baby: %s, nbt: %s, spawner_behaviour: %s, structure_behaviour: %s, advancements: %s}", this.isBaby, this.nbt, this.spawnerBehaviour, this.structureBehaviour, this.advancements);
 	}
 
 	public enum SpawnerBehaviour {

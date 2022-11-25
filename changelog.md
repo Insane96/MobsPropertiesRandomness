@@ -31,6 +31,7 @@
     * `sound`: the sound id
     * `volume`: the volume of the sound played. Defaults to 1
     * `pitch`: the pitch of the sound played. Defaults to 1
+* `world_whitelist` has been moved from Mob Properties to `conditions` as `world`
 * Renamed equipment slot "feets" to "feet"
 * Weights can now be omitted and will default to 1
 * Range object can now contain "value" instead of "min"
