@@ -9,6 +9,7 @@
 * Added very basic support for pehkui: `scale_pehkui` in mob properties, a list of ScalePehkui objects:
   * `scale`: a Range value to set the scale.
   * `scale_types`: a list of pehkui scale types. All the scale types in the list will have the same scale
+* Added `priority` to mobs, higher priorities are applied first. Tip: lower priorities for presets, so they can apply regardless of what's before.
 * Renamed `on_hit_effect` to `events`
 * Added generic event object, which all the events inherit (e.g. `on_attack`)
   * This object contains: 

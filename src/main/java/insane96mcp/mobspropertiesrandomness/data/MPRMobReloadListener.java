@@ -14,11 +14,13 @@ import net.minecraft.util.profiling.ProfilerFiller;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 public class MPRMobReloadListener extends SimpleJsonResourceReloadListener {
-	public static final List<MPRMob> MPR_MOBS = new ArrayList<>();
+	public static List<MPRMob> MPR_MOBS = new ArrayList<>();
 	public static final MPRMobReloadListener INSTANCE;
 	private static final Gson GSON = new GsonBuilder().create();
 
@@ -54,6 +56,8 @@ public class MPRMobReloadListener extends SimpleJsonResourceReloadListener {
 				Logger.error("Failed loading Mob %s: %s", entry.getKey(), e.getMessage());
 			}
 		}
+
+		MPR_MOBS = MPR_MOBS.stream().sorted(Comparator.comparing(mob -> mob.priority)).collect(Collectors.toList());
 
 		Logger.info("Loaded %s Mob(s)", MPR_MOBS.size());
 	}

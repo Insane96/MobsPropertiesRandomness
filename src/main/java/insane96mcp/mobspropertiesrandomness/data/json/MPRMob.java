@@ -27,6 +27,8 @@ public class MPRMob extends MPRProperties implements IMPRObject {
 
 	public MPRPresets presets;
 
+	public Integer priority = 0;
+
 	@Override
 	public void validate() throws JsonValidationException {
 		super.validate();
