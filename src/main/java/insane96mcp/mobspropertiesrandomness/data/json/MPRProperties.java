@@ -112,7 +112,7 @@ public abstract class MPRProperties implements IMPRObject {
 			if (this.lootTable.equals(""))
 				throw new JsonValidationException("\"loot_table\": \"\" is not valid. To use an empty loot_table use \"minecraft:empty\". " + this);
 			else if (ResourceLocation.tryParse(this.lootTable) == null)
-				throw new JsonValidationException("\"loot_table\": \"" + this.lootTable + "\" is not valid. You must use a valid Resource Location (modid:loot_table_id). " + this);
+				throw new JsonValidationException("\"loot_table\": \"" + this.lootTable + "\" is not valid. You must use a valid Resource Location (namespace:loot_table_id). " + this);
 		}
 
 		if (this.setNbt == null)
