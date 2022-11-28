@@ -38,7 +38,7 @@ public abstract class MPRProperties implements IMPRObject {
 	public MPREquipment equipment;
 
 	@SerializedName("events")
-	public MPREvents mprEvents;
+	public MPREvents events;
 
 	@SerializedName("custom_name")
 	public MPRCustomName customName;
@@ -86,8 +86,8 @@ public abstract class MPRProperties implements IMPRObject {
 			this.equipment = new MPREquipment();
 		this.equipment.validate();
 
-		if (this.mprEvents != null)
-			this.mprEvents.validate();
+		if (this.events != null)
+			this.events.validate();
 
 		if (this.customName != null)
 			this.customName.validate();
@@ -149,8 +149,8 @@ public abstract class MPRProperties implements IMPRObject {
 		}
 		this.equipment.apply(livingEntity, level);
 
-		if (this.mprEvents != null)
-			this.mprEvents.addToNBT(livingEntity);
+		if (this.events != null)
+			this.events.addToNBT(livingEntity);
 
 		if (this.customName != null)
 			this.customName.applyCustomName(livingEntity, level);
