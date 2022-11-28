@@ -6,7 +6,7 @@ import insane96mcp.insanelib.base.Feature;
 import insane96mcp.insanelib.base.Label;
 import insane96mcp.insanelib.base.Module;
 import insane96mcp.insanelib.exception.JsonValidationException;
-import insane96mcp.mobspropertiesrandomness.data.json.MPRMobOld;
+import insane96mcp.mobspropertiesrandomness.data.json.MPRMob;
 import insane96mcp.mobspropertiesrandomness.data.json.properties.events.MPROnDeath;
 import insane96mcp.mobspropertiesrandomness.data.json.properties.events.MPROnHit;
 import insane96mcp.mobspropertiesrandomness.data.json.properties.events.MPROnTick;
@@ -60,7 +60,7 @@ public class BaseFeature extends Feature {
 
 	@SubscribeEvent(priority = EventPriority.LOW)
 	public void onEntityJoinWorld(EntityJoinWorldEvent event) {
-		MPRMobOld.apply(event);
+		MPRMob.apply(event);
 	}
 
 	@SubscribeEvent

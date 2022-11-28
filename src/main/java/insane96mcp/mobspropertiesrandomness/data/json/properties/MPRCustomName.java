@@ -1,7 +1,7 @@
 package insane96mcp.mobspropertiesrandomness.data.json.properties;
 
 import insane96mcp.insanelib.exception.JsonValidationException;
-import insane96mcp.mobspropertiesrandomness.data.json.IMPRObject_old;
+import insane96mcp.mobspropertiesrandomness.data.json.IMPRObject;
 import insane96mcp.mobspropertiesrandomness.data.json.util.modifiable.MPRModifiableValue;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.TextComponent;
@@ -10,7 +10,7 @@ import net.minecraft.world.level.Level;
 
 import java.util.List;
 
-public class MPRCustomName implements IMPRObject_old {
+public class MPRCustomName implements IMPRObject {
 
 	public MPRModifiableValue chance;
 	public List<String> overrides;

@@ -1,10 +1,10 @@
 package insane96mcp.mobspropertiesrandomness.data.json.util.modifiable;
 
 import insane96mcp.insanelib.exception.JsonValidationException;
-import insane96mcp.mobspropertiesrandomness.data.json.IMPRObject_old;
+import insane96mcp.mobspropertiesrandomness.data.json.IMPRObject;
 import net.minecraft.world.Difficulty;
 
-public class MPRDifficultyModifier extends MPRModifier implements IMPRObject_old {
+public class MPRDifficultyModifier extends MPRModifier implements IMPRObject {
 	public Operation operation;
 	public Float easy;
 	public Float normal;

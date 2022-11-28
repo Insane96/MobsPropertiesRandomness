@@ -1,6 +1,6 @@
 package insane96mcp.mobspropertiesrandomness.util;
 
-import insane96mcp.mobspropertiesrandomness.data.json.MPRMobOld;
+import insane96mcp.mobspropertiesrandomness.data.json.MPRMob;
 import net.minecraft.core.Registry;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.tags.TagKey;
@@ -14,7 +14,7 @@ public class MPRUtils {
 	 * Checks if the entity passed matches the mob or the entity_tag
 	 * @return true if the entity passed matches the mob or the mob in the entity_tag
 	 */
-	public static boolean matchesEntity(LivingEntity entity, MPRMobOld mob) {
+	public static boolean matchesEntity(LivingEntity entity, MPRMob mob) {
 		if (mob.entityTag != null) {
 			return isEntityInTag(entity, mob.entityTag);
 		}

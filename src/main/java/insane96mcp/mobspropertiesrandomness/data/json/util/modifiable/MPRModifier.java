@@ -2,9 +2,9 @@ package insane96mcp.mobspropertiesrandomness.data.json.util.modifiable;
 
 import com.google.gson.annotations.SerializedName;
 import insane96mcp.insanelib.exception.JsonValidationException;
-import insane96mcp.mobspropertiesrandomness.data.json.IMPRObject_old;
+import insane96mcp.mobspropertiesrandomness.data.json.IMPRObject;
 
-public abstract class MPRModifier implements IMPRObject_old {
+public abstract class MPRModifier implements IMPRObject {
 	@SerializedName("affects_max_only")
 	private Boolean affectsMaxOnly;
 

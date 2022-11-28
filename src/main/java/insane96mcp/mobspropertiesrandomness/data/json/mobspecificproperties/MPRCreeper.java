@@ -3,7 +3,7 @@ package insane96mcp.mobspropertiesrandomness.data.json.mobspecificproperties;
 import com.google.gson.annotations.SerializedName;
 import insane96mcp.insanelib.exception.JsonValidationException;
 import insane96mcp.insanelib.setup.ILStrings;
-import insane96mcp.mobspropertiesrandomness.data.json.IMPRObject_old;
+import insane96mcp.mobspropertiesrandomness.data.json.IMPRObject;
 import insane96mcp.mobspropertiesrandomness.data.json.util.modifiable.MPRModifiableValue;
 import insane96mcp.mobspropertiesrandomness.data.json.util.modifiable.MPRRange;
 import insane96mcp.mobspropertiesrandomness.network.MessageCreeperFuseSync;
@@ -16,7 +16,7 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.Level;
 import net.minecraftforge.network.NetworkDirection;
 
-public class MPRCreeper implements IMPRObject_old {
+public class MPRCreeper implements IMPRObject {
 	public MPRRange fuse;
 	@SerializedName("explosion_radius")
 	public MPRRange explosionRadius;

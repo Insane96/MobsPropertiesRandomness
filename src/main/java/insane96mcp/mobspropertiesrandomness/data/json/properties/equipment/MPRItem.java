@@ -4,7 +4,7 @@ import com.google.gson.annotations.SerializedName;
 import com.mojang.brigadier.exceptions.CommandSyntaxException;
 import insane96mcp.insanelib.exception.JsonValidationException;
 import insane96mcp.insanelib.util.weightedrandom.IWeightedRandom;
-import insane96mcp.mobspropertiesrandomness.data.json.IMPRObject_old;
+import insane96mcp.mobspropertiesrandomness.data.json.IMPRObject;
 import insane96mcp.mobspropertiesrandomness.data.json.properties.attribute.MPRItemAttribute;
 import insane96mcp.mobspropertiesrandomness.data.json.properties.mods.tconstruct.MPRTiConMaterials;
 import insane96mcp.mobspropertiesrandomness.data.json.properties.mods.tconstruct.MPRTiConModifier;
@@ -21,7 +21,7 @@ import net.minecraftforge.registries.ForgeRegistries;
 import javax.annotation.Nullable;
 import java.util.List;
 
-public class MPRItem implements IMPRObject_old, IWeightedRandom {
+public class MPRItem implements IMPRObject, IWeightedRandom {
 
 	public String id;
 	@SerializedName("weight")

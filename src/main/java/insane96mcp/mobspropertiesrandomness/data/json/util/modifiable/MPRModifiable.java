@@ -3,11 +3,11 @@ package insane96mcp.mobspropertiesrandomness.data.json.util.modifiable;
 import com.google.gson.annotations.SerializedName;
 import insane96mcp.insanelib.exception.JsonValidationException;
 import insane96mcp.insanelib.util.MathHelper;
-import insane96mcp.mobspropertiesrandomness.data.json.IMPRObject_old;
+import insane96mcp.mobspropertiesrandomness.data.json.IMPRObject;
 
 import java.util.List;
 
-public abstract class MPRModifiable implements IMPRObject_old {
+public abstract class MPRModifiable implements IMPRObject {
 	@SerializedName("difficulty_modifier")
 	public MPRDifficultyModifier difficultyModifier;
 

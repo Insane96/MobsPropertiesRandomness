@@ -1,7 +1,7 @@
 package insane96mcp.mobspropertiesrandomness.data.json.util;
 
 import insane96mcp.insanelib.exception.JsonValidationException;
-import insane96mcp.mobspropertiesrandomness.data.json.IMPRObject_old;
+import insane96mcp.mobspropertiesrandomness.data.json.IMPRObject;
 import insane96mcp.mobspropertiesrandomness.data.json.util.modifiable.MPRRange;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.Entity;
@@ -10,7 +10,7 @@ import net.minecraft.world.entity.LivingEntity;
 import java.util.ArrayList;
 import java.util.List;
 
-public class MPRWorldWhitelist implements IMPRObject_old {
+public class MPRWorldWhitelist implements IMPRObject {
 
 	protected List<String> dimensions;
 	public transient List<ResourceLocation> dimensionsList = new ArrayList<>();

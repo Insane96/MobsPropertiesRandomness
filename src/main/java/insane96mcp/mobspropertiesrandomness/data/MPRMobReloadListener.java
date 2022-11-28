@@ -5,7 +5,7 @@ import com.google.gson.GsonBuilder;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonSyntaxException;
 import insane96mcp.insanelib.exception.JsonValidationException;
-import insane96mcp.mobspropertiesrandomness.data.json.MPRMobOld;
+import insane96mcp.mobspropertiesrandomness.data.json.MPRMob;
 import insane96mcp.mobspropertiesrandomness.util.Logger;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.packs.resources.ResourceManager;
@@ -20,7 +20,7 @@ import java.util.Map;
 import java.util.stream.Collectors;
 
 public class MPRMobReloadListener extends SimpleJsonResourceReloadListener {
-	public static List<MPRMobOld> MPR_MOBS = new ArrayList<>();
+	public static List<MPRMob> MPR_MOBS = new ArrayList<>();
 	public static final MPRMobReloadListener INSTANCE;
 	private static final Gson GSON = new GsonBuilder().create();
 
@@ -42,7 +42,7 @@ public class MPRMobReloadListener extends SimpleJsonResourceReloadListener {
 				if (split[split.length - 1].startsWith("_"))
 					continue;
 
-				MPRMobOld mob = GSON.fromJson(entry.getValue(), MPRMobOld.class);
+				MPRMob mob = GSON.fromJson(entry.getValue(), MPRMob.class);
 				mob.validate();
 				MPR_MOBS.add(mob);
 			}

@@ -2,7 +2,7 @@ package insane96mcp.mobspropertiesrandomness.data.json.util.modifiable;
 
 import com.google.gson.annotations.SerializedName;
 import insane96mcp.insanelib.exception.JsonValidationException;
-import insane96mcp.mobspropertiesrandomness.data.json.IMPRObject_old;
+import insane96mcp.mobspropertiesrandomness.data.json.IMPRObject;
 import insane96mcp.mobspropertiesrandomness.util.Logger;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.stats.Stats;
@@ -12,7 +12,7 @@ import net.minecraft.world.level.Level;
 import java.util.ArrayList;
 import java.util.List;
 
-public class MPRTimeExistedModifier extends MPRModifier implements IMPRObject_old {
+public class MPRTimeExistedModifier extends MPRModifier implements IMPRObject {
 	@SerializedName("bonus_percentage")
 	public Double bonusPercentage;
 	public Integer seconds;

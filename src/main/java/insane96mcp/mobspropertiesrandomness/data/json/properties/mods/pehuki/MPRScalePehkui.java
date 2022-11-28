@@ -8,7 +8,7 @@ import com.google.gson.annotations.JsonAdapter;
 import com.google.gson.annotations.SerializedName;
 import com.google.gson.reflect.TypeToken;
 import insane96mcp.insanelib.exception.JsonValidationException;
-import insane96mcp.mobspropertiesrandomness.data.json.IMPRObject_old;
+import insane96mcp.mobspropertiesrandomness.data.json.IMPRObject;
 import insane96mcp.mobspropertiesrandomness.data.json.util.modifiable.MPRRange;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.LivingEntity;
@@ -21,7 +21,7 @@ import java.lang.reflect.Type;
 import java.util.List;
 
 @JsonAdapter(MPRScalePehkui.Deserializer.class)
-public class MPRScalePehkui implements IMPRObject_old {
+public class MPRScalePehkui implements IMPRObject {
 
     public MPRRange scale;
     @SerializedName("scale_types")

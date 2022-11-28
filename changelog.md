@@ -1,6 +1,7 @@
 # Changelog
 
 ## Upcoming
+This version will 99% break your configuration.
 * The mod now works with data packs, no more config folder.
   * Location of presets and mobs in a data pack is `<namespace>/mobs_properties_randomness/presets` and `<namespace>/mobs_properties_randomness/mobs`
   * Groups have been removed. Use Entity Tags. `group` has been renamed to `entity_tag`
@@ -9,14 +10,14 @@
 * Added very basic support for pehkui: `scale_pehkui` in mob properties, a list of ScalePehkui objects:
   * `scale`: a Range value to set the scale.
   * `scale_types`: a list of pehkui scale types. All the scale types in the list will have the same scale
-* Added `priority` to mobs, higher priorities are applied first. Tip: lower priorities for presets, so they can apply regardless of what's before.
+* Added `priority` to mobs, higher priorities are applied first. Tip: use lower priorities for presets, so they can apply regardless of what's before.
 * Renamed `on_hit_effect` to `events`
-* Added generic event object, which all the events inherit (e.g. `on_attack`)
+* Added generic event object, which all the events inherit from (e.g. `on_attack`)
   * This object contains: 
     * `chance`: Chance to trigger the event
     * `play_sound`: Sound to play as the event triggers
     * `function`: A function executed when the event triggers. The function is executed as the mob and at the mob's position (unless specified otherwise)
-* `on_attack` and `on_attacked` events now inherit from the generic event object, so it now contains the aforementioned properties (the only new property is `function`).  
+* `on_attack` and `on_attacked` events now inherit from the generic event object, so it now contains the aforementioned properties (the actual only new property is `function`).  
   The `function` property is executed at (and at) the "entity" or the "other" specified `target`.  
   Also added `damage_taken`: a Range object defining the damage range at which the event should trigger (defaults to 0~Infinite)
 * Added `on_death` event, triggered when the entity dies. 
@@ -32,6 +33,7 @@
     * `volume`: the volume of the sound played. Defaults to 1
     * `pitch`: the pitch of the sound played. Defaults to 1
 * `world_whitelist` has been moved from Mob Properties to `conditions` as `world`
+* `nbt` and `raw_nbt` are now `set_nbt` and `set_raw_nbt`
 * Renamed equipment slot "feets" to "feet"
 * Weights can now be omitted and will default to 1
 * Range object can now contain "value" instead of "min"

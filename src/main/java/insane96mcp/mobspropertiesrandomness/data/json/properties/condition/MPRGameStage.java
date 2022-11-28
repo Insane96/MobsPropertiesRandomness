@@ -2,7 +2,7 @@ package insane96mcp.mobspropertiesrandomness.data.json.properties.condition;
 
 import com.google.gson.annotations.SerializedName;
 import insane96mcp.insanelib.exception.JsonValidationException;
-import insane96mcp.mobspropertiesrandomness.data.json.IMPRObject_old;
+import insane96mcp.mobspropertiesrandomness.data.json.IMPRObject;
 import net.darkhax.gamestages.GameStageHelper;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.entity.LivingEntity;
@@ -10,7 +10,7 @@ import net.minecraft.world.entity.LivingEntity;
 import java.util.ArrayList;
 import java.util.List;
 
-public class MPRGameStage implements IMPRObject_old {
+public class MPRGameStage implements IMPRObject {
 
 	@SerializedName("game_stages")
 	public List<String> gameStages;

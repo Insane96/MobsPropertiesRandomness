@@ -1,7 +1,7 @@
 package insane96mcp.mobspropertiesrandomness.data.json;
 
+import insane96mcp.insanelib.exception.JsonValidationException;
+
 public interface IMPRObject {
-    String getName();
-
-
+	void validate() throws JsonValidationException;
 }
