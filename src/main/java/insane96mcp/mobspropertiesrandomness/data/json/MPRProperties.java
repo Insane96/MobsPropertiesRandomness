@@ -38,7 +38,7 @@ public abstract class MPRProperties implements IMPRObject {
 	public MPREquipment equipment;
 
 	@SerializedName("events")
-	public MPREvents mprEvents;
+	public MPREvents events;
 
 	@SerializedName("custom_name")
 	public MPRCustomName customName;
@@ -55,12 +55,11 @@ public abstract class MPRProperties implements IMPRObject {
 	@SerializedName("loot_table")
 	public String lootTable;
 
-	//TODO Change name to set_nbt or something similar
-	public List<MPRNbt> nbt;
+	@SerializedName("set_nbt")
+	public List<MPRNbt> setNbt;
 
-	//TODO Change name to set_raw_nbt or something similar
-	@SerializedName("raw_nbt")
-	public String rawNbt;
+	@SerializedName("set_raw_nbt")
+	public String setRawNbt;
 	public transient CompoundTag _rawNbt = null;
 
 	@SerializedName("scale_pehkui")
@@ -87,8 +86,8 @@ public abstract class MPRProperties implements IMPRObject {
 			this.equipment = new MPREquipment();
 		this.equipment.validate();
 
-		if (this.mprEvents != null)
-			this.mprEvents.validate();
+		if (this.events != null)
+			this.events.validate();
 
 		if (this.customName != null)
 			this.customName.validate();
@@ -113,21 +112,21 @@ public abstract class MPRProperties implements IMPRObject {
 			if (this.lootTable.equals(""))
 				throw new JsonValidationException("\"loot_table\": \"\" is not valid. To use an empty loot_table use \"minecraft:empty\". " + this);
 			else if (ResourceLocation.tryParse(this.lootTable) == null)
-				throw new JsonValidationException("\"loot_table\": \"" + this.lootTable + "\" is not valid. You must use a valid Resource Location (modid:loot_table_id). " + this);
+				throw new JsonValidationException("\"loot_table\": \"" + this.lootTable + "\" is not valid. You must use a valid Resource Location (namespace:loot_table_id). " + this);
 		}
 
-		if (this.nbt == null)
-			this.nbt = new ArrayList<>();
-		for (MPRNbt mprNbt : this.nbt) {
+		if (this.setNbt == null)
+			this.setNbt = new ArrayList<>();
+		for (MPRNbt mprNbt : this.setNbt) {
 			mprNbt.validate();
 		}
 
-		if (this.rawNbt != null) {
+		if (this.setRawNbt != null) {
 			try {
-				this._rawNbt = TagParser.parseTag(this.rawNbt);
+				this._rawNbt = TagParser.parseTag(this.setRawNbt);
 			}
 			catch (CommandSyntaxException e) {
-				throw new JsonValidationException("Invalid raw nbt in properties: " + this.rawNbt);
+				throw new JsonValidationException("Invalid raw nbt in properties: " + this.setRawNbt);
 			}
 		}
 
@@ -150,8 +149,8 @@ public abstract class MPRProperties implements IMPRObject {
 		}
 		this.equipment.apply(livingEntity, level);
 
-		if (this.mprEvents != null)
-			this.mprEvents.addToNBT(livingEntity);
+		if (this.events != null)
+			this.events.addToNBT(livingEntity);
 
 		if (this.customName != null)
 			this.customName.applyCustomName(livingEntity, level);
@@ -173,7 +172,7 @@ public abstract class MPRProperties implements IMPRObject {
 			((Mob) livingEntity).lootTable = new ResourceLocation(this.lootTable);
 		}
 
-		for (MPRNbt mprNbt : this.nbt) {
+		for (MPRNbt mprNbt : this.setNbt) {
 			mprNbt.apply(livingEntity, level);
 		}
 

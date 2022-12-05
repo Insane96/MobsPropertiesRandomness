@@ -49,7 +49,7 @@ public class MPRTiConMaterials implements IMPRObject {
 			for (String material : this.materials) {
 				MaterialId materialId = MaterialId.tryParse(material);
 				if (materialId == null)
-					throw new JsonValidationException("%s is not a valid material. Must be a resource location modid:entry_id.".formatted(material));
+					throw new JsonValidationException("%s is not a valid material. Must be a resource location namespace:entry_id.".formatted(material));
 				IMaterial iMaterial = MaterialRegistry.getMaterial(materialId);
 				if (iMaterial == IMaterial.UNKNOWN)
 					throw new JsonParseException("%s material does not exist.".formatted(material));

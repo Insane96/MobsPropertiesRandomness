@@ -2,7 +2,6 @@ package insane96mcp.mobspropertiesrandomness.data.json.properties.equipment;
 
 import com.google.gson.annotations.SerializedName;
 import insane96mcp.insanelib.exception.JsonValidationException;
-import insane96mcp.mobspropertiesrandomness.data.json.IMPRAppliable;
 import insane96mcp.mobspropertiesrandomness.data.json.IMPRObject;
 import insane96mcp.mobspropertiesrandomness.data.json.properties.attribute.MPRItemAttribute;
 import insane96mcp.mobspropertiesrandomness.data.json.properties.mods.tconstruct.MPRTiConModifier;
@@ -14,7 +13,7 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
 import net.minecraftforge.registries.ForgeRegistries;
 
-public class MPREquipment implements IMPRObject, IMPRAppliable {
+public class MPREquipment implements IMPRObject {
 
 	public MPRSlot head;
 	public MPRSlot chest;
@@ -41,7 +40,6 @@ public class MPREquipment implements IMPRObject, IMPRAppliable {
 			offHand.validate();
 	}
 
-	@Override
 	public void apply(LivingEntity entity, Level world) {
 		if (world.isClientSide)
 			return;
@@ -102,7 +100,6 @@ public class MPREquipment implements IMPRObject, IMPRAppliable {
 		//Drop Chance
 		if (choosenItem.dropChance != null && entity instanceof Mob)
 			((Mob) entity).setDropChance(equipmentSlotType, choosenItem.dropChance.getValue(entity, level));
-
 	}
 
 	@Override

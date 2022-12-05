@@ -1,14 +1,13 @@
 package insane96mcp.mobspropertiesrandomness.data.json.mobspecificproperties;
 
 import insane96mcp.insanelib.exception.JsonValidationException;
-import insane96mcp.mobspropertiesrandomness.data.json.IMPRAppliable;
 import insane96mcp.mobspropertiesrandomness.data.json.IMPRObject;
 import insane96mcp.mobspropertiesrandomness.data.json.util.modifiable.MPRRange;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.monster.Phantom;
 import net.minecraft.world.level.Level;
 
-public class MPRPhantom implements IMPRObject, IMPRAppliable {
+public class MPRPhantom implements IMPRObject {
 	public MPRRange size;
 
 	@Override
@@ -17,7 +16,6 @@ public class MPRPhantom implements IMPRObject, IMPRAppliable {
 			size.validate();
 	}
 
-	@Override
 	public void apply(LivingEntity entity, Level world) {
 		if (!(entity instanceof Phantom))
 			return;
