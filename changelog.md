@@ -1,6 +1,6 @@
 # Changelog
 
-## Upcoming
+## Beta 4.0.0
 This version will 99% break your configuration.
 * The mod now works with data packs, no more config folder.
   * Location of presets and mobs in a data pack is `<namespace>/mobs_properties_randomness/presets` and `<namespace>/mobs_properties_randomness/mobs`
@@ -36,7 +36,7 @@ This version will 99% break your configuration.
 * `nbt` and `raw_nbt` are now `set_nbt` and `set_raw_nbt`
 * Renamed equipment slot "feets" to "feet"
 * Weights can now be omitted and will default to 1
-* Range object can now contain "value" instead of "min"
+* Range object's `min` has now an alias: `value`
 
 ## 3.6.0
 * Added `game_stages_unlocked` condition
