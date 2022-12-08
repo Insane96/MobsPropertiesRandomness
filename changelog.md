@@ -1,5 +1,8 @@
 # Changelog
 
+## 4.0.1
+* Fixed `id` not being recognized in presets list
+
 ## Beta 4.0.0
 This version will 99% break your configuration.
 * The mod now works with data packs, no more config folder.

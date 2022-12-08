@@ -19,7 +19,7 @@ import static insane96mcp.mobspropertiesrandomness.data.MPRPresetReloadListener.
 public class MPRWeightedPreset implements IMPRObject, IWeightedRandom {
 
 	@JsonAdapter(ResourceLocation.Serializer.class)
-	public transient ResourceLocation id;
+	public ResourceLocation id;
 
 	@SerializedName("weight")
 	private MPRModifiableValue modifiableWeight;
