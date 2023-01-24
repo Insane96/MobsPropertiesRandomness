@@ -33,7 +33,7 @@ archivesBaseName = 'MobsPropertiesRandomness'
 java.toolchain.languageVersion = JavaLanguageVersion.of(17)
 
 minecraft {
-    mappings channel: 'official', version: '1.18.2'
+    mappings channel: 'official', version: "${mc_version}"
     
     accessTransformer = file('src/main/resources/META-INF/accesstransformer.cfg')
 
@@ -101,8 +101,8 @@ dependencies {
     annotationProcessor "org.spongepowered:mixin:${mixin_version}:processor"
 
     // Copypasted from materialis. Still no shame.
-    implementation fg.deobf("slimeknights.mantle:Mantle:${mc_version}-${mantle_version}")
-    implementation fg.deobf("slimeknights.tconstruct:TConstruct:${mc_version}-${tic_version}")
+    //implementation fg.deobf("slimeknights.mantle:Mantle:${mc_version}-${mantle_version}")
+    //implementation fg.deobf("slimeknights.tconstruct:TConstruct:${mc_version}-${tic_version}")
 
     implementation fg.deobf("net.darkhax.bookshelf:Bookshelf-Forge-${mc_version}:${bookshelf_version}")
     implementation fg.deobf("net.darkhax.gamestages:GameStages-Forge-${mc_version}:${gamestages_version}")

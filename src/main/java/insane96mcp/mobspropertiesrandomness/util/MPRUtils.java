@@ -14,7 +14,7 @@ public class MPRUtils {
 	 * Checks if the entity passed matches the mob or the entity_tag
 	 * @return true if the entity passed matches the mob or the mob in the entity_tag
 	 */
-	public static boolean matchesEntity(LivingEntity entity, MPRMob mob) {
+	/*public static boolean matchesEntity(LivingEntity entity, MPRMob mob) {
 		if (mob.entityTag != null) {
 			return isEntityInTag(entity, mob.entityTag);
 		}
@@ -28,5 +28,5 @@ public class MPRUtils {
 		TagKey<EntityType<?>> tagKey = TagKey.create(Registry.ENTITY_TYPE_REGISTRY, tag);
 		//noinspection ConstantConditions
 		return ForgeRegistries.ENTITIES.tags().getTag(tagKey).contains(entity.getType());
-	}
+	}*/
 }

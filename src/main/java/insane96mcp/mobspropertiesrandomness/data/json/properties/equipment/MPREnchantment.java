@@ -7,6 +7,7 @@ import insane96mcp.mobspropertiesrandomness.data.json.util.modifiable.MPRModifia
 import insane96mcp.mobspropertiesrandomness.data.json.util.modifiable.MPRRange;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.Mth;
+import net.minecraft.util.RandomSource;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.item.EnchantedBookItem;
 import net.minecraft.world.item.ItemStack;
@@ -97,7 +98,7 @@ public class MPREnchantment implements IMPRObject {
 			itemStack.enchant(enchantment, level);
 	}
 
-	public static void enchantItem(Random random, ItemStack itemStack, int level, boolean treasure) {
+	public static void enchantItem(RandomSource random, ItemStack itemStack, int level, boolean treasure) {
 		level = Mth.clamp(level, 1, 40);
 		List<EnchantmentInstance> list = EnchantmentHelper.selectEnchantment(random, itemStack, level, treasure);
 		boolean isEnchantedBook = itemStack.is(Items.ENCHANTED_BOOK);

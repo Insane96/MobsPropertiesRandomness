@@ -5,17 +5,19 @@ import com.google.gson.reflect.TypeToken;
 import insane96mcp.insanelib.base.Feature;
 import insane96mcp.insanelib.base.Label;
 import insane96mcp.insanelib.base.Module;
+import insane96mcp.insanelib.base.config.Config;
+import insane96mcp.insanelib.base.config.LoadFeature;
 import insane96mcp.insanelib.exception.JsonValidationException;
+import insane96mcp.mobspropertiesrandomness.MobsPropertiesRandomness;
 import insane96mcp.mobspropertiesrandomness.data.json.MPRMob;
 import insane96mcp.mobspropertiesrandomness.data.json.properties.events.MPROnDeath;
 import insane96mcp.mobspropertiesrandomness.data.json.properties.events.MPROnHit;
 import insane96mcp.mobspropertiesrandomness.data.json.properties.events.MPROnTick;
-import insane96mcp.mobspropertiesrandomness.setup.Config;
 import insane96mcp.mobspropertiesrandomness.setup.Strings;
 import insane96mcp.mobspropertiesrandomness.util.Logger;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraftforge.common.ForgeConfigSpec;
-import net.minecraftforge.event.entity.EntityJoinWorldEvent;
+import net.minecraftforge.event.entity.EntityJoinLevelEvent;
 import net.minecraftforge.event.entity.living.LivingDamageEvent;
 import net.minecraftforge.event.entity.living.LivingDeathEvent;
 import net.minecraftforge.event.entity.living.LivingEvent;
@@ -26,40 +28,24 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Label(name = "Base")
+@LoadFeature(module = MobsPropertiesRandomness.RESOURCE_PREFIX + "base", canBeDisabled = false)
 public class BaseFeature extends Feature {
-	private final ForgeConfigSpec.BooleanValue tiConAttackConfig;
-	private final ForgeConfigSpec.BooleanValue betterCreeperLingeringConfig;
-	private final ForgeConfigSpec.ConfigValue<Boolean> debugConfig;
+	@Config
+	@Label(name = "TiCon Attack", description = "If true mob attacks with Tinker tools will use the Tinker attack method, making mobs able to use some TiCon modifiers.")
+	public static Boolean ticonAttack = true;
+	@Config
+	@Label(name = "Better Creeper Lingering", description = "If true creeper lingering clouds size changes based off creeper explosion radius.")
+	public static Boolean betterCreeperLingering = true;
+	@Config
+	@Label(name = "Debug", description = "If true, all the loaded JSONs will be logged in the mobspropertiesrandomness.log file.")
+	public static Boolean debug = false;
 
-	public boolean ticonAttack = true;
-	public boolean betterCreeperLingering = true;
-	public boolean debug = false;
-
-	public BaseFeature(Module module) {
-		super(Config.builder, module, true, false);
-		//this.pushConfig(Config.builder);
-		this.tiConAttackConfig = Config.builder
-				.comment("If true mob attacks with Tinker tools will use the Tinker attack method. Might have side effects")
-				.define("TiCon Attack", this.ticonAttack);
-		this.betterCreeperLingeringConfig = Config.builder
-				.comment("If true creeper lingering clouds size changes based off creeper explosion radius")
-				.define("Better Creeper Lingering", this.betterCreeperLingering);
-		this.debugConfig = Config.builder
-				.comment("If true, all the loaded JSONs will be logged in the mobspropertiesrandomness.log file.")
-				.define("Debug", this.debug);
-		//Config.builder.pop();
-	}
-
-	@Override
-	public void loadConfig() {
-		super.loadConfig();
-		this.ticonAttack = this.tiConAttackConfig.get();
-		this.betterCreeperLingering = this.betterCreeperLingeringConfig.get();
-		this.debug = this.debugConfig.get();
+	public BaseFeature(Module module, boolean enabledByDefault, boolean canBeDisabled) {
+		super(module, enabledByDefault, canBeDisabled);
 	}
 
 	@SubscribeEvent(priority = EventPriority.LOW)
-	public void onEntityJoinWorld(EntityJoinWorldEvent event) {
+	public void onEntityJoinWorld(EntityJoinLevelEvent event) {
 		MPRMob.apply(event);
 	}
 
@@ -75,11 +61,11 @@ public class BaseFeature extends Feature {
 	public static final java.lang.reflect.Type MPR_ON_DEATH_LIST_TYPE = new TypeToken<ArrayList<MPROnDeath>>(){}.getType();
 	@SubscribeEvent
 	public void onLivingDeath(LivingDeathEvent event) {
-		if (!event.getEntityLiving().getPersistentData().contains(Strings.Tags.ON_DEATH))
+		if (!event.getEntity().getPersistentData().contains(Strings.Tags.ON_DEATH))
 			return;
 
 		LivingEntity attacker = (LivingEntity) event.getSource().getEntity();
-		List<MPROnDeath> onDeaths = new Gson().fromJson(event.getEntityLiving().getPersistentData().getString(Strings.Tags.ON_DEATH), MPR_ON_DEATH_LIST_TYPE);
+		List<MPROnDeath> onDeaths = new Gson().fromJson(event.getEntity().getPersistentData().getString(Strings.Tags.ON_DEATH), MPR_ON_DEATH_LIST_TYPE);
 		if (onDeaths == null)
 			return;
 
@@ -91,17 +77,17 @@ public class BaseFeature extends Feature {
 				Logger.error("Failed to validate MPROnDeath: " + e);
 				continue;
 			}
-			onDeath.apply(event.getEntityLiving(), attacker, event.getSource().getDirectEntity() == event.getSource().getEntity());
+			onDeath.apply(event.getEntity(), attacker, event.getSource().getDirectEntity() == event.getSource().getEntity());
 		}
 	}
 
 	public static final java.lang.reflect.Type MPR_ON_TICK_LIST_TYPE = new TypeToken<ArrayList<MPROnTick>>(){}.getType();
 	@SubscribeEvent
-	public void onLivingTick(LivingEvent.LivingUpdateEvent event) {
-		if (!event.getEntityLiving().getPersistentData().contains(Strings.Tags.ON_TICK))
+	public void onLivingTick(LivingEvent.LivingTickEvent event) {
+		if (!event.getEntity().getPersistentData().contains(Strings.Tags.ON_TICK))
 			return;
 
-		List<MPROnTick> onTicks = new Gson().fromJson(event.getEntityLiving().getPersistentData().getString(Strings.Tags.ON_TICK), MPR_ON_TICK_LIST_TYPE);
+		List<MPROnTick> onTicks = new Gson().fromJson(event.getEntity().getPersistentData().getString(Strings.Tags.ON_TICK), MPR_ON_TICK_LIST_TYPE);
 		if (onTicks == null)
 			return;
 
@@ -113,7 +99,7 @@ public class BaseFeature extends Feature {
 				Logger.error("Failed to validate MPROnTick: " + e);
 				continue;
 			}
-			onTick.apply(event.getEntityLiving());
+			onTick.apply(event.getEntity());
 		}
 	}
 
@@ -136,12 +122,12 @@ public class BaseFeature extends Feature {
 				Logger.error("Failed to validate MPROnHit: " + e);
 				continue;
 			}
-			mprOnHit.apply(attacker, event.getEntityLiving(), event.getSource().getDirectEntity() == event.getSource().getEntity(), event, false);
+			mprOnHit.apply(attacker, event.getEntity(), event.getSource().getDirectEntity() == event.getSource().getEntity(), event, false);
 		}
 	}
 
 	private void onAttacked(LivingDamageEvent event) {
-		LivingEntity attacked = event.getEntityLiving();
+		LivingEntity attacked = event.getEntity();
 		if (attacked == null
 				|| !attacked.getPersistentData().contains(Strings.Tags.ON_ATTACKED))
 			return;
@@ -162,7 +148,7 @@ public class BaseFeature extends Feature {
 		}
 	}
 
-	public boolean isBetterCreeperLingeringActivated() {
-		return this.isEnabled() && this.betterCreeperLingering;
+	public static boolean isBetterCreeperLingeringActivated() {
+		return Feature.isEnabled(BaseFeature.class) && betterCreeperLingering;
 	}
 }

@@ -46,16 +46,18 @@ public class MPRWorldWhitelist implements IMPRObject {
 		if (dimensionsList.isEmpty())
 			return true;
 
-		ResourceLocation entityDimension = entity.level.dimension().getRegistryName();
-		return dimensionsList.contains(entityDimension);
+		return false;
+		//ResourceLocation entityDimension = entity.level.dimension().getRegistryName();
+		//return dimensionsList.contains(entityDimension);
 	}
 
 	public boolean doesBiomeMatch(LivingEntity entity) {
 		if (biomesList.isEmpty())
 			return true;
 
-		ResourceLocation entityBiome = entity.level.getBiome(entity.blockPosition()).value().getRegistryName();
-		return biomesList.contains(entityBiome);
+		return false;
+		/*ResourceLocation entityBiome = entity.level.getBiome(entity.blockPosition()).value().getRegistryName();
+		return biomesList.contains(entityBiome);*/
 	}
 
 	public boolean doesDepthMatch(LivingEntity entity) {
