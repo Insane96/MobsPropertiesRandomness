@@ -1,6 +1,7 @@
 package insane96mcp.mobspropertiesrandomness.util;
 
 import insane96mcp.mobspropertiesrandomness.module.Modules;
+import insane96mcp.mobspropertiesrandomness.module.base.feature.BaseFeature;
 
 import java.io.*;
 import java.nio.charset.StandardCharsets;
@@ -30,7 +31,7 @@ public class Logger {
 	}
 
 	public static void debug(String message, Object... params) {
-		if (!Modules.base.base.debug)
+		if (!BaseFeature.debug)
 			return;
 
 		log(LogType.DEBUG, message, params);

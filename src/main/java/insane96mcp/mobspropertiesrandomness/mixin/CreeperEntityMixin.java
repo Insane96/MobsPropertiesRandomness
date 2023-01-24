@@ -1,6 +1,7 @@
 package insane96mcp.mobspropertiesrandomness.mixin;
 
 import insane96mcp.mobspropertiesrandomness.module.Modules;
+import insane96mcp.mobspropertiesrandomness.module.base.feature.BaseFeature;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.entity.monster.Creeper;
@@ -22,7 +23,7 @@ public abstract class CreeperEntityMixin {
 
 	@ModifyArg(at = @At(value = "INVOKE", target = "Lnet/minecraft/world/entity/AreaEffectCloud;setRadius(F)V"), method = "spawnLingeringCloud", index = 0)
 	private float adjustRadius(float radius) {
-		if (!Modules.base.base.isBetterCreeperLingeringActivated())
+		if (!BaseFeature.isBetterCreeperLingeringActivated())
 			return radius;
 		Creeper $this = (Creeper)(Object)this;
 		CompoundTag compoundNBT = new CompoundTag();
@@ -34,6 +35,6 @@ public abstract class CreeperEntityMixin {
 
 	@ModifyArg(at = @At(value = "INVOKE", target = "Lnet/minecraft/world/entity/AreaEffectCloud;setWaitTime(I)V"), method = "spawnLingeringCloud", index = 0)
 	private int adjustWaitTime(int waitTime) {
-		return Modules.base.base.isBetterCreeperLingeringActivated() ? 0 : waitTime;
+		return BaseFeature.isBetterCreeperLingeringActivated() ? 0 : waitTime;
 	}
 }

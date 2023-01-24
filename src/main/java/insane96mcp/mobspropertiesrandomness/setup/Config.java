@@ -1,10 +1,12 @@
 package insane96mcp.mobspropertiesrandomness.setup;
 
+import insane96mcp.insanelib.base.Module;
 import insane96mcp.mobspropertiesrandomness.MobsPropertiesRandomness;
 import insane96mcp.mobspropertiesrandomness.module.Modules;
 import net.minecraftforge.common.ForgeConfigSpec;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
+import net.minecraftforge.fml.config.ModConfig;
 import net.minecraftforge.fml.event.config.ModConfigEvent;
 import org.apache.commons.lang3.tuple.Pair;
 
@@ -25,11 +27,7 @@ public class Config {
 	public static class CommonConfig {
 		public CommonConfig(final ForgeConfigSpec.Builder builder) {
 			Modules.init();
+			Module.loadFeatures(ModConfig.Type.COMMON, MobsPropertiesRandomness.MOD_ID, this.getClass().getClassLoader());
 		}
-	}
-
-	@SubscribeEvent
-	public static void onModConfigEvent(final ModConfigEvent event) {
-		Modules.loadConfig();
 	}
 }

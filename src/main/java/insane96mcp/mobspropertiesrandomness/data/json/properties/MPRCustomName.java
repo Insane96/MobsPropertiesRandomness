@@ -4,10 +4,10 @@ import insane96mcp.insanelib.exception.JsonValidationException;
 import insane96mcp.mobspropertiesrandomness.data.json.IMPRObject;
 import insane96mcp.mobspropertiesrandomness.data.json.util.modifiable.MPRModifiableValue;
 import net.minecraft.network.chat.Component;
-import net.minecraft.network.chat.TextComponent;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.level.Level;
 
+import java.awt.*;
 import java.util.List;
 
 public class MPRCustomName implements IMPRObject {
@@ -36,13 +36,13 @@ public class MPRCustomName implements IMPRObject {
 		if (this.suffixes != null && this.suffixes.size() > 0)
 			suffix = this.suffixes.get(entity.getRandom().nextInt(this.suffixes.size()));
 
-		Component iTextComponent;
+		Component component;
 		if (this.overrides != null && this.overrides.size() > 0)
-			iTextComponent = new TextComponent(prefix + this.overrides.get(entity.getRandom().nextInt(this.overrides.size())) + suffix);
+			component = Component.literal(prefix + this.overrides.get(entity.getRandom().nextInt(this.overrides.size())) + suffix);
 		else
-			iTextComponent = new TextComponent(prefix).append(entity.getName()).append(new TextComponent(suffix));
+			component = Component.literal(prefix + entity.getName() + suffix);
 
-		entity.setCustomName(iTextComponent);
+		entity.setCustomName(component);
 	}
 
 	@Override

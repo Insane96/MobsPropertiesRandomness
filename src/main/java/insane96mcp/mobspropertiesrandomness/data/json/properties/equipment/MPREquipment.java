@@ -4,7 +4,7 @@ import com.google.gson.annotations.SerializedName;
 import insane96mcp.insanelib.exception.JsonValidationException;
 import insane96mcp.mobspropertiesrandomness.data.json.IMPRObject;
 import insane96mcp.mobspropertiesrandomness.data.json.properties.attribute.MPRItemAttribute;
-import insane96mcp.mobspropertiesrandomness.data.json.properties.mods.tconstruct.MPRTiConModifier;
+//import insane96mcp.mobspropertiesrandomness.data.json.properties.mods.tconstruct.MPRTiConModifier;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.entity.LivingEntity;
@@ -79,7 +79,7 @@ public class MPREquipment implements IMPRObject {
 			}
 		}
 
-		if (choosenItem.ticonModifiers != null) {
+		/*if (choosenItem.ticonModifiers != null) {
 			for (MPRTiConModifier tiConModifier : choosenItem.ticonModifiers) {
 				itemStack = tiConModifier.applyToStack(entity, level, itemStack);
 			}
@@ -87,7 +87,7 @@ public class MPREquipment implements IMPRObject {
 
 		if (choosenItem.ticonMaterials != null) {
 			itemStack = choosenItem.ticonMaterials.applyToStack(entity, level, itemStack);
-		}
+		}*/
 
 		if (choosenItem.attributes != null) {
 			for (MPRItemAttribute itemAttribute : choosenItem.attributes) {

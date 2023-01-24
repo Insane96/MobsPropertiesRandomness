@@ -5,6 +5,7 @@ import insane96mcp.insanelib.exception.JsonValidationException;
 import insane96mcp.mobspropertiesrandomness.data.json.IMPRObject;
 import insane96mcp.mobspropertiesrandomness.util.Logger;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.util.RandomSource;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.item.enchantment.Enchantment;
@@ -42,7 +43,7 @@ public class MPRRandomEnchantment implements IMPRObject {
 	}
 
 	@Nullable
-	public Enchantment getEnchantment(Random rand, ItemStack itemStack, boolean allowIncompatible) {
+	public Enchantment getEnchantment(RandomSource rand, ItemStack itemStack, boolean allowIncompatible) {
 		Map<Enchantment, Integer> enchantmentsOnStack = EnchantmentHelper.getEnchantments(itemStack);
 
 		boolean isBook = itemStack.getItem() == Items.ENCHANTED_BOOK;

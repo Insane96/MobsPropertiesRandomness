@@ -6,8 +6,8 @@ import insane96mcp.insanelib.exception.JsonValidationException;
 import insane96mcp.insanelib.util.weightedrandom.IWeightedRandom;
 import insane96mcp.mobspropertiesrandomness.data.json.IMPRObject;
 import insane96mcp.mobspropertiesrandomness.data.json.properties.attribute.MPRItemAttribute;
-import insane96mcp.mobspropertiesrandomness.data.json.properties.mods.tconstruct.MPRTiConMaterials;
-import insane96mcp.mobspropertiesrandomness.data.json.properties.mods.tconstruct.MPRTiConModifier;
+//import insane96mcp.mobspropertiesrandomness.data.json.properties.mods.tconstruct.MPRTiConMaterials;
+//import insane96mcp.mobspropertiesrandomness.data.json.properties.mods.tconstruct.MPRTiConModifier;
 import insane96mcp.mobspropertiesrandomness.data.json.util.MPRWorldWhitelist;
 import insane96mcp.mobspropertiesrandomness.data.json.util.modifiable.MPRModifiableValue;
 import insane96mcp.mobspropertiesrandomness.util.Logger;
@@ -33,10 +33,10 @@ public class MPRItem implements IMPRObject, IWeightedRandom {
 	@SerializedName("drop_chance")
 	public MPRModifiableValue dropChance;
 	public List<MPREnchantment> enchantments;
-	@SerializedName("ticon_modifiers")
-	public List<MPRTiConModifier> ticonModifiers;
-	@SerializedName("ticon_materials")
-	public MPRTiConMaterials ticonMaterials;
+	//@SerializedName("ticon_modifiers")
+	//public List<MPRTiConModifier> ticonModifiers;
+	//@SerializedName("ticon_materials")
+	//public MPRTiConMaterials ticonMaterials;
 
 	public List<MPRItemAttribute> attributes;
 	public String nbt;
@@ -65,12 +65,12 @@ public class MPRItem implements IMPRObject, IWeightedRandom {
 			for (MPREnchantment enchantment : this.enchantments)
 				enchantment.validate();
 
-		if (this.ticonModifiers != null)
+		/*if (this.ticonModifiers != null)
 			for (MPRTiConModifier tiConModifier : this.ticonModifiers)
 				tiConModifier.validate();
 
 		if (this.ticonMaterials != null)
-			this.ticonMaterials.validate();
+			this.ticonMaterials.validate();*/
 
 		if (this.attributes != null)
 			for (MPRItemAttribute itemAttribute : this.attributes)

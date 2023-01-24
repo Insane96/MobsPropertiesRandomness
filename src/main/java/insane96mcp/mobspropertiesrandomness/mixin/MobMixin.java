@@ -1,6 +1,6 @@
 package insane96mcp.mobspropertiesrandomness.mixin;
 
-import insane96mcp.mobspropertiesrandomness.integration.TiConstruct;
+//import insane96mcp.mobspropertiesrandomness.integration.TiConstruct;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.Mob;
 import net.minecraftforge.fml.ModList;
@@ -14,7 +14,7 @@ public class MobMixin {
 	@Inject(at = @At("HEAD"), method = "doHurtTarget", cancellable = true)
 	private void onDoHurtTarget(Entity entity, CallbackInfoReturnable<Boolean> cir) {
 		Mob $this = (Mob) (Object) this;
-		if (ModList.get().isLoaded("tconstruct") && TiConstruct.tiConAttackForMobs($this, entity))
-			cir.cancel();
+		/*if (ModList.get().isLoaded("tconstruct") && TiConstruct.tiConAttackForMobs($this, entity))
+			cir.cancel();*/
 	}
 }
