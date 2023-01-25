@@ -1,5 +1,6 @@
 package insane96mcp.mobspropertiesrandomness.data.json.util;
 
+import com.google.gson.annotations.SerializedName;
 import insane96mcp.insanelib.exception.JsonValidationException;
 import insane96mcp.insanelib.util.IdTagMatcher;
 import insane96mcp.mobspropertiesrandomness.data.json.IMPRObject;
@@ -18,23 +19,32 @@ public class MPRWorldWhitelist implements IMPRObject {
 
 	public List<String> dimensions;
 	private final transient ArrayList<ResourceKey<Level>> dimensionsResourceKeys = new ArrayList<>();
+	@SerializedName("inverse_dimension_list")
+	public Boolean inverseDimensionList;
 
 	public ArrayList<IdTagMatcher> biomes;
+	@SerializedName("inverse_biome_list")
+	public Boolean inverseBiomeList;
 
 	protected MPRRange deepness;
 
 	@Override
 	public void validate() throws JsonValidationException {
-		dimensionsResourceKeys.clear();
-		if (dimensions != null) {
-			for (String dimensions : dimensions) {
+		this.dimensionsResourceKeys.clear();
+		if (this.dimensions != null) {
+			for (String dimensions : this.dimensions) {
 				ResourceKey<Level> rk = ResourceKey.create(Registry.DIMENSION_REGISTRY, new ResourceLocation(dimensions));
-				dimensionsResourceKeys.add(rk);
+				this.dimensionsResourceKeys.add(rk);
 			}
 		}
+		if (this.inverseDimensionList == null)
+			this.inverseDimensionList = false;
 
-		if (deepness != null)
-			deepness.validate();
+		if (this.inverseBiomeList == null)
+			this.inverseBiomeList = false;
+
+		if (this.deepness != null)
+			this.deepness.validate();
 	}
 
 	public boolean doesDimensionMatch(Entity entity) {
@@ -42,10 +52,10 @@ public class MPRWorldWhitelist implements IMPRObject {
 			return true;
 		for (ResourceKey<Level> dimension : this.dimensionsResourceKeys) {
 			if (entity.level.dimension().equals(dimension)) {
-				return true;
+				return !this.inverseDimensionList;
 			}
 		}
-		return false;
+		return this.inverseDimensionList;
 	}
 
 	public boolean doesBiomeMatch(LivingEntity entity) {
@@ -53,10 +63,10 @@ public class MPRWorldWhitelist implements IMPRObject {
 			return true;
 		for (IdTagMatcher dimension : this.biomes) {
 			if (dimension.matchesBiome(entity.level.getBiome(entity.blockPosition()))) {
-				return true;
+				return !this.inverseBiomeList;
 			}
 		}
-		return false;
+		return this.inverseBiomeList;
 	}
 
 	public boolean doesDepthMatch(LivingEntity entity) {
@@ -66,7 +76,7 @@ public class MPRWorldWhitelist implements IMPRObject {
 	}
 
 	public boolean isWhitelisted(LivingEntity entity) {
-		return doesBiomeMatch(entity) && doesDimensionMatch(entity) && doesDepthMatch(entity);
+		return this.doesBiomeMatch(entity) && this.doesDimensionMatch(entity) && this.doesDepthMatch(entity);
 	}
 
 	@Override

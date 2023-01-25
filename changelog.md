@@ -3,6 +3,7 @@
 ## Upcoming
 * Reimplemented World Whitelist
   * `biomes` now accepts a list of biomes / biome tags. "minecraft:desert" or "#minecraft:is_forest"
+* Added `inverse_dimension_list` and `inverse_biome_list` to world whitelist
 * Weighted Presets now have `condition` instead of `world_whitelist`
 
 ## Alpha 4.1.0
