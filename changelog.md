@@ -1,5 +1,9 @@
 # Changelog
 
+## Upcoming
+* Reimplemented World Whitelist
+  * `biomes` now accepts a list of biomes / biome tags. "minecraft:desert" or "#minecraft:is_forest"
+
 ## Alpha 4.1.0
 * Updated to MC 1.19.2, requires InsaneLib 1.7.5+
 * Changed `mob_id` and `entity_tag` to `target`

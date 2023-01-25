@@ -1,40 +1,35 @@
 package insane96mcp.mobspropertiesrandomness.data.json.util;
 
 import insane96mcp.insanelib.exception.JsonValidationException;
+import insane96mcp.insanelib.util.IdTagMatcher;
 import insane96mcp.mobspropertiesrandomness.data.json.IMPRObject;
 import insane96mcp.mobspropertiesrandomness.data.json.util.modifiable.MPRRange;
+import net.minecraft.core.Registry;
+import net.minecraft.resources.ResourceKey;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.level.Level;
 
 import java.util.ArrayList;
 import java.util.List;
 
 public class MPRWorldWhitelist implements IMPRObject {
 
-	protected List<String> dimensions;
-	public transient List<ResourceLocation> dimensionsList = new ArrayList<>();
+	public List<String> dimensions;
+	private final transient ArrayList<ResourceKey<Level>> dimensionsResourceKeys = new ArrayList<>();
 
-	protected List<String> biomes;
-	public transient List<ResourceLocation> biomesList = new ArrayList<>();
+	public ArrayList<IdTagMatcher> biomes;
 
 	protected MPRRange deepness;
 
 	@Override
 	public void validate() throws JsonValidationException {
-		dimensionsList.clear();
+		dimensionsResourceKeys.clear();
 		if (dimensions != null) {
-			for (String dimension : dimensions) {
-				ResourceLocation dimensionRL = new ResourceLocation(dimension);
-				dimensionsList.add(dimensionRL);
-			}
-		}
-
-		biomesList.clear();
-		if (biomes != null) {
-			for (String biome : biomes) {
-				ResourceLocation biomeLoc = new ResourceLocation(biome);
-				biomesList.add(biomeLoc);
+			for (String dimensions : dimensions) {
+				ResourceKey<Level> rk = ResourceKey.create(Registry.DIMENSION_REGISTRY, new ResourceLocation(dimensions));
+				dimensionsResourceKeys.add(rk);
 			}
 		}
 
@@ -43,21 +38,25 @@ public class MPRWorldWhitelist implements IMPRObject {
 	}
 
 	public boolean doesDimensionMatch(Entity entity) {
-		if (dimensionsList.isEmpty())
+		if (this.dimensions.isEmpty())
 			return true;
-
+		for (ResourceKey<Level> dimension : this.dimensionsResourceKeys) {
+			if (entity.level.dimension().equals(dimension)) {
+				return true;
+			}
+		}
 		return false;
-		//ResourceLocation entityDimension = entity.level.dimension().getRegistryName();
-		//return dimensionsList.contains(entityDimension);
 	}
 
 	public boolean doesBiomeMatch(LivingEntity entity) {
-		if (biomesList.isEmpty())
+		if (this.biomes.isEmpty())
 			return true;
-
+		for (IdTagMatcher dimension : this.biomes) {
+			if (dimension.matchesBiome(entity.level.getBiome(entity.blockPosition()))) {
+				return true;
+			}
+		}
 		return false;
-		/*ResourceLocation entityBiome = entity.level.getBiome(entity.blockPosition()).value().getRegistryName();
-		return biomesList.contains(entityBiome);*/
 	}
 
 	public boolean doesDepthMatch(LivingEntity entity) {
@@ -72,6 +71,6 @@ public class MPRWorldWhitelist implements IMPRObject {
 
 	@Override
 	public String toString() {
-		return String.format("WorldWhitelist{dimensions: %s, biomes: %s}", dimensionsList, biomesList);
+		return String.format("WorldWhitelist{dimensions: %s, biomes: %s, deepness: %s}", this.dimensions, this.biomes, this.deepness);
 	}
 }
