@@ -3,6 +3,7 @@
 ## Upcoming
 * Reimplemented World Whitelist
   * `biomes` now accepts a list of biomes / biome tags. "minecraft:desert" or "#minecraft:is_forest"
+* Weighted Presets now have `condition` instead of `world_whitelist`
 
 ## Alpha 4.1.0
 * Updated to MC 1.19.2, requires InsaneLib 1.7.5+

@@ -6,6 +6,7 @@ import insane96mcp.insanelib.exception.JsonValidationException;
 import insane96mcp.insanelib.util.weightedrandom.IWeightedRandom;
 import insane96mcp.mobspropertiesrandomness.data.json.IMPRObject;
 import insane96mcp.mobspropertiesrandomness.data.json.MPRPreset;
+import insane96mcp.mobspropertiesrandomness.data.json.properties.condition.MPRConditions;
 import insane96mcp.mobspropertiesrandomness.data.json.util.modifiable.MPRModifiableValue;
 import insane96mcp.mobspropertiesrandomness.util.Logger;
 import net.minecraft.resources.ResourceLocation;
@@ -26,8 +27,7 @@ public class MPRWeightedPreset implements IMPRObject, IWeightedRandom {
 
 	private transient int _weight;
 
-	@SerializedName("world_whitelist")
-	public MPRWorldWhitelist worldWhitelist;
+	public MPRConditions conditions;
 
 	@Override
 	public void validate() throws JsonValidationException {
@@ -49,8 +49,8 @@ public class MPRWeightedPreset implements IMPRObject, IWeightedRandom {
 		}
 		this.modifiableWeight.validate();
 
-		if (this.worldWhitelist != null)
-			this.worldWhitelist.validate();
+		if (this.conditions != null)
+			this.conditions.validate();
 	}
 
 	/**
@@ -58,7 +58,7 @@ public class MPRWeightedPreset implements IMPRObject, IWeightedRandom {
 	 */
 	@Nullable
 	public MPRWeightedPreset computeAndGet(LivingEntity entity, Level world) {
-		if (this.worldWhitelist != null && !this.worldWhitelist.isWhitelisted(entity))
+		if (this.conditions != null && !this.conditions.conditionsApply(entity))
 			return null;
 
 		this._weight = (int) this.modifiableWeight.getValue(entity, world);
@@ -68,7 +68,7 @@ public class MPRWeightedPreset implements IMPRObject, IWeightedRandom {
 
 	@Override
 	public String toString() {
-		return String.format("WeightedPreset{id: %s, weight: %s, world_whitelist: %s}", this.id, this.modifiableWeight, this.worldWhitelist);
+		return String.format("WeightedPreset{id: %s, weight: %s, conditions: %s}", this.id, this.modifiableWeight, this.conditions);
 	}
 
 	@Override
