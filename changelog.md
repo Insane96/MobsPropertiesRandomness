@@ -1,6 +1,6 @@
 # Changelog
 
-## Upcoming
+## Beta 4.1.1
 * Reimplemented World Whitelist
   * `biomes` now accepts a list of biomes / biome tags. "minecraft:desert" or "#minecraft:is_forest"
 * Added `inverse_dimension_list` and `inverse_biome_list` to world whitelist
