@@ -1,5 +1,10 @@
 # Changelog
 
+## Upcoming
+* Added `apply_all` to `presets`
+  * When true, instead of picking a random preset based off weight, all the presets are checked and try to apply.
+  * With this, a `chance` field has been added to Weighted Presets
+
 ## 4.0.1
 * Fixed `id` not being recognized in presets list
 

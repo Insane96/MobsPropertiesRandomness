@@ -26,6 +26,8 @@ public class MPRWeightedPreset implements IMPRObject, IWeightedRandom {
 
 	private transient int _weight;
 
+	private MPRModifiableValue chance;
+
 	@SerializedName("world_whitelist")
 	public MPRWorldWhitelist worldWhitelist;
 
@@ -51,24 +53,29 @@ public class MPRWeightedPreset implements IMPRObject, IWeightedRandom {
 
 		if (this.worldWhitelist != null)
 			this.worldWhitelist.validate();
+
+		if (this.chance != null)
+			this.chance.validate();
 	}
 
 	/**
-	 * Returns this MPRWeightedPreset with the weight calculated based off the modifiers, or null if the world whitelist doesn't match
+	 * Returns this MPRWeightedPreset with the weight calculated based off the modifiers, or null if the world whitelist / chance doesn't match
 	 */
 	@Nullable
-	public MPRWeightedPreset computeAndGet(LivingEntity entity, Level world) {
+	public MPRWeightedPreset computeAndGet(LivingEntity entity, Level level) {
 		if (this.worldWhitelist != null && !this.worldWhitelist.isWhitelisted(entity))
 			return null;
+		if (this.chance != null && level.random.nextDouble() >= this.chance.getValue(entity, level))
+			return null;
 
-		this._weight = (int) this.modifiableWeight.getValue(entity, world);
+		this._weight = (int) this.modifiableWeight.getValue(entity, level);
 
 		return this;
 	}
 
 	@Override
 	public String toString() {
-		return String.format("WeightedPreset{id: %s, weight: %s, world_whitelist: %s}", this.id, this.modifiableWeight, this.worldWhitelist);
+		return String.format("WeightedPreset{id: %s, weight: %s, world_whitelist: %s, chance: %s}", this.id, this.modifiableWeight, this.worldWhitelist, this.chance);
 	}
 
 	@Override
