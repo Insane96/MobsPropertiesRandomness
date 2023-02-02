@@ -24,9 +24,9 @@ Explain what's the problem
 **Logs / Crash reports**:  
 E.g. https://pastebin.com/1AbCDEFG
 
-//Send the mod's config folder with all the jsons and groups
-**Config Folder**:  
+//Send the Datapack that's not working
+**Datapack**:  
 E.g. MobsPropertiesRandomness.zip
 
-**Can be reproduced with Mobs Properties Randomness only? (InsaneLib is mandatory in 1.16+)**:  
+**Can be reproduced with Mobs Properties Randomness only?**:  
 Yes/No
