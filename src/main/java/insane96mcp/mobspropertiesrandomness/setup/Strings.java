@@ -9,5 +9,7 @@ public class Strings {
 		public static final String ON_ATTACKED = MobsPropertiesRandomness.RESOURCE_PREFIX + "on_attacked";
 		public static final String ON_DEATH = MobsPropertiesRandomness.RESOURCE_PREFIX + "on_death";
 		public static final String ON_TICK = MobsPropertiesRandomness.RESOURCE_PREFIX + "on_tick";
+
+		public static final String BOSS_BAR_ID = MobsPropertiesRandomness.RESOURCE_PREFIX + "boss_bar_uuid";
 	}
 }

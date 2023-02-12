@@ -8,6 +8,7 @@ import insane96mcp.insanelib.base.Module;
 import insane96mcp.insanelib.base.config.Config;
 import insane96mcp.insanelib.base.config.LoadFeature;
 import insane96mcp.insanelib.exception.JsonValidationException;
+import insane96mcp.insanelib.util.LogHelper;
 import insane96mcp.mobspropertiesrandomness.MobsPropertiesRandomness;
 import insane96mcp.mobspropertiesrandomness.data.json.MPRMob;
 import insane96mcp.mobspropertiesrandomness.data.json.properties.events.MPROnDeath;
@@ -15,8 +16,12 @@ import insane96mcp.mobspropertiesrandomness.data.json.properties.events.MPROnHit
 import insane96mcp.mobspropertiesrandomness.data.json.properties.events.MPROnTick;
 import insane96mcp.mobspropertiesrandomness.setup.Strings;
 import insane96mcp.mobspropertiesrandomness.util.Logger;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.server.bossevents.CustomBossEvent;
+import net.minecraft.server.bossevents.CustomBossEvents;
+import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.entity.LivingEntity;
-import net.minecraftforge.common.ForgeConfigSpec;
 import net.minecraftforge.event.entity.EntityJoinLevelEvent;
 import net.minecraftforge.event.entity.living.LivingDamageEvent;
 import net.minecraftforge.event.entity.living.LivingDeathEvent;
@@ -61,11 +66,21 @@ public class BaseFeature extends Feature {
 	public static final java.lang.reflect.Type MPR_ON_DEATH_LIST_TYPE = new TypeToken<ArrayList<MPROnDeath>>(){}.getType();
 	@SubscribeEvent
 	public void onLivingDeath(LivingDeathEvent event) {
-		if (!event.getEntity().getPersistentData().contains(Strings.Tags.ON_DEATH))
+		CompoundTag compoundTag = event.getEntity().getPersistentData();
+		if (compoundTag.contains(Strings.Tags.BOSS_BAR_ID)) {
+			CustomBossEvents customBossEvents = event.getEntity().getServer().getCustomBossEvents();
+			CustomBossEvent bossEvent = customBossEvents.get(new ResourceLocation(compoundTag.getString(Strings.Tags.BOSS_BAR_ID)));
+			if (bossEvent != null) {
+				bossEvent.removeAllPlayers();
+				customBossEvents.remove(bossEvent);
+			}
+		}
+
+		if (!compoundTag.contains(Strings.Tags.ON_DEATH))
 			return;
 
 		LivingEntity attacker = (LivingEntity) event.getSource().getEntity();
-		List<MPROnDeath> onDeaths = new Gson().fromJson(event.getEntity().getPersistentData().getString(Strings.Tags.ON_DEATH), MPR_ON_DEATH_LIST_TYPE);
+		List<MPROnDeath> onDeaths = new Gson().fromJson(compoundTag.getString(Strings.Tags.ON_DEATH), MPR_ON_DEATH_LIST_TYPE);
 		if (onDeaths == null)
 			return;
 
@@ -84,10 +99,33 @@ public class BaseFeature extends Feature {
 	public static final java.lang.reflect.Type MPR_ON_TICK_LIST_TYPE = new TypeToken<ArrayList<MPROnTick>>(){}.getType();
 	@SubscribeEvent
 	public void onLivingTick(LivingEvent.LivingTickEvent event) {
-		if (!event.getEntity().getPersistentData().contains(Strings.Tags.ON_TICK))
+		if (event.getEntity().level.isClientSide)
+			return;
+		checkOnTick(event.getEntity());
+		showBossBar(event.getEntity());
+		updateBossBar(event.getEntity());
+	}
+
+	private void updateBossBar(LivingEntity entity) {
+		if (entity.isDeadOrDying())
+			return;
+		CompoundTag persistentData = entity.getPersistentData();
+		if (!persistentData.contains(Strings.Tags.BOSS_BAR_ID))
+			return;
+		CustomBossEvent bossBar = entity.getServer().getCustomBossEvents().get(ResourceLocation.tryParse(persistentData.getString(Strings.Tags.BOSS_BAR_ID)));
+		if (bossBar == null) {
+			LogHelper.warn("[%s] Failed to find boss bar with id %s", MobsPropertiesRandomness.MOD_ID, persistentData.getString(Strings.Tags.BOSS_BAR_ID));
+			return;
+		}
+		bossBar.setProgress(entity.getHealth() / entity.getMaxHealth());
+	}
+
+	private void checkOnTick(LivingEntity entity) {
+		CompoundTag persistentData = entity.getPersistentData();
+		if (!persistentData.contains(Strings.Tags.ON_TICK))
 			return;
 
-		List<MPROnTick> onTicks = new Gson().fromJson(event.getEntity().getPersistentData().getString(Strings.Tags.ON_TICK), MPR_ON_TICK_LIST_TYPE);
+		List<MPROnTick> onTicks = new Gson().fromJson(persistentData.getString(Strings.Tags.ON_TICK), MPR_ON_TICK_LIST_TYPE);
 		if (onTicks == null)
 			return;
 
@@ -99,8 +137,28 @@ public class BaseFeature extends Feature {
 				Logger.error("Failed to validate MPROnTick: " + e);
 				continue;
 			}
-			onTick.apply(event.getEntity());
+			onTick.apply(entity);
 		}
+	}
+
+	private void showBossBar(LivingEntity entity) {
+		if (entity.tickCount % 20 != 0)
+			return;
+
+		CompoundTag persistentData = entity.getPersistentData();
+		if (!persistentData.contains(Strings.Tags.BOSS_BAR_ID))
+			return;
+
+		CustomBossEvent bossBar = entity.getServer().getCustomBossEvents().get(ResourceLocation.tryParse(persistentData.getString(Strings.Tags.BOSS_BAR_ID)));
+		if (bossBar == null) {
+			LogHelper.warn("[%s] Failed to find boss bar with id %s", MobsPropertiesRandomness.MOD_ID, persistentData.getString(Strings.Tags.BOSS_BAR_ID));
+			return;
+		}
+		bossBar.removeAllPlayers();
+		entity.level.players()
+				.stream()
+				.filter(p -> p.distanceToSqr(entity) < 2304 /*48 blocks*/)
+				.forEach(player -> bossBar.addPlayer((ServerPlayer) player));
 	}
 
 	public static final java.lang.reflect.Type MPR_ON_HIT_LIST_TYPE = new TypeToken<ArrayList<MPROnHit>>(){}.getType();
