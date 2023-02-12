@@ -1,5 +1,10 @@
 # Changelog
 
+## Upcoming
+* Added `apply_all` to `presets`
+  * When true, instead of picking a random preset based off weight, all the presets are checked and try to apply.
+  * With this, a `chance` field has been added to Weighted Presets
+
 ## Beta 4.1.1
 * Reimplemented World Whitelist
   * `biomes` now accepts a list of biomes / biome tags. "minecraft:desert" or "#minecraft:is_forest"

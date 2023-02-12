@@ -13,6 +13,7 @@ import net.minecraft.world.level.Level;
 import javax.annotation.Nullable;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 import static insane96mcp.mobspropertiesrandomness.data.MPRPresetReloadListener.MPR_PRESETS;
 
@@ -20,6 +21,8 @@ public class MPRPresets implements IMPRObject {
 
 	public MPRModifiableValue chance;
 	public Mode mode;
+	@SerializedName("apply_all")
+	public Boolean applyAll = false;
 	public List<MPRWeightedPreset> list;
 
 	@Override
@@ -37,20 +40,25 @@ public class MPRPresets implements IMPRObject {
 		}
 	}
 
-	public boolean apply(LivingEntity entity, Level world) {
-		if (this.chance != null && world.random.nextDouble() >= this.chance.getValue(entity, world))
+	public boolean apply(LivingEntity entity, Level level) {
+		if (this.chance != null && level.random.nextDouble() >= this.chance.getValue(entity, level))
 			return false;
 
-		MPRWeightedPreset weightedPreset = this.getRandomPreset(entity, world);
-		if (weightedPreset == null)
-			return false;
-		for (MPRPreset preset : MPR_PRESETS) {
-			if (!preset.id.equals(weightedPreset.id))
-				continue;
-
-			return preset.apply(entity, world);
+		if (this.applyAll) {
+			List<MPRWeightedPreset> items = this.getPresets(entity, level);
+			items.forEach(weightedPreset -> {
+				Optional<MPRPreset> presetFound = MPR_PRESETS.stream().filter(p -> p.id.equals(weightedPreset.id)).findFirst();
+				presetFound.ifPresent(preset -> preset.apply(entity, level));
+			});
+			return true;
 		}
-		return false;
+		else {
+			MPRWeightedPreset weightedPreset = this.getRandomPreset(entity, level);
+			if (weightedPreset == null)
+				return false;
+			Optional<MPRPreset> presetFound = MPR_PRESETS.stream().filter(p -> p.id.equals(weightedPreset.id)).findFirst();
+			return presetFound.map(mprPreset -> mprPreset.apply(entity, level)).orElse(false);
+		}
 	}
 
 	private List<MPRWeightedPreset> getPresets(LivingEntity entity, Level world){
