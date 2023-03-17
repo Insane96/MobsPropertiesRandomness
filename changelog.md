@@ -1,6 +1,6 @@
 # Changelog
 
-## Upcoming
+## Beta 4.2.0
 * Added `boss_bar` to `presets`
   * When present adds a boss bar to the preset mob. Has a `color`, `type` (decoration), `darken_screen` and `range`
 * Added `apply_all` to `presets`
