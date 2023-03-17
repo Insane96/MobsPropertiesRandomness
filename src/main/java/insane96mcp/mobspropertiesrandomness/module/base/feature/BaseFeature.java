@@ -11,6 +11,7 @@ import insane96mcp.insanelib.exception.JsonValidationException;
 import insane96mcp.insanelib.util.LogHelper;
 import insane96mcp.mobspropertiesrandomness.MobsPropertiesRandomness;
 import insane96mcp.mobspropertiesrandomness.data.json.MPRMob;
+import insane96mcp.mobspropertiesrandomness.data.json.properties.MPRBossBar;
 import insane96mcp.mobspropertiesrandomness.data.json.properties.events.MPROnDeath;
 import insane96mcp.mobspropertiesrandomness.data.json.properties.events.MPROnHit;
 import insane96mcp.mobspropertiesrandomness.data.json.properties.events.MPROnTick;
@@ -26,8 +27,10 @@ import net.minecraftforge.event.entity.EntityJoinLevelEvent;
 import net.minecraftforge.event.entity.living.LivingDamageEvent;
 import net.minecraftforge.event.entity.living.LivingDeathEvent;
 import net.minecraftforge.event.entity.living.LivingEvent;
+import net.minecraftforge.event.entity.player.PlayerEvent;
 import net.minecraftforge.eventbus.api.EventPriority;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
+import org.jetbrains.annotations.Nullable;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -105,19 +108,66 @@ public class BaseFeature extends Feature {
 		showBossBar(event.getEntity());
 		updateBossBar(event.getEntity());
 	}
+	@SubscribeEvent
+	public void onLivingTick(LivingDeathEvent event) {
+		if (event.getEntity().level.isClientSide
+				|| !(event.getSource().getEntity() instanceof LivingEntity livingEntity)
+				|| !(event.getEntity() instanceof ServerPlayer player))
+			return;
+		CustomBossEvent bossEvent = getBarFromEntity(livingEntity);
+		if (bossEvent == null)
+			return;
+		bossEvent.removePlayer(player);
+	}
+	@SubscribeEvent
+	public void onStopTracking(PlayerEvent.StopTracking event) {
+		if (event.getEntity().level.isClientSide
+				|| !(event.getTarget() instanceof LivingEntity livingEntity)
+				|| !(event.getEntity() instanceof ServerPlayer player))
+			return;
+		CustomBossEvent bossEvent = getBarFromEntity(livingEntity);
+		if (bossEvent == null)
+			return;
+		bossEvent.removePlayer(player);
+	}
+
+	@Nullable
+	private CustomBossEvent getBarFromEntity(LivingEntity entity) {
+		CompoundTag persistentData = entity.getPersistentData();
+		if (!persistentData.contains(Strings.Tags.BOSS_BAR_ID))
+			return null;
+		ResourceLocation bossbarId = ResourceLocation.tryParse(persistentData.getString(Strings.Tags.BOSS_BAR_ID));
+		if (bossbarId == null) {
+			LogHelper.warn("[%s] Failed to find boss bar with id %s", MobsPropertiesRandomness.MOD_ID, entity.getPersistentData().getString(Strings.Tags.BOSS_BAR_ID));
+			return null;
+		}
+		//noinspection ConstantConditions
+		return entity.getServer().getCustomBossEvents().get(bossbarId);
+	}
 
 	private void updateBossBar(LivingEntity entity) {
 		if (entity.isDeadOrDying())
 			return;
-		CompoundTag persistentData = entity.getPersistentData();
-		if (!persistentData.contains(Strings.Tags.BOSS_BAR_ID))
+
+		CustomBossEvent bossBar = getBarFromEntity(entity);
+		if (bossBar == null)
 			return;
-		CustomBossEvent bossBar = entity.getServer().getCustomBossEvents().get(ResourceLocation.tryParse(persistentData.getString(Strings.Tags.BOSS_BAR_ID)));
-		if (bossBar == null) {
-			LogHelper.warn("[%s] Failed to find boss bar with id %s", MobsPropertiesRandomness.MOD_ID, persistentData.getString(Strings.Tags.BOSS_BAR_ID));
-			return;
-		}
 		bossBar.setProgress(entity.getHealth() / entity.getMaxHealth());
+	}
+
+	private void showBossBar(LivingEntity entity) {
+		if (entity.tickCount % 20 != 0)
+			return;
+
+		CustomBossEvent bossBar = getBarFromEntity(entity);
+		if (bossBar == null)
+			return;
+		int range = entity.getPersistentData().getInt(MPRBossBar.BOSS_BAR_VISIBILITY_RANGE);
+		bossBar.removeAllPlayers();
+		entity.level.players()
+				.stream()
+				.filter(p -> p.distanceToSqr(entity) < range * range)
+				.forEach(player -> bossBar.addPlayer((ServerPlayer) player));
 	}
 
 	private void checkOnTick(LivingEntity entity) {
@@ -139,26 +189,6 @@ public class BaseFeature extends Feature {
 			}
 			onTick.apply(entity);
 		}
-	}
-
-	private void showBossBar(LivingEntity entity) {
-		if (entity.tickCount % 20 != 0)
-			return;
-
-		CompoundTag persistentData = entity.getPersistentData();
-		if (!persistentData.contains(Strings.Tags.BOSS_BAR_ID))
-			return;
-
-		CustomBossEvent bossBar = entity.getServer().getCustomBossEvents().get(ResourceLocation.tryParse(persistentData.getString(Strings.Tags.BOSS_BAR_ID)));
-		if (bossBar == null) {
-			LogHelper.warn("[%s] Failed to find boss bar with id %s", MobsPropertiesRandomness.MOD_ID, persistentData.getString(Strings.Tags.BOSS_BAR_ID));
-			return;
-		}
-		bossBar.removeAllPlayers();
-		entity.level.players()
-				.stream()
-				.filter(p -> p.distanceToSqr(entity) < 2304 /*48 blocks*/)
-				.forEach(player -> bossBar.addPlayer((ServerPlayer) player));
 	}
 
 	public static final java.lang.reflect.Type MPR_ON_HIT_LIST_TYPE = new TypeToken<ArrayList<MPROnHit>>(){}.getType();

@@ -1,6 +1,8 @@
 # Changelog
 
 ## Upcoming
+* Added `boss_bar` to `presets`
+  * When present adds a boss bar to the preset mob. Has a `color`, `type` (decoration), `darken_screen` and `range`
 * Added `apply_all` to `presets`
   * When true, instead of picking a random preset based off weight, all the presets are checked and try to apply.
   * With this, a `chance` field has been added to Weighted Presets
