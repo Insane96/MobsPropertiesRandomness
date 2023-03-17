@@ -5,7 +5,7 @@ import insane96mcp.insanelib.exception.JsonValidationException;
 import insane96mcp.insanelib.util.IdTagMatcher;
 import insane96mcp.mobspropertiesrandomness.data.json.IMPRObject;
 import insane96mcp.mobspropertiesrandomness.data.json.util.modifiable.MPRRange;
-import net.minecraft.core.Registry;
+import net.minecraft.core.registries.Registries;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.Entity;
@@ -33,7 +33,7 @@ public class MPRWorldWhitelist implements IMPRObject {
 		this.dimensionsResourceKeys.clear();
 		if (this.dimensions != null) {
 			for (String dimensions : this.dimensions) {
-				ResourceKey<Level> rk = ResourceKey.create(Registry.DIMENSION_REGISTRY, new ResourceLocation(dimensions));
+				ResourceKey<Level> rk = ResourceKey.create(Registries.DIMENSION, new ResourceLocation(dimensions));
 				this.dimensionsResourceKeys.add(rk);
 			}
 		}

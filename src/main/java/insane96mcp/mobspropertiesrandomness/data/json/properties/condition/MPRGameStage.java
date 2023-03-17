@@ -3,7 +3,6 @@ package insane96mcp.mobspropertiesrandomness.data.json.properties.condition;
 import com.google.gson.annotations.SerializedName;
 import insane96mcp.insanelib.exception.JsonValidationException;
 import insane96mcp.mobspropertiesrandomness.data.json.IMPRObject;
-import net.darkhax.gamestages.GameStageHelper;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.entity.LivingEntity;
 
@@ -35,10 +34,10 @@ public class MPRGameStage implements IMPRObject {
 		else
 			players = livingEntity.level.getEntitiesOfClass(ServerPlayer.class, livingEntity.getBoundingBox().inflate(128d));
 
-		for (ServerPlayer player : players) {
+		/*for (ServerPlayer player : players) {
 			if (GameStageHelper.hasAllOf(player, this.gameStages))
 				return true;
-		}
+		}*/
 		return false;
 	}
 
