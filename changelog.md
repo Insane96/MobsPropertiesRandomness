@@ -1,5 +1,8 @@
 # Changelog
 
+## 4.4.0
+* Updated to 1.19.4
+
 ## Beta 4.3.0
 * Port to 1.19.3
 

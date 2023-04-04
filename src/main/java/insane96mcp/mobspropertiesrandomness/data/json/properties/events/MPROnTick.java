@@ -12,8 +12,8 @@ public class MPROnTick extends MPREvent {
     @Override
     public void validate() throws JsonValidationException {
         super.validate();
-        if (updateSpeed == null)
-            updateSpeed = 20;
+        if (this.updateSpeed == null)
+            this.updateSpeed = 20;
     }
 
     public void apply(LivingEntity entity) {

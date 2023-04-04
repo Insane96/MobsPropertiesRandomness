@@ -37,7 +37,7 @@ public abstract class MPREvent implements IMPRObject {
 
     @SuppressWarnings("BooleanMethodIsAlwaysInverted")
     public boolean shouldApply(LivingEntity entity) {
-        return this.chance == null || entity.getRandom().nextDouble() >= this.chance.getValue(entity, entity.level);
+        return this.chance == null || entity.getRandom().nextDouble() < this.chance.getValue(entity, entity.level);
     }
 
     public void tryPlaySound(LivingEntity entity) {
