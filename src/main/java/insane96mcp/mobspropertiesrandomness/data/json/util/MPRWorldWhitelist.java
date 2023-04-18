@@ -28,6 +28,9 @@ public class MPRWorldWhitelist implements IMPRObject {
 
 	protected MPRRange deepness;
 
+	@SerializedName("moon_phases")
+	protected List<MoonPhase> moonPhases;
+
 	@Override
 	public void validate() throws JsonValidationException {
 		this.dimensionsResourceKeys.clear();
@@ -45,6 +48,8 @@ public class MPRWorldWhitelist implements IMPRObject {
 
 		if (this.deepness != null)
 			this.deepness.validate();
+
+
 	}
 
 	public boolean doesDimensionMatch(Entity entity) {
@@ -75,12 +80,48 @@ public class MPRWorldWhitelist implements IMPRObject {
 		return entity.getY() >= this.deepness.getMin(entity, entity.level) && entity.getY() <= this.deepness.getMax(entity, entity.level);
 	}
 
+	public boolean doesMoonPhaseMatch(LivingEntity entity) {
+		boolean moonPhaseMatches = false;
+		for (MoonPhase moonPhase : this.moonPhases) {
+			if (moonPhase == MoonPhase.of(entity.level.getMoonPhase())) {
+				moonPhaseMatches = true;
+				break;
+			}
+		}
+		return moonPhaseMatches;
+	}
+
 	public boolean isWhitelisted(LivingEntity entity) {
-		return this.doesBiomeMatch(entity) && this.doesDimensionMatch(entity) && this.doesDepthMatch(entity);
+		return this.doesBiomeMatch(entity) && this.doesDimensionMatch(entity) && this.doesDepthMatch(entity) && this.doesMoonPhaseMatch(entity);
 	}
 
 	@Override
 	public String toString() {
-		return String.format("WorldWhitelist{dimensions: %s, biomes: %s, deepness: %s}", this.dimensions, this.biomes, this.deepness);
+		return String.format("WorldWhitelist{dimensions: %s, biomes: %s, deepness: %s, moon_phases: %s}", this.dimensions, this.biomes, this.deepness, this.moonPhases);
+	}
+
+	enum MoonPhase {
+		@SerializedName("full_moon")
+		FULL_MOON,
+		@SerializedName("waning_gibbous")
+		WANING_GIBBOUS,
+		@SerializedName("last_quarter")
+		LAST_QUARTER,
+		@SerializedName("waning_crescent")
+		WANING_CRESCENT,
+		@SerializedName("new_moon")
+		NEW_MOON,
+		@SerializedName("waxing_crescent")
+		WAXING_CRESCENT,
+		@SerializedName("first_quarter")
+		FIRST_QUARTER,
+		@SerializedName("waxing_gibbous")
+		WAXING_GIBBOUS;
+
+		private static final MoonPhase[] PHASES = MoonPhase.values();
+
+		public static MoonPhase of(int moonPhase) {
+			return PHASES[moonPhase];
+		}
 	}
 }

@@ -1,5 +1,9 @@
 # Changelog
 
+## Upcoming
+* Added `moon_phases` to `world` condition
+  * A list of [MoonPhases]() which must match for the condition to be met
+
 ## 4.4.0
 * Updated to 1.19.4
 
