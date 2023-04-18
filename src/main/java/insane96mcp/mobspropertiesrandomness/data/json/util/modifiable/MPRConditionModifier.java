@@ -12,30 +12,30 @@ public class MPRConditionModifier extends MPRModifier implements IMPRObject {
 
 	@Override
 	public void validate() throws JsonValidationException {
-		if (condition == null)
+		if (this.condition == null)
 			throw new JsonValidationException("Missing 'condition' for Condition Modifier. " + this);
-		if (operation == null)
+		if (this.operation == null)
 			throw new JsonValidationException("Missing 'operation' for Condition Modifier. " + this);
-		if (amount == null)
+		if (this.amount == null)
 			throw new JsonValidationException("Missing 'amount' for Condition Modifier. " + this);
 
-		condition.validate();
+		this.condition.validate();
 
 		super.validate();
 	}
 
 	public float applyModifier(LivingEntity livingEntity, float value) {
 		if (this.condition.conditionsApply(livingEntity)) {
-			if (operation == Operation.ADD)
-				return value + amount;
+			if (this.operation == Operation.ADD)
+				return value + this.amount;
 			else
-				return value * amount;
+				return value * this.amount;
 		}
 		return value;
 	}
 
 	@Override
 	public String toString() {
-		return String.format("ConditionModifier{condition: %s, operation: %s, amount: %s, affects_max_only: %b}", condition, operation, amount, this.doesAffectMaxOnly());
+		return String.format("ConditionModifier{condition: %s, operation: %s, amount: %s, affects_max_only: %b}", this.condition, this.operation, this.amount, this.doesAffectMaxOnly());
 	}
 }

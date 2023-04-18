@@ -3,7 +3,7 @@ package insane96mcp.mobspropertiesrandomness.data.json.properties;
 import com.google.gson.annotations.SerializedName;
 import insane96mcp.insanelib.exception.JsonValidationException;
 import insane96mcp.mobspropertiesrandomness.data.json.IMPRObject;
-import insane96mcp.mobspropertiesrandomness.data.json.util.MPRWorldWhitelist;
+import insane96mcp.mobspropertiesrandomness.data.json.properties.condition.MPRConditions;
 import insane96mcp.mobspropertiesrandomness.data.json.util.modifiable.MPRModifiableValue;
 import insane96mcp.mobspropertiesrandomness.data.json.util.modifiable.MPRRange;
 import insane96mcp.mobspropertiesrandomness.util.Logger;
@@ -26,8 +26,7 @@ public class MPRPotionEffect implements IMPRObject {
 
 	public MPRRange duration;
 
-	@SerializedName("world_whitelist")
-	public MPRWorldWhitelist worldWhitelist;
+	public MPRConditions conditions;
 
 	public void validate() throws JsonValidationException {
 		//Potion Id
@@ -56,8 +55,8 @@ public class MPRPotionEffect implements IMPRObject {
 		if (this.ambient && this.hideParticles)
 			Logger.info("Particles are hidden, but ambient is enabled. Ambient doesn't work if particles are hidden. " + this);
 
-		if (this.worldWhitelist != null)
-			this.worldWhitelist.validate();
+		if (this.conditions != null)
+			this.conditions.validate();
 	}
 
 	public void apply(LivingEntity entity, Level level) {
@@ -67,7 +66,7 @@ public class MPRPotionEffect implements IMPRObject {
 		if (this.chance != null && level.random.nextFloat() >= this.chance.getValue(entity, level))
 			return;
 
-		if (this.worldWhitelist != null && !this.worldWhitelist.isWhitelisted(entity))
+		if (this.conditions != null && !this.conditions.conditionsApply(entity))
 			return;
 
 		MobEffect effect = ForgeRegistries.MOB_EFFECTS.getValue(new ResourceLocation(this.id));
@@ -78,6 +77,6 @@ public class MPRPotionEffect implements IMPRObject {
 
 	@Override
 	public String toString() {
-		return String.format("PotionEffect{id: %s, amplifier: %s, chance: %s, duration: %s, ambient: %s, hide_particles: %s, world_whitelist: %s}", this.id, this.amplifier, this.chance, this.duration, this.ambient, this.hideParticles, this.worldWhitelist);
+		return String.format("PotionEffect{id: %s, amplifier: %s, chance: %s, duration: %s, ambient: %s, hide_particles: %s, conditions: %s}", this.id, this.amplifier, this.chance, this.duration, this.ambient, this.hideParticles, this.conditions);
 	}
 }

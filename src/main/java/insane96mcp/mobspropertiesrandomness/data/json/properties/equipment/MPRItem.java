@@ -6,9 +6,7 @@ import insane96mcp.insanelib.exception.JsonValidationException;
 import insane96mcp.insanelib.util.weightedrandom.IWeightedRandom;
 import insane96mcp.mobspropertiesrandomness.data.json.IMPRObject;
 import insane96mcp.mobspropertiesrandomness.data.json.properties.attribute.MPRItemAttribute;
-//import insane96mcp.mobspropertiesrandomness.data.json.properties.mods.tconstruct.MPRTiConMaterials;
-//import insane96mcp.mobspropertiesrandomness.data.json.properties.mods.tconstruct.MPRTiConModifier;
-import insane96mcp.mobspropertiesrandomness.data.json.util.MPRWorldWhitelist;
+import insane96mcp.mobspropertiesrandomness.data.json.properties.condition.MPRConditions;
 import insane96mcp.mobspropertiesrandomness.data.json.util.modifiable.MPRModifiableValue;
 import insane96mcp.mobspropertiesrandomness.util.Logger;
 import net.minecraft.nbt.CompoundTag;
@@ -42,8 +40,7 @@ public class MPRItem implements IMPRObject, IWeightedRandom {
 	public String nbt;
 	private transient CompoundTag _nbt;
 
-	@SerializedName("world_whitelist")
-	public MPRWorldWhitelist worldWhitelist;
+	public MPRConditions conditions;
 
 	@Override
 	public void validate() throws JsonValidationException {
@@ -85,8 +82,8 @@ public class MPRItem implements IMPRObject, IWeightedRandom {
 			}
 		}
 
-		if (this.worldWhitelist != null)
-			this.worldWhitelist.validate();
+		if (this.conditions != null)
+			this.conditions.validate();
 	}
 
 	/**
@@ -94,7 +91,7 @@ public class MPRItem implements IMPRObject, IWeightedRandom {
 	 */
 	@Nullable
 	public MPRItem computeAndGet(LivingEntity entity, Level world) {
-		if (this.worldWhitelist != null && !this.worldWhitelist.isWhitelisted(entity))
+		if (this.conditions != null && !this.conditions.conditionsApply(entity))
 			return null;
 
 		this._weight = (int) this.modifiableWeight.getValue(entity, world);
@@ -108,7 +105,7 @@ public class MPRItem implements IMPRObject, IWeightedRandom {
 
 	@Override
 	public String toString() {
-		return String.format("Item{id: %s, weight: %s, drop_chance: %s, enchantments: %s, attributes: %s, world_whitelist: %s, nbt: %s}", this.id, this.modifiableWeight, this.dropChance, this.enchantments, this.attributes, this.worldWhitelist, this._nbt);
+		return String.format("Item{id: %s, weight: %s, drop_chance: %s, enchantments: %s, attributes: %s, conditions: %s, nbt: %s}", this.id, this.modifiableWeight, this.dropChance, this.enchantments, this.attributes, this.conditions, this._nbt);
 	}
 
 	@Override

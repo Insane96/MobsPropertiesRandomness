@@ -3,7 +3,7 @@ package insane96mcp.mobspropertiesrandomness.data.json.properties.attribute;
 import com.google.gson.annotations.SerializedName;
 import insane96mcp.insanelib.exception.JsonValidationException;
 import insane96mcp.mobspropertiesrandomness.data.json.IMPRObject;
-import insane96mcp.mobspropertiesrandomness.data.json.util.MPRWorldWhitelist;
+import insane96mcp.mobspropertiesrandomness.data.json.properties.condition.MPRConditions;
 import insane96mcp.mobspropertiesrandomness.data.json.util.modifiable.MPRModifiableValue;
 import insane96mcp.mobspropertiesrandomness.data.json.util.modifiable.MPRRange;
 import net.minecraft.world.entity.LivingEntity;
@@ -22,8 +22,7 @@ public abstract class MPRAttribute implements IMPRObject {
 	public MPRRange amount;
 	public Operation operation;
 	public MPRModifiableValue chance;
-	@SerializedName("world_whitelist")
-	public MPRWorldWhitelist worldWhitelist;
+	public MPRConditions conditions;
 
 	@Override
 	public void validate() throws JsonValidationException {
@@ -46,8 +45,8 @@ public abstract class MPRAttribute implements IMPRObject {
 		if (this.chance != null)
 			this.chance.validate();
 
-		if (this.worldWhitelist != null)
-			this.worldWhitelist.validate();
+		if (this.conditions != null)
+			this.conditions.validate();
 	}
 
 	public boolean shouldApply(LivingEntity entity, Level world) {
@@ -57,10 +56,7 @@ public abstract class MPRAttribute implements IMPRObject {
 		if (this.chance != null && world.random.nextFloat() >= this.chance.getValue(entity, world))
 			return false;
 
-		if (worldWhitelist != null && !worldWhitelist.isWhitelisted(entity))
-			return false;
-
-		return true;
+		return this.conditions == null || this.conditions.conditionsApply(entity);
 	}
 
 	protected void fixHealth(LivingEntity entity) {
@@ -74,7 +70,7 @@ public abstract class MPRAttribute implements IMPRObject {
 
 	@Override
 	public String toString() {
-		return String.format("Attribute{uuid: %s, id: %s, modifier_name: %s, amount: %s, operation: %s, world_whitelist: %s}", uuid, id, modifierName, amount, operation, worldWhitelist);
+		return String.format("Attribute{uuid: %s, id: %s, modifier_name: %s, amount: %s, operation: %s, conditions: %s}", this.uuid, this.id, this.modifierName, this.amount, this.operation, this.conditions);
 	}
 
 	public enum Operation {
@@ -90,7 +86,7 @@ public abstract class MPRAttribute implements IMPRObject {
 			return this.operation;
 		}
 
-		private Operation(AttributeModifier.Operation operation) {
+		Operation(AttributeModifier.Operation operation) {
 			this.operation = operation;
 		}
 	}
