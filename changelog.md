@@ -4,6 +4,7 @@
 * Added `moon_phases` to `world` condition
   * A list of [MoonPhases]() which must match for the condition to be met
 * Changed `world_whitelist` to `conditions` in Attributes, Potion Effects and Items.
+* Fixed OnHit object's `potion_effects` begin mandatory
 
 ## 4.4.0
 * Updated to 1.19.4
