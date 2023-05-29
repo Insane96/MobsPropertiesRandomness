@@ -2,7 +2,7 @@
 
 ## 4.4.1
 * Added `moon_phases` to `world` condition
-  * A list of [MoonPhases]() which must match for the condition to be met
+  * A list of [MoonPhases](https://github.com/Insane96/MobsPropertiesRandomness/blob/ddbb215424dfcfe6db969f4e8c908768a1abace5/src/main/java/insane96mcp/mobspropertiesrandomness/data/json/util/MPRWorldWhitelist.java#L103) which must match for the condition to be met
 * Changed `world_whitelist` to `conditions` in Attributes, Potion Effects and Items.
 * Fixed OnHit object's `potion_effects` begin mandatory
 
