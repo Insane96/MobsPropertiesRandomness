@@ -1,6 +1,6 @@
 # Changelog
 
-## Upcoming
+## 4.4.1
 * Added `moon_phases` to `world` condition
   * A list of [MoonPhases]() which must match for the condition to be met
 * Changed `world_whitelist` to `conditions` in Attributes, Potion Effects and Items.
