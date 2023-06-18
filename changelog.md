@@ -1,5 +1,8 @@
 # Changelog
 
+## 4.2.0.1
+* Fixed prefixes and suffixes in custom names not working properly
+
 ## Beta 4.2.0
 * Added `boss_bar` to `presets`
   * When present adds a boss bar to the preset mob. Has a `color`, `type` (decoration), `darken_screen` and `range`

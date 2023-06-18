@@ -7,7 +7,6 @@ import net.minecraft.network.chat.Component;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.level.Level;
 
-import java.awt.*;
 import java.util.List;
 
 public class MPRCustomName implements IMPRObject {
@@ -40,7 +39,7 @@ public class MPRCustomName implements IMPRObject {
 		if (this.overrides != null && this.overrides.size() > 0)
 			component = Component.literal(prefix + this.overrides.get(entity.getRandom().nextInt(this.overrides.size())) + suffix);
 		else
-			component = Component.literal(prefix + entity.getName() + suffix);
+			component = Component.literal(prefix).append(entity.getName()).append(suffix);
 
 		entity.setCustomName(component);
 	}
