@@ -1,6 +1,6 @@
 # Changelog
 
-## 4.2.0.1
+## 4.2.1
 * Fixed prefixes and suffixes in custom names not working properly
 
 ## Beta 4.2.0
