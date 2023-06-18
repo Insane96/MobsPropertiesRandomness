@@ -28,7 +28,7 @@ public class MPRSlot implements IMPRObject {
 
 		if (replaceOnly && !override)
 		{
-			Logger.info("override has been set to true since replace_only is true. " + this);
+			Logger.debug("override has been set to true since replace_only is true. " + this);
 			override = true;
 		}
 

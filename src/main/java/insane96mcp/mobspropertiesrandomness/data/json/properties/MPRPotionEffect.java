@@ -37,7 +37,7 @@ public class MPRPotionEffect implements IMPRObject {
 
 		//Amplifier
 		if (this.amplifier == null) {
-			Logger.info("Missing Amplifier in PotionEffect object. " + this + ". Will default to 0 (I)");
+			Logger.debug("Missing Amplifier in PotionEffect object. " + this + ". Will default to 0 (I)");
 			this.amplifier = new MPRRange(0);
 		}
 		this.amplifier.validate();
@@ -53,7 +53,7 @@ public class MPRPotionEffect implements IMPRObject {
 
 		//ambient and hide particles
 		if (this.ambient && this.hideParticles)
-			Logger.info("Particles are hidden, but ambient is enabled. Ambient doesn't work if particles are hidden. " + this);
+			Logger.debug("Particles are hidden, but ambient is enabled. Ambient doesn't work if particles are hidden. " + this);
 
 		if (this.conditions != null)
 			this.conditions.validate();

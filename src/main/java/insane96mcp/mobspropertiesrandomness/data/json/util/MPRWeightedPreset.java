@@ -43,10 +43,10 @@ public class MPRWeightedPreset implements IMPRObject, IWeightedRandom {
 			}
 		}
 		if (!found)
-			Logger.info("Preset " + this.id + " does not exist");
+			Logger.warn("Preset " + this.id + " does not exist");
 
 		if (this.modifiableWeight == null) {
-			Logger.info("Weight value missing for %s, will default to 1", this);
+			Logger.debug("Weight value missing for %s, will default to 1", this);
 			this.modifiableWeight = new MPRModifiableValue(1f);
 		}
 		this.modifiableWeight.validate();

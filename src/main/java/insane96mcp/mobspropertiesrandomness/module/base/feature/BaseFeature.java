@@ -45,8 +45,8 @@ public class BaseFeature extends Feature {
 	@Label(name = "Better Creeper Lingering", description = "If true creeper lingering clouds size changes based off creeper explosion radius.")
 	public static Boolean betterCreeperLingering = true;
 	@Config
-	@Label(name = "Debug", description = "If true, all the loaded JSONs will be logged in the mobspropertiesrandomness.log file.")
-	public static Boolean debug = false;
+	@Label(name = "Verbose Log")
+	public static Boolean verboseLog = false;
 
 	public BaseFeature(Module module, boolean enabledByDefault, boolean canBeDisabled) {
 		super(module, enabledByDefault, canBeDisabled);

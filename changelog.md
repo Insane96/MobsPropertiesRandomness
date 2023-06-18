@@ -1,5 +1,9 @@
 # Changelog
 
+## 4.4.2
+* Fixed Custom names not working with presets
+* Moved info logs to debug
+
 ## 4.4.1
 * Added `moon_phases` to `world` condition
   * A list of [MoonPhases](https://github.com/Insane96/MobsPropertiesRandomness/blob/ddbb215424dfcfe6db969f4e8c908768a1abace5/src/main/java/insane96mcp/mobspropertiesrandomness/data/json/util/MPRWorldWhitelist.java#L103) which must match for the condition to be met

@@ -42,7 +42,7 @@ public class MPRRange extends MPRModifiable implements IMPRObject {
 			throw new JsonValidationException("Missing min. " + this);
 
 		if (this.max == null) {
-			Logger.info("Missing max for " + this + ". Max will be equal to min.");
+			Logger.debug("Missing max for " + this + ". Max will be equal to min.");
 			this.max = this.min;
 		}
 
