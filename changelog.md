@@ -1,5 +1,8 @@
 # Changelog
 
+## Upcoming
+* Potion effect duration is now actually infinite and not a huge value
+
 ## 4.4.2
 * Fixed Custom names not working with presets
 * Moved info logs to debug

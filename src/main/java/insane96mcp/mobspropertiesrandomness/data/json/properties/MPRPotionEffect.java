@@ -47,7 +47,7 @@ public class MPRPotionEffect implements IMPRObject {
 			this.chance.validate();
 
 		if (this.duration == null)
-			this.duration = new MPRRange(100000000);
+			this.duration = new MPRRange(-1);
 		else
 			this.duration.validate();
 
@@ -71,7 +71,9 @@ public class MPRPotionEffect implements IMPRObject {
 
 		MobEffect effect = ForgeRegistries.MOB_EFFECTS.getValue(new ResourceLocation(this.id));
 		//noinspection ConstantConditions
-		MobEffectInstance effectInstance = new MobEffectInstance(effect, this.duration.getInt(entity, level) * 20, this.amplifier.getInt(entity, level), this.ambient, !this.hideParticles, false);
+		int duration = this.duration.getInt(entity, level);
+		//noinspection DataFlowIssue
+		MobEffectInstance effectInstance = new MobEffectInstance(effect, duration == -1 ? -1 : duration * 20, this.amplifier.getInt(entity, level), this.ambient, !this.hideParticles, false);
 		entity.addEffect(effectInstance);
 	}
 

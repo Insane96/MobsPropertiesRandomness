@@ -97,7 +97,7 @@ public class MPRWorldWhitelist implements IMPRObject {
 
 	@Override
 	public String toString() {
-		return String.format("WorldWhitelist{dimensions: %s, biomes: %s, deepness: %s, moon_phases: %s}", this.dimensions, this.biomes, this.deepness, this.moonPhases);
+		return String.format("WorldWhitelist{dimensions: %s, inverse_dimension_list: %s, biomes: %s, inverse_biome_list: %s, deepness: %s, moon_phases: %s}", this.dimensions, this.inverseDimensionList, this.biomes, this.inverseBiomeList, this.deepness, this.moonPhases);
 	}
 
 	enum MoonPhase {
