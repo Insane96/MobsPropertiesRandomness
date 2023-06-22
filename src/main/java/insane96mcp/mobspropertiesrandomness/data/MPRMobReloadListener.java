@@ -45,6 +45,7 @@ public class MPRMobReloadListener extends SimpleJsonResourceReloadListener {
 				MPRMob mob = GSON.fromJson(entry.getValue(), MPRMob.class);
 				mob.validate();
 				MPR_MOBS.add(mob);
+				Logger.info("Loaded Mob %s", entry.getKey());
 			}
 			catch (JsonValidationException e) {
 				Logger.error("Validation error loading Mob %s: %s", entry.getKey(), e.getMessage());

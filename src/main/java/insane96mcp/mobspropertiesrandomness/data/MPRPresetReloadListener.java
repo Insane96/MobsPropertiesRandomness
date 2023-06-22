@@ -44,6 +44,7 @@ public class MPRPresetReloadListener extends SimpleJsonResourceReloadListener {
 				preset.validate();
 				preset.id = name;
 				MPR_PRESETS.add(preset);
+				Logger.info("Loaded Preset %s", entry.getKey());
 			}
 			catch (JsonValidationException e) {
 				Logger.error("Validation error loading Preset %s: %s", entry.getKey(), e.getMessage());
