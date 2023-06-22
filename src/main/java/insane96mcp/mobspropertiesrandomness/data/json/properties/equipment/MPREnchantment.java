@@ -3,6 +3,7 @@ package insane96mcp.mobspropertiesrandomness.data.json.properties.equipment;
 import com.google.gson.annotations.SerializedName;
 import insane96mcp.insanelib.exception.JsonValidationException;
 import insane96mcp.mobspropertiesrandomness.data.json.IMPRObject;
+import insane96mcp.mobspropertiesrandomness.data.json.properties.condition.MPRConditions;
 import insane96mcp.mobspropertiesrandomness.data.json.util.modifiable.MPRModifiableValue;
 import insane96mcp.mobspropertiesrandomness.data.json.util.modifiable.MPRRange;
 import net.minecraft.resources.ResourceLocation;
@@ -20,7 +21,6 @@ import net.minecraftforge.registries.ForgeRegistries;
 
 import java.util.List;
 import java.util.Map;
-import java.util.Random;
 
 public class MPREnchantment implements IMPRObject {
 
@@ -32,6 +32,8 @@ public class MPREnchantment implements IMPRObject {
 	public boolean allowIncompatible;
 	@SerializedName("with_levels")
 	public MPRRange withLevels;
+
+	public MPRConditions conditions;
 
 	public MPREnchantment() {
 
@@ -56,9 +58,15 @@ public class MPREnchantment implements IMPRObject {
 
 		if (this.withLevels != null)
 			this.withLevels.validate();
+
+		if (this.conditions != null)
+			this.conditions.validate();
 	}
 
 	public void applyToStack(LivingEntity entity, Level level, ItemStack itemStack) {
+		if (this.conditions != null && !this.conditions.conditionsApply(entity))
+			return;
+
 		if (this.chance != null && level.random.nextFloat() >= this.chance.getValue(entity, level))
 			return;
 

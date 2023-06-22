@@ -49,11 +49,8 @@ public abstract class MPRAttribute implements IMPRObject {
 			this.conditions.validate();
 	}
 
-	public boolean shouldApply(LivingEntity entity, Level world) {
-		if (world.isClientSide)
-			return false;
-
-		if (this.chance != null && world.random.nextFloat() >= this.chance.getValue(entity, world))
+	public boolean shouldApply(LivingEntity entity, Level level) {
+		if (this.chance != null && level.random.nextFloat() >= this.chance.getValue(entity, level))
 			return false;
 
 		return this.conditions == null || this.conditions.conditionsApply(entity);
@@ -81,7 +78,7 @@ public abstract class MPRAttribute implements IMPRObject {
 		@SerializedName("multiply_total")
 		MULTIPLY_TOTAL(AttributeModifier.Operation.MULTIPLY_TOTAL);
 
-		AttributeModifier.Operation operation;
+		final AttributeModifier.Operation operation;
 		public AttributeModifier.Operation get() {
 			return this.operation;
 		}
