@@ -1,6 +1,7 @@
 # Changelog
 
 ## Upcoming
+* Renamed `conditions_modifier` to `condition_modifiers`
 * Potion effect duration is now actually infinite and not a huge value
 * Decreased the time it takes for a creeper to not spawn a lingering cloud (60 -> 30 minutes)
 

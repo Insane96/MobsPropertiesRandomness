@@ -20,10 +20,10 @@ public abstract class MPRModifiable implements IMPRObject {
 	public MPRTimeExistedModifier timeExistedModifier;
 
 	//Applied after time existed modifier
-	@SerializedName("conditions_modifier")
+	@SerializedName("condition_modifiers")
 	public List<MPRConditionModifier> conditionModifiers;
 
-	//Rounds the final result to this value
+	//Rounds the final result to this decimal places
 	public Integer round;
 
 	public MPRModifiable(MPRDifficultyModifier difficultyModifier, MPRPosModifier posModifier, MPRTimeExistedModifier timeExistedModifier, List<MPRConditionModifier> conditionModifiers, Integer round) {
@@ -59,6 +59,6 @@ public abstract class MPRModifiable implements IMPRObject {
 
 	@Override
 	public String toString() {
-		return String.format("difficulty_modifier: %s, pos_modifier: %s, time_existed_modifier: %s, conditionModifiers: %s, round: %s", difficultyModifier, posModifier, timeExistedModifier, conditionModifiers, round);
+		return String.format("difficulty_modifier: %s, pos_modifier: %s, time_existed_modifier: %s, conditionModifiers: %s, round: %s", this.difficultyModifier, this.posModifier, this.timeExistedModifier, this.conditionModifiers, this.round);
 	}
 }
