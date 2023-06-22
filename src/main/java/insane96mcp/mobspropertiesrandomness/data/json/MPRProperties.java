@@ -4,9 +4,6 @@ import com.google.gson.annotations.SerializedName;
 import com.mojang.brigadier.exceptions.CommandSyntaxException;
 import insane96mcp.insanelib.exception.JsonValidationException;
 import insane96mcp.insanelib.setup.ILStrings;
-import insane96mcp.mobspropertiesrandomness.data.json.mobspecificproperties.MPRCreeper;
-import insane96mcp.mobspropertiesrandomness.data.json.mobspecificproperties.MPRGhast;
-import insane96mcp.mobspropertiesrandomness.data.json.mobspecificproperties.MPRPhantom;
 import insane96mcp.mobspropertiesrandomness.data.json.properties.MPRCustomName;
 import insane96mcp.mobspropertiesrandomness.data.json.properties.MPRNbt;
 import insane96mcp.mobspropertiesrandomness.data.json.properties.MPRPotionEffect;
@@ -42,10 +39,6 @@ public abstract class MPRProperties implements IMPRObject {
 
 	@SerializedName("custom_name")
 	public MPRCustomName customName;
-
-	public MPRCreeper creeper;
-	public MPRGhast ghast;
-	public MPRPhantom phantom;
 
 	public MPRModifiableValue silent;
 
@@ -97,16 +90,6 @@ public abstract class MPRProperties implements IMPRObject {
 
 		if (this.experienceMultiplier != null)
 			this.experienceMultiplier.validate();
-
-		//Mob specific validations
-		if (this.creeper != null)
-			this.creeper.validate();
-
-		if (this.ghast != null)
-			this.ghast.validate();
-
-		if (this.phantom != null)
-			this.phantom.validate();
 
 		if (this.lootTable != null) {
 			if (this.lootTable.equals(""))
@@ -160,13 +143,6 @@ public abstract class MPRProperties implements IMPRObject {
 
 		if (this.experienceMultiplier != null)
 			livingEntity.getPersistentData().putDouble(ILStrings.Tags.EXPERIENCE_MULTIPLIER, this.experienceMultiplier.getValue(livingEntity, level));
-
-		if (this.creeper != null)
-			this.creeper.apply(livingEntity, level);
-		if (this.ghast != null)
-			this.ghast.apply(livingEntity, level);
-		if (this.phantom != null)
-			this.phantom.apply(livingEntity, level);
 
 		if (this.lootTable != null && livingEntity instanceof Mob) {
 			((Mob) livingEntity).lootTable = new ResourceLocation(this.lootTable);

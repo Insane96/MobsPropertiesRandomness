@@ -4,6 +4,7 @@
 * Reimplemented Game Stages Support
 * Renamed `conditions_modifier` to `condition_modifiers`
 * Enchantment Object now has `conditions`
+* Removed mobs specific properties (`creeper`, `phantom`, `ghast`). Use NBT
 * Potion effect duration is now actually infinite and not a huge value
 * Decreased the time of a potion effect required for a creeper to not spawn a lingering cloud (60 -> 30 minutes)
 

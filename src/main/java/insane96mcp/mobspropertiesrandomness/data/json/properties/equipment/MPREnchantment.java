@@ -121,6 +121,6 @@ public class MPREnchantment implements IMPRObject {
 
 	@Override
 	public String toString() {
-		return String.format("Enchantment{id: %s, random: %s, level: %s, chance: %s, with_levels: %s}", this.id, this.random, this.level, this.chance, this.withLevels);
+		return String.format("Enchantment{id: %s, random: %s, level: %s, chance: %s, with_levels: %s, conditions: %s}", this.id, this.random, this.level, this.chance, this.withLevels, this.conditions);
 	}
 }
