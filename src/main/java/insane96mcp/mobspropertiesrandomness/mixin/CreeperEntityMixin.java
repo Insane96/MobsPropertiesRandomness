@@ -1,6 +1,5 @@
 package insane96mcp.mobspropertiesrandomness.mixin;
 
-import insane96mcp.mobspropertiesrandomness.module.Modules;
 import insane96mcp.mobspropertiesrandomness.module.base.feature.BaseFeature;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.world.effect.MobEffectInstance;
@@ -17,7 +16,7 @@ public abstract class CreeperEntityMixin {
 	//Remove any effect that has duration higher than 1 hour
 	@ModifyVariable(at = @At(value = "STORE"), method = "spawnLingeringCloud", ordinal = 0)
 	private Collection<MobEffectInstance> changeCollection(Collection<MobEffectInstance> collection) {
-		collection.removeIf(mobEffectInstance -> mobEffectInstance.getDuration() > 72000);
+		collection.removeIf(mobEffectInstance -> mobEffectInstance.getDuration() > 36000);
 		return collection;
 	}
 
