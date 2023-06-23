@@ -4,6 +4,8 @@ import insane96mcp.mobspropertiesrandomness.module.base.feature.BaseFeature;
 
 import java.io.*;
 import java.nio.charset.StandardCharsets;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 
 public class Logger {
 	private static File logFile;
@@ -22,7 +24,7 @@ public class Logger {
 
 	public static void log(LogType logType, String message, Object... params) {
 		try {
-			writer.write(String.format("[%s] %s %s", logType, String.format(message, params), System.lineSeparator()));
+			writer.write(String.format("[%s] [%s] %s %s", new SimpleDateFormat("HH:mm:ss").format(new Date()), logType, String.format(message, params), System.lineSeparator()));
 			writer.flush();
 		} catch (IOException e) {
 			throw new RuntimeException(e);
