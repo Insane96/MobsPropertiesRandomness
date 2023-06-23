@@ -3,6 +3,7 @@ package insane96mcp.mobspropertiesrandomness.data.json.properties;
 import com.google.gson.annotations.SerializedName;
 import insane96mcp.insanelib.exception.JsonValidationException;
 import insane96mcp.mobspropertiesrandomness.data.json.IMPRObject;
+import insane96mcp.mobspropertiesrandomness.data.json.properties.condition.MPRConditions;
 import insane96mcp.mobspropertiesrandomness.data.json.util.modifiable.MPRRange;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.world.entity.LivingEntity;
@@ -17,6 +18,8 @@ public class MPRNbt implements IMPRObject {
     @SerializedName("persistent_data")
     public Boolean isPersistentData;
 
+    public MPRConditions conditions;
+
     @Override
     public void validate() throws JsonValidationException {
         if (this.nbtTag == null || this.nbtTag.equals(""))
@@ -30,25 +33,31 @@ public class MPRNbt implements IMPRObject {
 
         if (this.isPersistentData == null)
             this.isPersistentData = false;
+
+        if (this.conditions != null)
+            this.conditions.validate();
     }
 
-    public void apply(LivingEntity livingEntity, Level level) {
+    public void apply(LivingEntity entity, Level level) {
+        if (this.conditions != null && !this.conditions.conditionsApply(entity))
+            return;
+
         CompoundTag nbt = new CompoundTag();
         if (!this.isPersistentData) {
-            livingEntity.addAdditionalSaveData(nbt);
+            entity.addAdditionalSaveData(nbt);
             switch (this.type) {
-                case DOUBLE -> nbt.putDouble(this.nbtTag, this.value.getFloat(livingEntity, level));
-                case INTEGER -> nbt.putInt(this.nbtTag, this.value.getInt(livingEntity, level));
-                case BOOLEAN -> nbt.putBoolean(this.nbtTag, livingEntity.getRandom().nextFloat() < this.value.getFloat(livingEntity, level));
+                case DOUBLE -> nbt.putDouble(this.nbtTag, this.value.getFloat(entity, level));
+                case INTEGER -> nbt.putInt(this.nbtTag, this.value.getInt(entity, level));
+                case BOOLEAN -> nbt.putBoolean(this.nbtTag, entity.getRandom().nextFloat() < this.value.getFloat(entity, level));
             }
-            livingEntity.readAdditionalSaveData(nbt);
+            entity.readAdditionalSaveData(nbt);
         }
         else {
-            nbt = livingEntity.getPersistentData();
+            nbt = entity.getPersistentData();
             switch (this.type) {
-                case DOUBLE -> nbt.putDouble(this.nbtTag, this.value.getFloat(livingEntity, level));
-                case INTEGER -> nbt.putInt(this.nbtTag, this.value.getInt(livingEntity, level));
-                case BOOLEAN -> nbt.putBoolean(this.nbtTag, livingEntity.getRandom().nextFloat() < this.value.getFloat(livingEntity, level));
+                case DOUBLE -> nbt.putDouble(this.nbtTag, this.value.getFloat(entity, level));
+                case INTEGER -> nbt.putInt(this.nbtTag, this.value.getInt(entity, level));
+                case BOOLEAN -> nbt.putBoolean(this.nbtTag, entity.getRandom().nextFloat() < this.value.getFloat(entity, level));
             }
         }
     }
@@ -64,6 +73,6 @@ public class MPRNbt implements IMPRObject {
 
     @Override
     public String toString() {
-        return String.format("Nbt{nbt_tag: %s, type: %s, value: %s}", this.nbtTag, this.type, this.value);
+        return String.format("Nbt{nbt_tag: %s, type: %s, value: %s, conditions: %s}", this.nbtTag, this.type, this.value, this.conditions);
     }
 }
