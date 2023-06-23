@@ -80,8 +80,7 @@ public class MPROnHit extends MPREvent {
 					potionEffect.apply(entity, entity.level);
 				}
 			}
-			this.tryPlaySound(entity);
-			this.tryExecuteFunction(entity);
+			this.tryApply(entity);
 		}
 		else if (this.target == Target.OTHER) {
 			if (this.potionEffects != null) {
@@ -89,8 +88,7 @@ public class MPROnHit extends MPREvent {
 					potionEffect.apply(other, other.level);
 				}
 			}
-			this.tryPlaySound(other);
-			this.tryExecuteFunction(other);
+			this.tryApply(other);
 		}
 	}
 

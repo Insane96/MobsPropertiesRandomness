@@ -3,6 +3,7 @@ package insane96mcp.mobspropertiesrandomness.data.json.properties.events;
 import com.google.gson.annotations.SerializedName;
 import insane96mcp.insanelib.exception.JsonValidationException;
 import insane96mcp.mobspropertiesrandomness.data.json.IMPRObject;
+import insane96mcp.mobspropertiesrandomness.data.json.properties.mods.pehuki.MPRScalePehkui;
 import insane96mcp.mobspropertiesrandomness.data.json.util.modifiable.MPRModifiableValue;
 import net.minecraft.commands.CommandFunction;
 import net.minecraft.resources.ResourceLocation;
@@ -19,8 +20,11 @@ public abstract class MPREvent implements IMPRObject {
     public MPRPlaySound playSound;
 
     @SerializedName("function")
-    public String _function;
+    public String functionId;
     public transient CommandFunction.CacheableFunction function;
+
+    @SerializedName("scale_pehkui")
+    public MPRScalePehkui scalePehkui;
 
     @Override
     public void validate() throws JsonValidationException {
@@ -30,14 +34,22 @@ public abstract class MPREvent implements IMPRObject {
         if (this.playSound != null)
             this.playSound.validate();
 
-        if (this._function != null) {
-            this.function = new CommandFunction.CacheableFunction(new ResourceLocation(this._function));
-        }
+        if (this.functionId != null)
+            this.function = new CommandFunction.CacheableFunction(new ResourceLocation(this.functionId));
+
+        if (this.scalePehkui != null)
+            this.scalePehkui.validate();
     }
 
     @SuppressWarnings("BooleanMethodIsAlwaysInverted")
     public boolean shouldApply(LivingEntity entity) {
         return this.chance == null || entity.getRandom().nextDouble() < this.chance.getValue(entity, entity.level);
+    }
+
+    public void tryApply(LivingEntity entity) {
+        this.tryPlaySound(entity);
+        this.tryExecuteFunction(entity);
+        this.tryApplyPehkuiScale(entity);
     }
 
     public void tryPlaySound(LivingEntity entity) {
@@ -56,8 +68,14 @@ public abstract class MPREvent implements IMPRObject {
                 server.getFunctions().execute(commandFunction, server.getFunctions().getGameLoopSender().withPosition(new Vec3(entity.getX(), entity.getY(), entity.getZ())).withLevel((ServerLevel) entity.level).withEntity(entity)));
     }
 
+    public void tryApplyPehkuiScale(LivingEntity entity) {
+        if (this.scalePehkui == null)
+            return;
+        this.scalePehkui.apply(entity);
+    }
+
     @Override
     public String toString() {
-        return String.format("chance: %s, play_sound: %s, function: %s", this.chance, this.playSound, this._function);
+        return String.format("chance: %s, play_sound: %s, function: %s, scale_pehkui: %s", this.chance, this.playSound, this.functionId, this.scalePehkui);
     }
 }

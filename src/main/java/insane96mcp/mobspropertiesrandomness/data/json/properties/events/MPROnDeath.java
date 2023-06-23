@@ -16,7 +16,7 @@ public class MPROnDeath extends MPREvent {
 	@Override
 	public void validate() throws JsonValidationException {
 		super.validate();
-		if (target == null)
+		if (this.target == null)
 			throw new JsonValidationException("Missing \"target\" for OnDeath object: %s".formatted(this));
 	}
 
@@ -28,12 +28,10 @@ public class MPROnDeath extends MPREvent {
 			return;
 
 		if (this.target == Target.ENTITY) {
-			this.tryPlaySound(entity);
-			this.tryExecuteFunction(entity);
+			this.tryApply(entity);
 		}
 		else if (this.target == Target.OTHER && other != null) {
-			this.tryPlaySound(other);
-			this.tryExecuteFunction(other);
+			this.tryApply(other);
 		}
 	}
 

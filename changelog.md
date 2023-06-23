@@ -3,6 +3,10 @@
 ## Upcoming
 * Conditions object now has `inverted` boolean
   * When true, the conditions are inverted (so if checking if the player has completed an advancement, with `"inverted": true` it checks if the player hasn't completed it)
+* Scale Pehkui object now requires `operation`
+  * Can be "set" (previous behaviour), "add" or "multiply"
+* Abstract Event Object now has `scale_pehkui`
+  * Applies scale changes whenever the event triggers
 * Reimplemented Game Stages Support
 * Renamed `conditions_modifier` to `condition_modifiers`
 * Renamed `advancements_done` to `advancements_unlocked`

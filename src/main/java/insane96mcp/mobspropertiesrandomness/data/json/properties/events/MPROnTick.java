@@ -19,10 +19,9 @@ public class MPROnTick extends MPREvent {
     public void apply(LivingEntity entity) {
         if (!super.shouldApply(entity))
             return;
-        if (entity.tickCount == 0 || entity.tickCount % updateSpeed != 0)
+        if (entity.tickCount == 0 || entity.tickCount % this.updateSpeed != 0)
             return;
-        this.tryPlaySound(entity);
-        this.tryExecuteFunction(entity);
+        this.tryApply(entity);
     }
 
     @Override
