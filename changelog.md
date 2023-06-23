@@ -1,10 +1,10 @@
 # Changelog
 
-## Upcoming
-* Conditions object now has `inverted` boolean
+## 4.5.0
+* "Conditions" object now has `inverted` boolean
   * When true, the conditions are inverted (so if checking if the player has completed an advancement, with `"inverted": true` it checks if the player hasn't completed it)
 * Scale Pehkui object now requires `operation`
-  * Can be "set" (previous behaviour), "add" or "multiply"
+  * Can be "set" (previous behavior), "add" or "multiply"
 * Abstract Event Object now has `scale_pehkui` list
   * Applies scale changes whenever the event triggers
 * Range object now accepts `min` and `max` as Modifiable Values instead of being a Modifiable Object itself
