@@ -26,13 +26,15 @@ public class MPRConditions implements IMPRObject {
 	@SerializedName("world")
 	public MPRWorldWhitelist world;
 
-	@SerializedName("advancements_done")
+	@SerializedName("advancements_unlocked")
 	public List<MPRAdvancement> advancements;
 	@SerializedName("game_stages_unlocked")
 	public List<MPRGameStage> gameStages;
 	//TODO Add MPRNbt condition
 	public String nbt;
 	public transient CompoundTag _nbt;
+
+	public boolean inverted;
 
 	@Override
 	public void validate() throws JsonValidationException {
@@ -118,12 +120,13 @@ public class MPRConditions implements IMPRObject {
 				result = false;
 		}
 
-		return result;
+		if (!this.inverted) return result;
+		else return !result;
 	}
 
 	@Override
 	public String toString() {
-		return String.format("Conditions{is_baby: %s, nbt: %s, spawner_behaviour: %s, structure_behaviour: %s, advancements: %s}", this.isBaby, this.nbt, this.spawnerBehaviour, this.structureBehaviour, this.advancements);
+		return String.format("Conditions{is_baby: %s, nbt: %s, spawner_behaviour: %s, structure_behaviour: %s, advancements_unlocked: %s, game_stages_unlocked: %s, inverted: %s}", this.isBaby, this.nbt, this.spawnerBehaviour, this.structureBehaviour, this.advancements, this.gameStages, this.inverted);
 	}
 
 	public enum SpawnerBehaviour {

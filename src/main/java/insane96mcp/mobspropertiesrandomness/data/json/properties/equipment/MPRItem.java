@@ -25,7 +25,6 @@ public class MPRItem implements IMPRObject, IWeightedRandom {
 	@SerializedName("weight")
 	private MPRModifiableValue modifiableWeight;
 
-	//TODO Make a class for the _weight
 	private transient int _weight;
 
 	@SerializedName("drop_chance")

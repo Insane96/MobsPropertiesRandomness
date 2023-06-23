@@ -1,20 +1,15 @@
 package insane96mcp.mobspropertiesrandomness.data.json;
 
-import com.google.gson.annotations.JsonAdapter;
 import com.google.gson.annotations.SerializedName;
 import insane96mcp.insanelib.exception.JsonValidationException;
 import insane96mcp.insanelib.util.IdTagMatcher;
 import insane96mcp.mobspropertiesrandomness.data.json.properties.MPRPresets;
 import insane96mcp.mobspropertiesrandomness.setup.Strings;
-import insane96mcp.mobspropertiesrandomness.util.Logger;
-import insane96mcp.mobspropertiesrandomness.util.MPRUtils;
 import net.minecraft.nbt.CompoundTag;
-import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.level.Level;
 import net.minecraftforge.event.entity.EntityJoinLevelEvent;
-import net.minecraftforge.registries.ForgeRegistries;
 
 import static insane96mcp.mobspropertiesrandomness.data.MPRMobReloadListener.MPR_MOBS;
 

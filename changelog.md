@@ -1,8 +1,11 @@
 # Changelog
 
 ## Upcoming
+* Conditions object now has `inverted` boolean
+  * When true, the conditions are inverted (so if checking if the player has completed an advancement, with `"inverted": true` it checks if the player hasn't completed it)
 * Reimplemented Game Stages Support
 * Renamed `conditions_modifier` to `condition_modifiers`
+* Renamed `advancements_done` to `advancements_unlocked`
 * Enchantment and NBT Objects now have `conditions`
 * Removed mobs specific properties (`creeper`, `phantom`, `ghast`). Use NBT
 * Potion effect duration is now actually infinite and not a huge value
