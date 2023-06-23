@@ -53,20 +53,20 @@ public class MPRMob extends MPRProperties implements IMPRObject {
 			if (!mprMob.target.matchesEntity(livingEntity))
 				continue;
 			if (mprMob.presets == null)
-				mprMob.apply(livingEntity, level);
+				mprMob.apply(livingEntity);
 			else {
 				switch (mprMob.presets.mode) {
 					case EXCLUSIVE:
-						if (!mprMob.presets.apply(livingEntity, level))
-							mprMob.apply(livingEntity, level);
+						if (!mprMob.presets.apply(livingEntity))
+							mprMob.apply(livingEntity);
 						break;
 					case BEFORE:
-						mprMob.presets.apply(livingEntity, level);
-						mprMob.apply(livingEntity, level);
+						mprMob.presets.apply(livingEntity);
+						mprMob.apply(livingEntity);
 						break;
 					case AFTER:
-						mprMob.apply(livingEntity, level);
-						mprMob.presets.apply(livingEntity, level);
+						mprMob.apply(livingEntity);
+						mprMob.presets.apply(livingEntity);
 						break;
 				}
 			}

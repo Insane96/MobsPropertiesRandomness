@@ -8,7 +8,6 @@ import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.ai.attributes.Attribute;
 import net.minecraft.world.entity.ai.attributes.AttributeInstance;
 import net.minecraft.world.entity.ai.attributes.AttributeModifier;
-import net.minecraft.world.level.Level;
 import net.minecraftforge.registries.ForgeRegistries;
 
 import java.util.UUID;
@@ -19,8 +18,8 @@ public class MPRMobAttribute extends MPRAttribute implements IMPRObject {
 		super.validate();
 	}
 
-	public void apply(LivingEntity entity, Level world) {
-		if (!this.shouldApply(entity, world))
+	public void apply(LivingEntity entity) {
+		if (!this.shouldApply(entity))
 			return;
 
 		Attribute attribute = ForgeRegistries.ATTRIBUTES.getValue(new ResourceLocation(this.id));
@@ -30,7 +29,7 @@ public class MPRMobAttribute extends MPRAttribute implements IMPRObject {
 			return;
 		}
 
-		AttributeModifier modifier = new AttributeModifier(UUID.randomUUID(), this.modifierName, this.amount.getFloat(entity, world), this.operation.get());
+		AttributeModifier modifier = new AttributeModifier(UUID.randomUUID(), this.modifierName, this.amount.getFloatBetween(entity), this.operation.get());
 		attributeInstance.addPermanentModifier(modifier);
 
 		this.fixHealth(entity);

@@ -16,7 +16,6 @@ import net.minecraft.world.item.Items;
 import net.minecraft.world.item.enchantment.Enchantment;
 import net.minecraft.world.item.enchantment.EnchantmentHelper;
 import net.minecraft.world.item.enchantment.EnchantmentInstance;
-import net.minecraft.world.level.Level;
 import net.minecraftforge.registries.ForgeRegistries;
 
 import java.util.List;
@@ -63,15 +62,15 @@ public class MPREnchantment implements IMPRObject {
 			this.conditions.validate();
 	}
 
-	public void applyToStack(LivingEntity entity, Level level, ItemStack itemStack) {
+	public void applyToStack(LivingEntity entity, ItemStack itemStack) {
 		if (this.conditions != null && !this.conditions.conditionsApply(entity))
 			return;
 
-		if (this.chance != null && level.random.nextFloat() >= this.chance.getValue(entity, level))
+		if (this.chance != null && entity.level.random.nextFloat() >= this.chance.getValue(entity))
 			return;
 
 		if (this.withLevels != null) {
-			enchantItem(level.random, itemStack, this.withLevels.getInt(entity, level), false);
+			enchantItem(entity.level.random, itemStack, this.withLevels.getIntBetween(entity), false);
 		}
 		else {
 			Enchantment enchantment;
@@ -86,29 +85,29 @@ public class MPREnchantment implements IMPRObject {
 			}
 			//Then random object
 			else {
-				enchantment = this.random.getEnchantment(level.random, itemStack, this.allowIncompatible);
+				enchantment = this.random.getEnchantment(entity.level.random, itemStack, this.allowIncompatible);
 			}
 			if (enchantment == null)
 				return;
 
-			int minLevel = this.level != null ? (int) this.level.getMin(entity, level) : enchantment.getMinLevel();
-			int maxLevel = this.level != null ? (int) this.level.getMax(entity, level) : enchantment.getMaxLevel();
-			int lvl = Mth.nextInt(level.random, minLevel, maxLevel);
+			int minLevel = this.level != null ? (int) this.level.getMin(entity) : enchantment.getMinLevel();
+			int maxLevel = this.level != null ? (int) this.level.getMax(entity) : enchantment.getMaxLevel();
+			int lvl = Mth.nextInt(entity.level.random, minLevel, maxLevel);
 
 			addEnchantmentToItemStack(itemStack, enchantment, lvl);
 		}
 	}
 
-	private static void addEnchantmentToItemStack(ItemStack itemStack, Enchantment enchantment, int level) {
+	private static void addEnchantmentToItemStack(ItemStack itemStack, Enchantment enchantment, int lvl) {
 		if (itemStack.getItem() == Items.ENCHANTED_BOOK)
-			EnchantedBookItem.addEnchantment(itemStack, new EnchantmentInstance(enchantment, level));
+			EnchantedBookItem.addEnchantment(itemStack, new EnchantmentInstance(enchantment, lvl));
 		else
-			itemStack.enchant(enchantment, level);
+			itemStack.enchant(enchantment, lvl);
 	}
 
-	public static void enchantItem(RandomSource random, ItemStack itemStack, int level, boolean treasure) {
-		level = Mth.clamp(level, 1, 40);
-		List<EnchantmentInstance> list = EnchantmentHelper.selectEnchantment(random, itemStack, level, treasure);
+	public static void enchantItem(RandomSource random, ItemStack itemStack, int lvl, boolean treasure) {
+		lvl = Mth.clamp(lvl, 1, 40);
+		List<EnchantmentInstance> list = EnchantmentHelper.selectEnchantment(random, itemStack, lvl, treasure);
 		boolean isEnchantedBook = itemStack.is(Items.ENCHANTED_BOOK);
 
 		for (EnchantmentInstance enchantmentInstance : list) {

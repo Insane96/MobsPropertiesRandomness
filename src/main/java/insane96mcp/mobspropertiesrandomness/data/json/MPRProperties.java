@@ -18,7 +18,6 @@ import net.minecraft.nbt.TagParser;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.Mob;
-import net.minecraft.world.level.Level;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -121,44 +120,44 @@ public abstract class MPRProperties implements IMPRObject {
 		}
 	}
 
-	public boolean apply(LivingEntity livingEntity, Level level) {
-		if (this.conditions != null && !this.conditions.conditionsApply(livingEntity))
+	public boolean apply(LivingEntity entity) {
+		if (this.conditions != null && !this.conditions.conditionsApply(entity))
 			return false;
 		for (MPRPotionEffect potionEffect : this.potionEffects) {
-			potionEffect.apply(livingEntity, level);
+			potionEffect.apply(entity);
 		}
 		for (MPRMobAttribute attribute : this.attributes) {
-			attribute.apply(livingEntity, level);
+			attribute.apply(entity);
 		}
-		this.equipment.apply(livingEntity, level);
+		this.equipment.apply(entity);
 
 		if (this.events != null)
-			this.events.addToNBT(livingEntity);
+			this.events.addToNBT(entity);
 
 		if (this.customName != null)
-			this.customName.applyCustomName(livingEntity, level);
+			this.customName.applyCustomName(entity);
 
-		if (this.silent != null && level.random.nextDouble() < this.silent.getValue(livingEntity, level))
-			livingEntity.setSilent(true);
+		if (this.silent != null && entity.level.random.nextDouble() < this.silent.getValue(entity))
+			entity.setSilent(true);
 
 		if (this.experienceMultiplier != null)
-			livingEntity.getPersistentData().putDouble(ILStrings.Tags.EXPERIENCE_MULTIPLIER, this.experienceMultiplier.getValue(livingEntity, level));
+			entity.getPersistentData().putDouble(ILStrings.Tags.EXPERIENCE_MULTIPLIER, this.experienceMultiplier.getValue(entity));
 
-		if (this.lootTable != null && livingEntity instanceof Mob) {
-			((Mob) livingEntity).lootTable = new ResourceLocation(this.lootTable);
+		if (this.lootTable != null && entity instanceof Mob) {
+			((Mob) entity).lootTable = new ResourceLocation(this.lootTable);
 		}
 
 		for (MPRNbt mprNbt : this.setNbt) {
-			mprNbt.apply(livingEntity, level);
+			mprNbt.apply(entity);
 		}
 
 		if (this._rawNbt != null) {
-			livingEntity.readAdditionalSaveData(this._rawNbt);
+			entity.readAdditionalSaveData(this._rawNbt);
 		}
 
 		if (this.scalePehkui != null) {
 			for (MPRScalePehkui scalePehkui1 : this.scalePehkui) {
-				scalePehkui1.apply(livingEntity);
+				scalePehkui1.apply(entity);
 			}
 		}
 

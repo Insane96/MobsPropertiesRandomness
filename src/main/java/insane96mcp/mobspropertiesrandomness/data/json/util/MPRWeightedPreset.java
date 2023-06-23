@@ -11,7 +11,6 @@ import insane96mcp.mobspropertiesrandomness.data.json.util.modifiable.MPRModifia
 import insane96mcp.mobspropertiesrandomness.util.Logger;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.LivingEntity;
-import net.minecraft.world.level.Level;
 
 import javax.annotation.Nullable;
 
@@ -62,13 +61,13 @@ public class MPRWeightedPreset implements IMPRObject, IWeightedRandom {
 	 * Returns this MPRWeightedPreset with the weight calculated based off the modifiers, or null if the world whitelist / chance doesn't match
 	 */
 	@Nullable
-	public MPRWeightedPreset computeAndGet(LivingEntity entity, Level level) {
+	public MPRWeightedPreset computeAndGet(LivingEntity entity) {
 		if (this.conditions != null && !this.conditions.conditionsApply(entity))
 			return null;
-		if (this.chance != null && level.random.nextDouble() >= this.chance.getValue(entity, level))
+		if (this.chance != null && entity.level.random.nextDouble() >= this.chance.getValue(entity))
 			return null;
 
-		this._weight = (int) this.modifiableWeight.getValue(entity, level);
+		this._weight = (int) this.modifiableWeight.getValue(entity);
 
 		return this;
 	}

@@ -65,6 +65,6 @@ public class MPRDifficultyModifier extends MPRModifier implements IMPRObject {
 
 	@Override
 	public String toString() {
-		return String.format("DifficultyModifier{operation: %s, easy: %f, normal: %f, hard: %f, affects_max_only: %b}", this.getOperation(), this.easy, this.normal, this.hard, this.doesAffectMaxOnly());
+		return String.format("DifficultyModifier{operation: %s, easy: %f, normal: %f, hard: %f}", this.getOperation(), this.easy, this.normal, this.hard);
 	}
 }

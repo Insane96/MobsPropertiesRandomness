@@ -19,11 +19,12 @@ public class MPRModifiableValue extends MPRModifiable implements IMPRObject {
 	private Float value;
 
 	public MPRModifiableValue(Float value) {
-		this(value, null, null, null, null, null);
+		this(value, null, null, null, null, null, null);
 	}
 
-	public MPRModifiableValue(Float value, @Nullable MPRDifficultyModifier difficultyModifier, @Nullable MPRPosModifier posModifier, @Nullable MPRTimeExistedModifier timeExistedModifier, @Nullable List<MPRConditionModifier> conditionsModifier, @Nullable Integer round) {
-		super(difficultyModifier, posModifier, timeExistedModifier, conditionsModifier, round);
+	//TODO think about a builder
+	public MPRModifiableValue(Float value, @Nullable MPRDifficultyModifier difficultyModifier, @Nullable MPRWorldSpawnDistanceModifier worldSpawnDistanceModifier, @Nullable MPRDepthModifier depthModifier, @Nullable MPRTimeExistedModifier timeExistedModifier, @Nullable List<MPRConditionModifier> conditionsModifier, @Nullable Integer round) {
+		super(difficultyModifier, worldSpawnDistanceModifier, depthModifier, timeExistedModifier, conditionsModifier, round);
 		this.value = value;
 	}
 
@@ -50,7 +51,8 @@ public class MPRModifiableValue extends MPRModifiable implements IMPRObject {
 				return new MPRModifiableValue(json.getAsFloat());
 			return new MPRModifiableValue(context.deserialize(json.getAsJsonObject().get("value"), Float.class),
 					context.deserialize(json.getAsJsonObject().get("difficulty_modifier"), MPRDifficultyModifier.class),
-					context.deserialize(json.getAsJsonObject().get("pos_modifier"), MPRPosModifier.class),
+					context.deserialize(json.getAsJsonObject().get("world_spawn_distance_modifier"), MPRWorldSpawnDistanceModifier.class),
+					context.deserialize(json.getAsJsonObject().get("depth_modifier"), MPRDepthModifier.class),
 					context.deserialize(json.getAsJsonObject().get("time_existed_modifier"), MPRTimeExistedModifier.class),
 					context.deserialize(json.getAsJsonObject().get("conditions_modifier"), new TypeToken<List<MPRConditionModifier>>() {}.getType()),
 					context.deserialize(json.getAsJsonObject().get("round"), Integer.class));

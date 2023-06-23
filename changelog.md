@@ -5,8 +5,10 @@
   * When true, the conditions are inverted (so if checking if the player has completed an advancement, with `"inverted": true` it checks if the player hasn't completed it)
 * Scale Pehkui object now requires `operation`
   * Can be "set" (previous behaviour), "add" or "multiply"
-* Abstract Event Object now has `scale_pehkui`
+* Abstract Event Object now has `scale_pehkui` list
   * Applies scale changes whenever the event triggers
+* Range object now accepts `min` and `max` as Modifiable Values instead of being a Modifiable Object itself
+* Split `pos_modifier` into `world_spawn_distance_modifier` and `depth_modifier`
 * Reimplemented Game Stages Support
 * Renamed `conditions_modifier` to `condition_modifiers`
 * Renamed `advancements_done` to `advancements_unlocked`

@@ -8,7 +8,6 @@ import insane96mcp.mobspropertiesrandomness.setup.Strings;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.bossevents.CustomBossEvent;
 import net.minecraft.world.entity.LivingEntity;
-import net.minecraft.world.level.Level;
 
 public class MPRPreset extends MPRProperties implements IMPRObject {
 	@JsonAdapter(ResourceLocation.Serializer.class)
@@ -23,12 +22,12 @@ public class MPRPreset extends MPRProperties implements IMPRObject {
 	}
 
 	@Override
-	public boolean apply(LivingEntity livingEntity, Level level) {
-		boolean ret = super.apply(livingEntity, level);
+	public boolean apply(LivingEntity entity) {
+		boolean ret = super.apply(entity);
 		if (this.bossBar != null) {
 			//noinspection ConstantConditions
-			CustomBossEvent bossBar = this.bossBar.createBar(this.id.getPath(), livingEntity, livingEntity.getRandom(), livingEntity.getServer());
-			livingEntity.getPersistentData().putString(Strings.Tags.BOSS_BAR_ID, bossBar.getTextId().toString());
+			CustomBossEvent bossBar = this.bossBar.createBar(this.id.getPath(), entity, entity.getRandom(), entity.getServer());
+			entity.getPersistentData().putString(Strings.Tags.BOSS_BAR_ID, bossBar.getTextId().toString());
 		}
 		return ret;
 	}

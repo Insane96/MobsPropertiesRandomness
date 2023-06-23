@@ -4,13 +4,11 @@ import com.google.gson.annotations.SerializedName;
 import insane96mcp.insanelib.exception.JsonValidationException;
 import insane96mcp.mobspropertiesrandomness.data.json.IMPRObject;
 import insane96mcp.mobspropertiesrandomness.data.json.properties.attribute.MPRItemAttribute;
-//import insane96mcp.mobspropertiesrandomness.data.json.properties.mods.tconstruct.MPRTiConModifier;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.Mob;
 import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.level.Level;
 import net.minecraftforge.registries.ForgeRegistries;
 
 public class MPREquipment implements IMPRObject {
@@ -40,19 +38,16 @@ public class MPREquipment implements IMPRObject {
 			offHand.validate();
 	}
 
-	public void apply(LivingEntity entity, Level world) {
-		if (world.isClientSide)
-			return;
-
-		applyEquipmentToSlot(entity, world, this.head, EquipmentSlot.HEAD);
-		applyEquipmentToSlot(entity, world, this.chest, EquipmentSlot.CHEST);
-		applyEquipmentToSlot(entity, world, this.legs, EquipmentSlot.LEGS);
-		applyEquipmentToSlot(entity, world, this.feet, EquipmentSlot.FEET);
-		applyEquipmentToSlot(entity, world, this.mainHand, EquipmentSlot.MAINHAND);
-		applyEquipmentToSlot(entity, world, this.offHand, EquipmentSlot.OFFHAND);
+	public void apply(LivingEntity entity) {
+		applyEquipmentToSlot(entity, this.head, EquipmentSlot.HEAD);
+		applyEquipmentToSlot(entity, this.chest, EquipmentSlot.CHEST);
+		applyEquipmentToSlot(entity, this.legs, EquipmentSlot.LEGS);
+		applyEquipmentToSlot(entity, this.feet, EquipmentSlot.FEET);
+		applyEquipmentToSlot(entity, this.mainHand, EquipmentSlot.MAINHAND);
+		applyEquipmentToSlot(entity, this.offHand, EquipmentSlot.OFFHAND);
 	}
 
-	private void applyEquipmentToSlot(LivingEntity entity, Level level, MPRSlot slot, EquipmentSlot equipmentSlotType) {
+	private void applyEquipmentToSlot(LivingEntity entity, MPRSlot slot, EquipmentSlot equipmentSlotType) {
 		if (slot == null)
 			return;
 
@@ -60,10 +55,10 @@ public class MPREquipment implements IMPRObject {
 			|| (slot.replaceOnly && entity.getItemBySlot(equipmentSlotType).isEmpty()))
 			return;
 
-		if (slot.chance != null && level.random.nextFloat() >= slot.chance.getValue(entity, level))
+		if (slot.chance != null && entity.level.random.nextFloat() >= slot.chance.getValue(entity))
 			return;
 
-		MPRItem choosenItem = slot.getRandomItem(entity, level);
+		MPRItem choosenItem = slot.getRandomItem(entity);
 		if (choosenItem == null)
 			return;
 
@@ -75,7 +70,7 @@ public class MPREquipment implements IMPRObject {
 
 		if (choosenItem.enchantments != null) {
 			for (MPREnchantment enchantment : choosenItem.enchantments) {
-				enchantment.applyToStack(entity, level, itemStack);
+				enchantment.applyToStack(entity, itemStack);
 			}
 		}
 
@@ -91,7 +86,7 @@ public class MPREquipment implements IMPRObject {
 
 		if (choosenItem.attributes != null) {
 			for (MPRItemAttribute itemAttribute : choosenItem.attributes) {
-				itemAttribute.applyToStack(entity, level, itemStack, equipmentSlotType);
+				itemAttribute.applyToStack(entity, itemStack, equipmentSlotType);
 			}
 		}
 
@@ -99,7 +94,7 @@ public class MPREquipment implements IMPRObject {
 
 		//Drop Chance
 		if (choosenItem.dropChance != null && entity instanceof Mob)
-			((Mob) entity).setDropChance(equipmentSlotType, choosenItem.dropChance.getValue(entity, level));
+			((Mob) entity).setDropChance(equipmentSlotType, choosenItem.dropChance.getValue(entity));
 	}
 
 	@Override

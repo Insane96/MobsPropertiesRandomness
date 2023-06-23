@@ -9,7 +9,6 @@ import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.ai.attributes.Attribute;
 import net.minecraft.world.entity.ai.attributes.AttributeModifier;
 import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.level.Level;
 import net.minecraftforge.registries.ForgeRegistries;
 
 public class MPRItemAttribute extends MPRAttribute implements IMPRObject {
@@ -20,12 +19,12 @@ public class MPRItemAttribute extends MPRAttribute implements IMPRObject {
 		super.validate();
 	}
 
-	public void applyToStack(LivingEntity entity, Level world, ItemStack itemStack, EquipmentSlot equipmentSlotType) {
-		if (!this.shouldApply(entity, world))
+	public void applyToStack(LivingEntity entity, ItemStack itemStack, EquipmentSlot equipmentSlotType) {
+		if (!this.shouldApply(entity))
 			return;
 
 		Attribute attribute = ForgeRegistries.ATTRIBUTES.getValue(new ResourceLocation(this.id));
-		AttributeModifier modifier = new AttributeModifier(this.modifierName, this.amount.getFloat(entity, world), this.operation.get());
+		AttributeModifier modifier = new AttributeModifier(this.modifierName, this.amount.getFloatBetween(entity), this.operation.get());
 		EquipmentSlot modifierSlot = this.slot == null ? equipmentSlotType : this.slot;
 		MCUtils.addAttributeModifierToItemStack(itemStack, attribute, modifier, modifierSlot);
 

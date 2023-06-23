@@ -13,7 +13,6 @@ import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.TagParser;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.LivingEntity;
-import net.minecraft.world.level.Level;
 import net.minecraftforge.registries.ForgeRegistries;
 
 import javax.annotation.Nullable;
@@ -89,11 +88,11 @@ public class MPRItem implements IMPRObject, IWeightedRandom {
 	 * Returns this MPRItem with the weight calculated based off the modifiers, or null if the world whitelist doesn't match
 	 */
 	@Nullable
-	public MPRItem computeAndGet(LivingEntity entity, Level world) {
+	public MPRItem computeAndGet(LivingEntity entity) {
 		if (this.conditions != null && !this.conditions.conditionsApply(entity))
 			return null;
 
-		this._weight = (int) this.modifiableWeight.getValue(entity, world);
+		this._weight = (int) this.modifiableWeight.getValue(entity);
 
 		return this;
 	}

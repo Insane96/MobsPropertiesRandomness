@@ -11,7 +11,6 @@ import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.effect.MobEffect;
 import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.entity.LivingEntity;
-import net.minecraft.world.level.Level;
 import net.minecraftforge.registries.ForgeRegistries;
 
 public class MPRPotionEffect implements IMPRObject {
@@ -59,11 +58,8 @@ public class MPRPotionEffect implements IMPRObject {
 			this.conditions.validate();
 	}
 
-	public void apply(LivingEntity entity, Level level) {
-		if (level.isClientSide)
-			return;
-
-		if (this.chance != null && level.random.nextFloat() >= this.chance.getValue(entity, level))
+	public void apply(LivingEntity entity) {
+		if (this.chance != null && entity.level.random.nextFloat() >= this.chance.getValue(entity))
 			return;
 
 		if (this.conditions != null && !this.conditions.conditionsApply(entity))
@@ -71,9 +67,9 @@ public class MPRPotionEffect implements IMPRObject {
 
 		MobEffect effect = ForgeRegistries.MOB_EFFECTS.getValue(new ResourceLocation(this.id));
 		//noinspection ConstantConditions
-		int duration = this.duration.getInt(entity, level);
+		int duration = this.duration.getIntBetween(entity);
 		//noinspection DataFlowIssue
-		MobEffectInstance effectInstance = new MobEffectInstance(effect, duration == -1 ? -1 : duration * 20, this.amplifier.getInt(entity, level), this.ambient, !this.hideParticles, false);
+		MobEffectInstance effectInstance = new MobEffectInstance(effect, duration == -1 ? -1 : duration * 20, this.amplifier.getIntBetween(entity), this.ambient, !this.hideParticles, false);
 		entity.addEffect(effectInstance);
 	}
 

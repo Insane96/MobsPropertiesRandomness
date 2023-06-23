@@ -12,6 +12,8 @@ import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.phys.Vec3;
 
+import java.util.List;
+
 public abstract class MPREvent implements IMPRObject {
 
     public MPRModifiableValue chance;
@@ -24,7 +26,7 @@ public abstract class MPREvent implements IMPRObject {
     public transient CommandFunction.CacheableFunction function;
 
     @SerializedName("scale_pehkui")
-    public MPRScalePehkui scalePehkui;
+    public List<MPRScalePehkui> scalePehkui;
 
     @Override
     public void validate() throws JsonValidationException {
@@ -38,12 +40,16 @@ public abstract class MPREvent implements IMPRObject {
             this.function = new CommandFunction.CacheableFunction(new ResourceLocation(this.functionId));
 
         if (this.scalePehkui != null)
-            this.scalePehkui.validate();
+        {
+            for (MPRScalePehkui scalePehkui1 : this.scalePehkui) {
+                scalePehkui1.validate();
+            }
+        }
     }
 
     @SuppressWarnings("BooleanMethodIsAlwaysInverted")
     public boolean shouldApply(LivingEntity entity) {
-        return this.chance == null || entity.getRandom().nextDouble() < this.chance.getValue(entity, entity.level);
+        return this.chance == null || entity.getRandom().nextDouble() < this.chance.getValue(entity);
     }
 
     public void tryApply(LivingEntity entity) {
@@ -71,7 +77,10 @@ public abstract class MPREvent implements IMPRObject {
     public void tryApplyPehkuiScale(LivingEntity entity) {
         if (this.scalePehkui == null)
             return;
-        this.scalePehkui.apply(entity);
+
+        for (MPRScalePehkui scalePehkui1 : this.scalePehkui) {
+            scalePehkui1.apply(entity);
+        }
     }
 
     @Override

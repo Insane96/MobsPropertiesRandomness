@@ -17,10 +17,10 @@ public abstract class MPRModifiable implements IMPRObject {
 	public MPRWorldSpawnDistanceModifier worldSpawnDistanceModifier;
 
 	//Applied after world spawn distance modifier
-	@SerializedName("pos_modifier")
-	public MPRPosModifier posModifier;
+	@SerializedName("depth_modifier")
+	public MPRDepthModifier depthModifier;
 
-	//Applied after pos modifier
+	//Applied after depth modifier
 	@SerializedName("time_existed_modifier")
 	public MPRTimeExistedModifier timeExistedModifier;
 
@@ -31,9 +31,10 @@ public abstract class MPRModifiable implements IMPRObject {
 	//Rounds the final result to this decimal places
 	public Integer round;
 
-	public MPRModifiable(MPRDifficultyModifier difficultyModifier, MPRPosModifier posModifier, MPRTimeExistedModifier timeExistedModifier, List<MPRConditionModifier> conditionModifiers, Integer round) {
+	public MPRModifiable(MPRDifficultyModifier difficultyModifier, MPRWorldSpawnDistanceModifier worldSpawnDistanceModifier, MPRDepthModifier depthModifier, MPRTimeExistedModifier timeExistedModifier, List<MPRConditionModifier> conditionModifiers, Integer round) {
 		this.difficultyModifier = difficultyModifier;
-		this.posModifier = posModifier;
+		this.worldSpawnDistanceModifier = worldSpawnDistanceModifier;
+		this.depthModifier = depthModifier;
 		this.timeExistedModifier = timeExistedModifier;
 		this.conditionModifiers = conditionModifiers;
 		this.round = round;
@@ -46,8 +47,8 @@ public abstract class MPRModifiable implements IMPRObject {
 		if (this.worldSpawnDistanceModifier != null)
 			this.worldSpawnDistanceModifier.validate();
 
-		if (this.posModifier != null)
-			this.posModifier.validate();
+		if (this.depthModifier != null)
+			this.depthModifier.validate();
 
 		if (this.timeExistedModifier != null)
 			this.timeExistedModifier.validate();
@@ -61,16 +62,16 @@ public abstract class MPRModifiable implements IMPRObject {
 
 	public float applyModifiersAndRound(LivingEntity entity, float value) {
 		if (this.difficultyModifier != null)
-			value = this.difficultyModifier.applyModifier(entity.level.getDifficulty(), value);
+			value = this.difficultyModifier.applyModifier(entity, value);
 
 		if (this.worldSpawnDistanceModifier != null)
 			value = this.worldSpawnDistanceModifier.applyModifier(entity, value);
 
-		if (this.posModifier != null)
-			value = this.posModifier.applyModifier(entity.level, entity.position(), value);
+		if (this.depthModifier != null)
+			value = this.depthModifier.applyModifier(entity, value);
 
 		if (this.timeExistedModifier != null)
-			value = this.timeExistedModifier.applyModifier(entity.level, entity, value);
+			value = this.timeExistedModifier.applyModifier(entity, value);
 
 		if (this.conditionModifiers != null) {
 			for (MPRConditionModifier conditionModifier : this.conditionModifiers) {
@@ -89,6 +90,6 @@ public abstract class MPRModifiable implements IMPRObject {
 
 	@Override
 	public String toString() {
-		return String.format("difficulty_modifier: %s, pos_modifier: %s, time_existed_modifier: %s, conditionModifiers: %s, round: %s", this.difficultyModifier, this.posModifier, this.timeExistedModifier, this.conditionModifiers, this.round);
+		return String.format("difficulty_modifier: %s, world_spawn_distance_modifier: %s, depth_modifier: %s, time_existed_modifier: %s, conditionModifiers: %s, round: %s", this.difficultyModifier, this.worldSpawnDistanceModifier, this.depthModifier, this.timeExistedModifier, this.conditionModifiers, this.round);
 	}
 }

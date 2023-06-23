@@ -77,7 +77,7 @@ public class MPRWorldWhitelist implements IMPRObject {
 	public boolean doesDepthMatch(LivingEntity entity) {
 		if (this.deepness == null)
 			return true;
-		return entity.getY() >= this.deepness.getMin(entity, entity.level) && entity.getY() <= this.deepness.getMax(entity, entity.level);
+		return entity.getY() >= this.deepness.getMin(entity) && entity.getY() <= this.deepness.getMax(entity);
 	}
 
 	public boolean doesMoonPhaseMatch(LivingEntity entity) {

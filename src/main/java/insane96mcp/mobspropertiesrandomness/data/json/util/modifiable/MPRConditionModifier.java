@@ -33,6 +33,6 @@ public class MPRConditionModifier extends MPRModifier implements IMPRObject {
 
 	@Override
 	public String toString() {
-		return String.format("ConditionModifier{condition: %s, operation: %s, amount: %s, affects_max_only: %b}", this.condition, this.getOperation(), this.amount, this.doesAffectMaxOnly());
+		return String.format("ConditionModifier{condition: %s, operation: %s, amount: %s}", this.condition, this.getOperation(), this.amount);
 	}
 }

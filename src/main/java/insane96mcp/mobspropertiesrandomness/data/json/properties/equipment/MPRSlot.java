@@ -7,7 +7,6 @@ import insane96mcp.mobspropertiesrandomness.data.json.IMPRObject;
 import insane96mcp.mobspropertiesrandomness.data.json.util.modifiable.MPRModifiableValue;
 import insane96mcp.mobspropertiesrandomness.util.Logger;
 import net.minecraft.world.entity.LivingEntity;
-import net.minecraft.world.level.Level;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -41,10 +40,10 @@ public class MPRSlot implements IMPRObject {
 		}
 	}
 
-	private List<MPRItem> getItems(LivingEntity entity, Level world){
+	private List<MPRItem> getItems(LivingEntity entity){
 		ArrayList<MPRItem> items = new ArrayList<>();
 		for (MPRItem item : this.items) {
-			MPRItem mprItem = item.computeAndGet(entity, world);
+			MPRItem mprItem = item.computeAndGet(entity);
 			if (mprItem != null)
 				items.add(mprItem);
 		}
@@ -53,15 +52,13 @@ public class MPRSlot implements IMPRObject {
 
 	/**
 	 * Returns a random item from the pool based of weights, dimensions whitelist and biomes whitelist
-	 * @param entity
-	 * @param world
 	 * @return an Item or null if no items were available
 	 */
-	public MPRItem getRandomItem(LivingEntity entity, Level world) {
-		List<MPRItem> items = getItems(entity, world);
+	public MPRItem getRandomItem(LivingEntity entity) {
+		List<MPRItem> items = getItems(entity);
 		if (items.isEmpty())
 			return null;
-		return WeightedRandom.getRandomItem(world.random, items);
+		return WeightedRandom.getRandomItem(entity.level.random, items);
 	}
 
 	@Override

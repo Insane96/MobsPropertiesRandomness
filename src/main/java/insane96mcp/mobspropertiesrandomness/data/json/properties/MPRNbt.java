@@ -7,7 +7,6 @@ import insane96mcp.mobspropertiesrandomness.data.json.properties.condition.MPRCo
 import insane96mcp.mobspropertiesrandomness.data.json.util.modifiable.MPRRange;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.world.entity.LivingEntity;
-import net.minecraft.world.level.Level;
 
 public class MPRNbt implements IMPRObject {
 
@@ -38,7 +37,7 @@ public class MPRNbt implements IMPRObject {
             this.conditions.validate();
     }
 
-    public void apply(LivingEntity entity, Level level) {
+    public void apply(LivingEntity entity) {
         if (this.conditions != null && !this.conditions.conditionsApply(entity))
             return;
 
@@ -46,18 +45,18 @@ public class MPRNbt implements IMPRObject {
         if (!this.isPersistentData) {
             entity.addAdditionalSaveData(nbt);
             switch (this.type) {
-                case DOUBLE -> nbt.putDouble(this.nbtTag, this.value.getFloat(entity, level));
-                case INTEGER -> nbt.putInt(this.nbtTag, this.value.getInt(entity, level));
-                case BOOLEAN -> nbt.putBoolean(this.nbtTag, entity.getRandom().nextFloat() < this.value.getFloat(entity, level));
+                case DOUBLE -> nbt.putDouble(this.nbtTag, this.value.getFloatBetween(entity));
+                case INTEGER -> nbt.putInt(this.nbtTag, this.value.getIntBetween(entity));
+                case BOOLEAN -> nbt.putBoolean(this.nbtTag, entity.getRandom().nextFloat() < this.value.getFloatBetween(entity));
             }
             entity.readAdditionalSaveData(nbt);
         }
         else {
             nbt = entity.getPersistentData();
             switch (this.type) {
-                case DOUBLE -> nbt.putDouble(this.nbtTag, this.value.getFloat(entity, level));
-                case INTEGER -> nbt.putInt(this.nbtTag, this.value.getInt(entity, level));
-                case BOOLEAN -> nbt.putBoolean(this.nbtTag, entity.getRandom().nextFloat() < this.value.getFloat(entity, level));
+                case DOUBLE -> nbt.putDouble(this.nbtTag, this.value.getFloatBetween(entity));
+                case INTEGER -> nbt.putInt(this.nbtTag, this.value.getIntBetween(entity));
+                case BOOLEAN -> nbt.putBoolean(this.nbtTag, entity.getRandom().nextFloat() < this.value.getFloatBetween(entity));
             }
         }
     }

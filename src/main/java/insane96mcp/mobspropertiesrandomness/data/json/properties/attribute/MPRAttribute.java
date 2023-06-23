@@ -10,7 +10,6 @@ import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.ai.attributes.AttributeInstance;
 import net.minecraft.world.entity.ai.attributes.AttributeModifier;
 import net.minecraft.world.entity.ai.attributes.Attributes;
-import net.minecraft.world.level.Level;
 
 import java.util.UUID;
 
@@ -49,8 +48,8 @@ public abstract class MPRAttribute implements IMPRObject {
 			this.conditions.validate();
 	}
 
-	public boolean shouldApply(LivingEntity entity, Level level) {
-		if (this.chance != null && level.random.nextFloat() >= this.chance.getValue(entity, level))
+	public boolean shouldApply(LivingEntity entity) {
+		if (this.chance != null && entity.level.random.nextFloat() >= this.chance.getValue(entity))
 			return false;
 
 		return this.conditions == null || this.conditions.conditionsApply(entity);

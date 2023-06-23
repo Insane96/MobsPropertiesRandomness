@@ -70,13 +70,13 @@ public class MPRScalePehkui implements IMPRObject {
     enum Operation {
         @SerializedName("set")
         SET((scaleData, mprRange, entity) ->
-                scaleData.setScale(mprRange.getFloat(entity, entity.level))),
+                scaleData.setScale(mprRange.getFloatBetween(entity))),
         @SerializedName("add")
         ADD((scaleData, mprRange, entity) ->
-                scaleData.setScale(scaleData.getScale() + mprRange.getFloat(entity, entity.level))),
+                scaleData.setScale(scaleData.getScale() + mprRange.getFloatBetween(entity))),
         @SerializedName("multiply")
         MULTIPLY((scaleData, mprRange, entity) ->
-                scaleData.setScale(scaleData.getScale() * mprRange.getFloat(entity, entity.level)));
+                scaleData.setScale(scaleData.getScale() * mprRange.getFloatBetween(entity)));
 
         final TriConsumer<ScaleData, MPRRange, LivingEntity> apply;
 

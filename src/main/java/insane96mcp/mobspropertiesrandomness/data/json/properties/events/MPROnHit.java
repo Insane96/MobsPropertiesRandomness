@@ -58,14 +58,14 @@ public class MPROnHit extends MPREvent {
 		if (this.damageType != null && ((isDirectDamage && this.damageType == DamageType.INDIRECT) || (!isDirectDamage && this.damageType == DamageType.DIRECT)))
 			return;
 
-		if (event.getAmount() < this.damageAmount.getMin(entity, entity.level) || event.getAmount() > this.damageAmount.getMax(entity, entity.level))
+		if (event.getAmount() < this.damageAmount.getMin(entity) || event.getAmount() > this.damageAmount.getMax(entity))
 			return;
 
 		if (this.damageModifier != null) {
 			if (this.damageModifierOperation == MPRModifier.Operation.ADD)
-				event.setAmount(event.getAmount() + this.damageModifier.getValue(entity, entity.level));
+				event.setAmount(event.getAmount() + this.damageModifier.getValue(entity));
 			else
-				event.setAmount(event.getAmount() * this.damageModifier.getValue(entity, entity.level));
+				event.setAmount(event.getAmount() * this.damageModifier.getValue(entity));
 		}
 
 		if (this.healthLeft != null && attacked) {
@@ -77,7 +77,7 @@ public class MPROnHit extends MPREvent {
 		if (this.target == Target.ENTITY) {
 			if (this.potionEffects != null) {
 				for (MPRPotionEffect potionEffect : this.potionEffects) {
-					potionEffect.apply(entity, entity.level);
+					potionEffect.apply(entity);
 				}
 			}
 			this.tryApply(entity);
@@ -85,7 +85,7 @@ public class MPROnHit extends MPREvent {
 		else if (this.target == Target.OTHER) {
 			if (this.potionEffects != null) {
 				for (MPRPotionEffect potionEffect : this.potionEffects) {
-					potionEffect.apply(other, other.level);
+					potionEffect.apply(other);
 				}
 			}
 			this.tryApply(other);

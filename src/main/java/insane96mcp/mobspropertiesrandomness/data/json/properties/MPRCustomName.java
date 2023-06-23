@@ -5,7 +5,6 @@ import insane96mcp.mobspropertiesrandomness.data.json.IMPRObject;
 import insane96mcp.mobspropertiesrandomness.data.json.util.modifiable.MPRModifiableValue;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.entity.LivingEntity;
-import net.minecraft.world.level.Level;
 
 import java.util.List;
 
@@ -24,8 +23,8 @@ public class MPRCustomName implements IMPRObject {
 			throw new JsonValidationException("No overrides, prefixes or suffixes specified for Custom Name");
 	}
 
-	public void applyCustomName(LivingEntity entity, Level world) {
-		if (this.chance != null && world.random.nextDouble() >= this.chance.getValue(entity, world))
+	public void applyCustomName(LivingEntity entity) {
+		if (this.chance != null && entity.level.random.nextDouble() >= this.chance.getValue(entity))
 			return;
 
 		String prefix = "";
