@@ -3,22 +3,21 @@ package insane96mcp.mobspropertiesrandomness.data.json.util.modifiable;
 import com.google.gson.annotations.SerializedName;
 import insane96mcp.insanelib.exception.JsonValidationException;
 import insane96mcp.mobspropertiesrandomness.data.json.IMPRObject;
+import net.minecraft.world.entity.LivingEntity;
 
 public abstract class MPRModifier implements IMPRObject {
-	@SerializedName("affects_max_only")
-	private Boolean affectsMaxOnly;
-
-	public MPRModifier() {
-		this.affectsMaxOnly = false;
-	}
+	private Operation operation;
 
 	@Override
 	public void validate() throws JsonValidationException {
-
+		if (this.operation == null)
+			throw new JsonValidationException("operation missing from Modifier");
 	}
 
-	public boolean doesAffectMaxOnly() {
-		return this.affectsMaxOnly;
+	public abstract float applyModifier(LivingEntity entity, float value);
+
+	public Operation getOperation() {
+		return this.operation;
 	}
 
 	public enum Operation {

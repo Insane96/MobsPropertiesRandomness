@@ -7,7 +7,6 @@ import insane96mcp.mobspropertiesrandomness.util.Logger;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.stats.Stats;
 import net.minecraft.world.entity.LivingEntity;
-import net.minecraft.world.level.Level;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -26,20 +25,21 @@ public class MPRTimeExistedModifier extends MPRModifier implements IMPRObject {
 
 	@Override
 	public void validate() throws JsonValidationException {
-		if (bonusPercentage == null || bonusPercentage == 0d)
+		if (this.bonusPercentage == null || this.bonusPercentage == 0d)
 			throw new JsonValidationException("Time Existed Modifier is missing bonus_percentage. " + this);
-		if (seconds == null || seconds == 0)
+		if (this.seconds == null || this.seconds == 0)
 			throw new JsonValidationException("Time Existed Modifier is missing seconds. " + this);
 
 		super.validate();
 	}
 
-	public float applyModifier(Level world, LivingEntity entity, float value) {
+	@Override
+	public float applyModifier(LivingEntity entity, float value) {
 		List<ServerPlayer> players = new ArrayList<>();
 		if (this.mode == Mode.NEAREST)
-			players.add((ServerPlayer) world.getNearestPlayer(entity, 128d));
+			players.add((ServerPlayer) entity.level.getNearestPlayer(entity, 128d));
 		else
-			players = world.getEntitiesOfClass(ServerPlayer.class, entity.getBoundingBox().inflate(128d));
+			players = entity.level.getEntitiesOfClass(ServerPlayer.class, entity.getBoundingBox().inflate(128d));
 		if (players.size() == 0) {
 			Logger.warn("No player found when applying Time Existed Modifier.");
 			return value;
@@ -63,7 +63,7 @@ public class MPRTimeExistedModifier extends MPRModifier implements IMPRObject {
 
 	@Override
 	public String toString() {
-		return String.format("TimeExistedModifier{affects_max_only: %b, bonus_percentage: %s, seconds: %s, max_bonus_percentage: %s, mode: %s}", this.doesAffectMaxOnly(), bonusPercentage, seconds, maxBonusPercentage, mode);
+		return String.format("TimeExistedModifier{%s, bonus_percentage: %s, seconds: %s, max_bonus_percentage: %s, mode: %s}", super.toString(), this.bonusPercentage, this.seconds, this.maxBonusPercentage, this.mode);
 	}
 
 	public enum Mode {

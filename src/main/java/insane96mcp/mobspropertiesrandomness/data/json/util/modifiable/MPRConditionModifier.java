@@ -7,15 +7,12 @@ import net.minecraft.world.entity.LivingEntity;
 
 public class MPRConditionModifier extends MPRModifier implements IMPRObject {
 	public MPRConditions condition;
-	public Operation operation;
 	public Float amount;
 
 	@Override
 	public void validate() throws JsonValidationException {
 		if (this.condition == null)
 			throw new JsonValidationException("Missing 'condition' for Condition Modifier. " + this);
-		if (this.operation == null)
-			throw new JsonValidationException("Missing 'operation' for Condition Modifier. " + this);
 		if (this.amount == null)
 			throw new JsonValidationException("Missing 'amount' for Condition Modifier. " + this);
 
@@ -26,7 +23,7 @@ public class MPRConditionModifier extends MPRModifier implements IMPRObject {
 
 	public float applyModifier(LivingEntity livingEntity, float value) {
 		if (this.condition.conditionsApply(livingEntity)) {
-			if (this.operation == Operation.ADD)
+			if (this.getOperation() == Operation.ADD)
 				return value + this.amount;
 			else
 				return value * this.amount;
@@ -36,6 +33,6 @@ public class MPRConditionModifier extends MPRModifier implements IMPRObject {
 
 	@Override
 	public String toString() {
-		return String.format("ConditionModifier{condition: %s, operation: %s, amount: %s, affects_max_only: %b}", this.condition, this.operation, this.amount, this.doesAffectMaxOnly());
+		return String.format("ConditionModifier{condition: %s, operation: %s, amount: %s, affects_max_only: %b}", this.condition, this.getOperation(), this.amount, this.doesAffectMaxOnly());
 	}
 }

@@ -18,51 +18,45 @@ import java.lang.reflect.Type;
 import java.util.List;
 
 @JsonAdapter(MPRRange.Deserializer.class)
-public class MPRRange extends MPRModifiable implements IMPRObject {
-	private Float min;
-	private Float max;
+public class MPRRange implements IMPRObject {
+	private MPRModifiableValue min;
+	private MPRModifiableValue max;
 
-	public MPRRange(Float min, @Nullable Float max, @Nullable MPRDifficultyModifier difficultyModifier, @Nullable MPRPosModifier posModifier, @Nullable MPRTimeExistedModifier timeExistedModifier, @Nullable List<MPRConditionModifier> conditionsModifier, @Nullable Integer round) {
-		super(difficultyModifier, posModifier, timeExistedModifier, conditionsModifier, round);
+	public MPRRange(MPRModifiableValue min, @Nullable MPRModifiableValue max, boolean applyMinModifiersToMax) {
 		this.min = min;
 		if (max != null)
-			this.max = Math.max(min, max);
-	}
-
-	public MPRRange(Float min, @Nullable Float max) {
-		this(min, max, null, null, null, null, null);
-	}
-
-	public MPRRange(float min) {
-		this(min, min);
+			this.max = max;
+		else
+			this.max = this.min;
+		this.applyMinModifiersToMax = applyMinModifiersToMax;
 	}
 
 	public void validate() throws JsonValidationException {
 		if (this.min == null)
 			throw new JsonValidationException("Missing min. " + this);
+		else
+			this.min.validate();
 
 		if (this.max == null) {
 			Logger.debug("Missing max for " + this + ". Max will be equal to min.");
 			this.max = this.min;
 		}
-
-		if (this.max < this.min)
-			throw new JsonValidationException("Min cannot be greater than max. " + this);
-
-		super.validate();
+		else
+			this.max.validate();
 	}
 
-	public float getMin(LivingEntity entity, Level level) {
+	public float getMin(LivingEntity entity) {
+		return this.min.getValue(entity);
 		float min = this.min;
 
 		if (this.difficultyModifier != null && !this.difficultyModifier.doesAffectMaxOnly())
-			min = this.difficultyModifier.applyModifier(level.getDifficulty(), min);
+			min = this.difficultyModifier.applyModifier(entity, min);
 
 		if (this.posModifier != null && !this.posModifier.doesAffectMaxOnly())
-			min = this.posModifier.applyModifier(level, entity.position(), min);
+			min = this.posModifier.applyModifier(entity, min);
 
 		if (this.timeExistedModifier != null && !this.timeExistedModifier.doesAffectMaxOnly())
-			min = this.timeExistedModifier.applyModifier(level, entity, min);
+			min = this.timeExistedModifier.applyModifier(entity, min);
 
 		if (this.conditionModifiers != null) {
 			for (MPRConditionModifier conditionModifier : this.conditionModifiers) {
@@ -132,4 +126,6 @@ public class MPRRange extends MPRModifiable implements IMPRObject {
 					context.deserialize(json.getAsJsonObject().get("round"), Integer.class));
 		}
 	}
+
+
 }

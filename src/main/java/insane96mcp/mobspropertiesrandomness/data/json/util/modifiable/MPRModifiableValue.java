@@ -9,7 +9,6 @@ import com.google.gson.reflect.TypeToken;
 import insane96mcp.insanelib.exception.JsonValidationException;
 import insane96mcp.mobspropertiesrandomness.data.json.IMPRObject;
 import net.minecraft.world.entity.LivingEntity;
-import net.minecraft.world.level.Level;
 
 import javax.annotation.Nullable;
 import java.lang.reflect.Type;
@@ -35,25 +34,8 @@ public class MPRModifiableValue extends MPRModifiable implements IMPRObject {
 		super.validate();
 	}
 
-	public float getValue(LivingEntity entity, Level level) {
-		float value = this.value;
-
-		if (this.difficultyModifier != null)
-			value = this.difficultyModifier.applyModifier(level.getDifficulty(), value);
-
-		if (this.posModifier != null)
-			value = this.posModifier.applyModifier(level, entity.position(), value);
-
-		if (this.timeExistedModifier != null)
-			value = this.timeExistedModifier.applyModifier(level, entity, value);
-
-		if (this.conditionModifiers != null) {
-			for (MPRConditionModifier conditionModifier : this.conditionModifiers) {
-				value = conditionModifier.applyModifier(entity, value);
-			}
-		}
-
-		return this.round(value);
+	public float getValue(LivingEntity entity) {
+		return this.applyModifiersAndRound(entity, this.value);
 	}
 
 	@Override
