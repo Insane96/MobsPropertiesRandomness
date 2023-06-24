@@ -47,10 +47,11 @@ public class MPRScalePehkui implements IMPRObject {
     }
 
     public void apply(LivingEntity entity) {
+        float scale = this.scale.getFloatBetween(entity);
         for (String scaleType : this.scaleTypes) {
             ScaleType type = ScaleRegistries.SCALE_TYPES.get(new ResourceLocation(scaleType));
             ScaleData scaleData = type.getScaleData(entity);
-            this.operation.applyScale(scaleData, this.scale, entity);
+            this.operation.applyScale(scaleData, scale, entity);
         }
     }
 
@@ -69,22 +70,22 @@ public class MPRScalePehkui implements IMPRObject {
 
     enum Operation {
         @SerializedName("set")
-        SET((scaleData, mprRange, entity) ->
-                scaleData.setScale(mprRange.getFloatBetween(entity))),
+        SET((scaleData, scale, entity) ->
+                scaleData.setScale(scale)),
         @SerializedName("add")
-        ADD((scaleData, mprRange, entity) ->
-                scaleData.setScale(scaleData.getScale() + mprRange.getFloatBetween(entity))),
+        ADD((scaleData, scale, entity) ->
+                scaleData.setScale(scaleData.getScale() + scale)),
         @SerializedName("multiply")
-        MULTIPLY((scaleData, mprRange, entity) ->
-                scaleData.setScale(scaleData.getScale() * mprRange.getFloatBetween(entity)));
+        MULTIPLY((scaleData, scale, entity) ->
+                scaleData.setScale(scaleData.getScale() * scale));
 
-        final TriConsumer<ScaleData, MPRRange, LivingEntity> apply;
+        final TriConsumer<ScaleData, Float, LivingEntity> apply;
 
-        Operation(TriConsumer<ScaleData, MPRRange, LivingEntity> apply) {
+        Operation(TriConsumer<ScaleData, Float, LivingEntity> apply) {
             this.apply = apply;
         }
 
-        public void applyScale(ScaleData scaleData, MPRRange mprRange, LivingEntity entity) {
+        public void applyScale(ScaleData scaleData, Float mprRange, LivingEntity entity) {
             this.apply.accept(scaleData, mprRange, entity);
         }
     }

@@ -1,5 +1,8 @@
 # Changelog
 
+## 4.5.1
+* Fixed scaling begin separated with multiple scale types
+
 ## 4.5.0
 * "Conditions" object now has `inverted` boolean
   * When true, the conditions are inverted (so if checking if the player has completed an advancement, with `"inverted": true` it checks if the player hasn't completed it)
