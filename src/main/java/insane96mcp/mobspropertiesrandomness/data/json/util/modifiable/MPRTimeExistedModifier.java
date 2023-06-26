@@ -12,8 +12,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class MPRTimeExistedModifier extends MPRModifier implements IMPRObject {
-	@SerializedName("bonus_percentage")
-	public Double bonusPercentage;
+	@SerializedName("bonus_per_seconds")
+	public Double bonusPerSeconds;
 	public Integer seconds;
 	@SerializedName("max_bonus_percentage")
 	public Double maxBonusPercentage;
@@ -25,8 +25,8 @@ public class MPRTimeExistedModifier extends MPRModifier implements IMPRObject {
 
 	@Override
 	public void validate() throws JsonValidationException {
-		if (this.bonusPercentage == null || this.bonusPercentage == 0d)
-			throw new JsonValidationException("Time Existed Modifier is missing bonus_percentage. " + this);
+		if (this.bonusPerSeconds == null || this.bonusPerSeconds == 0d)
+			throw new JsonValidationException("Time Existed Modifier is missing bonus_per_seconds. " + this);
 		if (this.seconds == null || this.seconds == 0)
 			throw new JsonValidationException("Time Existed Modifier is missing seconds. " + this);
 
@@ -44,26 +44,29 @@ public class MPRTimeExistedModifier extends MPRModifier implements IMPRObject {
 			Logger.warn("No player found when applying Time Existed Modifier.");
 			return value;
 		}
-		double bonus = 0d;
+		double modifier = 0d;
 		for (ServerPlayer player : players) {
 			int ticksPlayed = player.getStats().getValue(Stats.CUSTOM.get(Stats.PLAY_TIME));
-			bonus += ((ticksPlayed / 20d) / seconds) * bonusPercentage;
+			modifier += ((ticksPlayed / 20d) / this.seconds) * this.bonusPerSeconds;
 		}
 
 		if (this.mode == Mode.AVERAGE)
-			bonus /= players.size();
+			modifier /= players.size();
 
 		if (this.maxBonusPercentage != null)
-			bonus = Math.min(bonus, this.maxBonusPercentage);
+			modifier = Math.min(modifier, this.maxBonusPercentage);
 
-		value += bonus * value;
+		if (this.getOperation() == Operation.MULTIPLY)
+			value += (modifier * value);
+		else
+			value += modifier;
 
 		return value;
 	}
 
 	@Override
 	public String toString() {
-		return String.format("TimeExistedModifier{%s, bonus_percentage: %s, seconds: %s, max_bonus_percentage: %s, mode: %s}", super.toString(), this.bonusPercentage, this.seconds, this.maxBonusPercentage, this.mode);
+		return String.format("TimeExistedModifier{%s, bonus_per_seconds: %s, seconds: %s, max_bonus_percentage: %s, mode: %s}", super.toString(), this.bonusPerSeconds, this.seconds, this.maxBonusPercentage, this.mode);
 	}
 
 	public enum Mode {

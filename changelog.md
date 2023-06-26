@@ -1,5 +1,9 @@
 # Changelog
 
+## Upcoming
+* Fixed `time_existed_modifier` not taking into account `operation`
+  * Also renamed `bonus_percentage` to `bonus_per_seconds`
+
 ## 4.5.1
 * Fixed scaling begin separated with multiple scale types
 
