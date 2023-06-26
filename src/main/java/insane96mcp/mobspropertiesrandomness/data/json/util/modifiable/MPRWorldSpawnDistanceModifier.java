@@ -12,7 +12,7 @@ public class MPRWorldSpawnDistanceModifier extends MPRModifier implements IMPROb
 	 Each 'step' blocks from spawn will increase the value to modify by 'amount_per_step'.
 	 If operation is "multiply" the result is treated as a percentage increase, the formula is 'value * (1 + ((distance + shift) / step) * amount_per_step)'.
 	 Else if the operation is "add" the result is added to the value, the formula is 'value + (((distance + shift) / step) * amount_per_step)'
-	 E.g. A mob with 50% chance (0.5) to spawn with a potion effect, with this modifier set as step = 100, bonus = 0.02 and operation = "multiply" when it spawns 150 blocks from world spawn it will have the value modified as 'chance * (1 + ((distance + shift) / step) * amount_per_step)' = '0.5 * (1 + ((150 + 0) / 100))' = '0.5 * 1.5' (an increase of 50%) = '0.75 (75% chance)'
+	 E.g. A mob with 50% chance (0.5) to spawn with a potion effect, with this modifier set as step = 100, amount_per_step = 0.02 and operation = "multiply" when it spawns 150 blocks from world spawn it will have the value modified as 'chance * (1 + ((distance + shift) / step) * amount_per_step)' = '0.5 * (1 + ((150 + 0) / 100))' = '0.5 * 1.5' (an increase of 50%) = '0.75 (75% chance)'
 	 */
 	@SerializedName("amount_per_step")
 	public MPRModifiableValue amountPerStep;

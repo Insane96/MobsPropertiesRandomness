@@ -36,6 +36,7 @@ public class MPRPresetReloadListener extends SimpleJsonResourceReloadListener {
 		for (var entry : map.entrySet()) {
 			try {
 				ResourceLocation name = entry.getKey();
+				Logger.info("Loading Preset %s", entry.getKey());
 				String[] split = name.getPath().split("/");
 				if (split[split.length - 1].startsWith("_"))
 					continue;

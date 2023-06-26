@@ -3,13 +3,14 @@
 ## Upcoming
 * Fixed `time_existed_modifier` not taking into account `operation`
   * Also renamed `bonus_percentage` to `bonus_per_seconds`
+* Depth Modifiers' `starting_y` no longer has a default value and it's mandatory
 
 ## 4.5.1
-* Fixed scaling begin separated with multiple scale types
+* Fixed scaling being separated with multiple scale types
 
 ## 4.5.0
 * "Conditions" object now has `inverted` boolean
-  * When true, the conditions are inverted (so if checking if the player has completed an advancement, with `"inverted": true` it checks if the player hasn't completed it)
+  * When true, the conditions are inverted (so by checking if the player has completed an advancement, with `"inverted": true` it checks if the player hasn't completed it)
 * Scale Pehkui object now requires `operation`
   * Can be "set" (previous behavior), "add" or "multiply"
 * Abstract Event Object now has `scale_pehkui` list

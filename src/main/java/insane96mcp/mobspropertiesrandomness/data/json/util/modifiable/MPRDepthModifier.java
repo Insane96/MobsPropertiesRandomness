@@ -17,14 +17,14 @@ public class MPRDepthModifier extends MPRModifier implements IMPRObject {
 	@SerializedName("starting_y")
 	public Float startingY;
 
-	public MPRDepthModifier() {
-		this.startingY = 64f;
-	}
-
 	@Override
 	public void validate() throws JsonValidationException {
-		if (this.amountPerStep == null || this.step == null)
-			throw new JsonValidationException("depth_bonus and depth_step are required for each other. " + this);
+		if (this.amountPerStep == null)
+			throw new JsonValidationException("amount_per_step is required for Depth Modifier");
+		else if (this.step == null)
+			throw new JsonValidationException("step is required for Depth Modifier");
+		if (this.startingY == null)
+			throw new JsonValidationException("starting_y is required for Depth Modifier");
 
 		super.validate();
 	}
@@ -39,6 +39,6 @@ public class MPRDepthModifier extends MPRModifier implements IMPRObject {
 
 	@Override
 	public String toString() {
-		return String.format("PosModifier{amount_per_step: %s, step: %s, starting_y: %s}", this.amountPerStep, this.step, this.startingY);
+		return String.format("DepthModifier{%s, amount_per_step: %s, step: %s, starting_y: %s}", super.toString(), this.amountPerStep, this.step, this.startingY);
 	}
 }
