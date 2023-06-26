@@ -37,7 +37,7 @@ public class MPRPotionEffect implements IMPRObject {
 		//Amplifier
 		if (this.amplifier == null) {
 			Logger.debug("Missing Amplifier in PotionEffect object. " + this + ". Will default to 0 (I)");
-			this.amplifier = new MPRRange(0);
+			this.amplifier = new MPRRange(0f);
 		}
 		this.amplifier.validate();
 
@@ -46,7 +46,7 @@ public class MPRPotionEffect implements IMPRObject {
 			this.chance.validate();
 
 		if (this.duration == null)
-			this.duration = new MPRRange(-1);
+			this.duration = new MPRRange(-1f);
 		else
 			this.duration.validate();
 

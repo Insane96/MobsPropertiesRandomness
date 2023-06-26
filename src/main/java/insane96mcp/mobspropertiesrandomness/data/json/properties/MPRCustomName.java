@@ -17,8 +17,8 @@ public class MPRCustomName implements IMPRObject {
 
 	@Override
 	public void validate() throws JsonValidationException {
-		if (chance != null)
-			chance.validate();
+		if (this.chance != null)
+			this.chance.validate();
 		if ((this.overrides == null || this.overrides.size() == 0) && (this.prefixes == null || this.prefixes.size() == 0) && (this.suffixes == null || this.suffixes.size() == 0))
 			throw new JsonValidationException("No overrides, prefixes or suffixes specified for Custom Name");
 	}

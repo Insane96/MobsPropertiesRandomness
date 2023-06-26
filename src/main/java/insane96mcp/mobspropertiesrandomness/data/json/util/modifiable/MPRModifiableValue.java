@@ -16,7 +16,7 @@ import java.util.List;
 
 @JsonAdapter(MPRModifiableValue.Deserializer.class)
 public class MPRModifiableValue extends MPRModifiable implements IMPRObject {
-	private Float value;
+	protected Float value;
 
 	public MPRModifiableValue(Float value) {
 		this(value, null, null, null, null, null, null);

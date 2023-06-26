@@ -60,7 +60,7 @@ public abstract class MPRModifiable implements IMPRObject {
 		}
 	}
 
-	public float applyModifiersAndRound(LivingEntity entity, float value) {
+	public float applyModifiers(LivingEntity entity, float value) {
 		if (this.difficultyModifier != null)
 			value = this.difficultyModifier.applyModifier(entity, value);
 
@@ -79,7 +79,11 @@ public abstract class MPRModifiable implements IMPRObject {
 			}
 		}
 
-		return this.round(value);
+		return value;
+	}
+
+	public float applyModifiersAndRound(LivingEntity entity, float value) {
+		return this.round(this.applyModifiers(entity, value));
 	}
 
 	public float round(float value) {

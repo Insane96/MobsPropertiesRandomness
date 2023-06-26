@@ -1,9 +1,11 @@
 # Changelog
 
 ## Upcoming
+* Range Object now inherits from Modifiable Value and has a new field
+  * `modifiers_behaviour`: can be "both" (default), "min_only", "max_only".
+* Depth Modifiers' `starting_y` no longer has a default value and it's mandatory
 * Fixed `time_existed_modifier` not taking into account `operation`
   * Also renamed `bonus_percentage` to `bonus_per_seconds`
-* Depth Modifiers' `starting_y` no longer has a default value and it's mandatory
 
 ## 4.5.1
 * Fixed scaling being separated with multiple scale types
