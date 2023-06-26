@@ -51,8 +51,10 @@ public class MPRRange extends MPRModifiableValue implements IMPRObject {
 		if (this.max < this.value)
 			throw new JsonValidationException("min cannot be greater than max in Range Object");
 
-		if (this.modifiersBehaviour == null)
+		if (this.modifiersBehaviour == null) {
 			Logger.debug("Missing modifiers_behaviour for Range Object. modifiers_behaviour will be equal to 'both'");
+			this.modifiersBehaviour = ModifiersBehaviour.BOTH;
+		}
 
 		super.validate();
 	}
