@@ -2,7 +2,6 @@ package insane96mcp.mobspropertiesrandomness;
 
 import insane96mcp.mobspropertiesrandomness.data.MPRMobReloadListener;
 import insane96mcp.mobspropertiesrandomness.data.MPRPresetReloadListener;
-import insane96mcp.mobspropertiesrandomness.network.NetworkHandler;
 import insane96mcp.mobspropertiesrandomness.setup.Config;
 import insane96mcp.mobspropertiesrandomness.util.Logger;
 import net.minecraftforge.common.MinecraftForge;
@@ -35,6 +34,5 @@ public class MobsPropertiesRandomness
     public void preInit(FMLCommonSetupEvent event) {
         Logger.init("logs/MobsPropertiesRandomness.log");
         Logger.debug("Initialized!");
-        NetworkHandler.init();
     }
 }

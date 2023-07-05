@@ -6,6 +6,7 @@
 * Depth Modifiers' `starting_y` no longer has a default value and it's mandatory
 * Fixed `time_existed_modifier` not taking into account `operation`
   * Also renamed `bonus_percentage` to `bonus_per_seconds`
+* Fixed the mod not working server side only
 
 ## 4.5.1
 * Fixed scaling being separated with multiple scale types
