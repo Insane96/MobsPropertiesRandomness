@@ -23,20 +23,23 @@ public class MPRRange extends MPRModifiableValue implements IMPRObject {
 	@SerializedName("modifiers_behaviour")
 	private ModifiersBehaviour modifiersBehaviour;
 
-	public MPRRange(Float min, @Nullable Float max, @Nullable MPRDifficultyModifier difficultyModifier, @Nullable MPRWorldSpawnDistanceModifier worldSpawnDistanceModifier, @Nullable MPRDepthModifier depthModifier, @Nullable MPRTimeExistedModifier timeExistedModifier, @Nullable List<MPRConditionModifier> conditionsModifier, @Nullable Integer round) {
+	public MPRRange(Float min, @Nullable Float max, @Nullable ModifiersBehaviour modifiersBehaviour, @Nullable MPRDifficultyModifier difficultyModifier, @Nullable MPRWorldSpawnDistanceModifier worldSpawnDistanceModifier, @Nullable MPRDepthModifier depthModifier, @Nullable MPRTimeExistedModifier timeExistedModifier, @Nullable List<MPRConditionModifier> conditionsModifier, @Nullable Integer round) {
 		super(min, difficultyModifier, worldSpawnDistanceModifier, depthModifier, timeExistedModifier, conditionsModifier, round);
 		if (max != null)
 			this.max = max;
 		else
 			this.max = min;
+		this.modifiersBehaviour = modifiersBehaviour;
+		if (this.modifiersBehaviour == null)
+			this.modifiersBehaviour = ModifiersBehaviour.BOTH;
 	}
 
 	public MPRRange(Float min, Float max) {
-		this(min, max, null, null, null, null, null, null);
+		this(min, max, null, null, null, null, null, null, null);
 	}
 
 	public MPRRange(Float min) {
-		super(min);
+		this(min, null, null, null, null, null, null, null, null);
 	}
 
 	public void validate() throws JsonValidationException {
@@ -105,6 +108,7 @@ public class MPRRange extends MPRModifiableValue implements IMPRObject {
 				min = context.deserialize(json.getAsJsonObject().get("value"), Float.class);
 			return new MPRRange(min,
 					context.deserialize(json.getAsJsonObject().get("max"), Float.class),
+					context.deserialize(json.getAsJsonObject().get("modifiers_behaviour"), ModifiersBehaviour.class),
 					context.deserialize(json.getAsJsonObject().get("difficulty_modifier"), MPRDifficultyModifier.class),
 					context.deserialize(json.getAsJsonObject().get("world_spawn_distance_modifier"), MPRWorldSpawnDistanceModifier.class),
 					context.deserialize(json.getAsJsonObject().get("depth_modifier"), MPRDepthModifier.class),
