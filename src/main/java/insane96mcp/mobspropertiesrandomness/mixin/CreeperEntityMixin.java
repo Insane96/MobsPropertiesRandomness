@@ -16,7 +16,7 @@ public abstract class CreeperEntityMixin {
 	//Remove any effect that has duration higher than 1 hour
 	@ModifyVariable(at = @At(value = "STORE"), method = "spawnLingeringCloud", ordinal = 0)
 	private Collection<MobEffectInstance> changeCollection(Collection<MobEffectInstance> collection) {
-		collection.removeIf(mobEffectInstance -> mobEffectInstance.getDuration() > 36000);
+		collection.removeIf(mobEffectInstance -> mobEffectInstance.getDuration() > 36000 || mobEffectInstance.isInfiniteDuration());
 		return collection;
 	}
 
