@@ -56,7 +56,7 @@ public class MPRWorldWhitelist implements IMPRObject {
 		if (this.dimensions.isEmpty())
 			return true;
 		for (ResourceKey<Level> dimension : this.dimensionsResourceKeys) {
-			if (entity.level.dimension().equals(dimension)) {
+			if (entity.level().dimension().equals(dimension)) {
 				return !this.inverseDimensionList;
 			}
 		}
@@ -67,7 +67,7 @@ public class MPRWorldWhitelist implements IMPRObject {
 		if (this.biomes.isEmpty())
 			return true;
 		for (IdTagMatcher dimension : this.biomes) {
-			if (dimension.matchesBiome(entity.level.getBiome(entity.blockPosition()))) {
+			if (dimension.matchesBiome(entity.level().getBiome(entity.blockPosition()))) {
 				return !this.inverseBiomeList;
 			}
 		}
@@ -83,7 +83,7 @@ public class MPRWorldWhitelist implements IMPRObject {
 	public boolean doesMoonPhaseMatch(LivingEntity entity) {
 		boolean moonPhaseMatches = false;
 		for (MoonPhase moonPhase : this.moonPhases) {
-			if (moonPhase == MoonPhase.of(entity.level.getMoonPhase())) {
+			if (moonPhase == MoonPhase.of(entity.level().getMoonPhase())) {
 				moonPhaseMatches = true;
 				break;
 			}

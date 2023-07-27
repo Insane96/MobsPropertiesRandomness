@@ -59,7 +59,7 @@ public class MPRPotionEffect implements IMPRObject {
 	}
 
 	public void apply(LivingEntity entity) {
-		if (this.chance != null && entity.level.random.nextFloat() >= this.chance.getValue(entity))
+		if (this.chance != null && entity.level().random.nextFloat() >= this.chance.getValue(entity))
 			return;
 
 		if (this.conditions != null && !this.conditions.conditionsApply(entity))

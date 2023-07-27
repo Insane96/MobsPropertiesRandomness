@@ -83,14 +83,14 @@ public class MPRRange extends MPRModifiableValue implements IMPRObject {
 	 * Returns a random float value between min and max
 	 */
 	public float getFloatBetween(LivingEntity entity) {
-		return Mth.nextFloat(entity.level.random, this.applyModifiers(entity, this.value), this.applyModifiers(entity, this.max));
+		return Mth.nextFloat(entity.level().random, this.applyModifiers(entity, this.value), this.applyModifiers(entity, this.max));
 	}
 
 	/**
 	 * Returns a random int value between min and max
 	 */
 	public int getIntBetween(LivingEntity entity) {
-		return Mth.nextInt(entity.level.random, (int) this.getMin(entity), (int) this.getMax(entity));
+		return Mth.nextInt(entity.level().random, (int) this.getMin(entity), (int) this.getMax(entity));
 	}
 
 	@Override

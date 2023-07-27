@@ -137,7 +137,7 @@ public abstract class MPRProperties implements IMPRObject {
 		if (this.customName != null)
 			this.customName.applyCustomName(entity);
 
-		if (this.silent != null && entity.level.random.nextDouble() < this.silent.getValue(entity))
+		if (this.silent != null && entity.level().random.nextDouble() < this.silent.getValue(entity))
 			entity.setSilent(true);
 
 		if (this.experienceMultiplier != null)

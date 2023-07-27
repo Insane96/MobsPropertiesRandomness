@@ -38,9 +38,9 @@ public class MPRAdvancement implements IMPRObject {
 	public boolean conditionApplies(LivingEntity livingEntity) {
 		List<ServerPlayer> players = new ArrayList<>();
 		if (this.playerMode == PlayerMode.NEAREST)
-			players.add((ServerPlayer) livingEntity.level.getNearestPlayer(livingEntity, 128d));
+			players.add((ServerPlayer) livingEntity.level().getNearestPlayer(livingEntity, 128d));
 		else
-			players = livingEntity.level.getEntitiesOfClass(ServerPlayer.class, livingEntity.getBoundingBox().inflate(128d));
+			players = livingEntity.level().getEntitiesOfClass(ServerPlayer.class, livingEntity.getBoundingBox().inflate(128d));
 
 		for (ServerPlayer player : players) {
 			boolean allAdvancementDone = true;

@@ -1,5 +1,8 @@
 # Changelog
 
+## 4.6.0
+* Updated to MC 1.20.1
+
 ## 4.5.2
 * Range Object now inherits from Modifiable Value and has a new field
   * `modifiers_behaviour`: can be "both" (default), "min_only", "max_only".

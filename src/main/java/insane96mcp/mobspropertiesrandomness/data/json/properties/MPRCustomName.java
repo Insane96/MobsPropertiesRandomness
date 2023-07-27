@@ -24,7 +24,7 @@ public class MPRCustomName implements IMPRObject {
 	}
 
 	public void applyCustomName(LivingEntity entity) {
-		if (this.chance != null && entity.level.random.nextDouble() >= this.chance.getValue(entity))
+		if (this.chance != null && entity.level().random.nextDouble() >= this.chance.getValue(entity))
 			return;
 
 		String prefix = "";

@@ -49,7 +49,7 @@ public abstract class MPRAttribute implements IMPRObject {
 	}
 
 	public boolean shouldApply(LivingEntity entity) {
-		if (this.chance != null && entity.level.random.nextFloat() >= this.chance.getValue(entity))
+		if (this.chance != null && entity.level().random.nextFloat() >= this.chance.getValue(entity))
 			return false;
 
 		return this.conditions == null || this.conditions.conditionsApply(entity);

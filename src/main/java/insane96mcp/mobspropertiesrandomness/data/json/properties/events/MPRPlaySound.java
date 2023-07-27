@@ -65,7 +65,7 @@ public class MPRPlaySound implements IMPRObject {
     }
 
     public void playSound(LivingEntity livingEntity) {
-        livingEntity.level.playSound(null, livingEntity.getX(), livingEntity.getY(), livingEntity.getZ(), this.cachedSound, livingEntity.getSoundSource(), this.volume, this.pitch);
+        livingEntity.level().playSound(null, livingEntity.getX(), livingEntity.getY(), livingEntity.getZ(), this.cachedSound, livingEntity.getSoundSource(), this.volume, this.pitch);
     }
 
     @Override

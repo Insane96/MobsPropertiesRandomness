@@ -37,7 +37,7 @@ public class MPRDifficultyModifier extends MPRModifier implements IMPRObject {
 
 	@Override
 	public float applyModifier(LivingEntity entity, float value) {
-		Difficulty worldDifficulty = entity.level.getDifficulty();
+		Difficulty worldDifficulty = entity.level().getDifficulty();
 		switch (worldDifficulty) {
 			case EASY -> {
 				if (this.getOperation() == Operation.ADD)

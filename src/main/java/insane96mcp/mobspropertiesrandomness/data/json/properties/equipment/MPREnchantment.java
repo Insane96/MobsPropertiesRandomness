@@ -66,11 +66,11 @@ public class MPREnchantment implements IMPRObject {
 		if (this.conditions != null && !this.conditions.conditionsApply(entity))
 			return;
 
-		if (this.chance != null && entity.level.random.nextFloat() >= this.chance.getValue(entity))
+		if (this.chance != null && entity.level().random.nextFloat() >= this.chance.getValue(entity))
 			return;
 
 		if (this.withLevels != null) {
-			enchantItem(entity.level.random, itemStack, this.withLevels.getIntBetween(entity), false);
+			enchantItem(entity.level().random, itemStack, this.withLevels.getIntBetween(entity), false);
 		}
 		else {
 			Enchantment enchantment;
@@ -85,14 +85,14 @@ public class MPREnchantment implements IMPRObject {
 			}
 			//Then random object
 			else {
-				enchantment = this.random.getEnchantment(entity.level.random, itemStack, this.allowIncompatible);
+				enchantment = this.random.getEnchantment(entity.level().random, itemStack, this.allowIncompatible);
 			}
 			if (enchantment == null)
 				return;
 
 			int minLevel = this.level != null ? (int) this.level.getMin(entity) : enchantment.getMinLevel();
 			int maxLevel = this.level != null ? (int) this.level.getMax(entity) : enchantment.getMaxLevel();
-			int lvl = Mth.nextInt(entity.level.random, minLevel, maxLevel);
+			int lvl = Mth.nextInt(entity.level().random, minLevel, maxLevel);
 
 			addEnchantmentToItemStack(itemStack, enchantment, lvl);
 		}

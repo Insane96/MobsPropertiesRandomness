@@ -37,9 +37,9 @@ public class MPRTimeExistedModifier extends MPRModifier implements IMPRObject {
 	public float applyModifier(LivingEntity entity, float value) {
 		List<ServerPlayer> players = new ArrayList<>();
 		if (this.mode == Mode.NEAREST)
-			players.add((ServerPlayer) entity.level.getNearestPlayer(entity, 128d));
+			players.add((ServerPlayer) entity.level().getNearestPlayer(entity, 128d));
 		else
-			players = entity.level.getEntitiesOfClass(ServerPlayer.class, entity.getBoundingBox().inflate(128d));
+			players = entity.level().getEntitiesOfClass(ServerPlayer.class, entity.getBoundingBox().inflate(128d));
 		if (players.size() == 0) {
 			Logger.warn("No player found when applying Time Existed Modifier.");
 			return value;

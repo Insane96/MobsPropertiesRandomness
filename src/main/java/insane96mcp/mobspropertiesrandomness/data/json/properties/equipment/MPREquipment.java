@@ -55,7 +55,7 @@ public class MPREquipment implements IMPRObject {
 			|| (slot.replaceOnly && entity.getItemBySlot(equipmentSlotType).isEmpty()))
 			return;
 
-		if (slot.chance != null && entity.level.random.nextFloat() >= slot.chance.getValue(entity))
+		if (slot.chance != null && entity.level().random.nextFloat() >= slot.chance.getValue(entity))
 			return;
 
 		MPRItem choosenItem = slot.getRandomItem(entity);

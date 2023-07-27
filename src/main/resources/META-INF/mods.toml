@@ -1,5 +1,5 @@
 modLoader="javafml"
-loaderVersion="[43,)"
+loaderVersion="[47,)"
 license="All rights reserved"
 issueTrackerURL="https://github.com/Insane96/MobsPropertiesRandomness/issues"
 [[mods]]
@@ -16,18 +16,18 @@ Randomize (or just set) mobs Attributes, Equipment and Potion Effects on spawn
 [[dependencies.mobspropertiesrandomness]]
     modId="forge"
     mandatory=true
-    versionRange="[43,)"
+    versionRange="[47,)"
     ordering="NONE"
     side="BOTH"
 [[dependencies.mobspropertiesrandomness]]
     modId="minecraft"
     mandatory=true
-    versionRange="[1.19.2,)"
+    versionRange="[1.20.1,)"
     ordering="NONE"
     side="BOTH"
 [[dependencies.mobspropertiesrandomness]]
     modId="insanelib"
     mandatory=true
-    versionRange="[1.7.5,)"
+    versionRange="[1.10.2,)"
     ordering="NONE"
     side="BOTH"

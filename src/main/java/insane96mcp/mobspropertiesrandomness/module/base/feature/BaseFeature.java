@@ -102,7 +102,7 @@ public class BaseFeature extends Feature {
 	public static final java.lang.reflect.Type MPR_ON_TICK_LIST_TYPE = new TypeToken<ArrayList<MPROnTick>>(){}.getType();
 	@SubscribeEvent
 	public void onLivingTick(LivingEvent.LivingTickEvent event) {
-		if (event.getEntity().level.isClientSide)
+		if (event.getEntity().level().isClientSide)
 			return;
 		checkOnTick(event.getEntity());
 		showBossBar(event.getEntity());
@@ -110,7 +110,7 @@ public class BaseFeature extends Feature {
 	}
 	@SubscribeEvent
 	public void onLivingTick(LivingDeathEvent event) {
-		if (event.getEntity().level.isClientSide
+		if (event.getEntity().level().isClientSide
 				|| !(event.getSource().getEntity() instanceof LivingEntity livingEntity)
 				|| !(event.getEntity() instanceof ServerPlayer player))
 			return;
@@ -121,7 +121,7 @@ public class BaseFeature extends Feature {
 	}
 	@SubscribeEvent
 	public void onStopTracking(PlayerEvent.StopTracking event) {
-		if (event.getEntity().level.isClientSide
+		if (event.getEntity().level().isClientSide
 				|| !(event.getTarget() instanceof LivingEntity livingEntity)
 				|| !(event.getEntity() instanceof ServerPlayer player))
 			return;
@@ -164,7 +164,7 @@ public class BaseFeature extends Feature {
 			return;
 		int range = entity.getPersistentData().getInt(MPRBossBar.BOSS_BAR_VISIBILITY_RANGE);
 		bossBar.removeAllPlayers();
-		entity.level.players()
+		entity.level().players()
 				.stream()
 				.filter(p -> p.distanceToSqr(entity) < range * range)
 				.forEach(player -> bossBar.addPlayer((ServerPlayer) player));

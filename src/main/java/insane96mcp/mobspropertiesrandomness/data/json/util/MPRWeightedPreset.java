@@ -64,7 +64,7 @@ public class MPRWeightedPreset implements IMPRObject, IWeightedRandom {
 	public MPRWeightedPreset computeAndGet(LivingEntity entity) {
 		if (this.conditions != null && !this.conditions.conditionsApply(entity))
 			return null;
-		if (this.chance != null && entity.level.random.nextDouble() >= this.chance.getValue(entity))
+		if (this.chance != null && entity.level().random.nextDouble() >= this.chance.getValue(entity))
 			return null;
 
 		this._weight = (int) this.modifiableWeight.getValue(entity);

@@ -35,7 +35,7 @@ public class MPRWorldSpawnDistanceModifier extends MPRModifier implements IMPROb
 	}
 
 	public float applyModifier(LivingEntity entity, float value) {
-		Vec3 spawnPos = new Vec3(entity.level.getLevelData().getXSpawn(), entity.level.getLevelData().getYSpawn(), entity.level.getLevelData().getZSpawn());
+		Vec3 spawnPos = new Vec3(entity.level().getLevelData().getXSpawn(), entity.level().getLevelData().getYSpawn(), entity.level().getLevelData().getZSpawn());
 		float distance = (float) spawnPos.distanceTo(entity.position()) + this.shift.getValue(entity);
 		float totalBonus = (distance / this.step.getValue(entity)) * this.amountPerStep.getValue(entity);
 

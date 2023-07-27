@@ -58,7 +58,7 @@ public class MPRSlot implements IMPRObject {
 		List<MPRItem> items = getItems(entity);
 		if (items.isEmpty())
 			return null;
-		return WeightedRandom.getRandomItem(entity.level.random, items);
+		return WeightedRandom.getRandomItem(entity.level().random, items);
 	}
 
 	@Override
