@@ -7,7 +7,7 @@ import net.minecraft.world.entity.LivingEntity;
 
 public class MPRConditionModifier extends MPRModifier implements IMPRObject {
 	public MPRConditions condition;
-	public Float amount;
+	public MPRModifiableValue amount;
 
 	@Override
 	public void validate() throws JsonValidationException {
@@ -24,9 +24,9 @@ public class MPRConditionModifier extends MPRModifier implements IMPRObject {
 	public float applyModifier(LivingEntity livingEntity, float value) {
 		if (this.condition.conditionsApply(livingEntity)) {
 			if (this.getOperation() == Operation.ADD)
-				return value + this.amount;
+				return value + this.amount.getValue(livingEntity);
 			else
-				return value * this.amount;
+				return value * this.amount.getValue(livingEntity);
 		}
 		return value;
 	}

@@ -1,5 +1,8 @@
 # Changelog
 
+## Upcoming
+* Time Existed, Condition and Depth modifiers now use a ModifiableValue instead of a simple number
+
 ## 4.6.0
 * Updated to MC 1.20.1
 

@@ -12,10 +12,10 @@ public class MPRDepthModifier extends MPRModifier implements IMPRObject {
 	 E.g. A mob with 50% chance (0.5) to spawn with a potion effect, with this modifier set as step = 10, bonus = 0.02 and operation = "multiply" when it spawns 15 blocks from world spawn it will have the value modified as 'chance * (1 + (distance_below_starting_y / step) * amount_per_step)' = '0.5 * (1 + (15 / 10))' = '0.5 * 1.5' (an increase of 50%) = '0.75 (75% chance)'
 	 */
 	@SerializedName("amount_per_step")
-	public Float amountPerStep;
-	public Float step;
+	public MPRModifiableValue amountPerStep;
+	public MPRModifiableValue step;
 	@SerializedName("starting_y")
-	public Float startingY;
+	public MPRModifiableValue startingY;
 
 	@Override
 	public void validate() throws JsonValidationException {
@@ -31,7 +31,7 @@ public class MPRDepthModifier extends MPRModifier implements IMPRObject {
 
 	@Override
 	public float applyModifier(LivingEntity entity, float value) {
-		float totalBonus = (Math.max(this.startingY - entity.blockPosition().getY(), 0) / this.step) * this.amountPerStep;
+		float totalBonus = (Math.max(this.startingY.getValue(entity) - entity.blockPosition().getY(), 0) / this.step.getValue(entity)) * this.amountPerStep.getValue(entity);
 
 		if (this.getOperation() == Operation.ADD) return value + totalBonus;
 		else return value * (1 + totalBonus);
