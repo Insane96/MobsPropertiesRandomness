@@ -2,6 +2,7 @@
 
 ## Upcoming
 * Time Existed, Condition and Depth modifiers now use a ModifiableValue instead of a simple number
+* Fixed crash when missing `biomes` or `dimensions` in world whitelist object
 
 ## 4.6.0
 * Updated to MC 1.20.1
