@@ -1,5 +1,8 @@
 # Changelog
 
+## 4.2.2
+* Fixed crash when missing `biomes` or `dimensions` in world whitelist object
+
 ## 4.2.1
 * Fixed prefixes and suffixes in custom names not working properly
 

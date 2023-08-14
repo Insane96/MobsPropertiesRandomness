@@ -37,8 +37,14 @@ public class MPRWorldWhitelist implements IMPRObject {
 				this.dimensionsResourceKeys.add(rk);
 			}
 		}
+		else {
+			this.dimensions = new ArrayList<>();
+		}
 		if (this.inverseDimensionList == null)
 			this.inverseDimensionList = false;
+
+		if (this.biomes == null)
+			this.biomes = new ArrayList<>();
 
 		if (this.inverseBiomeList == null)
 			this.inverseBiomeList = false;
