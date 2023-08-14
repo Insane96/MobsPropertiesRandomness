@@ -1,5 +1,8 @@
 # Changelog
 
+## 4.5.3
+* Fixed crash when missing `biomes` or `dimensions` in world whitelist object
+
 ## 4.5.2
 * Range Object now inherits from Modifiable Value and has a new field
   * `modifiers_behaviour`: can be "both" (default), "min_only", "max_only".
