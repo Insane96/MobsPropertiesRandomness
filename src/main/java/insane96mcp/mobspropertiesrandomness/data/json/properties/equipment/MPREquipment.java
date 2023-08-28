@@ -51,7 +51,7 @@ public class MPREquipment implements IMPRObject {
 		if (slot == null)
 			return;
 
-		if ((!slot.override && !entity.getItemBySlot(equipmentSlotType).isEmpty())
+		if ((slot.keepSpawned && !entity.getItemBySlot(equipmentSlotType).isEmpty())
 			|| (slot.replaceOnly && entity.getItemBySlot(equipmentSlotType).isEmpty()))
 			return;
 

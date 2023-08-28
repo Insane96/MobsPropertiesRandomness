@@ -13,8 +13,8 @@ import java.util.List;
 
 public class MPRSlot implements IMPRObject {
 
-	@SerializedName("override")
-	public boolean override;
+	@SerializedName("keep_spawned")
+	public boolean keepSpawned;
 	@SerializedName("replace_only")
 	public boolean replaceOnly;
 	public MPRModifiableValue chance;
@@ -22,19 +22,19 @@ public class MPRSlot implements IMPRObject {
 
 	@Override
 	public void validate() throws JsonValidationException {
-		if (chance != null)
-			chance.validate();
+		if (this.chance != null)
+			this.chance.validate();
 
-		if (replaceOnly && !override)
+		if (this.replaceOnly && this.keepSpawned)
 		{
-			Logger.debug("override has been set to true since replace_only is true. " + this);
-			override = true;
+			Logger.debug("keep_spawned has been set to false since replace_only is true. " + this);
+			this.keepSpawned = false;
 		}
 
-		if (items == null || items.isEmpty())
+		if (this.items == null || this.items.isEmpty())
 			throw new JsonValidationException("Missing items. " + this);
 		else {
-			for (MPRItem item : items) {
+			for (MPRItem item : this.items) {
 				item.validate();
 			}
 		}
@@ -63,6 +63,6 @@ public class MPRSlot implements IMPRObject {
 
 	@Override
 	public String toString() {
-		return String.format("Slot{override: %s, replace_only: %s, chance: %s, items: %s}", override, replaceOnly, chance, items);
+		return String.format("Slot{keep_spawned: %s, replace_only: %s, chance: %s, items: %s}", this.keepSpawned, this.replaceOnly, this.chance, this.items);
 	}
 }

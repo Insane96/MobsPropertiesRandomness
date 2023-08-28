@@ -2,6 +2,7 @@
 
 ## Upcoming
 * Time Existed, Condition and Depth modifiers now use a ModifiableValue instead of a simple number
+* Changed `override` to `keep_spawned` (so it now defaults to opposite behaviour)
 * Fixed crash when missing `biomes` or `dimensions` in world whitelist object
 
 ## 4.6.0
