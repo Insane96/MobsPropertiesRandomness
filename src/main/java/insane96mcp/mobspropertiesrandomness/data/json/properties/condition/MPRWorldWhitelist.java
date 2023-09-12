@@ -1,4 +1,4 @@
-package insane96mcp.mobspropertiesrandomness.data.json.util;
+package insane96mcp.mobspropertiesrandomness.data.json.properties.condition;
 
 import com.google.gson.annotations.SerializedName;
 import insane96mcp.insanelib.exception.JsonValidationException;
@@ -14,7 +14,6 @@ import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.levelgen.structure.Structure;
-import net.minecraft.world.level.levelgen.structure.StructureStart;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -115,7 +114,7 @@ public class MPRWorldWhitelist implements IMPRObject {
 				LogHelper.warn("No structure found with id %s", structure.location());
 				break;
 			}
-			if (((ServerLevel) entity.level()).structureManager().getStructureAt(entity.blockPosition(), s) != StructureStart.INVALID_START) {
+			if (((ServerLevel) entity.level()).structureManager().getStructureAt(entity.blockPosition(), s).isValid()) {
 				structureMatches = true;
 				break;
 			}
