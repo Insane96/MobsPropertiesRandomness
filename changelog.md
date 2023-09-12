@@ -1,6 +1,6 @@
 # Changelog
 
-## Upcoming
+## 4.7.0
 * Added `structures` in World Whitelist Object
   * A string list of structures where the properties are applied
 * Time Existed, Condition and Depth modifiers now use a ModifiableValue instead of a simple number
