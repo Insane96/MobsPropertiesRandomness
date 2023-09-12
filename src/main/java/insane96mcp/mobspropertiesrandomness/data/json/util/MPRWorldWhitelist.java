@@ -3,14 +3,18 @@ package insane96mcp.mobspropertiesrandomness.data.json.util;
 import com.google.gson.annotations.SerializedName;
 import insane96mcp.insanelib.exception.JsonValidationException;
 import insane96mcp.insanelib.util.IdTagMatcher;
+import insane96mcp.insanelib.util.LogHelper;
 import insane96mcp.mobspropertiesrandomness.data.json.IMPRObject;
 import insane96mcp.mobspropertiesrandomness.data.json.util.modifiable.MPRRange;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.level.Level;
+import net.minecraft.world.level.levelgen.structure.Structure;
+import net.minecraft.world.level.levelgen.structure.StructureStart;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -31,6 +35,11 @@ public class MPRWorldWhitelist implements IMPRObject {
 	@SerializedName("moon_phases")
 	protected List<MoonPhase> moonPhases;
 
+	@SerializedName("structures")
+	protected List<String> structures;
+
+	private transient List<ResourceKey<Structure>> _structures;
+
 	@Override
 	public void validate() throws JsonValidationException {
 		this.dimensionsResourceKeys.clear();
@@ -40,25 +49,23 @@ public class MPRWorldWhitelist implements IMPRObject {
 				this.dimensionsResourceKeys.add(rk);
 			}
 		}
-		else {
-			this.dimensions = new ArrayList<>();
-		}
-		if (this.inverseDimensionList == null)
-			this.inverseDimensionList = false;
 
-		if (this.biomes == null)
-			this.biomes = new ArrayList<>();
 		if (this.inverseBiomeList == null)
 			this.inverseBiomeList = false;
 
 		if (this.deepness != null)
 			this.deepness.validate();
 
-
+		if (this.structures != null) {
+			this._structures = new ArrayList<>();
+			for (String structure : this.structures) {
+				this._structures.add(ResourceKey.create(Registries.STRUCTURE, new ResourceLocation(structure)));
+			}
+		}
 	}
 
 	public boolean doesDimensionMatch(Entity entity) {
-		if (this.dimensions.isEmpty())
+		if (this.dimensions == null)
 			return true;
 		for (ResourceKey<Level> dimension : this.dimensionsResourceKeys) {
 			if (entity.level().dimension().equals(dimension)) {
@@ -69,7 +76,7 @@ public class MPRWorldWhitelist implements IMPRObject {
 	}
 
 	public boolean doesBiomeMatch(LivingEntity entity) {
-		if (this.biomes.isEmpty())
+		if (this.biomes == null)
 			return true;
 		for (IdTagMatcher dimension : this.biomes) {
 			if (dimension.matchesBiome(entity.level().getBiome(entity.blockPosition()))) {
@@ -86,6 +93,8 @@ public class MPRWorldWhitelist implements IMPRObject {
 	}
 
 	public boolean doesMoonPhaseMatch(LivingEntity entity) {
+		if (this.moonPhases == null)
+			return true;
 		boolean moonPhaseMatches = false;
 		for (MoonPhase moonPhase : this.moonPhases) {
 			if (moonPhase == MoonPhase.of(entity.level().getMoonPhase())) {
@@ -96,13 +105,31 @@ public class MPRWorldWhitelist implements IMPRObject {
 		return moonPhaseMatches;
 	}
 
+	public boolean doesStructureMatch(LivingEntity entity) {
+		if (this.structures == null)
+			return true;
+		boolean structureMatches = false;
+		for (var structure : this._structures) {
+			Structure s = ((ServerLevel) entity.level()).structureManager().registryAccess().registryOrThrow(Registries.STRUCTURE).get(structure);
+			if (s == null) {
+				LogHelper.warn("No structure found with id %s", structure.location());
+				break;
+			}
+			if (((ServerLevel) entity.level()).structureManager().getStructureAt(entity.blockPosition(), s) != StructureStart.INVALID_START) {
+				structureMatches = true;
+				break;
+			}
+		}
+		return structureMatches;
+	}
+
 	public boolean isWhitelisted(LivingEntity entity) {
-		return this.doesBiomeMatch(entity) && this.doesDimensionMatch(entity) && this.doesDepthMatch(entity) && this.doesMoonPhaseMatch(entity);
+		return this.doesBiomeMatch(entity) && this.doesDimensionMatch(entity) && this.doesDepthMatch(entity) && this.doesMoonPhaseMatch(entity) && this.doesStructureMatch(entity);
 	}
 
 	@Override
 	public String toString() {
-		return String.format("WorldWhitelist{dimensions: %s, inverse_dimension_list: %s, biomes: %s, inverse_biome_list: %s, deepness: %s, moon_phases: %s}", this.dimensions, this.inverseDimensionList, this.biomes, this.inverseBiomeList, this.deepness, this.moonPhases);
+		return String.format("WorldWhitelist{dimensions: %s, inverse_dimension_list: %s, biomes: %s, inverse_biome_list: %s, deepness: %s, moon_phases: %s, structures: %s}", this.dimensions, this.inverseDimensionList, this.biomes, this.inverseBiomeList, this.deepness, this.moonPhases, this.structures);
 	}
 
 	enum MoonPhase {
