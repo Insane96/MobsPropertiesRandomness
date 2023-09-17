@@ -1,5 +1,8 @@
 # Changelog
 
+## 4.7.1
+* Fixed priorities being applied in the wrong order (lower first)
+
 ## 4.7.0
 * Added `structures` in World Whitelist Object
   * A string list of structures where the properties are applied

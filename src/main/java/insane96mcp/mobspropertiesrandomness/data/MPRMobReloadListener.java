@@ -17,7 +17,6 @@ import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
 import java.util.Map;
-import java.util.stream.Collectors;
 
 public class MPRMobReloadListener extends SimpleJsonResourceReloadListener {
 	public static List<MPRMob> MPR_MOBS = new ArrayList<>();
@@ -59,7 +58,7 @@ public class MPRMobReloadListener extends SimpleJsonResourceReloadListener {
 			}
 		}
 
-		MPR_MOBS = MPR_MOBS.stream().sorted(Comparator.comparing(mob -> mob.priority)).collect(Collectors.toList());
+		MPR_MOBS.sort(Comparator.comparing(mob -> mob.priority, Comparator.reverseOrder()));
 
 		Logger.info("Loaded %s Mob(s)", MPR_MOBS.size());
 	}
