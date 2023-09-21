@@ -1,5 +1,8 @@
 # Changelog
 
+## 4.7.2
+* Now requires InsaneLib 1.11.1
+
 ## 4.7.1
 * Fixed priorities being applied in the wrong order (lower first)
 

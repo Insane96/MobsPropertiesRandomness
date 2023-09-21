@@ -1,8 +1,8 @@
 package insane96mcp.mobspropertiesrandomness.data.json;
 
 import com.google.gson.annotations.SerializedName;
+import insane96mcp.insanelib.data.IdTagMatcher;
 import insane96mcp.insanelib.exception.JsonValidationException;
-import insane96mcp.insanelib.util.IdTagMatcher;
 import insane96mcp.mobspropertiesrandomness.data.json.properties.MPRPresets;
 import insane96mcp.mobspropertiesrandomness.setup.Strings;
 import net.minecraft.nbt.CompoundTag;

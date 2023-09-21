@@ -1,8 +1,8 @@
 package insane96mcp.mobspropertiesrandomness.data.json.properties.condition;
 
 import com.google.gson.annotations.SerializedName;
+import insane96mcp.insanelib.data.IdTagMatcher;
 import insane96mcp.insanelib.exception.JsonValidationException;
-import insane96mcp.insanelib.util.IdTagMatcher;
 import insane96mcp.insanelib.util.LogHelper;
 import insane96mcp.mobspropertiesrandomness.data.json.IMPRObject;
 import insane96mcp.mobspropertiesrandomness.data.json.util.modifiable.MPRRange;
