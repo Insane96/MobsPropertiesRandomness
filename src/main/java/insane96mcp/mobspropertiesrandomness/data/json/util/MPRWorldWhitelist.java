@@ -46,7 +46,7 @@ public class MPRWorldWhitelist implements IMPRObject {
 		if (dimensionsList.isEmpty())
 			return true;
 
-		ResourceLocation entityDimension = entity.level.dimension().getRegistryName();
+		ResourceLocation entityDimension = entity.level.dimension().location();
 		return dimensionsList.contains(entityDimension);
 	}
 

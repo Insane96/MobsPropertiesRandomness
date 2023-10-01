@@ -1,5 +1,8 @@
 # Changelog
 
+## 4.0.3
+* Fixed `dimensions` not working
+
 ## 4.0.2
 * Added `apply_all` to `presets`
   * When true, instead of picking a random preset based off weight, all the presets are checked and try to apply.
