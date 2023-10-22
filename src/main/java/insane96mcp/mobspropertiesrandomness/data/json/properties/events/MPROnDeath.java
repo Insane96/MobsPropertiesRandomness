@@ -27,7 +27,7 @@ public class MPROnDeath extends MPREvent {
 		if (this.damageType != null && ((isDirectDamage && this.damageType == DamageType.INDIRECT) || (!isDirectDamage && this.damageType == DamageType.DIRECT)))
 			return;
 
-		if (this.target == Target.ENTITY) {
+		if (this.target == Target.THIS) {
 			this.tryApply(entity);
 		}
 		else if (this.target == Target.OTHER && other != null) {

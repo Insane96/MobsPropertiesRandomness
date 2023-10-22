@@ -74,7 +74,7 @@ public class MPROnHit extends MPREvent {
 				return;
 		}
 
-		if (this.target == Target.ENTITY) {
+		if (this.target == Target.THIS) {
 			if (this.potionEffects != null) {
 				for (MPRPotionEffect potionEffect : this.potionEffects) {
 					potionEffect.apply(entity);

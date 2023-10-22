@@ -1,5 +1,8 @@
 # Changelog
 
+## 4.8.0
+* Renamed event targets from "entity" to "this"
+
 ## 4.7.2
 * Now requires InsaneLib 1.11.1
 
