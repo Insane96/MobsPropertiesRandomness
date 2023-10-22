@@ -12,6 +12,7 @@ import insane96mcp.insanelib.util.LogHelper;
 import insane96mcp.mobspropertiesrandomness.MobsPropertiesRandomness;
 import insane96mcp.mobspropertiesrandomness.data.json.MPRMob;
 import insane96mcp.mobspropertiesrandomness.data.json.properties.MPRBossBar;
+import insane96mcp.mobspropertiesrandomness.data.json.properties.events.MPREvents;
 import insane96mcp.mobspropertiesrandomness.data.json.properties.events.MPROnDeath;
 import insane96mcp.mobspropertiesrandomness.data.json.properties.events.MPROnHit;
 import insane96mcp.mobspropertiesrandomness.data.json.properties.events.MPROnTick;
@@ -79,11 +80,11 @@ public class BaseFeature extends Feature {
 			}
 		}
 
-		if (!compoundTag.contains(Strings.Tags.ON_DEATH))
+		if (!compoundTag.contains(MPREvents.ON_DEATH))
 			return;
 
 		LivingEntity attacker = (LivingEntity) event.getSource().getEntity();
-		List<MPROnDeath> onDeaths = new Gson().fromJson(compoundTag.getString(Strings.Tags.ON_DEATH), MPR_ON_DEATH_LIST_TYPE);
+		List<MPROnDeath> onDeaths = new Gson().fromJson(compoundTag.getString(MPREvents.ON_DEATH), MPR_ON_DEATH_LIST_TYPE);
 		if (onDeaths == null)
 			return;
 
@@ -172,10 +173,10 @@ public class BaseFeature extends Feature {
 
 	private void checkOnTick(LivingEntity entity) {
 		CompoundTag persistentData = entity.getPersistentData();
-		if (!persistentData.contains(Strings.Tags.ON_TICK))
+		if (!persistentData.contains(MPREvents.ON_TICK))
 			return;
 
-		List<MPROnTick> onTicks = new Gson().fromJson(persistentData.getString(Strings.Tags.ON_TICK), MPR_ON_TICK_LIST_TYPE);
+		List<MPROnTick> onTicks = new Gson().fromJson(persistentData.getString(MPREvents.ON_TICK), MPR_ON_TICK_LIST_TYPE);
 		if (onTicks == null)
 			return;
 
@@ -195,10 +196,10 @@ public class BaseFeature extends Feature {
 	private void onAttack(LivingDamageEvent event) {
 		LivingEntity attacker = (LivingEntity) event.getSource().getEntity();
 		if (attacker == null
-				|| !attacker.getPersistentData().contains(Strings.Tags.ON_ATTACK))
+				|| !attacker.getPersistentData().contains(MPREvents.ON_ATTACK))
 			return;
 
-		List<MPROnHit> onHitEffects = new Gson().fromJson(attacker.getPersistentData().getString(Strings.Tags.ON_ATTACK), MPR_ON_HIT_LIST_TYPE);
+		List<MPROnHit> onHitEffects = new Gson().fromJson(attacker.getPersistentData().getString(MPREvents.ON_ATTACK), MPR_ON_HIT_LIST_TYPE);
 		if (onHitEffects == null)
 			return;
 
@@ -217,10 +218,10 @@ public class BaseFeature extends Feature {
 	private void onAttacked(LivingDamageEvent event) {
 		LivingEntity attacked = event.getEntity();
 		if (attacked == null
-				|| !attacked.getPersistentData().contains(Strings.Tags.ON_ATTACKED))
+				|| !attacked.getPersistentData().contains(MPREvents.ON_ATTACKED))
 			return;
 
-		List<MPROnHit> onHitEffects = new Gson().fromJson(attacked.getPersistentData().getString(Strings.Tags.ON_ATTACKED), MPR_ON_HIT_LIST_TYPE);
+		List<MPROnHit> onHitEffects = new Gson().fromJson(attacked.getPersistentData().getString(MPREvents.ON_ATTACKED), MPR_ON_HIT_LIST_TYPE);
 		if (onHitEffects == null)
 			return;
 

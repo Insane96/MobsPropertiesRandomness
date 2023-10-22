@@ -68,7 +68,7 @@ public class MPRScalePehkui implements IMPRObject {
         }
     }
 
-    enum Operation {
+    public enum Operation {
         @SerializedName("set")
         SET((scaleData, scale, entity) ->
                 scaleData.setScale(scale)),

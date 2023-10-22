@@ -3,14 +3,18 @@ package insane96mcp.mobspropertiesrandomness.data.json.properties.events;
 import com.google.gson.Gson;
 import com.google.gson.annotations.SerializedName;
 import insane96mcp.insanelib.exception.JsonValidationException;
+import insane96mcp.mobspropertiesrandomness.MobsPropertiesRandomness;
 import insane96mcp.mobspropertiesrandomness.data.json.IMPRObject;
-import insane96mcp.mobspropertiesrandomness.setup.Strings;
 import net.minecraft.world.entity.LivingEntity;
 
 import java.util.List;
 
 public class MPREvents implements IMPRObject {
 
+	public static final String ON_ATTACK = MobsPropertiesRandomness.RESOURCE_PREFIX + "on_attack";
+	public static final String ON_ATTACKED = MobsPropertiesRandomness.RESOURCE_PREFIX + "on_attacked";
+	public static final String ON_DEATH = MobsPropertiesRandomness.RESOURCE_PREFIX + "on_death";
+	public static final String ON_TICK = MobsPropertiesRandomness.RESOURCE_PREFIX + "on_tick";
 	@SerializedName("on_attack")
 	public List<MPROnHit> onAttack;
 
@@ -44,13 +48,13 @@ public class MPREvents implements IMPRObject {
 
 	public void addToNBT(LivingEntity entity) {
 		if (this.onAttack != null)
-			entity.getPersistentData().putString(Strings.Tags.ON_ATTACK, new Gson().toJson(this.onAttack));
+			entity.getPersistentData().putString(ON_ATTACK, new Gson().toJson(this.onAttack));
 		if (this.onAttacked != null)
-			entity.getPersistentData().putString(Strings.Tags.ON_ATTACKED, new Gson().toJson(this.onAttacked));
+			entity.getPersistentData().putString(ON_ATTACKED, new Gson().toJson(this.onAttacked));
 		if (this.onDeath != null)
-			entity.getPersistentData().putString(Strings.Tags.ON_DEATH, new Gson().toJson(this.onDeath));
+			entity.getPersistentData().putString(ON_DEATH, new Gson().toJson(this.onDeath));
 		if (this.onTick != null)
-			entity.getPersistentData().putString(Strings.Tags.ON_TICK, new Gson().toJson(this.onTick));
+			entity.getPersistentData().putString(ON_TICK, new Gson().toJson(this.onTick));
 	}
 
 	@Override

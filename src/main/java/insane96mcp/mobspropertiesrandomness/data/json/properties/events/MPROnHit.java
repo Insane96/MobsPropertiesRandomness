@@ -13,10 +13,11 @@ import java.util.List;
 
 public class MPROnHit extends MPREvent {
 
-	@SerializedName("potion_effects")
-	public List<MPRPotionEffect> potionEffects;
 
 	public Target target;
+
+	@SerializedName("potion_effects")
+	public List<MPRPotionEffect> potionEffects;
 
 	@SerializedName("damage_type")
 	public DamageType damageType;
@@ -28,7 +29,14 @@ public class MPROnHit extends MPREvent {
 	public MPRModifier.Operation damageModifierOperation;
 	@SerializedName("damage_modifier")
 	public MPRModifiableValue damageModifier;
-
+	@SerializedName("set_fire")
+	public MPRRange setFire;
+	@SerializedName("additive_fire")
+	public boolean additiveFire;
+	@SerializedName("set_freeze")
+	public MPRRange setFreeze;
+	@SerializedName("additive_freeze")
+	public boolean additiveFreeze;
 	@SerializedName("health_left")
 	public Double healthLeft;
 
@@ -49,6 +57,10 @@ public class MPROnHit extends MPREvent {
 			else
 				this.damageModifier.validate();
 		}
+		if (this.setFire != null)
+			this.setFire.validate();
+		if (this.setFreeze != null)
+			this.setFreeze.validate();
 	}
 
 	public void apply(LivingEntity entity, LivingEntity other, boolean isDirectDamage, LivingDamageEvent event, boolean attacked) {
@@ -74,22 +86,24 @@ public class MPROnHit extends MPREvent {
 				return;
 		}
 
-		if (this.target == Target.THIS) {
-			if (this.potionEffects != null) {
-				for (MPRPotionEffect potionEffect : this.potionEffects) {
-					potionEffect.apply(entity);
-				}
+		LivingEntity target = this.target == Target.THIS ? entity : other;
+		if (this.potionEffects != null) {
+			for (MPRPotionEffect potionEffect : this.potionEffects) {
+				potionEffect.apply(target);
 			}
-			this.tryApply(entity);
 		}
-		else if (this.target == Target.OTHER) {
-			if (this.potionEffects != null) {
-				for (MPRPotionEffect potionEffect : this.potionEffects) {
-					potionEffect.apply(other);
-				}
-			}
-			this.tryApply(other);
+		if (this.setFire != null)
+			if (!this.additiveFire)
+				target.setSecondsOnFire(this.setFire.getIntBetween(target));
+			else
+				target.setSecondsOnFire(target.getRemainingFireTicks() / 20 + this.setFire.getIntBetween(target));
+		if (this.setFreeze != null) {
+			if (!this.additiveFreeze)
+				target.setTicksFrozen(this.setFreeze.getIntBetween(target) * 20);
+			else
+				target.setTicksFrozen(target.getTicksFrozen() + this.setFreeze.getIntBetween(target) * 20);
 		}
+		this.tryApply(target);
 	}
 
 	@Override
