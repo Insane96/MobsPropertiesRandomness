@@ -38,10 +38,7 @@ public class MPROnHit extends MPREvent {
 		if (this.target == null)
 			throw new JsonValidationException("Missing \"target\" for OnHit object: %s".formatted(this));
 
-		if (this.potionEffects == null) {
-			throw new JsonValidationException("Missing \"potion_effects\" for OnHit object: %s".formatted(this));
-		}
-		else {
+		if (this.potionEffects != null) {
 			for (MPRPotionEffect potionEffect : this.potionEffects)
 				potionEffect.validate();
 		}

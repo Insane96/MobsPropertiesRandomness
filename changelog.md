@@ -1,5 +1,8 @@
 # Changelog
 
+## 4.2.3
+* `potion_effects` are no longer mandatory in OnHit Object
+
 ## 4.2.2
 * Fixed crash when missing `biomes` or `dimensions` in world whitelist object
 
