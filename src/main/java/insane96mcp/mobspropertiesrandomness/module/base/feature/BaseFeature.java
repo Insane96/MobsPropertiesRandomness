@@ -19,6 +19,7 @@ import insane96mcp.mobspropertiesrandomness.data.json.properties.events.MPROnTic
 import insane96mcp.mobspropertiesrandomness.setup.Strings;
 import insane96mcp.mobspropertiesrandomness.util.Logger;
 import net.minecraft.nbt.CompoundTag;
+import net.minecraft.nbt.ListTag;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.bossevents.CustomBossEvent;
 import net.minecraft.server.bossevents.CustomBossEvents;
@@ -28,9 +29,12 @@ import net.minecraftforge.event.entity.EntityJoinLevelEvent;
 import net.minecraftforge.event.entity.living.LivingDamageEvent;
 import net.minecraftforge.event.entity.living.LivingDeathEvent;
 import net.minecraftforge.event.entity.living.LivingEvent;
+import net.minecraftforge.event.entity.living.MobEffectEvent;
 import net.minecraftforge.event.entity.player.PlayerEvent;
+import net.minecraftforge.eventbus.api.Event;
 import net.minecraftforge.eventbus.api.EventPriority;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
+import net.minecraftforge.registries.ForgeRegistries;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.ArrayList;
@@ -39,9 +43,9 @@ import java.util.List;
 @Label(name = "Base")
 @LoadFeature(module = MobsPropertiesRandomness.RESOURCE_PREFIX + "base", canBeDisabled = false)
 public class BaseFeature extends Feature {
-	@Config
+	/*@Config
 	@Label(name = "TiCon Attack", description = "If true mob attacks with Tinker tools will use the Tinker attack method, making mobs able to use some TiCon modifiers.")
-	public static Boolean ticonAttack = true;
+	public static Boolean ticonAttack = true;*/
 	@Config
 	@Label(name = "Better Creeper Lingering", description = "If true creeper lingering clouds size changes based off creeper explosion radius.")
 	public static Boolean betterCreeperLingering = true;
@@ -97,6 +101,22 @@ public class BaseFeature extends Feature {
 				continue;
 			}
 			onDeath.apply(event.getEntity(), attacker, event.getSource().getDirectEntity() == event.getSource().getEntity());
+		}
+	}
+
+	@SubscribeEvent
+	public void onApplyEffect(MobEffectEvent.Applicable event) {
+		if (event.getEntity().level().isClientSide
+				|| !event.getEntity().getPersistentData().contains(MobsPropertiesRandomness.RESOURCE_PREFIX + "effect_immunity"))
+			return;
+
+		ListTag listTag = event.getEntity().getPersistentData().getList(MobsPropertiesRandomness.RESOURCE_PREFIX + "effect_immunity", 8);
+		for (int i = 0; i < listTag.size(); ++i) {
+			String s = listTag.getString(i);
+			if (ForgeRegistries.MOB_EFFECTS.getKey(event.getEffectInstance().getEffect()).toString().equals(s)) {
+				event.setResult(Event.Result.DENY);
+				break;
+			}
 		}
 	}
 

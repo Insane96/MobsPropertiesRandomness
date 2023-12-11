@@ -4,6 +4,7 @@ import com.google.gson.annotations.SerializedName;
 import com.mojang.brigadier.exceptions.CommandSyntaxException;
 import insane96mcp.insanelib.exception.JsonValidationException;
 import insane96mcp.insanelib.setup.ILStrings;
+import insane96mcp.mobspropertiesrandomness.MobsPropertiesRandomness;
 import insane96mcp.mobspropertiesrandomness.data.json.properties.MPRCustomName;
 import insane96mcp.mobspropertiesrandomness.data.json.properties.MPRNbt;
 import insane96mcp.mobspropertiesrandomness.data.json.properties.MPRPotionEffect;
@@ -15,6 +16,7 @@ import insane96mcp.mobspropertiesrandomness.data.json.properties.mods.pehuki.MPR
 import insane96mcp.mobspropertiesrandomness.data.json.util.modifiable.MPRModifiableValue;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.ListTag;
+import net.minecraft.nbt.StringTag;
 import net.minecraft.nbt.TagParser;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.LivingEntity;
@@ -49,7 +51,7 @@ public abstract class MPRProperties implements IMPRObject {
 	@SerializedName("loot_table")
 	public String lootTable;
 
-	@SerializedName("effect_immunity")
+	@SerializedName("effects_immunity")
 	public List<String> effectImmunity;
 
 	@SerializedName("set_nbt")
@@ -162,7 +164,10 @@ public abstract class MPRProperties implements IMPRObject {
 
 		if (this.effectImmunity != null) {
 			ListTag listTag = new ListTag();
-			entity.getPersistentData().put(ILStrings.Tags.EXPERIENCE_MULTIPLIER, );
+			for (String mobEffect : this.effectImmunity) {
+				listTag.add(StringTag.valueOf(mobEffect));
+			}
+			entity.getPersistentData().put(MobsPropertiesRandomness.RESOURCE_PREFIX + "effect_immunity", listTag);
 		}
 
 		for (MPRNbt mprNbt : this.setNbt) {

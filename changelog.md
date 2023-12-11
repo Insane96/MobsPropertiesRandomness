@@ -1,6 +1,8 @@
 # Changelog
 
 ## Upcoming
+* Added `effects_immunity`
+  * A list of effects id that the mob cannot be affected by
 * Added `drop_chance`, `enchantments`, `attributes` and `nbt` to slots
   * This makes you apply them to all the items listed, instead of having to add them to every single item
 
