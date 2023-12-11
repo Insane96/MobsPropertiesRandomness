@@ -20,6 +20,7 @@ import insane96mcp.mobspropertiesrandomness.setup.Strings;
 import insane96mcp.mobspropertiesrandomness.util.Logger;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.ListTag;
+import net.minecraft.nbt.Tag;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.bossevents.CustomBossEvent;
 import net.minecraft.server.bossevents.CustomBossEvents;
@@ -110,7 +111,7 @@ public class BaseFeature extends Feature {
 				|| !event.getEntity().getPersistentData().contains(MobsPropertiesRandomness.RESOURCE_PREFIX + "effect_immunity"))
 			return;
 
-		ListTag listTag = event.getEntity().getPersistentData().getList(MobsPropertiesRandomness.RESOURCE_PREFIX + "effect_immunity", 8);
+		ListTag listTag = event.getEntity().getPersistentData().getList(MobsPropertiesRandomness.RESOURCE_PREFIX + "effect_immunity", Tag.TAG_STRING);
 		for (int i = 0; i < listTag.size(); ++i) {
 			String s = listTag.getString(i);
 			if (ForgeRegistries.MOB_EFFECTS.getKey(event.getEffectInstance().getEffect()).toString().equals(s)) {

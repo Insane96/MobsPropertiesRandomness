@@ -1,6 +1,6 @@
 # Changelog
 
-## Upcoming
+## 4.9.0
 * Added `effects_immunity`
   * A list of effects id that the mob cannot be affected by
 * Added `drop_chance`, `enchantments`, `attributes` and `nbt` to slots
