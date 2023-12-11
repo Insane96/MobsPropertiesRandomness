@@ -1,5 +1,9 @@
 # Changelog
 
+## 4.8.1
+* Added `enchantments`, `attributes` and `nbt` to slots
+  * This makes you apply them to all the items listed, instead of having to add them to every single item
+
 ## 4.8.0
 * Added `set_fire` and `set_freeze` to On Hit and On Death event
   * Sets the target to the specified seconds on fire and freeze

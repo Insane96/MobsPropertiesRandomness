@@ -58,34 +58,47 @@ public class MPREquipment implements IMPRObject {
 		if (slot.chance != null && entity.level().random.nextFloat() >= slot.chance.getValue(entity))
 			return;
 
-		MPRItem choosenItem = slot.getRandomItem(entity);
-		if (choosenItem == null)
+		MPRItem chosenItem = slot.getRandomItem(entity);
+		if (chosenItem == null)
 			return;
 
-		ItemStack itemStack = new ItemStack(ForgeRegistries.ITEMS.getValue(new ResourceLocation(choosenItem.id)), 1);
+		ItemStack itemStack = new ItemStack(ForgeRegistries.ITEMS.getValue(new ResourceLocation(chosenItem.id)), 1);
 
-		if (choosenItem.nbt != null) {
-			itemStack.setTag(choosenItem.getNBT());
+		if (slot.nbt != null) {
+			itemStack.setTag(slot.getNBT());
+		}
+		if (chosenItem.nbt != null) {
+			itemStack.setTag(chosenItem.getNBT());
 		}
 
-		if (choosenItem.enchantments != null) {
-			for (MPREnchantment enchantment : choosenItem.enchantments) {
+		if (slot.enchantments != null) {
+			for (MPREnchantment enchantment : slot.enchantments) {
+				enchantment.applyToStack(entity, itemStack);
+			}
+		}
+		if (chosenItem.enchantments != null) {
+			for (MPREnchantment enchantment : chosenItem.enchantments) {
 				enchantment.applyToStack(entity, itemStack);
 			}
 		}
 
-		/*if (choosenItem.ticonModifiers != null) {
-			for (MPRTiConModifier tiConModifier : choosenItem.ticonModifiers) {
+		/*if (chosenItem.ticonModifiers != null) {
+			for (MPRTiConModifier tiConModifier : chosenItem.ticonModifiers) {
 				itemStack = tiConModifier.applyToStack(entity, level, itemStack);
 			}
 		}
 
-		if (choosenItem.ticonMaterials != null) {
-			itemStack = choosenItem.ticonMaterials.applyToStack(entity, level, itemStack);
+		if (chosenItem.ticonMaterials != null) {
+			itemStack = chosenItem.ticonMaterials.applyToStack(entity, level, itemStack);
 		}*/
 
-		if (choosenItem.attributes != null) {
-			for (MPRItemAttribute itemAttribute : choosenItem.attributes) {
+		if (slot.attributes != null) {
+			for (MPRItemAttribute itemAttribute : slot.attributes) {
+				itemAttribute.applyToStack(entity, itemStack, equipmentSlotType);
+			}
+		}
+		if (chosenItem.attributes != null) {
+			for (MPRItemAttribute itemAttribute : chosenItem.attributes) {
 				itemAttribute.applyToStack(entity, itemStack, equipmentSlotType);
 			}
 		}
@@ -93,8 +106,8 @@ public class MPREquipment implements IMPRObject {
 		entity.setItemSlot(equipmentSlotType, itemStack);
 
 		//Drop Chance
-		if (choosenItem.dropChance != null && entity instanceof Mob)
-			((Mob) entity).setDropChance(equipmentSlotType, choosenItem.dropChance.getValue(entity));
+		if (chosenItem.dropChance != null && entity instanceof Mob)
+			((Mob) entity).setDropChance(equipmentSlotType, chosenItem.dropChance.getValue(entity));
 	}
 
 	@Override

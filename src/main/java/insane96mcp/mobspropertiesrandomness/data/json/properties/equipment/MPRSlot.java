@@ -1,11 +1,15 @@
 package insane96mcp.mobspropertiesrandomness.data.json.properties.equipment;
 
 import com.google.gson.annotations.SerializedName;
+import com.mojang.brigadier.exceptions.CommandSyntaxException;
 import insane96mcp.insanelib.exception.JsonValidationException;
 import insane96mcp.insanelib.util.weightedrandom.WeightedRandom;
 import insane96mcp.mobspropertiesrandomness.data.json.IMPRObject;
+import insane96mcp.mobspropertiesrandomness.data.json.properties.attribute.MPRItemAttribute;
 import insane96mcp.mobspropertiesrandomness.data.json.util.modifiable.MPRModifiableValue;
 import insane96mcp.mobspropertiesrandomness.util.Logger;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.nbt.TagParser;
 import net.minecraft.world.entity.LivingEntity;
 
 import java.util.ArrayList;
@@ -19,6 +23,10 @@ public class MPRSlot implements IMPRObject {
 	public boolean replaceOnly;
 	public MPRModifiableValue chance;
 	public List<MPRItem> items;
+	public List<MPREnchantment> enchantments;
+	public List<MPRItemAttribute> attributes;
+	public String nbt;
+	private transient CompoundTag _nbt;
 
 	@Override
 	public void validate() throws JsonValidationException {
@@ -36,6 +44,23 @@ public class MPRSlot implements IMPRObject {
 		else {
 			for (MPRItem item : this.items) {
 				item.validate();
+			}
+		}
+
+		if (this.enchantments != null)
+			for (MPREnchantment enchantment : this.enchantments)
+				enchantment.validate();
+
+		if (this.attributes != null)
+			for (MPRItemAttribute itemAttribute : this.attributes)
+				itemAttribute.validate();
+
+		if (this.nbt != null) {
+			try {
+				this._nbt = TagParser.parseTag(this.nbt);
+			}
+			catch (CommandSyntaxException e) {
+				throw new JsonValidationException("Invalid nbt for Slot (%s): %s".formatted(e.getMessage(), this.nbt));
 			}
 		}
 	}
@@ -59,6 +84,10 @@ public class MPRSlot implements IMPRObject {
 		if (items.isEmpty())
 			return null;
 		return WeightedRandom.getRandomItem(entity.level().random, items);
+	}
+
+	public CompoundTag getNBT() {
+		return this._nbt.copy();
 	}
 
 	@Override
