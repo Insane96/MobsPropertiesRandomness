@@ -14,10 +14,12 @@ import insane96mcp.mobspropertiesrandomness.data.json.properties.events.MPREvent
 import insane96mcp.mobspropertiesrandomness.data.json.properties.mods.pehuki.MPRScalePehkui;
 import insane96mcp.mobspropertiesrandomness.data.json.util.modifiable.MPRModifiableValue;
 import net.minecraft.nbt.CompoundTag;
+import net.minecraft.nbt.ListTag;
 import net.minecraft.nbt.TagParser;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.Mob;
+import net.minecraftforge.registries.ForgeRegistries;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -46,6 +48,9 @@ public abstract class MPRProperties implements IMPRObject {
 
 	@SerializedName("loot_table")
 	public String lootTable;
+
+	@SerializedName("effect_immunity")
+	public List<String> effectImmunity;
 
 	@SerializedName("set_nbt")
 	public List<MPRNbt> setNbt;
@@ -97,6 +102,14 @@ public abstract class MPRProperties implements IMPRObject {
 				throw new JsonValidationException("\"loot_table\": \"" + this.lootTable + "\" is not valid. You must use a valid Resource Location (namespace:loot_table_id). " + this);
 		}
 
+		if (this.effectImmunity != null) {
+			for (String mobEffect : this.effectImmunity) {
+				if (ForgeRegistries.MOB_EFFECTS.getValue(new ResourceLocation(mobEffect)) == null) {
+					throw new JsonValidationException("Invalid MobEffect ID " + mobEffect + " for " + this);
+				}
+			}
+		}
+
 		if (this.setNbt == null)
 			this.setNbt = new ArrayList<>();
 		for (MPRNbt mprNbt : this.setNbt) {
@@ -145,6 +158,11 @@ public abstract class MPRProperties implements IMPRObject {
 
 		if (this.lootTable != null && entity instanceof Mob) {
 			((Mob) entity).lootTable = new ResourceLocation(this.lootTable);
+		}
+
+		if (this.effectImmunity != null) {
+			ListTag listTag = new ListTag();
+			entity.getPersistentData().put(ILStrings.Tags.EXPERIENCE_MULTIPLIER, );
 		}
 
 		for (MPRNbt mprNbt : this.setNbt) {
