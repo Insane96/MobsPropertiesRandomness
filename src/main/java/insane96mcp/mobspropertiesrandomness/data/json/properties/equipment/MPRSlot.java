@@ -23,6 +23,8 @@ public class MPRSlot implements IMPRObject {
 	public boolean replaceOnly;
 	public MPRModifiableValue chance;
 	public List<MPRItem> items;
+	@SerializedName("drop_chance")
+	public MPRModifiableValue dropChance;
 	public List<MPREnchantment> enchantments;
 	public List<MPRItemAttribute> attributes;
 	public String nbt;
@@ -46,6 +48,9 @@ public class MPRSlot implements IMPRObject {
 				item.validate();
 			}
 		}
+
+		if (this.dropChance != null)
+			this.dropChance.validate();
 
 		if (this.enchantments != null)
 			for (MPREnchantment enchantment : this.enchantments)

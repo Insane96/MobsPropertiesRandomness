@@ -1,7 +1,7 @@
 # Changelog
 
-## 4.8.1
-* Added `enchantments`, `attributes` and `nbt` to slots
+## Upcoming
+* Added `drop_chance`, `enchantments`, `attributes` and `nbt` to slots
   * This makes you apply them to all the items listed, instead of having to add them to every single item
 
 ## 4.8.0
