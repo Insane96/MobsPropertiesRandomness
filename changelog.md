@@ -1,5 +1,8 @@
 # Changelog
 
+## 4.9.1
+* Fixed crash when omitting `inverse_dimension_list`
+
 ## 4.9.0
 * Added `effects_immunity`
   * A list of effects id that the mob cannot be affected by

@@ -52,6 +52,9 @@ public class MPRWorldWhitelist implements IMPRObject {
 		if (this.inverseBiomeList == null)
 			this.inverseBiomeList = false;
 
+		if (this.inverseDimensionList == null)
+			this.inverseDimensionList = false;
+
 		if (this.deepness != null)
 			this.deepness.validate();
 
