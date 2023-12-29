@@ -61,8 +61,8 @@ public class MPREquipment implements IMPRObject {
 		MPRItem chosenItem = slot.getRandomItem(entity);
 		if (chosenItem == null)
 			return;
-
-		ItemStack itemStack = new ItemStack(ForgeRegistries.ITEMS.getValue(new ResourceLocation(chosenItem.id)), 1);
+		//noinspection DataFlowIssue
+		ItemStack itemStack = new ItemStack(ForgeRegistries.ITEMS.getValue(new ResourceLocation(chosenItem.id)), chosenItem.count);
 
 		if (slot.nbt != null) {
 			itemStack.setTag(slot.getNBT());

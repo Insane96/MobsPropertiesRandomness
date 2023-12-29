@@ -21,6 +21,7 @@ import java.util.List;
 public class MPRItem implements IMPRObject, IWeightedRandom {
 
 	public String id;
+	public Integer count;
 	@SerializedName("weight")
 	private MPRModifiableValue modifiableWeight;
 
@@ -46,6 +47,9 @@ public class MPRItem implements IMPRObject, IWeightedRandom {
 			throw new JsonValidationException("Missing id. " + this);
 		else if (ForgeRegistries.ITEMS.getValue(new ResourceLocation(this.id)) == null)
 			throw new JsonValidationException("Invalid id. " + this);
+
+		if (this.count == null)
+			this.count = 1;
 
 		if (this.modifiableWeight == null) {
 			Logger.debug("Weight value missing for %s, will default to 1", this);
