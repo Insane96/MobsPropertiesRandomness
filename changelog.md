@@ -1,6 +1,6 @@
 # Changelog
 
-## Upcoming
+## 4.10.0
 * Added `inverse_structures`
   * If true, the condition fails if the mob spawns in the listed structure
 * Added `count` to items
