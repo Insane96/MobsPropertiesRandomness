@@ -1,6 +1,8 @@
 # Changelog
 
 ## Upcoming
+* Added `inverse_structures`
+  * If true, the condition fails if the mob spawns in the listed structure
 * Fixed `play_sound` not working with resource pack sounds
 
 ## 4.9.1

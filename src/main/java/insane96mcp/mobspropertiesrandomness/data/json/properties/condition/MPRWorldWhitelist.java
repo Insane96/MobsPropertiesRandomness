@@ -13,6 +13,7 @@ import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.level.Level;
+import net.minecraft.world.level.StructureManager;
 import net.minecraft.world.level.levelgen.structure.Structure;
 
 import java.util.ArrayList;
@@ -36,6 +37,8 @@ public class MPRWorldWhitelist implements IMPRObject {
 
 	@SerializedName("structures")
 	protected List<String> structures;
+	@SerializedName("inverse_structures")
+	public Boolean inverseStructures;
 
 	private transient List<ResourceKey<Structure>> _structures;
 
@@ -64,6 +67,8 @@ public class MPRWorldWhitelist implements IMPRObject {
 				this._structures.add(ResourceKey.create(Registries.STRUCTURE, new ResourceLocation(structure)));
 			}
 		}
+		if (this.inverseStructures == null)
+			this.inverseStructures = false;
 	}
 
 	public boolean doesDimensionMatch(Entity entity) {
@@ -110,19 +115,17 @@ public class MPRWorldWhitelist implements IMPRObject {
 	public boolean doesStructureMatch(LivingEntity entity) {
 		if (this.structures == null)
 			return true;
-		boolean structureMatches = false;
 		for (var structure : this._structures) {
-			Structure s = ((ServerLevel) entity.level()).structureManager().registryAccess().registryOrThrow(Registries.STRUCTURE).get(structure);
+			StructureManager structureManager = ((ServerLevel) entity.level()).structureManager();
+			Structure s = structureManager.registryAccess().registryOrThrow(Registries.STRUCTURE).get(structure);
 			if (s == null) {
-				LogHelper.warn("No structure found with id %s", structure.location());
-				break;
+				LogHelper.warn("No structure found with id %s. Ignored", structure.location());
+				continue;
 			}
-			if (((ServerLevel) entity.level()).structureManager().getStructureAt(entity.blockPosition(), s).isValid()) {
-				structureMatches = true;
-				break;
-			}
+			if (structureManager.getStructureAt(entity.blockPosition(), s).isValid())
+				return !this.inverseStructures;
 		}
-		return structureMatches;
+		return this.inverseStructures;
 	}
 
 	public boolean isWhitelisted(LivingEntity entity) {
