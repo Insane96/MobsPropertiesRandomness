@@ -1,5 +1,8 @@
 # Changelog
 
+## Upcoming
+* Fixed `play_sound` not working with resource pack sounds
+
 ## 4.9.1
 * Fixed crash when omitting `inverse_dimension_list`
 

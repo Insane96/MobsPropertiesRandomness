@@ -8,10 +8,10 @@ import com.google.gson.annotations.JsonAdapter;
 import insane96mcp.insanelib.exception.JsonValidationException;
 import insane96mcp.mobspropertiesrandomness.data.json.IMPRObject;
 import insane96mcp.mobspropertiesrandomness.util.Logger;
+import net.minecraft.core.Holder;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.sounds.SoundEvent;
 import net.minecraft.world.entity.LivingEntity;
-import net.minecraftforge.registries.ForgeRegistries;
 
 import java.lang.reflect.Type;
 
@@ -19,8 +19,7 @@ import java.lang.reflect.Type;
 public class MPRPlaySound implements IMPRObject {
 
     public String sound;
-    private transient SoundEvent cachedSound;
-
+    public ResourceLocation _sound;
     public Float volume;
     public Float pitch;
 
@@ -39,33 +38,35 @@ public class MPRPlaySound implements IMPRObject {
         if (this.sound != null) {
             ResourceLocation rl = ResourceLocation.tryParse(this.sound);
             if (rl == null)
-                throw new JsonValidationException("Invalid resource location for On Hit playSound: " + this);
-            this.cachedSound = ForgeRegistries.SOUND_EVENTS.getValue(rl);
+                throw new JsonValidationException("Invalid resource location for Event PlaySound: " + this);
+            this._sound = rl;
+            /*this.cachedSound = ForgeRegistries.SOUND_EVENTS.getValue(rl);
             if (this.cachedSound == null)
-                throw new JsonValidationException("Sound does not exist for On Hit playSound: " + this);
+                throw new JsonValidationException("Sound does not exist for Event PlaySound: " + this);*/
         }
         else {
-            throw new JsonValidationException("Missing sound for MPRPlaySound");
+            throw new JsonValidationException("Missing sound for PlaySound");
         }
 
         if (this.volume == null) {
             this.volume = 1f;
         }
         else if (this.volume <= 0f || this.volume > 32f){
-            Logger.warn("Invalid volume (%s) for MPRPlaySound. Must be between 0.1 and 32. Set it to 1", this.volume);
+            Logger.warn("Invalid volume (%s) for PlaySound. Must be between 0.1 and 32. Has been set to 1", this.volume);
             this.volume = 1f;
         }
         if (this.pitch == null) {
             this.pitch = 1f;
         }
         else if (this.pitch <= 0f || this.pitch > 32f){
-            Logger.warn("Invalid pitch (%s) for MPRPlaySound. Must be between 0.5 and 2. Set it to 1", this.pitch);
+            Logger.warn("Invalid pitch (%s) for PlaySound. Must be between 0.5 and 2. Has been set to 1", this.pitch);
             this.pitch = 1f;
         }
     }
 
     public void playSound(LivingEntity livingEntity) {
-        livingEntity.level().playSound(null, livingEntity.getX(), livingEntity.getY(), livingEntity.getZ(), this.cachedSound, livingEntity.getSoundSource(), this.volume, this.pitch);
+        SoundEvent soundEvent = Holder.direct(SoundEvent.createVariableRangeEvent(this._sound)).value();
+        livingEntity.level().playSound(null, livingEntity.getX(), livingEntity.getY(), livingEntity.getZ(), soundEvent, livingEntity.getSoundSource(), this.volume, this.pitch);
     }
 
     @Override
