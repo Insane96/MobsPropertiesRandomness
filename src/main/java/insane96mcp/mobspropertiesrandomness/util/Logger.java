@@ -18,7 +18,7 @@ public class Logger {
 			writer = new OutputStreamWriter(new FileOutputStream(logFile), StandardCharsets.UTF_8);
 			printWriter = new PrintWriter(writer);
 		} catch (FileNotFoundException ex) {
-			throw new RuntimeException("Could not create / open log file " + logFile);
+			throw new RuntimeException("Could not create / open log file " + logFile, ex);
 		}
 	}
 
