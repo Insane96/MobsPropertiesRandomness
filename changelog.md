@@ -1,6 +1,6 @@
 # Changelog
 
-## Upcoming
+## 4.10.1
 * Setting weight to < 1 will now show an error 
 
 ## 4.10.0

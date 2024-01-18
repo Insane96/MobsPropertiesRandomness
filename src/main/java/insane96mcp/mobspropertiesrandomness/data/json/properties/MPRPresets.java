@@ -30,7 +30,7 @@ public class MPRPresets implements IMPRObject {
 			this.chance.validate();
 		if (this.mode == null)
 			this.mode = Mode.EXCLUSIVE;
-		if (this.list == null || this.list.size() == 0)
+		if (this.list == null || this.list.isEmpty())
 			throw new JsonValidationException("Missing or empty list in Presets. " + this);
 		else {
 			for (MPRWeightedPreset weightedPreset : this.list) {
