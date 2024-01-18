@@ -1,5 +1,8 @@
 # Changelog
 
+## Upcoming
+* Setting weight to < 1 will now show an error 
+
 ## 4.10.0
 * Added `inverse_structures`
   * If true, the condition fails if the mob spawns in the listed structure

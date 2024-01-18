@@ -55,6 +55,9 @@ public class MPRItem implements IMPRObject, IWeightedRandom {
 			Logger.debug("Weight value missing for %s, will default to 1", this);
 			this.modifiableWeight = new MPRModifiableValue(1f);
 		}
+		else if (this.modifiableWeight.getValue() < 1) {
+			throw new JsonValidationException("Invalid weight for Item. Must be > 0. " + this);
+		}
 		this.modifiableWeight.validate();
 
 		if (this.dropChance != null)

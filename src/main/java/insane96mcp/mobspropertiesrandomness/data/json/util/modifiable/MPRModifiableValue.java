@@ -39,6 +39,8 @@ public class MPRModifiableValue extends MPRModifiable implements IMPRObject {
 		return this.applyModifiersAndRound(entity, this.value);
 	}
 
+	public float getValue() { return this.value; }
+
 	@Override
 	public String toString() {
 		return String.format("ModifiableValue{value: %f, %s}", this.value, super.toString());
