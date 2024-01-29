@@ -65,9 +65,6 @@ public class BaseFeature extends Feature {
 
 	@SubscribeEvent
 	public void onLivingDamage(LivingDamageEvent event) {
-		if (!(event.getSource().getEntity() instanceof LivingEntity))
-			return;
-
 		onAttack(event);
 		onAttacked(event);
 	}
@@ -75,6 +72,37 @@ public class BaseFeature extends Feature {
 	public static final java.lang.reflect.Type MPR_ON_DEATH_LIST_TYPE = new TypeToken<ArrayList<MPROnDeath>>(){}.getType();
 	@SubscribeEvent
 	public void onLivingDeath(LivingDeathEvent event) {
+		onDeathEvent(event);
+		removeBossBar(event);
+	}
+
+	@SubscribeEvent
+	public void onApplyEffect(MobEffectEvent.Applicable event) {
+		if (event.getEntity().level().isClientSide
+				|| !event.getEntity().getPersistentData().contains(MobsPropertiesRandomness.RESOURCE_PREFIX + "effect_immunity"))
+			return;
+
+		ListTag listTag = event.getEntity().getPersistentData().getList(MobsPropertiesRandomness.RESOURCE_PREFIX + "effect_immunity", Tag.TAG_STRING);
+		for (int i = 0; i < listTag.size(); ++i) {
+			String s = listTag.getString(i);
+			if (ForgeRegistries.MOB_EFFECTS.getKey(event.getEffectInstance().getEffect()).toString().equals(s)) {
+				event.setResult(Event.Result.DENY);
+				break;
+			}
+		}
+	}
+
+	public static final java.lang.reflect.Type MPR_ON_TICK_LIST_TYPE = new TypeToken<ArrayList<MPROnTick>>(){}.getType();
+	@SubscribeEvent
+	public void onLivingTick(LivingEvent.LivingTickEvent event) {
+		if (event.getEntity().level().isClientSide)
+			return;
+		checkOnTick(event.getEntity());
+		showBossBar(event.getEntity());
+		updateBossBar(event.getEntity());
+	}
+
+	public void onDeathEvent(LivingDeathEvent event) {
 		CompoundTag compoundTag = event.getEntity().getPersistentData();
 		if (compoundTag.contains(Strings.Tags.BOSS_BAR_ID)) {
 			CustomBossEvents customBossEvents = event.getEntity().getServer().getCustomBossEvents();
@@ -105,33 +133,7 @@ public class BaseFeature extends Feature {
 		}
 	}
 
-	@SubscribeEvent
-	public void onApplyEffect(MobEffectEvent.Applicable event) {
-		if (event.getEntity().level().isClientSide
-				|| !event.getEntity().getPersistentData().contains(MobsPropertiesRandomness.RESOURCE_PREFIX + "effect_immunity"))
-			return;
-
-		ListTag listTag = event.getEntity().getPersistentData().getList(MobsPropertiesRandomness.RESOURCE_PREFIX + "effect_immunity", Tag.TAG_STRING);
-		for (int i = 0; i < listTag.size(); ++i) {
-			String s = listTag.getString(i);
-			if (ForgeRegistries.MOB_EFFECTS.getKey(event.getEffectInstance().getEffect()).toString().equals(s)) {
-				event.setResult(Event.Result.DENY);
-				break;
-			}
-		}
-	}
-
-	public static final java.lang.reflect.Type MPR_ON_TICK_LIST_TYPE = new TypeToken<ArrayList<MPROnTick>>(){}.getType();
-	@SubscribeEvent
-	public void onLivingTick(LivingEvent.LivingTickEvent event) {
-		if (event.getEntity().level().isClientSide)
-			return;
-		checkOnTick(event.getEntity());
-		showBossBar(event.getEntity());
-		updateBossBar(event.getEntity());
-	}
-	@SubscribeEvent
-	public void onLivingTick(LivingDeathEvent event) {
+	public void removeBossBar(LivingDeathEvent event) {
 		if (event.getEntity().level().isClientSide
 				|| !(event.getSource().getEntity() instanceof LivingEntity livingEntity)
 				|| !(event.getEntity() instanceof ServerPlayer player))
@@ -238,11 +240,10 @@ public class BaseFeature extends Feature {
 
 	private void onAttacked(LivingDamageEvent event) {
 		LivingEntity attacked = event.getEntity();
-		if (attacked == null
-				|| !attacked.getPersistentData().contains(MPREvents.ON_ATTACKED))
+		if (!attacked.getPersistentData().contains(MPREvents.ON_DAMAGED))
 			return;
 
-		List<MPROnHit> onHitEffects = new Gson().fromJson(attacked.getPersistentData().getString(MPREvents.ON_ATTACKED), MPR_ON_HIT_LIST_TYPE);
+		List<MPROnHit> onHitEffects = new Gson().fromJson(attacked.getPersistentData().getString(MPREvents.ON_DAMAGED), MPR_ON_HIT_LIST_TYPE);
 		if (onHitEffects == null)
 			return;
 

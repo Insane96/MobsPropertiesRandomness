@@ -13,9 +13,6 @@ import java.util.List;
 
 public class MPROnHit extends MPREvent {
 
-
-	public Target target;
-
 	@SerializedName("potion_effects")
 	public List<MPRPotionEffect> potionEffects;
 
@@ -87,6 +84,8 @@ public class MPROnHit extends MPREvent {
 		}
 
 		LivingEntity target = this.target == Target.THIS ? entity : other;
+		if (target == null)
+			return;
 		if (this.potionEffects != null) {
 			for (MPRPotionEffect potionEffect : this.potionEffects) {
 				potionEffect.apply(target);

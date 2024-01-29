@@ -12,14 +12,14 @@ import java.util.List;
 public class MPREvents implements IMPRObject {
 
 	public static final String ON_ATTACK = MobsPropertiesRandomness.RESOURCE_PREFIX + "on_attack";
-	public static final String ON_ATTACKED = MobsPropertiesRandomness.RESOURCE_PREFIX + "on_attacked";
+	public static final String ON_DAMAGED = MobsPropertiesRandomness.RESOURCE_PREFIX + "on_damaged";
 	public static final String ON_DEATH = MobsPropertiesRandomness.RESOURCE_PREFIX + "on_death";
 	public static final String ON_TICK = MobsPropertiesRandomness.RESOURCE_PREFIX + "on_tick";
 	@SerializedName("on_attack")
 	public List<MPROnHit> onAttack;
 
-	@SerializedName("on_attacked")
-	public List<MPROnHit> onAttacked;
+	@SerializedName("on_damaged")
+	public List<MPROnHit> onDamaged;
 
 	@SerializedName("on_death")
 	public List<MPROnDeath> onDeath;
@@ -33,8 +33,8 @@ public class MPREvents implements IMPRObject {
 			for (MPROnHit onHit : this.onAttack)
 				onHit.validate();
 
-		if (this.onAttacked != null)
-			for (MPROnHit onHit : this.onAttacked)
+		if (this.onDamaged != null)
+			for (MPROnHit onHit : this.onDamaged)
 				onHit.validate();
 
 		if (this.onDeath != null)
@@ -49,8 +49,8 @@ public class MPREvents implements IMPRObject {
 	public void addToNBT(LivingEntity entity) {
 		if (this.onAttack != null)
 			entity.getPersistentData().putString(ON_ATTACK, new Gson().toJson(this.onAttack));
-		if (this.onAttacked != null)
-			entity.getPersistentData().putString(ON_ATTACKED, new Gson().toJson(this.onAttacked));
+		if (this.onDamaged != null)
+			entity.getPersistentData().putString(ON_DAMAGED, new Gson().toJson(this.onDamaged));
 		if (this.onDeath != null)
 			entity.getPersistentData().putString(ON_DEATH, new Gson().toJson(this.onDeath));
 		if (this.onTick != null)
@@ -59,6 +59,6 @@ public class MPREvents implements IMPRObject {
 
 	@Override
 	public String toString() {
-		return String.format("OnHitEffects{on_attack: %s, on_attacked: %s, on_death: %s, on_tick: %s}", this.onAttack, this.onAttacked, this.onDeath, this.onTick);
+		return String.format("OnHitEffects{on_attack: %s, on_attacked: %s, on_death: %s, on_tick: %s}", this.onAttack, this.onDamaged, this.onDeath, this.onTick);
 	}
 }

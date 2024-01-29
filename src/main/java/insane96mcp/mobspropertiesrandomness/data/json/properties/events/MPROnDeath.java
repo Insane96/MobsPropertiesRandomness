@@ -8,9 +8,6 @@ import net.minecraft.world.entity.LivingEntity;
 import javax.annotation.Nullable;
 
 public class MPROnDeath extends MPREvent {
-
-	public Target target;
-
 	@SerializedName("damage_type")
 	public DamageType damageType;
 	@SerializedName("set_fire")

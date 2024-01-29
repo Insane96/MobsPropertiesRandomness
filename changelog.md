@@ -1,5 +1,9 @@
 # Changelog
 
+## 4.10.2
+* Renamed `on_attacked` event to `on_damaged`
+  * Fixed event triggering only when the mob is attacked by another entity
+
 ## 4.10.1
 * Setting weight to < 1 will now show an error 
 

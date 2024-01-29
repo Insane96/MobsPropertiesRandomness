@@ -16,6 +16,7 @@ import java.util.List;
 
 public abstract class MPREvent implements IMPRObject {
 
+    public Target target;
     public MPRModifiableValue chance;
 
     @SerializedName("play_sound")
@@ -61,7 +62,7 @@ public abstract class MPREvent implements IMPRObject {
     public void tryPlaySound(LivingEntity entity) {
         if (this.playSound == null)
             return;
-        this.playSound.playSound(entity);
+        this.playSound.playSound(this.target, entity);
     }
 
     public void tryExecuteFunction(LivingEntity entity) {
