@@ -217,8 +217,7 @@ public class BaseFeature extends Feature {
 
 	public static final java.lang.reflect.Type MPR_ON_HIT_LIST_TYPE = new TypeToken<ArrayList<MPROnHit>>(){}.getType();
 	private void onAttack(LivingDamageEvent event) {
-		LivingEntity attacker = (LivingEntity) event.getSource().getEntity();
-		if (attacker == null
+		if (!(event.getSource().getEntity() instanceof LivingEntity attacker)
 				|| !attacker.getPersistentData().contains(MPREvents.ON_ATTACK))
 			return;
 

@@ -1,5 +1,8 @@
 # Changelog
 
+## 4.10.3
+* Fixed crash when non-living entities damaged someone
+
 ## 4.10.2
 * Renamed `on_attacked` event to `on_damaged`
   * Fixed event triggering only when the mob is attacked by another entity
