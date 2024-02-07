@@ -16,7 +16,6 @@ import insane96mcp.mobspropertiesrandomness.data.json.properties.events.MPREvent
 import insane96mcp.mobspropertiesrandomness.data.json.properties.events.MPROnDeath;
 import insane96mcp.mobspropertiesrandomness.data.json.properties.events.MPROnHit;
 import insane96mcp.mobspropertiesrandomness.data.json.properties.events.MPROnTick;
-import insane96mcp.mobspropertiesrandomness.setup.Strings;
 import insane96mcp.mobspropertiesrandomness.util.Logger;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.ListTag;
@@ -43,10 +42,11 @@ import java.util.List;
 
 @Label(name = "Base")
 @LoadFeature(module = MobsPropertiesRandomness.RESOURCE_PREFIX + "base", canBeDisabled = false)
-public class BaseFeature extends Feature {
+public class MPRBase extends Feature {
+	public static final String PROCESSED = MobsPropertiesRandomness.RESOURCE_PREFIX + "processed";
 	/*@Config
-	@Label(name = "TiCon Attack", description = "If true mob attacks with Tinker tools will use the Tinker attack method, making mobs able to use some TiCon modifiers.")
-	public static Boolean ticonAttack = true;*/
+        @Label(name = "TiCon Attack", description = "If true mob attacks with Tinker tools will use the Tinker attack method, making mobs able to use some TiCon modifiers.")
+        public static Boolean ticonAttack = true;*/
 	@Config
 	@Label(name = "Better Creeper Lingering", description = "If true creeper lingering clouds size changes based off creeper explosion radius.")
 	public static Boolean betterCreeperLingering = true;
@@ -54,7 +54,7 @@ public class BaseFeature extends Feature {
 	@Label(name = "Verbose Log")
 	public static Boolean verboseLog = false;
 
-	public BaseFeature(Module module, boolean enabledByDefault, boolean canBeDisabled) {
+	public MPRBase(Module module, boolean enabledByDefault, boolean canBeDisabled) {
 		super(module, enabledByDefault, canBeDisabled);
 	}
 
@@ -104,9 +104,9 @@ public class BaseFeature extends Feature {
 
 	public void onDeathEvent(LivingDeathEvent event) {
 		CompoundTag compoundTag = event.getEntity().getPersistentData();
-		if (compoundTag.contains(Strings.Tags.BOSS_BAR_ID)) {
+		if (compoundTag.contains(MPRBossBar.BOSS_BAR_ID)) {
 			CustomBossEvents customBossEvents = event.getEntity().getServer().getCustomBossEvents();
-			CustomBossEvent bossEvent = customBossEvents.get(new ResourceLocation(compoundTag.getString(Strings.Tags.BOSS_BAR_ID)));
+			CustomBossEvent bossEvent = customBossEvents.get(new ResourceLocation(compoundTag.getString(MPRBossBar.BOSS_BAR_ID)));
 			if (bossEvent != null) {
 				bossEvent.removeAllPlayers();
 				customBossEvents.remove(bossEvent);
@@ -158,11 +158,11 @@ public class BaseFeature extends Feature {
 	@Nullable
 	private CustomBossEvent getBarFromEntity(LivingEntity entity) {
 		CompoundTag persistentData = entity.getPersistentData();
-		if (!persistentData.contains(Strings.Tags.BOSS_BAR_ID))
+		if (!persistentData.contains(MPRBossBar.BOSS_BAR_ID))
 			return null;
-		ResourceLocation bossbarId = ResourceLocation.tryParse(persistentData.getString(Strings.Tags.BOSS_BAR_ID));
+		ResourceLocation bossbarId = ResourceLocation.tryParse(persistentData.getString(MPRBossBar.BOSS_BAR_ID));
 		if (bossbarId == null) {
-			LogHelper.warn("[%s] Failed to find boss bar with id %s", MobsPropertiesRandomness.MOD_ID, entity.getPersistentData().getString(Strings.Tags.BOSS_BAR_ID));
+			LogHelper.warn("[%s] Failed to find boss bar with id %s", MobsPropertiesRandomness.MOD_ID, entity.getPersistentData().getString(MPRBossBar.BOSS_BAR_ID));
 			return null;
 		}
 		//noinspection ConstantConditions
@@ -259,6 +259,6 @@ public class BaseFeature extends Feature {
 	}
 
 	public static boolean isBetterCreeperLingeringActivated() {
-		return Feature.isEnabled(BaseFeature.class) && betterCreeperLingering;
+		return Feature.isEnabled(MPRBase.class) && betterCreeperLingering;
 	}
 }

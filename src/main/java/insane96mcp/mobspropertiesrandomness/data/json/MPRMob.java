@@ -4,7 +4,7 @@ import com.google.gson.annotations.SerializedName;
 import insane96mcp.insanelib.data.IdTagMatcher;
 import insane96mcp.insanelib.exception.JsonValidationException;
 import insane96mcp.mobspropertiesrandomness.data.json.properties.MPRPresets;
-import insane96mcp.mobspropertiesrandomness.setup.Strings;
+import insane96mcp.mobspropertiesrandomness.module.base.feature.MPRBase;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
@@ -45,7 +45,7 @@ public class MPRMob extends MPRProperties implements IMPRObject {
 			return;
 
 		CompoundTag tags = livingEntity.getPersistentData();
-		boolean isAlreadyChecked = tags.getBoolean(Strings.Tags.PROCESSED);
+		boolean isAlreadyChecked = tags.getBoolean(MPRBase.PROCESSED);
 		if (isAlreadyChecked)
 			return;
 
@@ -72,6 +72,6 @@ public class MPRMob extends MPRProperties implements IMPRObject {
 			}
 		}
 
-		tags.putBoolean(Strings.Tags.PROCESSED, true);
+		tags.putBoolean(MPRBase.PROCESSED, true);
 	}
 }

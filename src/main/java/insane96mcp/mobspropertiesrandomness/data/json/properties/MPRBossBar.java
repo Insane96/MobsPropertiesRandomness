@@ -14,6 +14,7 @@ import net.minecraft.world.entity.LivingEntity;
 public class MPRBossBar implements IMPRObject {
 
     public static final String BOSS_BAR_VISIBILITY_RANGE = MobsPropertiesRandomness.RESOURCE_PREFIX + "boss_bar_visibility_range";
+    public static final String BOSS_BAR_ID = MobsPropertiesRandomness.RESOURCE_PREFIX + "boss_bar_uuid";
     public String color;
     public String type;
     @SerializedName("darken_screen")
