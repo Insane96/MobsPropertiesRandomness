@@ -195,6 +195,8 @@ public class MPRBase extends Feature {
 	}
 
 	private void checkOnTick(LivingEntity entity) {
+		if (entity.isDeadOrDying())
+			return;
 		CompoundTag persistentData = entity.getPersistentData();
 		if (!persistentData.contains(MPREvents.ON_TICK))
 			return;
@@ -207,7 +209,8 @@ public class MPRBase extends Feature {
 			//Does it impact performance?
 			try {
 				onTick.validate();
-			} catch (JsonValidationException e) {
+			}
+			catch (JsonValidationException e) {
 				Logger.error("Failed to validate MPROnTick: " + e);
 				continue;
 			}

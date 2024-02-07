@@ -1,5 +1,8 @@
 # Changelog
 
+## Upcoming
+* Fixed on_tick event working during the mob's death animation
+
 ## 4.10.3
 * Fixed crash when non-living entities damaged someone
 
