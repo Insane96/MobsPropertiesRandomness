@@ -35,7 +35,7 @@ public class MPROnHit extends MPREvent {
 	@SerializedName("additive_freeze")
 	public boolean additiveFreeze;
 	@SerializedName("health_left")
-	public Double healthLeft;
+	public MPRRange healthLeft = new MPRRange(0f, 1f);
 
 	@Override
 	public void validate() throws JsonValidationException {
@@ -61,7 +61,7 @@ public class MPROnHit extends MPREvent {
 	}
 
 	public void apply(LivingEntity entity, LivingEntity other, boolean isDirectDamage, LivingDamageEvent event, boolean attacked) {
-		if (!super.shouldApply(entity))
+		if (!super.shouldApply(entity) || event.getEntity().isDeadOrDying())
 			return;
 
 		if (this.damageType != null && ((isDirectDamage && this.damageType == DamageType.INDIRECT) || (!isDirectDamage && this.damageType == DamageType.DIRECT)))
@@ -79,7 +79,7 @@ public class MPROnHit extends MPREvent {
 
 		if (this.healthLeft != null && attacked) {
 			float health = (entity.getHealth() - event.getAmount()) / entity.getMaxHealth();
-			if (health > this.healthLeft || health <= 0f)
+			if (health < this.damageAmount.getMin(entity) || event.getAmount() > this.damageAmount.getMax(entity))
 				return;
 		}
 

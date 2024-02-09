@@ -1,6 +1,7 @@
 # Changelog
 
 ## Upcoming
+* On hit object's `health_left` is now a range between 0 and 1
 * Fixed on_tick event working during the mob's death animation
 
 ## 4.10.3
