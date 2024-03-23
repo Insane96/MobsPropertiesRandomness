@@ -12,7 +12,7 @@ public class MPRWorldSpawnDistanceModifier extends MPRModifier implements IMPROb
 	 Each 'step' blocks from spawn will increase the value to modify by 'amount_per_step'.
 	 If operation is "multiply" the result is treated as a percentage increase, the formula is 'value * (1 + ((distance + shift) / step) * amount_per_step)'.
 	 Else if the operation is "add" the result is added to the value, the formula is 'value + (((distance + shift) / step) * amount_per_step)'
-	 E.g. A mob with 50% chance (0.5) to spawn with a potion effect, with this modifier set as step = 100, amount_per_step = 0.02 and operation = "multiply" when it spawns 150 blocks from world spawn it will have the value modified as 'chance * (1 + ((distance + shift) / step) * amount_per_step)' = '0.5 * (1 + ((150 + 0) / 100))' = '0.5 * 1.5' (an increase of 50%) = '0.75 (75% chance)'
+	 E.g. A mob with 50% chance (0.5) to spawn with a potion effect, with this modifier set as step = 100, amount_per_step = 0.02 and operation = "multiply" when it spawns 150 blocks from world spawn it will have the value modified as 'chance * (1 + ((MIN(distance_cap, distance) + shift) / step) * amount_per_step)' = '0.5 * (1 + ((150 + 0) / 100))' = '0.5 * 1.5' (an increase of 50%) = '0.75 (75% chance)'
 	 */
 	@SerializedName("amount_per_step")
 	public MPRModifiableValue amountPerStep;
@@ -21,6 +21,11 @@ public class MPRWorldSpawnDistanceModifier extends MPRModifier implements IMPROb
 	 * Shifts the distance from spawn by this value
 	 */
 	public MPRModifiableValue shift;
+	/**
+	 * Distance in calculation will be capped to this value
+	 */
+	@SerializedName("distance_cap")
+	public MPRModifiableValue distanceCap;
 
 	public MPRWorldSpawnDistanceModifier() {
 		this.shift = new MPRModifiableValue(0f);
@@ -36,7 +41,13 @@ public class MPRWorldSpawnDistanceModifier extends MPRModifier implements IMPROb
 
 	public float applyModifier(LivingEntity entity, float value) {
 		Vec3 spawnPos = new Vec3(entity.level().getLevelData().getXSpawn(), entity.level().getLevelData().getYSpawn(), entity.level().getLevelData().getZSpawn());
-		float distance = (float) spawnPos.distanceTo(entity.position()) + this.shift.getValue(entity);
+		float distance = (float) spawnPos.distanceTo(entity.position());
+		if (this.distanceCap != null) {
+			float distanceCap = this.distanceCap.getValue(entity);
+			if (distance > distanceCap)
+				distance = distanceCap;
+		}
+		distance += this.shift.getValue(entity);
 		float totalBonus = (distance / this.step.getValue(entity)) * this.amountPerStep.getValue(entity);
 
 		if (this.getOperation() == Operation.ADD) return value + totalBonus;
@@ -45,6 +56,6 @@ public class MPRWorldSpawnDistanceModifier extends MPRModifier implements IMPROb
 
 	@Override
 	public String toString() {
-		return String.format("PosModifier{%s, amount_per_step: %s, step: %s, shift: %s}", super.toString(), this.amountPerStep, this.step, this.shift);
+		return String.format("PosModifier{%s, amount_per_step: %s, step: %s, shift: %s, distance_cap: %s}", super.toString(), this.amountPerStep, this.step, this.shift, this.distanceCap);
 	}
 }
