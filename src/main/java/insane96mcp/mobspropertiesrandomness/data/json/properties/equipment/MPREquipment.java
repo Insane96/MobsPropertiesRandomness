@@ -62,56 +62,47 @@ public class MPREquipment implements IMPRObject {
 		ItemStack itemStack;
 		if (chosenItem == null)
 			itemStack = entity.getItemBySlot(equipmentSlotType);
-		else
+		else {
 			//noinspection DataFlowIssue
 			itemStack = new ItemStack(ForgeRegistries.ITEMS.getValue(new ResourceLocation(chosenItem.id)), chosenItem.count);
+		}
 
-		if (slot.nbt != null) {
+		if (slot.nbt != null)
 			itemStack.setTag(slot.getNBT());
-		}
-		if (chosenItem.nbt != null) {
-			itemStack.setTag(chosenItem.getNBT());
-		}
 
 		if (slot.enchantments != null) {
 			for (MPREnchantment enchantment : slot.enchantments) {
 				enchantment.applyToStack(entity, itemStack);
 			}
 		}
-		if (chosenItem.enchantments != null) {
-			for (MPREnchantment enchantment : chosenItem.enchantments) {
-				enchantment.applyToStack(entity, itemStack);
-			}
-		}
-
-		/*if (chosenItem.ticonModifiers != null) {
-			for (MPRTiConModifier tiConModifier : chosenItem.ticonModifiers) {
-				itemStack = tiConModifier.applyToStack(entity, level, itemStack);
-			}
-		}
-
-		if (chosenItem.ticonMaterials != null) {
-			itemStack = chosenItem.ticonMaterials.applyToStack(entity, level, itemStack);
-		}*/
 
 		if (slot.attributes != null) {
 			for (MPRItemAttribute itemAttribute : slot.attributes) {
 				itemAttribute.applyToStack(entity, itemStack, equipmentSlotType);
 			}
 		}
-		if (chosenItem.attributes != null) {
-			for (MPRItemAttribute itemAttribute : chosenItem.attributes) {
-				itemAttribute.applyToStack(entity, itemStack, equipmentSlotType);
-			}
-		}
-
-		entity.setItemSlot(equipmentSlotType, itemStack);
 
 		//Drop Chance
 		if (slot.dropChance != null && entity instanceof Mob)
 			((Mob) entity).setDropChance(equipmentSlotType, slot.dropChance.getValue(entity));
-		if (chosenItem.dropChance != null && entity instanceof Mob)
-			((Mob) entity).setDropChance(equipmentSlotType, chosenItem.dropChance.getValue(entity));
+		if (chosenItem != null) {
+			if (chosenItem.nbt != null)
+				itemStack.setTag(chosenItem.getNBT());
+			if (chosenItem.enchantments != null) {
+				for (MPREnchantment enchantment : chosenItem.enchantments) {
+					enchantment.applyToStack(entity, itemStack);
+				}
+			}
+			if (chosenItem.attributes != null) {
+				for (MPRItemAttribute itemAttribute : chosenItem.attributes) {
+					itemAttribute.applyToStack(entity, itemStack, equipmentSlotType);
+				}
+			}
+			if (chosenItem.dropChance != null && entity instanceof Mob)
+				((Mob) entity).setDropChance(equipmentSlotType, chosenItem.dropChance.getValue(entity));
+		}
+
+		entity.setItemSlot(equipmentSlotType, itemStack);
 	}
 
 	@Override

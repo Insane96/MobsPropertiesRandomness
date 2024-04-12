@@ -86,6 +86,7 @@ public class MPRSlot implements IMPRObject {
 	 * Returns a random item from the pool based of weights, dimensions whitelist and biomes whitelist
 	 * @return an Item or null if no items were available
 	 */
+	@Nullable
 	public MPRItem getRandomItem(LivingEntity entity) {
 		List<MPRItem> items = getItems(entity);
 		if (items.isEmpty())
