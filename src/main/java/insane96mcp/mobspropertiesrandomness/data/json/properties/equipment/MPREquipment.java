@@ -60,7 +60,7 @@ public class MPREquipment implements IMPRObject {
 
 		MPRItem chosenItem = slot.getRandomItem(entity);
 		ItemStack itemStack;
-		if (chosenItem != null)
+		if (chosenItem == null)
 			itemStack = entity.getItemBySlot(equipmentSlotType);
 		else
 			//noinspection DataFlowIssue
