@@ -12,6 +12,7 @@ import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.TagParser;
 import net.minecraft.world.entity.LivingEntity;
 
+import javax.annotation.Nullable;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -22,6 +23,7 @@ public class MPRSlot implements IMPRObject {
 	@SerializedName("replace_only")
 	public boolean replaceOnly;
 	public MPRModifiableValue chance;
+	@Nullable
 	public List<MPRItem> items;
 	@SerializedName("drop_chance")
 	public MPRModifiableValue dropChance;
@@ -70,6 +72,8 @@ public class MPRSlot implements IMPRObject {
 
 	private List<MPRItem> getItems(LivingEntity entity){
 		ArrayList<MPRItem> items = new ArrayList<>();
+		if (this.items == null)
+			return items;
 		for (MPRItem item : this.items) {
 			MPRItem mprItem = item.computeAndGet(entity);
 			if (mprItem != null)
