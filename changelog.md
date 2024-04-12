@@ -1,7 +1,9 @@
 # Changelog
 
-## Upcoming
+## 4.10.4
 * Added `distance_cap` to World Spawn Distance Modifier
+* `items` in Equipment is no longer mandatory
+  * Can be used to apply enchantments, nbt and other stuff to already equipped items 
 * On hit object's `health_left` is now a range between 0 and 1
 * Fixed on_tick event working during the mob's death animation
 

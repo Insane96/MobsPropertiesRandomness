@@ -41,15 +41,13 @@ public class MPRSlot implements IMPRObject {
 			this.keepSpawned = false;
 		}
 
-		if (this.items == null || this.items.isEmpty())
-			throw new JsonValidationException("Missing items. " + this);
-		else {
-			for (MPRItem item : this.items) {
-				item.validate();
-			}
-		}
+        if (this.items != null) {
+            for (MPRItem item : this.items) {
+                item.validate();
+            }
+        }
 
-		if (this.dropChance != null)
+        if (this.dropChance != null)
 			this.dropChance.validate();
 
 		if (this.enchantments != null)
