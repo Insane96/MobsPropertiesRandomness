@@ -35,7 +35,7 @@ public class MPROnHit extends MPREvent {
 	@SerializedName("additive_freeze")
 	public boolean additiveFreeze;
 	@SerializedName("health_left")
-	public MPRRange healthLeft = new MPRRange(0f, 1f);
+	public MPRRange healthLeft;
 
 	@Override
 	public void validate() throws JsonValidationException {

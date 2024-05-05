@@ -1,5 +1,8 @@
 # Changelog
 
+## 4.10.5
+* Fixed `health_left` always defaulting to 0~1
+
 ## 4.10.4
 * Added `distance_cap` to World Spawn Distance Modifier
 * `items` in Equipment is no longer mandatory
