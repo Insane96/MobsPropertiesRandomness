@@ -1,5 +1,8 @@
 # Changelog
 
+## 4.10.6
+* Fixed `health_left` yet again not working
+
 ## 4.10.5
 * Fixed `health_left` always defaulting to 0~1
 

@@ -79,7 +79,7 @@ public class MPROnHit extends MPREvent {
 
 		if (this.healthLeft != null && attacked) {
 			float health = (entity.getHealth() - event.getAmount()) / entity.getMaxHealth();
-			if (health < this.damageAmount.getMin(entity) || event.getAmount() > this.damageAmount.getMax(entity))
+			if (health < this.healthLeft.getMin(entity) || event.getAmount() > this.healthLeft.getMax(entity))
 				return;
 		}
 
