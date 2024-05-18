@@ -1,7 +1,10 @@
 # Changelog
 
-## 4.10.7
+## 4.10.8
 * Fixed boss bar ignoring conditions
+
+## 4.10.7
+* ~~Removed `health_left`~~ Fixed `health_left` yet yet again not working
 
 ## 4.10.6
 * Fixed `health_left` yet again not working
