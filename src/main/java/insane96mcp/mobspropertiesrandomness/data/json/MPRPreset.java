@@ -23,11 +23,13 @@ public class MPRPreset extends MPRProperties implements IMPRObject {
 	@Override
 	public boolean apply(LivingEntity entity) {
 		boolean ret = super.apply(entity);
+		if (!ret)
+			return false;
 		if (this.bossBar != null) {
 			//noinspection ConstantConditions
 			CustomBossEvent bossBar = this.bossBar.createBar(this.id.getPath(), entity, entity.getRandom(), entity.getServer());
 			entity.getPersistentData().putString(MPRBossBar.BOSS_BAR_ID, bossBar.getTextId().toString());
 		}
-		return ret;
+		return true;
 	}
 }
