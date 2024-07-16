@@ -38,12 +38,12 @@ public class MPREvents implements IMPRObject {
 				onHit.validate();
 
 		if (this.onDeath != null)
-			for (MPROnDeath mprOnDeath : this.onDeath)
-				mprOnDeath.validate();
+			for (MPROnDeath onDeath : this.onDeath)
+				onDeath.validate();
 
 		if (this.onTick != null)
-			for (MPROnTick mprOnTick : this.onTick)
-				mprOnTick.validate();
+			for (MPROnTick onTick : this.onTick)
+				onTick.validate();
 	}
 
 	public void addToNBT(LivingEntity entity) {

@@ -4,6 +4,7 @@ import com.google.gson.annotations.SerializedName;
 import com.mojang.brigadier.exceptions.CommandSyntaxException;
 import insane96mcp.insanelib.exception.JsonValidationException;
 import insane96mcp.insanelib.setup.ILStrings;
+import insane96mcp.insanelib.util.LogHelper;
 import insane96mcp.mobspropertiesrandomness.MobsPropertiesRandomness;
 import insane96mcp.mobspropertiesrandomness.data.json.properties.MPRCustomName;
 import insane96mcp.mobspropertiesrandomness.data.json.properties.MPRNbt;
@@ -19,8 +20,10 @@ import net.minecraft.nbt.ListTag;
 import net.minecraft.nbt.StringTag;
 import net.minecraft.nbt.TagParser;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.server.ServerScoreboard;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.Mob;
+import net.minecraft.world.scores.PlayerTeam;
 import net.minecraftforge.registries.ForgeRegistries;
 
 import java.util.ArrayList;
@@ -53,6 +56,8 @@ public abstract class MPRProperties implements IMPRObject {
 
 	@SerializedName("effects_immunity")
 	public List<String> effectImmunity;
+
+	public String team;
 
 	@SerializedName("set_nbt")
 	public List<MPRNbt> setNbt;
@@ -98,7 +103,7 @@ public abstract class MPRProperties implements IMPRObject {
 			this.experienceMultiplier.validate();
 
 		if (this.lootTable != null) {
-			if (this.lootTable.equals(""))
+			if (this.lootTable.isEmpty())
 				throw new JsonValidationException("\"loot_table\": \"\" is not valid. To use an empty loot_table use \"minecraft:empty\". " + this);
 			else if (ResourceLocation.tryParse(this.lootTable) == null)
 				throw new JsonValidationException("\"loot_table\": \"" + this.lootTable + "\" is not valid. You must use a valid Resource Location (namespace:loot_table_id). " + this);
@@ -172,6 +177,15 @@ public abstract class MPRProperties implements IMPRObject {
 
 		for (MPRNbt mprNbt : this.setNbt) {
 			mprNbt.apply(entity);
+		}
+
+		if (this.team != null && entity.level().getServer() != null) {
+			ServerScoreboard scoreboard = entity.level().getServer().getScoreboard();
+			PlayerTeam playerTeam = scoreboard.getPlayerTeam(this.team);
+			if (playerTeam == null)
+				LogHelper.warn("Failed to find team %s. Ignored", this.team);
+			else
+				scoreboard.addPlayerToTeam(entity.getScoreboardName(), playerTeam);
 		}
 
 		if (this._rawNbt != null) {

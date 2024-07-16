@@ -1,5 +1,8 @@
 # Changelog
 
+## Upcoming
+* Added `team` to properties to add an entity to a scoreboard team
+
 ## 4.10.8
 * Fixed boss bar ignoring conditions
 
