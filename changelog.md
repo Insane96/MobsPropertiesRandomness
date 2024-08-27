@@ -2,6 +2,7 @@
 
 ## Upcoming
 * Added `team` to properties to add an entity to a scoreboard team
+* Fixed some NBT tags not getting applied
 
 ## 4.10.8
 * Fixed boss bar ignoring conditions

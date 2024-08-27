@@ -43,13 +43,13 @@ public class MPRNbt implements IMPRObject {
 
         CompoundTag nbt = new CompoundTag();
         if (!this.isPersistentData) {
-            entity.addAdditionalSaveData(nbt);
+            entity.saveWithoutId(nbt);
             switch (this.type) {
                 case DOUBLE -> nbt.putDouble(this.nbtTag, this.value.getFloatBetween(entity));
                 case INTEGER -> nbt.putInt(this.nbtTag, this.value.getIntBetween(entity));
                 case BOOLEAN -> nbt.putBoolean(this.nbtTag, entity.getRandom().nextFloat() < this.value.getFloatBetween(entity));
             }
-            entity.readAdditionalSaveData(nbt);
+            entity.load(nbt);
         }
         else {
             nbt = entity.getPersistentData();
