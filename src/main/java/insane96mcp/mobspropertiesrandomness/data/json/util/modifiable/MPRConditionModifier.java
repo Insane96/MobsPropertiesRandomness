@@ -1,9 +1,13 @@
 package insane96mcp.mobspropertiesrandomness.data.json.util.modifiable;
 
+import com.google.gson.reflect.TypeToken;
 import insane96mcp.insanelib.exception.JsonValidationException;
 import insane96mcp.mobspropertiesrandomness.data.json.IMPRObject;
 import insane96mcp.mobspropertiesrandomness.data.json.properties.condition.MPRConditions;
 import net.minecraft.world.entity.LivingEntity;
+
+import java.lang.reflect.Type;
+import java.util.List;
 
 public class MPRConditionModifier extends MPRModifier implements IMPRObject {
 	public MPRConditions condition;
@@ -35,4 +39,6 @@ public class MPRConditionModifier extends MPRModifier implements IMPRObject {
 	public String toString() {
 		return String.format("ConditionModifier{condition: %s, operation: %s, amount: %s}", this.condition, this.getOperation(), this.amount);
 	}
+
+	static final Type LIST_TYPE = new TypeToken<List<MPRConditionModifier>>() { }.getType();
 }

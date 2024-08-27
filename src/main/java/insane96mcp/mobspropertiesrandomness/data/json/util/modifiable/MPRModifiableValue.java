@@ -5,7 +5,6 @@ import com.google.gson.JsonDeserializer;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonParseException;
 import com.google.gson.annotations.JsonAdapter;
-import com.google.gson.reflect.TypeToken;
 import insane96mcp.insanelib.exception.JsonValidationException;
 import insane96mcp.mobspropertiesrandomness.data.json.IMPRObject;
 import net.minecraft.world.entity.LivingEntity;
@@ -56,7 +55,7 @@ public class MPRModifiableValue extends MPRModifiable implements IMPRObject {
 					context.deserialize(json.getAsJsonObject().get("world_spawn_distance_modifier"), MPRWorldSpawnDistanceModifier.class),
 					context.deserialize(json.getAsJsonObject().get("depth_modifier"), MPRDepthModifier.class),
 					context.deserialize(json.getAsJsonObject().get("time_existed_modifier"), MPRTimeExistedModifier.class),
-					context.deserialize(json.getAsJsonObject().get("conditions_modifier"), new TypeToken<List<MPRConditionModifier>>() {}.getType()),
+					context.deserialize(json.getAsJsonObject().get("condition_modifiers"), MPRConditionModifier.LIST_TYPE),
 					context.deserialize(json.getAsJsonObject().get("round"), Integer.class));
 		}
 	}
