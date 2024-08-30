@@ -1,6 +1,6 @@
 # Changelog
 
-## Upcoming
+## 4.10.9
 * Added `team` to properties to add an entity to a scoreboard team
 * Fixed some NBT tags not getting applied
 * Fixed `condition_modifiers` not working
