@@ -5,6 +5,7 @@ import insane96mcp.insanelib.data.IdTagMatcher;
 import insane96mcp.insanelib.exception.JsonValidationException;
 import insane96mcp.mobspropertiesrandomness.data.json.properties.MPRPresets;
 import insane96mcp.mobspropertiesrandomness.module.base.feature.MPRBase;
+import insane96mcp.mobspropertiesrandomness.util.Logger;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
@@ -52,6 +53,7 @@ public class MPRMob extends MPRProperties implements IMPRObject {
 		for (MPRMob mprMob : MPR_MOBS) {
 			if (!mprMob.target.matchesEntity(livingEntity))
 				continue;
+			Logger.debug("Applying MPRMob " + mprMob.target + " to " + livingEntity);
 			if (mprMob.presets == null)
 				mprMob.apply(livingEntity);
 			else {
