@@ -1,6 +1,8 @@
 # Changelog
 
 ## Upcoming
+* Passenger entities are no longer scaled with Pehkui
+  * This is to prevent a deadlock till under investigation
 * Added a debug log when applying properties to mobs
 
 ## 4.10.9

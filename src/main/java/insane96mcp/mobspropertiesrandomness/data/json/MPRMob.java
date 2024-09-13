@@ -53,7 +53,7 @@ public class MPRMob extends MPRProperties implements IMPRObject {
 		for (MPRMob mprMob : MPR_MOBS) {
 			if (!mprMob.target.matchesEntity(livingEntity))
 				continue;
-			Logger.debug("Applying MPRMob " + mprMob.target + " to " + livingEntity);
+			Logger.debug("Applying MPRMob " + mprMob + " to " + livingEntity);
 			if (mprMob.presets == null)
 				mprMob.apply(livingEntity);
 			else {

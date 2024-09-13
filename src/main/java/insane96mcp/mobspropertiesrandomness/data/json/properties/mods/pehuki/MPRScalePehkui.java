@@ -47,6 +47,8 @@ public class MPRScalePehkui implements IMPRObject {
     }
 
     public void apply(LivingEntity entity) {
+        if (entity.isPassenger())
+            return;
         float scale = this.scale.getFloatBetween(entity);
         for (String scaleType : this.scaleTypes) {
             ScaleType type = ScaleRegistries.SCALE_TYPES.get(new ResourceLocation(scaleType));
