@@ -1,5 +1,10 @@
 # Changelog
 
+## 4.10.11
+* Passenger entities have nothing to do with the deadlock. 
+  * It seems to be caused by mobs generating within structures on world generation.
+  * With this, mobs spawned by structure are no longer affected by pehkui scaling
+
 ## 4.10.10
 * Passenger entities are no longer scaled with Pehkui
   * This is to prevent a deadlock still under investigation

@@ -12,6 +12,8 @@ import insane96mcp.mobspropertiesrandomness.data.json.IMPRObject;
 import insane96mcp.mobspropertiesrandomness.data.json.util.modifiable.MPRRange;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.entity.Mob;
+import net.minecraft.world.entity.MobSpawnType;
 import net.minecraftforge.fml.ModList;
 import org.apache.logging.log4j.util.TriConsumer;
 import virtuoel.pehkui.api.ScaleData;
@@ -47,7 +49,7 @@ public class MPRScalePehkui implements IMPRObject {
     }
 
     public void apply(LivingEntity entity) {
-        if (entity.isPassenger())
+        if (entity instanceof Mob mob && mob.getSpawnType() == MobSpawnType.STRUCTURE && !mob.level().isLoaded(entity.blockPosition()))
             return;
         float scale = this.scale.getFloatBetween(entity);
         for (String scaleType : this.scaleTypes) {
