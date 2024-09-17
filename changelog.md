@@ -1,5 +1,8 @@
 # Changelog
 
+## Upcoming
+* Fixed mobs and presets not throwing errors anymore (for some reason)
+
 ## 4.10.11
 * Passenger entities have nothing to do with the deadlock. 
   * It seems to be caused by mobs generating within structures on world generation.

@@ -1,33 +1,64 @@
 package insane96mcp.mobspropertiesrandomness.data;
 
-import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
-import com.google.gson.JsonElement;
-import com.google.gson.JsonSyntaxException;
+import com.google.gson.*;
 import insane96mcp.insanelib.exception.JsonValidationException;
 import insane96mcp.mobspropertiesrandomness.data.json.MPRPreset;
 import insane96mcp.mobspropertiesrandomness.util.Logger;
+import net.minecraft.resources.FileToIdConverter;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.server.packs.resources.Resource;
 import net.minecraft.server.packs.resources.ResourceManager;
-import net.minecraft.server.packs.resources.SimpleJsonResourceReloadListener;
+import net.minecraft.server.packs.resources.SimplePreparableReloadListener;
+import net.minecraft.util.GsonHelper;
 import net.minecraft.util.profiling.ProfilerFiller;
 import org.jetbrains.annotations.NotNull;
 
+import java.io.IOException;
+import java.io.Reader;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-public class MPRPresetReloadListener extends SimpleJsonResourceReloadListener {
+public class MPRPresetReloadListener extends SimplePreparableReloadListener<Map<ResourceLocation, JsonElement>> {
 	public static final List<MPRPreset> MPR_PRESETS = new ArrayList<>();
 	public static final MPRPresetReloadListener INSTANCE;
 	private static final Gson GSON = new GsonBuilder().create();
+	private final String directory;
 
 	public MPRPresetReloadListener() {
-		super(GSON, "mobs_properties_randomness/presets");
+		this.directory = "mobs_properties_randomness/presets";
 	}
 
 	static {
 		INSTANCE = new MPRPresetReloadListener();
+	}
+
+	@Override
+	protected @NotNull Map<ResourceLocation, JsonElement> prepare(@NotNull ResourceManager resourceManager, @NotNull ProfilerFiller profilerFiller) {
+		Map<ResourceLocation, JsonElement> map = new HashMap<>();
+		scanDirectory(resourceManager, this.directory, GSON, map);
+		return map;
+	}
+
+	public static void scanDirectory(ResourceManager resourceManager, String directory, Gson gson, Map<ResourceLocation, JsonElement> map) {
+		FileToIdConverter filetoidconverter = FileToIdConverter.json(directory);
+
+		for (Map.Entry<ResourceLocation, Resource> entry : filetoidconverter.listMatchingResources(resourceManager).entrySet()) {
+			ResourceLocation key = entry.getKey();
+			ResourceLocation id = filetoidconverter.fileToId(key);
+
+			try (Reader reader = entry.getValue().openAsReader()) {
+				JsonElement jsonElement = GsonHelper.fromJson(gson, reader, JsonElement.class);
+				JsonElement duplicated = map.put(id, jsonElement);
+				if (duplicated != null)
+					throw new IllegalStateException("Duplicate data file ignored with ID " + id);
+			}
+			catch (IllegalArgumentException | IOException | JsonParseException exception) {
+				Logger.error("Error loading Preset %s: %s", key, exception.getMessage());
+			}
+		}
+
 	}
 
 	@Override
