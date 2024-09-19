@@ -1,6 +1,7 @@
 # Changelog
 
-## Upcoming
+## 4.10.12
+* Requires InsaneLib 1.15.0
 * Fixed mobs and presets not throwing errors anymore (for some reason)
 
 ## 4.10.11
