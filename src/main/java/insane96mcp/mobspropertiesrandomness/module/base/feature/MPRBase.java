@@ -16,6 +16,7 @@ import insane96mcp.mobspropertiesrandomness.data.json.properties.events.MPREvent
 import insane96mcp.mobspropertiesrandomness.data.json.properties.events.MPROnDeath;
 import insane96mcp.mobspropertiesrandomness.data.json.properties.events.MPROnHit;
 import insane96mcp.mobspropertiesrandomness.data.json.properties.events.MPROnTick;
+import insane96mcp.mobspropertiesrandomness.data.json.properties.mods.pehuki.MPRScalePehkui;
 import insane96mcp.mobspropertiesrandomness.util.Logger;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.ListTag;
@@ -60,6 +61,8 @@ public class MPRBase extends Feature {
 
 	@SubscribeEvent(priority = EventPriority.LOW)
 	public void onEntityJoinWorld(EntityJoinLevelEvent event) {
+		if (event.getLevel().isClientSide)
+			return;
 		MPRMob.apply(event);
 	}
 
@@ -97,9 +100,15 @@ public class MPRBase extends Feature {
 	public void onLivingTick(LivingEvent.LivingTickEvent event) {
 		if (event.getEntity().level().isClientSide)
 			return;
+		tryApplyPehkui(event.getEntity());
 		checkOnTick(event.getEntity());
 		showBossBar(event.getEntity());
 		updateBossBar(event.getEntity());
+	}
+
+	public void tryApplyPehkui(LivingEntity entity) {
+		if (entity.tickCount == 1)
+			MPRScalePehkui.applyScheduled(entity);
 	}
 
 	public void onDeathEvent(LivingDeathEvent event) {

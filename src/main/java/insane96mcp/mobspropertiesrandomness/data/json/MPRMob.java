@@ -9,7 +9,6 @@ import insane96mcp.mobspropertiesrandomness.util.Logger;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
-import net.minecraft.world.level.Level;
 import net.minecraftforge.event.entity.EntityJoinLevelEvent;
 
 import static insane96mcp.mobspropertiesrandomness.data.MPRMobReloadListener.MPR_MOBS;
@@ -37,10 +36,6 @@ public class MPRMob extends MPRProperties implements IMPRObject {
 			return;
 
 		Entity entity = event.getEntity();
-		Level level = event.getLevel();
-
-		if (level.isClientSide)
-			return;
 
 		if (!(entity instanceof LivingEntity livingEntity))
 			return;

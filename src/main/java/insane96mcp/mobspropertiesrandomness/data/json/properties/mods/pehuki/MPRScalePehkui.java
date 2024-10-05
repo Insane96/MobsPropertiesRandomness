@@ -1,5 +1,6 @@
 package insane96mcp.mobspropertiesrandomness.data.json.properties.mods.pehuki;
 
+import com.google.common.collect.HashMultimap;
 import com.google.gson.JsonDeserializationContext;
 import com.google.gson.JsonDeserializer;
 import com.google.gson.JsonElement;
@@ -8,12 +9,11 @@ import com.google.gson.annotations.JsonAdapter;
 import com.google.gson.annotations.SerializedName;
 import com.google.gson.reflect.TypeToken;
 import insane96mcp.insanelib.exception.JsonValidationException;
+import insane96mcp.mobspropertiesrandomness.MobsPropertiesRandomness;
 import insane96mcp.mobspropertiesrandomness.data.json.IMPRObject;
 import insane96mcp.mobspropertiesrandomness.data.json.util.modifiable.MPRRange;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.LivingEntity;
-import net.minecraft.world.entity.Mob;
-import net.minecraft.world.entity.MobSpawnType;
 import net.minecraftforge.fml.ModList;
 import org.apache.logging.log4j.util.TriConsumer;
 import virtuoel.pehkui.api.ScaleData;
@@ -48,15 +48,31 @@ public class MPRScalePehkui implements IMPRObject {
             throw new JsonValidationException("operation missing from ScalePehkui");
     }
 
-    public void apply(LivingEntity entity) {
-        if (entity instanceof Mob mob && mob.getSpawnType() == MobSpawnType.STRUCTURE && !mob.level().isLoaded(entity.blockPosition()))
+    private static final HashMultimap<LivingEntity, MPRScalePehkui> toApply = HashMultimap.create();
+
+    public void scheduleApply(LivingEntity entity) {
+        if (entity.getPersistentData().contains(MobsPropertiesRandomness.RESOURCE_PREFIX + "scale_pehkui_applied"))
             return;
+        toApply.put(entity, this);
+    }
+
+    public void apply(LivingEntity entity) {
+        /*if (entity instanceof Mob mob && mob.getSpawnType() == MobSpawnType.STRUCTURE && !mob.level().isLoaded(entity.blockPosition()))
+            return;*/
         float scale = this.scale.getFloatBetween(entity);
         for (String scaleType : this.scaleTypes) {
             ScaleType type = ScaleRegistries.SCALE_TYPES.get(new ResourceLocation(scaleType));
             ScaleData scaleData = type.getScaleData(entity);
             this.operation.applyScale(scaleData, scale, entity);
         }
+    }
+
+    public static void applyScheduled(LivingEntity entity) {
+        toApply.get(entity).forEach(mprScalePehkui -> {
+            mprScalePehkui.apply(entity);
+        });
+        entity.getPersistentData().putBoolean(MobsPropertiesRandomness.RESOURCE_PREFIX + "scale_pehkui_applied", true);
+        toApply.removeAll(entity);
     }
 
     private static final Type STRING_LIST_TYPE = new TypeToken<List<String>>(){}.getType();

@@ -1,5 +1,12 @@
 # Changelog
 
+## 4.10.13
+* Yet another try at fixing pehkui deadlock
+  * Pehkui scaling is now applied 1 tick later than other properties hopefully making chunks already loaded by that time
+* Mobs spawned by structure are again affected by pehkui scaling
+* Mobs spawned by structure are no longer affected by pehkui scaling
+  * Seems like that wasn't the problem
+
 ## 4.10.12
 * Requires InsaneLib 1.15.0
 * Fixed mobs and presets not throwing errors anymore (for some reason)

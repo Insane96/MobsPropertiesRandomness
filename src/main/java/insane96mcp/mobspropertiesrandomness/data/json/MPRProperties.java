@@ -194,7 +194,7 @@ public abstract class MPRProperties implements IMPRObject {
 
 		if (this.scalePehkui != null) {
 			for (MPRScalePehkui scalePehkui1 : this.scalePehkui) {
-				scalePehkui1.apply(entity);
+				scalePehkui1.scheduleApply(entity);
 			}
 		}
 
