@@ -1,5 +1,7 @@
 # Changelog
 
+* Add tags condition
+
 ## Upcoming
 * Fixed NBT condition not working on some of mob's NBT (e.g. `Silent`, `NoGravity`, ...)
 
