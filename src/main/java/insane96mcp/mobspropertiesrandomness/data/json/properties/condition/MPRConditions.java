@@ -82,8 +82,7 @@ public class MPRConditions implements IMPRObject {
 
 		if (this.nbt != null) {
 			CompoundTag mobNBT = new CompoundTag();
-			livingEntity.addAdditionalSaveData(mobNBT);
-			mobNBT.put("ForgeData", livingEntity.getPersistentData());
+			livingEntity.saveWithoutId(mobNBT);
 			result = MCUtils.compareNBT(this._nbt, mobNBT);
 		}
 

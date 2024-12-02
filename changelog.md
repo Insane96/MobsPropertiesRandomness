@@ -1,5 +1,8 @@
 # Changelog
 
+## Upcoming
+* Fixed NBT condition not working on some of mob's NBT (e.g. `Silent`, `NoGravity`, ...)
+
 ## 4.10.13
 * Yet another try at fixing pehkui deadlock
   * Pehkui scaling is now applied 1 tick later than other properties hopefully making chunks already loaded by that time
