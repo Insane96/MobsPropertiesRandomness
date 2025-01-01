@@ -5,6 +5,7 @@
 ## 4.10.14
 * Fixed item check not working and loading air
 * Also optimized items
+* Invalid presets are no longer added to the preset list
 * Fixed NBT condition not working on some of mob's NBT (e.g. `Silent`, `NoGravity`, ...)
 
 ## 4.10.13

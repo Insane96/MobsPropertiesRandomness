@@ -30,6 +30,8 @@ public class MPRWeightedPreset implements IMPRObject, IWeightedRandom {
 
 	public MPRConditions conditions;
 
+	private transient boolean valid = true;
+
 	@Override
 	public void validate() throws JsonValidationException {
 		if (this.id == null)
@@ -41,15 +43,20 @@ public class MPRWeightedPreset implements IMPRObject, IWeightedRandom {
 				break;
 			}
 		}
-		if (!found)
+		if (!found) {
 			Logger.warn("Preset " + this.id + " does not exist");
+			this.valid = false;
+			return;
+		}
 
 		if (this.modifiableWeight == null) {
 			Logger.debug("Weight value missing for %s, will default to 1", this);
 			this.modifiableWeight = new MPRModifiableValue(1f);
 		}
 		else if (this.modifiableWeight.getValue() < 1) {
-			throw new JsonValidationException("Invalid weight for Weighted Preset. Must be > 0. " + this);
+			Logger.warn("Invalid weight for Weighted Preset. Must be > 0. " + this);
+			this.valid = false;
+			return;
 		}
 		this.modifiableWeight.validate();
 
@@ -73,6 +80,10 @@ public class MPRWeightedPreset implements IMPRObject, IWeightedRandom {
 		this._weight = (int) this.modifiableWeight.getValue(entity);
 
 		return this;
+	}
+
+	public boolean isValid() {
+		return this.valid;
 	}
 
 	@Override

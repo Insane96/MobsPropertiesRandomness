@@ -33,9 +33,13 @@ public class MPRPresets implements IMPRObject {
 		if (this.list == null || this.list.isEmpty())
 			throw new JsonValidationException("Missing or empty list in Presets. " + this);
 		else {
+			List<MPRWeightedPreset> invalid = new ArrayList<>();
 			for (MPRWeightedPreset weightedPreset : this.list) {
 				weightedPreset.validate();
+				if (!weightedPreset.isValid())
+					invalid.add(weightedPreset);
 			}
+			invalid.forEach(this.list::remove);
 		}
 	}
 
