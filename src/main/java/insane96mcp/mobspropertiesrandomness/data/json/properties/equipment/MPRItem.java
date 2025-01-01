@@ -23,7 +23,7 @@ import java.util.List;
 public class MPRItem implements IMPRObject, IWeightedRandom {
 
 	public String id;
-	private Item item;
+	private transient Item item;
 	public Integer count;
 	@SerializedName("weight")
 	private MPRModifiableValue modifiableWeight;
