@@ -2,7 +2,9 @@
 
 * Add tags condition
 
-## Upcoming
+## 4.10.14
+* Fixed item check not working and loading air
+* Also optimized items
 * Fixed NBT condition not working on some of mob's NBT (e.g. `Silent`, `NoGravity`, ...)
 
 ## 4.10.13

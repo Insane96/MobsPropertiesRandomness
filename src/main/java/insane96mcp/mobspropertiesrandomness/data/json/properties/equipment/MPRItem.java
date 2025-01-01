@@ -13,6 +13,8 @@ import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.TagParser;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.item.Item;
+import net.minecraft.world.item.Items;
 import net.minecraftforge.registries.ForgeRegistries;
 
 import javax.annotation.Nullable;
@@ -21,6 +23,7 @@ import java.util.List;
 public class MPRItem implements IMPRObject, IWeightedRandom {
 
 	public String id;
+	private Item item;
 	public Integer count;
 	@SerializedName("weight")
 	private MPRModifiableValue modifiableWeight;
@@ -44,9 +47,11 @@ public class MPRItem implements IMPRObject, IWeightedRandom {
 	@Override
 	public void validate() throws JsonValidationException {
 		if (this.id == null)
-			throw new JsonValidationException("Missing id. " + this);
-		else if (ForgeRegistries.ITEMS.getValue(new ResourceLocation(this.id)) == null)
-			throw new JsonValidationException("Invalid id. " + this);
+			throw new JsonValidationException("Missing id. %s".formatted(this));
+
+		this.item = ForgeRegistries.ITEMS.getValue(new ResourceLocation(this.id));
+		if (this.item == Items.AIR && !this.id.equals("minecraft:air"))
+			throw new JsonValidationException("Item not found %s: %s".formatted(this.id, this));
 
 		if (this.count == null)
 			this.count = 1;
@@ -106,6 +111,10 @@ public class MPRItem implements IMPRObject, IWeightedRandom {
 
 	public CompoundTag getNBT() {
 		return this._nbt.copy();
+	}
+
+	public Item getItem() {
+		return this.item;
 	}
 
 	@Override
