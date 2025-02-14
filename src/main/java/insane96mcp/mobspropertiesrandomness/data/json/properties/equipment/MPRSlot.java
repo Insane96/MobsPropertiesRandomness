@@ -44,9 +44,13 @@ public class MPRSlot implements IMPRObject {
 		}
 
         if (this.items != null) {
+			List<MPRItem> invalid = new ArrayList<>();
             for (MPRItem item : this.items) {
                 item.validate();
+				if (!item.isValid())
+					invalid.add(item);
             }
+			invalid.forEach(this.items::remove);
         }
 
         if (this.dropChance != null)

@@ -2,6 +2,9 @@
 
 * Add tags condition
 
+## Upcoming
+* Invalid items are now not loaded and logged instead of breaking the whole json
+
 ## 4.10.14
 * Fixed item check not working and loading air
 * Also optimized items

@@ -44,14 +44,19 @@ public class MPRItem implements IMPRObject, IWeightedRandom {
 
 	public MPRConditions conditions;
 
+	private transient boolean valid = true;
+
 	@Override
 	public void validate() throws JsonValidationException {
 		if (this.id == null)
 			throw new JsonValidationException("Missing id. %s".formatted(this));
 
 		this.item = ForgeRegistries.ITEMS.getValue(new ResourceLocation(this.id));
-		if (this.item == Items.AIR && !this.id.equals("minecraft:air"))
-			throw new JsonValidationException("Item not found %s: %s".formatted(this.id, this));
+		if (this.item == Items.AIR && !this.id.equals("minecraft:air")) {
+			Logger.warn("Item not found %s: %s".formatted(this.id, this));
+			this.valid = false;
+			return;
+		}
 
 		if (this.count == null)
 			this.count = 1;
@@ -115,6 +120,10 @@ public class MPRItem implements IMPRObject, IWeightedRandom {
 
 	public Item getItem() {
 		return this.item;
+	}
+
+	public boolean isValid() {
+		return this.valid;
 	}
 
 	@Override
