@@ -8,6 +8,7 @@ import insane96mcp.mobspropertiesrandomness.data.json.IMPRObject;
 import insane96mcp.mobspropertiesrandomness.data.json.properties.attribute.MPRItemAttribute;
 import insane96mcp.mobspropertiesrandomness.data.json.properties.condition.MPRConditions;
 import insane96mcp.mobspropertiesrandomness.data.json.util.modifiable.MPRModifiableValue;
+import insane96mcp.mobspropertiesrandomness.data.json.util.modifiable.MPRRange;
 import insane96mcp.mobspropertiesrandomness.util.Logger;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.TagParser;
@@ -24,7 +25,7 @@ public class MPRItem implements IMPRObject, IWeightedRandom {
 
 	public String id;
 	private transient Item item;
-	public Integer count;
+	public MPRRange count;
 	@SerializedName("weight")
 	private MPRModifiableValue modifiableWeight;
 
@@ -59,7 +60,7 @@ public class MPRItem implements IMPRObject, IWeightedRandom {
 		}
 
 		if (this.count == null)
-			this.count = 1;
+			this.count = new MPRRange(1f);
 
 		if (this.modifiableWeight == null) {
 			Logger.debug("Weight value missing for %s, will default to 1", this);

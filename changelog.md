@@ -4,6 +4,8 @@
 
 ## Upcoming
 * Invalid items are now not loaded and logged instead of breaking the whole json
+* Items `count` is now a Range object
+  * So the wiki is no longer false advertisement
 
 ## 4.10.14
 * Fixed item check not working and loading air

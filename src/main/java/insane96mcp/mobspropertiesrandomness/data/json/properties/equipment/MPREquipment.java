@@ -61,8 +61,7 @@ public class MPREquipment implements IMPRObject {
 		if (chosenItem == null)
 			itemStack = entity.getItemBySlot(equipmentSlotType);
 		else {
-			//noinspection DataFlowIssue
-			itemStack = new ItemStack(chosenItem.getItem(), chosenItem.count);
+			itemStack = new ItemStack(chosenItem.getItem(), chosenItem.count.getIntBetween(entity));
 		}
 
 		if (slot.nbt != null)
