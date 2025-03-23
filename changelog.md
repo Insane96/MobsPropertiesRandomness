@@ -1,6 +1,6 @@
 # Changelog
 
-## Upcoming
+## 4.10.16
 * Pehkui scales now throw an error if the scale type is invalid
 
 ## 4.10.15
