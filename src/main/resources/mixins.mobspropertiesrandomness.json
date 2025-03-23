@@ -2,7 +2,10 @@
     "required": true,
     "package": "insane96mcp.mobspropertiesrandomness.mixin",
     "compatibilityLevel": "JAVA_8",
-    "refmap": "mobspropertiesrandomness.refmap.json",
+    "refmap": "mixins.mobspropertiesrandomness.refmap.json",
+    "injectors": {
+        "defaultRequire": 1
+    },
     "mixins": [
         "CreeperEntityMixin",
         "MobMixin"
