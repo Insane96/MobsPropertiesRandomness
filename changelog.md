@@ -1,6 +1,7 @@
 # Changelog
 
-* Add tags condition
+## Upcoming
+* Pehkui scales now throw an error if the scale type is invalid
 
 ## 4.10.15
 * Invalid items are now not loaded and logged instead of breaking the whole json

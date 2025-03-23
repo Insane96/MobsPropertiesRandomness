@@ -44,6 +44,10 @@ public class MPRScalePehkui implements IMPRObject {
             throw new JsonValidationException("scale missing from ScalePehkui");
         if (this.scaleTypes == null || this.scaleTypes.isEmpty())
             throw new JsonValidationException("scale_types missing or empty from ScalePehkui");
+        for (String scaleType : this.scaleTypes) {
+            if (ScaleRegistries.SCALE_TYPES.get(new ResourceLocation(scaleType)) == null)
+                throw new JsonValidationException("invalid scale_type %s from ScalePehkui".formatted(scaleType));
+        }
         if (this.operation == null)
             throw new JsonValidationException("operation missing from ScalePehkui");
     }
