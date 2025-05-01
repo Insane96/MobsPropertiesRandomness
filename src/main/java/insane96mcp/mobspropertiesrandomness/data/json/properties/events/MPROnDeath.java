@@ -9,7 +9,7 @@ import javax.annotation.Nullable;
 
 public class MPROnDeath extends MPREvent {
 	@SerializedName("damage_type")
-	public DamageType damageType;
+	public DirectIndirect directIndirect;
 	@SerializedName("set_fire")
 	public MPRRange setFire;
 	@SerializedName("additive_fire")
@@ -34,7 +34,7 @@ public class MPROnDeath extends MPREvent {
 		if (!super.shouldApply(entity))
 			return;
 
-		if (this.damageType != null && ((isDirectDamage && this.damageType == DamageType.INDIRECT) || (!isDirectDamage && this.damageType == DamageType.DIRECT)))
+		if (this.directIndirect != null && ((isDirectDamage && this.directIndirect == DirectIndirect.INDIRECT) || (!isDirectDamage && this.directIndirect == DirectIndirect.DIRECT)))
 			return;
 
 		LivingEntity target = this.target == Target.THIS ? entity : other;
@@ -56,6 +56,6 @@ public class MPROnDeath extends MPREvent {
 
 	@Override
 	public String toString() {
-		return String.format("OnDamage{%s, target: %s, damage_type: %s}", super.toString(), this.target, this.damageType);
+		return String.format("OnDamage{%s, target: %s, damage_type: %s}", super.toString(), this.target, this.directIndirect);
 	}
 }

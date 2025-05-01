@@ -1,10 +1,16 @@
 # Changelog
 
+## Upcoming
+* On Hit events (`on_attack` and `on_damaged`)
+  * `damage_type` has been renamed to `direct_indirect`
+  * Added `damage_type` allowing you to specify the damage type (or tag with `"#"`) that caused the damage.
+    E.g. `"damage_type": "#minecraft:is_projectile"`
+
 ## 4.10.16
 * Pehkui scales now throw an error if the scale type is invalid
 
 ## 4.10.15
-* Invalid items are now not loaded and logged instead of breaking the whole json
+* Invalid items are now no****t loaded and logged instead of breaking the whole json
 * Items `count` is now a Range object
   * So the wiki is no longer false advertisement
 

@@ -6,6 +6,11 @@ import insane96mcp.mobspropertiesrandomness.data.json.properties.MPRPotionEffect
 import insane96mcp.mobspropertiesrandomness.data.json.util.modifiable.MPRModifiableValue;
 import insane96mcp.mobspropertiesrandomness.data.json.util.modifiable.MPRModifier;
 import insane96mcp.mobspropertiesrandomness.data.json.util.modifiable.MPRRange;
+import net.minecraft.core.registries.Registries;
+import net.minecraft.resources.ResourceKey;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.tags.TagKey;
+import net.minecraft.world.damagesource.DamageType;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraftforge.event.entity.living.LivingDamageEvent;
 
@@ -16,8 +21,12 @@ public class MPROnHit extends MPREvent {
 	@SerializedName("potion_effects")
 	public List<MPRPotionEffect> potionEffects;
 
+	@SerializedName("direct_indirect")
+	public DirectIndirect directIndirect;
 	@SerializedName("damage_type")
-	public DamageType damageType;
+	public String damageType;
+	private transient ResourceKey<DamageType> _damageType;
+	private transient TagKey<DamageType> _damageTypeTag;
 
 	@SerializedName("damage_amount")
 	public MPRRange damageAmount = new MPRRange(0f, Float.MAX_VALUE);
@@ -48,6 +57,21 @@ public class MPROnHit extends MPREvent {
 				potionEffect.validate();
 		}
 
+		if (this.damageType != null) {
+			if (this.damageType.startsWith("#")) {
+				ResourceLocation rl = ResourceLocation.tryParse(this.damageType.substring(1));
+				if (rl == null)
+					throw new JsonValidationException("Invalid damage type tag %s for OnHit object: %s".formatted(this.damageType, this));
+				this._damageTypeTag = TagKey.create(Registries.DAMAGE_TYPE, rl);
+			}
+			else {
+				ResourceLocation rl = ResourceLocation.tryParse(this.damageType);
+				if (rl == null)
+					throw new JsonValidationException("Invalid damage type %s for OnHit object: %s".formatted(this.damageType, this));
+				this._damageType = ResourceKey.create(Registries.DAMAGE_TYPE, rl);
+			}
+		}
+
 		if (this.damageModifier != null) {
 			if (this.damageModifierOperation == null)
 				throw new JsonValidationException("Missing 'damage_modifier_operation' for OnHit object: %s".formatted(this));
@@ -60,14 +84,22 @@ public class MPROnHit extends MPREvent {
 			this.setFreeze.validate();
 	}
 
-	public void apply(LivingEntity entity, LivingEntity other, boolean isDirectDamage, LivingDamageEvent event, boolean attacked) {
-		if (!super.shouldApply(entity) || event.getEntity().isDeadOrDying())
+	public void apply(LivingEntity entity, LivingEntity other, LivingDamageEvent event, boolean attacked) {
+		if (!super.shouldApply(entity)
+				|| event.getEntity().isDeadOrDying())
 			return;
 
-		if (this.damageType != null && ((isDirectDamage && this.damageType == DamageType.INDIRECT) || (!isDirectDamage && this.damageType == DamageType.DIRECT)))
+		boolean isDirectDamage = event.getSource().getDirectEntity() == event.getSource().getEntity();
+		if (this.directIndirect != null
+				&& ((isDirectDamage && this.directIndirect == DirectIndirect.INDIRECT) || (!isDirectDamage && this.directIndirect == DirectIndirect.DIRECT)))
 			return;
 
-		if (event.getAmount() < this.damageAmount.getMin(entity) || event.getAmount() > this.damageAmount.getMax(entity))
+		if ((this._damageType != null && !event.getSource().is(this._damageType))
+				|| (this._damageTypeTag != null && !event.getSource().is(this._damageTypeTag)))
+			return;
+
+		if (event.getAmount() < this.damageAmount.getMin(entity)
+				|| event.getAmount() > this.damageAmount.getMax(entity))
 			return;
 
 		if (this.damageModifier != null) {
@@ -107,6 +139,6 @@ public class MPROnHit extends MPREvent {
 
 	@Override
 	public String toString() {
-		return String.format("OnHit{%s, potion_effects: %s, damage_modifier_operation: %s, damage_modifier: %s, target: %s, damage_type: %s, health_left: %s}", super.toString(), this.potionEffects, this.damageModifierOperation, this.damageModifier, this.target, this.damageType, this.healthLeft);
+		return String.format("OnHit{%s, potion_effects: %s, damage_modifier_operation: %s, damage_modifier: %s, target: %s, damage_type: %s, health_left: %s}", super.toString(), this.potionEffects, this.damageModifierOperation, this.damageModifier, this.target, this.directIndirect, this.healthLeft);
 	}
 }

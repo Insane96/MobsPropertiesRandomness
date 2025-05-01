@@ -245,7 +245,7 @@ public class MPRBase extends Feature {
 				Logger.error("Failed to validate MPROnHit: " + e);
 				continue;
 			}
-			mprOnHit.apply(attacker, event.getEntity(), event.getSource().getDirectEntity() == event.getSource().getEntity(), event, false);
+			mprOnHit.apply(attacker, event.getEntity(), event, false);
 		}
 	}
 
@@ -266,7 +266,7 @@ public class MPRBase extends Feature {
 				Logger.error("Failed to validate MPROnHit: " + e);
 				continue;
 			}
-			mprOnHit.apply(attacked, (LivingEntity) event.getSource().getEntity(), event.getSource().getDirectEntity() == event.getSource().getEntity(), event, true);
+			mprOnHit.apply(attacked, (LivingEntity) event.getSource().getEntity(), event, true);
 		}
 	}
 
