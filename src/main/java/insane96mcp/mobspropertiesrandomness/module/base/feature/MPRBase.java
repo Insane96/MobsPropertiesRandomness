@@ -11,6 +11,7 @@ import insane96mcp.insanelib.exception.JsonValidationException;
 import insane96mcp.insanelib.util.LogHelper;
 import insane96mcp.mobspropertiesrandomness.MobsPropertiesRandomness;
 import insane96mcp.mobspropertiesrandomness.data.json.MPRMob;
+import insane96mcp.mobspropertiesrandomness.data.json.MPRPreset;
 import insane96mcp.mobspropertiesrandomness.data.json.properties.MPRBossBar;
 import insane96mcp.mobspropertiesrandomness.data.json.properties.events.MPREvents;
 import insane96mcp.mobspropertiesrandomness.data.json.properties.events.MPROnDeath;
@@ -40,11 +41,15 @@ import org.jetbrains.annotations.Nullable;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
+
+import static insane96mcp.mobspropertiesrandomness.data.MPRPresetReloadListener.MPR_PRESETS;
 
 @Label(name = "Base")
 @LoadFeature(module = MobsPropertiesRandomness.RESOURCE_PREFIX + "base", canBeDisabled = false)
 public class MPRBase extends Feature {
 	public static final String PROCESSED = MobsPropertiesRandomness.RESOURCE_PREFIX + "processed";
+	public static final String PRESET = MobsPropertiesRandomness.RESOURCE_PREFIX + "preset";
 	/*@Config
         @Label(name = "TiCon Attack", description = "If true mob attacks with Tinker tools will use the Tinker attack method, making mobs able to use some TiCon modifiers.")
         public static Boolean ticonAttack = true;*/
@@ -63,6 +68,16 @@ public class MPRBase extends Feature {
 	public void onEntityJoinWorld(EntityJoinLevelEvent event) {
 		if (event.getLevel().isClientSide)
 			return;
+
+		if (!(event.getEntity() instanceof LivingEntity livingEntity))
+			return;
+		if (livingEntity.getPersistentData().contains(PRESET)) {
+			ResourceLocation rl = ResourceLocation.tryParse(livingEntity.getPersistentData().getString(PRESET));
+			if (rl != null) {
+				Optional<MPRPreset> preset = MPR_PRESETS.stream().filter(p -> p.id.equals(rl)).findFirst();
+				preset.ifPresent(mprWeightedPreset -> mprWeightedPreset.apply(livingEntity));
+			}
+		}
 		MPRMob.apply(event);
 	}
 

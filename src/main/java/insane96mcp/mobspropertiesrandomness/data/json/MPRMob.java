@@ -51,7 +51,7 @@ public class MPRMob extends MPRProperties implements IMPRObject {
 			Logger.debug("Applying MPRMob " + mprMob + " to " + livingEntity);
 			if (mprMob.presets == null)
 				mprMob.apply(livingEntity);
-			else {
+			else if (!livingEntity.getPersistentData().contains(MPRBase.PRESET)) {
 				switch (mprMob.presets.mode) {
 					case EXCLUSIVE:
 						if (!mprMob.presets.apply(livingEntity))
@@ -70,5 +70,6 @@ public class MPRMob extends MPRProperties implements IMPRObject {
 		}
 
 		tags.putBoolean(MPRBase.PROCESSED, true);
+		livingEntity.getPersistentData().remove(MPRBase.PRESET);
 	}
 }

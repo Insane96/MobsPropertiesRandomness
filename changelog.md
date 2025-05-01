@@ -5,6 +5,9 @@
   * `damage_type` has been renamed to `direct_indirect`
   * Added `damage_type` allowing you to specify the damage type (or tag with `"#"`) that caused the damage.
     E.g. `"damage_type": "#minecraft:is_projectile"`
+* Added a way to summon a mob with a preset
+  * `{ForgeData:{"mobspropertiesrandomness:preset":"namespace:preset_id"}}`
+  * Adding this NBT tag will not apply any other preset
 
 ## 4.10.16
 * Pehkui scales now throw an error if the scale type is invalid
