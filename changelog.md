@@ -1,6 +1,6 @@
 # Changelog
 
-## Upcoming
+## 4.11.0
 * On Hit events (`on_attack` and `on_damaged`)
   * `damage_type` has been renamed to `direct_indirect`
   * Added `damage_type` allowing you to specify the damage type (or tag with `"#"`) that caused the damage.
