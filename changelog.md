@@ -1,5 +1,9 @@
 # Changelog
 
+## Upcoming
+* Potion effects
+  * Renamed `id` to `effect`
+
 ## 4.11.1
 * Requires InsaneLib 1.12.0
 * Requires Forge 47.4.0

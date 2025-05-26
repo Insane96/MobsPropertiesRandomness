@@ -76,9 +76,6 @@ public abstract class MPRProperties implements IMPRObject {
 
 		if (this.potionEffects == null)
 			this.potionEffects = new ArrayList<>();
-		for (MPRPotionEffect potionEffect : this.potionEffects) {
-			potionEffect.validate();
-		}
 
 		if (this.attributes == null)
 			this.attributes = new ArrayList<>();
