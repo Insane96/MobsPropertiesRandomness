@@ -3,7 +3,7 @@ package insane96mcp.mobspropertiesrandomness.data.json.util.modifiable;
 import com.google.gson.reflect.TypeToken;
 import insane96mcp.insanelib.exception.JsonValidationException;
 import insane96mcp.mobspropertiesrandomness.data.json.IMPRObject;
-import insane96mcp.mobspropertiesrandomness.data.json.properties.condition.MPRConditions;
+import insane96mcp.mobspropertiesrandomness.data.json.properties.outdated.MPRConditions;
 import net.minecraft.world.entity.LivingEntity;
 
 import java.lang.reflect.Type;

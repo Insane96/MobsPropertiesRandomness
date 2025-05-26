@@ -1,4 +1,4 @@
-package insane96mcp.mobspropertiesrandomness.data.json.properties.condition;
+package insane96mcp.mobspropertiesrandomness.data.json.properties.outdated;
 
 import com.google.gson.annotations.SerializedName;
 import insane96mcp.insanelib.data.IdTagMatcher;
