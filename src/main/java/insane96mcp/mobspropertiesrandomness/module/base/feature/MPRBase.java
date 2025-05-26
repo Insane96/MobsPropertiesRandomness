@@ -3,7 +3,6 @@ package insane96mcp.mobspropertiesrandomness.module.base.feature;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 import insane96mcp.insanelib.base.Feature;
-import insane96mcp.insanelib.base.Label;
 import insane96mcp.insanelib.base.LoadFeature;
 import insane96mcp.insanelib.base.Module;
 import insane96mcp.insanelib.base.config.Config;
@@ -28,6 +27,7 @@ import net.minecraft.server.bossevents.CustomBossEvents;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraftforge.event.entity.EntityJoinLevelEvent;
+import net.minecraftforge.event.entity.EntityLeaveLevelEvent;
 import net.minecraftforge.event.entity.living.LivingDamageEvent;
 import net.minecraftforge.event.entity.living.LivingDeathEvent;
 import net.minecraftforge.event.entity.living.LivingEvent;
@@ -45,7 +45,6 @@ import java.util.Optional;
 
 import static insane96mcp.mobspropertiesrandomness.data.MPRPresetReloadListener.MPR_PRESETS;
 
-@Label(name = "Base")
 @LoadFeature(module = MobsPropertiesRandomness.RESOURCE_PREFIX + "base", canBeDisabled = false)
 public class MPRBase extends Feature {
 	public static final String PROCESSED = MobsPropertiesRandomness.RESOURCE_PREFIX + "processed";
@@ -53,11 +52,9 @@ public class MPRBase extends Feature {
 	/*@Config
         @Label(name = "TiCon Attack", description = "If true mob attacks with Tinker tools will use the Tinker attack method, making mobs able to use some TiCon modifiers.")
         public static Boolean ticonAttack = true;*/
-	@Config
-	@Label(name = "Better Creeper Lingering", description = "If true creeper lingering clouds size changes based off creeper explosion radius.")
+	@Config(description = "If true creeper lingering clouds size changes based off their explosion radius.")
 	public static Boolean betterCreeperLingering = true;
 	@Config
-	@Label(name = "Verbose Log")
 	public static Boolean verboseLog = false;
 
 	public MPRBase(Module module, boolean enabledByDefault, boolean canBeDisabled) {
@@ -91,7 +88,19 @@ public class MPRBase extends Feature {
 	@SubscribeEvent
 	public void onLivingDeath(LivingDeathEvent event) {
 		onDeathEvent(event);
-		removeBossBar(event);
+		removePlayerFromBossBar(event);
+	}
+
+	@SubscribeEvent
+	public void onEntityLeaveLevel(EntityLeaveLevelEvent event) {
+		if (!(event.getEntity() instanceof LivingEntity livingEntity)
+				|| livingEntity.getServer() == null)
+			return;
+
+		CustomBossEvent bossEvent = getBarFromEntity(livingEntity);
+		if (bossEvent == null)
+			return;
+		livingEntity.getServer().getCustomBossEvents().remove(bossEvent);
 	}
 
 	@SubscribeEvent
@@ -127,17 +136,10 @@ public class MPRBase extends Feature {
 	}
 
 	public void onDeathEvent(LivingDeathEvent event) {
-		CompoundTag compoundTag = event.getEntity().getPersistentData();
-		if (compoundTag.contains(MPRBossBar.BOSS_BAR_ID)) {
-			CustomBossEvents customBossEvents = event.getEntity().getServer().getCustomBossEvents();
-			CustomBossEvent bossEvent = customBossEvents.get(ResourceLocation.parse(compoundTag.getString(MPRBossBar.BOSS_BAR_ID)));
-			if (bossEvent != null) {
-				bossEvent.removeAllPlayers();
-				customBossEvents.remove(bossEvent);
-			}
-		}
+		removeBossBar(event.getEntity());
 
-		if (!compoundTag.contains(MPREvents.ON_DEATH))
+		CompoundTag compoundTag = event.getEntity().getPersistentData();
+        if (!compoundTag.contains(MPREvents.ON_DEATH))
 			return;
 
 		LivingEntity attacker = (LivingEntity) event.getSource().getEntity();
@@ -157,7 +159,7 @@ public class MPRBase extends Feature {
 		}
 	}
 
-	public void removeBossBar(LivingDeathEvent event) {
+	public void removePlayerFromBossBar(LivingDeathEvent event) {
 		if (event.getEntity().level().isClientSide
 				|| !(event.getSource().getEntity() instanceof LivingEntity livingEntity)
 				|| !(event.getEntity() instanceof ServerPlayer player))
@@ -167,6 +169,21 @@ public class MPRBase extends Feature {
 			return;
 		bossEvent.removePlayer(player);
 	}
+
+	public void removeBossBar(LivingEntity entity) {
+		if (entity.getServer() == null)
+			return;
+		CompoundTag compoundTag = entity.getPersistentData();
+		if (!compoundTag.contains(MPRBossBar.BOSS_BAR_ID))
+			return;
+		CustomBossEvents customBossEvents = entity.getServer().getCustomBossEvents();
+		CustomBossEvent bossEvent = customBossEvents.get(ResourceLocation.parse(compoundTag.getString(MPRBossBar.BOSS_BAR_ID)));
+		if (bossEvent != null) {
+			bossEvent.removeAllPlayers();
+			customBossEvents.remove(bossEvent);
+		}
+	}
+
 	@SubscribeEvent
 	public void onStopTracking(PlayerEvent.StopTracking event) {
 		if (event.getEntity().level().isClientSide

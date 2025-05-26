@@ -2,6 +2,9 @@
 
 ## Upcoming
 * Requires InsaneLib 1.12.0
+* Requires Forge 47.4.0
+* Minor optimization for Boss Bar performance
+* Fixed boss bars not disappearing when the mob despawns
 
 ## 4.11.0
 * On Hit events (`on_attack` and `on_damaged`)
