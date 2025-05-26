@@ -1,6 +1,6 @@
 # Changelog
 
-## Upcoming
+## 4.11.1
 * Requires InsaneLib 1.12.0
 * Requires Forge 47.4.0
 * Minor optimization for Boss Bar performance
