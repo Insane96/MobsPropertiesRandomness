@@ -204,7 +204,7 @@ public class MPRBase extends Feature {
 	}
 
 	private void showBossBar(LivingEntity entity) {
-		if (entity.tickCount % 20 != 0)
+		if (entity.tickCount % 20 != entity.getId() % 20)
 			return;
 
 		CustomBossEvent bossBar = getBarFromEntity(entity);
