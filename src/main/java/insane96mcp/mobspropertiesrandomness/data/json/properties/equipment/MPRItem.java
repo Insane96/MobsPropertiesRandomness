@@ -52,7 +52,7 @@ public class MPRItem implements IMPRObject, IWeightedRandom {
 		if (this.id == null)
 			throw new JsonValidationException("Missing id. %s".formatted(this));
 
-		this.item = ForgeRegistries.ITEMS.getValue(new ResourceLocation(this.id));
+		this.item = ForgeRegistries.ITEMS.getValue(ResourceLocation.parse(this.id));
 		if (this.item == Items.AIR && !this.id.equals("minecraft:air")) {
 			Logger.warn("Item not found %s: %s".formatted(this.id, this));
 			this.valid = false;

@@ -45,7 +45,7 @@ public class MPRAdvancement implements IMPRObject {
 		for (ServerPlayer player : players) {
 			boolean allAdvancementDone = true;
 			for (String adv : this.advancements) {
-				if (!MCUtils.isAdvancementDone(player, new ResourceLocation(adv))) {
+				if (!MCUtils.isAdvancementDone(player, ResourceLocation.parse(adv))) {
 					allAdvancementDone = false;
 				}
 			}

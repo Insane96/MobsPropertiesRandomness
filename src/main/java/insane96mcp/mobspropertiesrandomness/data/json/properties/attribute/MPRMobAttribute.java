@@ -22,7 +22,7 @@ public class MPRMobAttribute extends MPRAttribute implements IMPRObject {
 		if (!this.shouldApply(entity))
 			return;
 
-		Attribute attribute = ForgeRegistries.ATTRIBUTES.getValue(new ResourceLocation(this.id));
+		Attribute attribute = ForgeRegistries.ATTRIBUTES.getValue(ResourceLocation.parse(this.id));
 		AttributeInstance attributeInstance = entity.getAttribute(attribute);
 		if (attributeInstance == null) {
 			Logger.warn("Attribute " + this.id + " not found for the entity, skipping the attribute");

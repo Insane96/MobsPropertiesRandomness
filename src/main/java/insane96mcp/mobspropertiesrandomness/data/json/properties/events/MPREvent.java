@@ -38,7 +38,7 @@ public abstract class MPREvent implements IMPRObject {
             this.playSound.validate();
 
         if (this.functionId != null)
-            this.function = new CommandFunction.CacheableFunction(new ResourceLocation(this.functionId));
+            this.function = new CommandFunction.CacheableFunction(ResourceLocation.parse(this.functionId));
 
         if (this.scalePehkui != null)
         {

@@ -130,7 +130,7 @@ public class MPRBase extends Feature {
 		CompoundTag compoundTag = event.getEntity().getPersistentData();
 		if (compoundTag.contains(MPRBossBar.BOSS_BAR_ID)) {
 			CustomBossEvents customBossEvents = event.getEntity().getServer().getCustomBossEvents();
-			CustomBossEvent bossEvent = customBossEvents.get(new ResourceLocation(compoundTag.getString(MPRBossBar.BOSS_BAR_ID)));
+			CustomBossEvent bossEvent = customBossEvents.get(ResourceLocation.parse(compoundTag.getString(MPRBossBar.BOSS_BAR_ID)));
 			if (bossEvent != null) {
 				bossEvent.removeAllPlayers();
 				customBossEvents.remove(bossEvent);

@@ -31,7 +31,7 @@ public class MPRPotionEffect implements IMPRObject {
 		//Potion Id
 		if (this.id == null)
 			throw new JsonValidationException("Missing Potion Effect Id in PotionEffect Object. " + this);
-		else if (!ForgeRegistries.MOB_EFFECTS.containsKey(new ResourceLocation(this.id)))
+		else if (!ForgeRegistries.MOB_EFFECTS.containsKey(ResourceLocation.parse(this.id)))
 			throw new JsonValidationException("Invalid Potion Effect Id in PotionEffect Object. " + this);
 
 		//Amplifier
@@ -65,7 +65,7 @@ public class MPRPotionEffect implements IMPRObject {
 		if (this.conditions != null && !this.conditions.conditionsApply(entity))
 			return;
 
-		MobEffect effect = ForgeRegistries.MOB_EFFECTS.getValue(new ResourceLocation(this.id));
+		MobEffect effect = ForgeRegistries.MOB_EFFECTS.getValue(ResourceLocation.parse(this.id));
 		//noinspection ConstantConditions
 		int duration = this.duration.getIntBetween(entity);
 		//noinspection DataFlowIssue

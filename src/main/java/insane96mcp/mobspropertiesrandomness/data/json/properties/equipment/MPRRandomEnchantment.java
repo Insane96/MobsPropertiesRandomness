@@ -16,7 +16,6 @@ import javax.annotation.Nullable;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
-import java.util.Random;
 
 public class MPRRandomEnchantment implements IMPRObject {
 
@@ -35,7 +34,7 @@ public class MPRRandomEnchantment implements IMPRObject {
 	public void validate() throws JsonValidationException {
 		if (this.list != null) {
 			for (String enchantment : this.list) {
-				if (ForgeRegistries.ENCHANTMENTS.getValue(new ResourceLocation(enchantment)) == null) {
+				if (ForgeRegistries.ENCHANTMENTS.getValue(ResourceLocation.parse(enchantment)) == null) {
 					throw new JsonValidationException("Invalid Enchantment ID " + enchantment + " for " + this);
 				}
 			}
@@ -51,7 +50,7 @@ public class MPRRandomEnchantment implements IMPRObject {
 		List<Enchantment> toFilter = new ArrayList<>();
 		if (this.list != null)
 			for (String s : list)
-				toFilter.add(ForgeRegistries.ENCHANTMENTS.getValue(new ResourceLocation(s)));
+				toFilter.add(ForgeRegistries.ENCHANTMENTS.getValue(ResourceLocation.parse(s)));
 		else
 			toFilter = new ArrayList<>(ForgeRegistries.ENCHANTMENTS.getValues());
 

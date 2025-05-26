@@ -23,7 +23,7 @@ public class MPRConditions implements IMPRObject {
 	public StructureBehaviour structureBehaviour;
 
 	@SerializedName("world")
-	public MPRWorldWhitelist world;
+	public MPRWorld world;
 
 	@SerializedName("advancements_unlocked")
 	public List<MPRAdvancement> advancements;

@@ -111,7 +111,7 @@ public abstract class MPRProperties implements IMPRObject {
 
 		if (this.effectImmunity != null) {
 			for (String mobEffect : this.effectImmunity) {
-				if (ForgeRegistries.MOB_EFFECTS.getValue(new ResourceLocation(mobEffect)) == null) {
+				if (ForgeRegistries.MOB_EFFECTS.getValue(ResourceLocation.parse(mobEffect)) == null) {
 					throw new JsonValidationException("Invalid MobEffect ID " + mobEffect + " for " + this);
 				}
 			}
@@ -164,7 +164,7 @@ public abstract class MPRProperties implements IMPRObject {
 			entity.getPersistentData().putDouble(ILStrings.Tags.EXPERIENCE_MULTIPLIER, this.experienceMultiplier.getValue(entity));
 
 		if (this.lootTable != null && entity instanceof Mob) {
-			((Mob) entity).lootTable = new ResourceLocation(this.lootTable);
+			((Mob) entity).lootTable = ResourceLocation.parse(this.lootTable);
 		}
 
 		if (this.effectImmunity != null) {

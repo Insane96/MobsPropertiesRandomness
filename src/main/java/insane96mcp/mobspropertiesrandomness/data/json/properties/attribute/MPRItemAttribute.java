@@ -23,7 +23,7 @@ public class MPRItemAttribute extends MPRAttribute implements IMPRObject {
 		if (!this.shouldApply(entity))
 			return;
 
-		Attribute attribute = ForgeRegistries.ATTRIBUTES.getValue(new ResourceLocation(this.id));
+		Attribute attribute = ForgeRegistries.ATTRIBUTES.getValue(ResourceLocation.parse(this.id));
 		AttributeModifier modifier = new AttributeModifier(this.modifierName, this.amount.getFloatBetween(entity), this.operation.get());
 		EquipmentSlot modifierSlot = this.slot == null ? equipmentSlotType : this.slot;
 		MCUtils.addAttributeModifierToItemStack(itemStack, attribute, modifier, modifierSlot);

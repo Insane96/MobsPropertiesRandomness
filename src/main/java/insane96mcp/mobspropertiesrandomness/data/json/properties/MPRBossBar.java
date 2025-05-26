@@ -30,7 +30,7 @@ public class MPRBossBar implements IMPRObject {
     }
 
     public CustomBossEvent createBar(String id, LivingEntity entity, RandomSource random, MinecraftServer server) {
-        ResourceLocation bossBarId = new ResourceLocation(MobsPropertiesRandomness.MOD_ID, id + "_" + random.nextInt(Integer.MAX_VALUE));
+        ResourceLocation bossBarId = ResourceLocation.fromNamespaceAndPath(MobsPropertiesRandomness.MOD_ID, id + "_" + random.nextInt(Integer.MAX_VALUE));
         CustomBossEvent bossEvent = server.getCustomBossEvents().create(bossBarId, entity.getDisplayName());
         bossEvent.setColor(BossEvent.BossBarColor.byName(this.color));
         bossEvent.setOverlay(BossEvent.BossBarOverlay.byName(this.type));

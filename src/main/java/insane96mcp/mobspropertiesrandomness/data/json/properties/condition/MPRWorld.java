@@ -19,7 +19,7 @@ import net.minecraft.world.level.levelgen.structure.Structure;
 import java.util.ArrayList;
 import java.util.List;
 
-public class MPRWorldWhitelist implements IMPRObject {
+public class MPRWorld implements IMPRObject {
 
 	public List<String> dimensions;
 	private final transient ArrayList<ResourceKey<Level>> dimensionsResourceKeys = new ArrayList<>();
@@ -47,7 +47,7 @@ public class MPRWorldWhitelist implements IMPRObject {
 		this.dimensionsResourceKeys.clear();
 		if (this.dimensions != null) {
 			for (String dimensions : this.dimensions) {
-				ResourceKey<Level> rk = ResourceKey.create(Registries.DIMENSION, new ResourceLocation(dimensions));
+				ResourceKey<Level> rk = ResourceKey.create(Registries.DIMENSION, ResourceLocation.parse(dimensions));
 				this.dimensionsResourceKeys.add(rk);
 			}
 		}
@@ -64,7 +64,7 @@ public class MPRWorldWhitelist implements IMPRObject {
 		if (this.structures != null) {
 			this._structures = new ArrayList<>();
 			for (String structure : this.structures) {
-				this._structures.add(ResourceKey.create(Registries.STRUCTURE, new ResourceLocation(structure)));
+				this._structures.add(ResourceKey.create(Registries.STRUCTURE, ResourceLocation.parse(structure)));
 			}
 		}
 		if (this.inverseStructures == null)

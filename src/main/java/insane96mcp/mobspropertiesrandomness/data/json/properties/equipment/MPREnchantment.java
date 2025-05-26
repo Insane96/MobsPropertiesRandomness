@@ -43,7 +43,7 @@ public class MPREnchantment implements IMPRObject {
 		if (this.id == null && this.random == null && this.withLevels == null)
 			throw new JsonValidationException("Missing id, random or with_levels for %s".formatted(this));
 
-		if (this.id != null && ForgeRegistries.ENCHANTMENTS.getValue(new ResourceLocation(this.id)) == null)
+		if (this.id != null && ForgeRegistries.ENCHANTMENTS.getValue(ResourceLocation.parse(this.id)) == null)
 			throw new JsonValidationException("Invalid Enchantment ID %s for %s".formatted(this.id, this));
 
 		if (this.level != null)
@@ -77,7 +77,7 @@ public class MPREnchantment implements IMPRObject {
 			//id has priority
 			if (this.id != null) {
 				Map<Enchantment, Integer> enchantmentsOnStack = EnchantmentHelper.getEnchantments(itemStack);
-				enchantment = ForgeRegistries.ENCHANTMENTS.getValue(new ResourceLocation(id));
+				enchantment = ForgeRegistries.ENCHANTMENTS.getValue(ResourceLocation.parse(id));
 				//noinspection ConstantConditions can't be null as it's checked to exist when the data is reloaded
 				boolean canApply = this.allowIncompatible || EnchantmentHelper.isEnchantmentCompatible(enchantmentsOnStack.keySet(), enchantment);
 				if (!canApply)

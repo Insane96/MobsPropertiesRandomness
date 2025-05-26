@@ -1,5 +1,8 @@
 # Changelog
 
+## Upcoming
+* Requires InsaneLib 1.12.0
+
 ## 4.11.0
 * On Hit events (`on_attack` and `on_damaged`)
   * `damage_type` has been renamed to `direct_indirect`
@@ -13,7 +16,7 @@
 * Pehkui scales now throw an error if the scale type is invalid
 
 ## 4.10.15
-* Invalid items are now no****t loaded and logged instead of breaking the whole json
+* Invalid items are now not loaded and logged instead of breaking the whole json
 * Items `count` is now a Range object
   * So the wiki is no longer false advertisement
 

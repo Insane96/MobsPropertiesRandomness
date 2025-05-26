@@ -45,7 +45,7 @@ public class MPRScalePehkui implements IMPRObject {
         if (this.scaleTypes == null || this.scaleTypes.isEmpty())
             throw new JsonValidationException("scale_types missing or empty from ScalePehkui");
         for (String scaleType : this.scaleTypes) {
-            if (ScaleRegistries.SCALE_TYPES.get(new ResourceLocation(scaleType)) == null)
+            if (ScaleRegistries.SCALE_TYPES.get(ResourceLocation.parse(scaleType)) == null)
                 throw new JsonValidationException("invalid scale_type %s from ScalePehkui".formatted(scaleType));
         }
         if (this.operation == null)
@@ -65,7 +65,7 @@ public class MPRScalePehkui implements IMPRObject {
             return;*/
         float scale = this.scale.getFloatBetween(entity);
         for (String scaleType : this.scaleTypes) {
-            ScaleType type = ScaleRegistries.SCALE_TYPES.get(new ResourceLocation(scaleType));
+            ScaleType type = ScaleRegistries.SCALE_TYPES.get(ResourceLocation.parse(scaleType));
             ScaleData scaleData = type.getScaleData(entity);
             this.operation.applyScale(scaleData, scale, entity);
         }
