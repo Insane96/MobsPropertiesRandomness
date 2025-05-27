@@ -14,9 +14,6 @@ import java.util.List;
 
 public class MPRConditions implements IMPRObject {
 
-	@SerializedName("world")
-	public MPRWorld world;
-
 	@SerializedName("advancements_unlocked")
 	public List<MPRAdvancement> advancements;
 	@SerializedName("game_stages_unlocked")
@@ -29,9 +26,6 @@ public class MPRConditions implements IMPRObject {
 
 	@Override
 	public void validate() throws JsonValidationException {
-		if (this.world != null)
-			this.world.validate();
-
 		if (this.nbt != null) {
 			try {
 				this._nbt = TagParser.parseTag(this.nbt);
@@ -61,9 +55,6 @@ public class MPRConditions implements IMPRObject {
 
 	public boolean conditionsApply(LivingEntity livingEntity) {
 		boolean result = true;
-
-		if (this.world != null && !this.world.isWhitelisted(livingEntity))
-			return false;
 
 		if (this.nbt != null) {
 			CompoundTag mobNBT = new CompoundTag();

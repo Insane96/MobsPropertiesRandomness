@@ -1,6 +1,7 @@
 # Changelog
 
 ## Upcoming
+* The mod is now fully server sided
 * Potion effects
   * Renamed `id` to `effect`
 

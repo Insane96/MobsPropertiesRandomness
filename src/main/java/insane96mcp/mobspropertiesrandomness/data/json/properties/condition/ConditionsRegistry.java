@@ -24,5 +24,6 @@ public class ConditionsRegistry {
         register("biome", MPRBiomeCondition.class);
         register("structure", MPRStructureCondition.class);
         register("deepness", MPRDeepnessCondition.class);
+        register("distance_from_spawn", MPRDistanceFromSpawnCondition.class);
     }
 }
