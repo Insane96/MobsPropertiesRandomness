@@ -22,5 +22,6 @@ public class ConditionsRegistry {
         register("days_passed", MPRDaysPassedCondition.class);
         register("dimension", MPRDimensionCondition.class);
         register("biome", MPRBiomeCondition.class);
+        register("structure", MPRStructureCondition.class);
     }
 }
