@@ -13,9 +13,6 @@ import net.minecraftforge.fml.ModList;
 import java.util.List;
 
 public class MPRConditions implements IMPRObject {
-
-	@SerializedName("advancements_unlocked")
-	public List<MPRAdvancement> advancements;
 	@SerializedName("game_stages_unlocked")
 	public List<MPRGameStage> gameStages;
 	//TODO Add MPRNbt condition
@@ -32,12 +29,6 @@ public class MPRConditions implements IMPRObject {
 			}
 			catch (CommandSyntaxException e) {
 				throw new JsonValidationException("Invalid nbt for Conditions: " + this.nbt);
-			}
-		}
-
-		if (this.advancements != null) {
-			for (MPRAdvancement advancement : this.advancements) {
-				advancement.validate();
 			}
 		}
 
@@ -62,18 +53,6 @@ public class MPRConditions implements IMPRObject {
 			result = MCUtils.compareNBT(this._nbt, mobNBT);
 		}
 
-		if (this.advancements != null) {
-			boolean advancementCondition = false;
-			for (MPRAdvancement advancement : this.advancements) {
-				if (advancement.conditionApplies(livingEntity)) {
-					advancementCondition = true;
-					break;
-				}
-			}
-			if (!advancementCondition)
-				result = false;
-		}
-
 		if (this.gameStages != null) {
 			boolean gameStagesCondition = false;
 			for (MPRGameStage gameStage : this.gameStages) {
@@ -92,6 +71,6 @@ public class MPRConditions implements IMPRObject {
 
 	@Override
 	public String toString() {
-		return String.format("Conditions{nbt: %s, advancements_unlocked: %s, game_stages_unlocked: %s, inverted: %s}", this.nbt, this.advancements, this.gameStages, this.inverted);
+		return String.format("Conditions{nbt: %s, game_stages_unlocked: %s, inverted: %s}", this.nbt, this.gameStages, this.inverted);
 	}
 }

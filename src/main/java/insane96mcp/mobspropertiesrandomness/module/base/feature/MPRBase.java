@@ -76,6 +76,7 @@ public class MPRBase extends Feature {
 			}
 		}
 		MPRMob.apply(event);
+
 	}
 
 	@SubscribeEvent
