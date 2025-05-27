@@ -26,5 +26,6 @@ public class ConditionsRegistry {
         register("deepness", MPRDeepnessCondition.class);
         register("distance_from_spawn", MPRDistanceFromSpawnCondition.class);
         register("advancement", MPRAdvancementCondition.class);
+        register("game_stage", MPRGameStageCondition.class);
     }
 }
