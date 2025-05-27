@@ -32,9 +32,6 @@ public class MPRWorld implements IMPRObject {
 
 	protected MPRRange deepness;
 
-	@SerializedName("moon_phases")
-	protected List<MoonPhase> moonPhases;
-
 	@SerializedName("structures")
 	protected List<String> structures;
 	@SerializedName("inverse_structures")
@@ -99,19 +96,6 @@ public class MPRWorld implements IMPRObject {
 		return entity.getY() >= this.deepness.getMin(entity) && entity.getY() <= this.deepness.getMax(entity);
 	}
 
-	public boolean doesMoonPhaseMatch(LivingEntity entity) {
-		if (this.moonPhases == null)
-			return true;
-		boolean moonPhaseMatches = false;
-		for (MoonPhase moonPhase : this.moonPhases) {
-			if (moonPhase == MoonPhase.of(entity.level().getMoonPhase())) {
-				moonPhaseMatches = true;
-				break;
-			}
-		}
-		return moonPhaseMatches;
-	}
-
 	public boolean doesStructureMatch(LivingEntity entity) {
 		if (this.structures == null)
 			return true;
@@ -129,36 +113,11 @@ public class MPRWorld implements IMPRObject {
 	}
 
 	public boolean isWhitelisted(LivingEntity entity) {
-		return this.doesBiomeMatch(entity) && this.doesDimensionMatch(entity) && this.doesDepthMatch(entity) && this.doesMoonPhaseMatch(entity) && this.doesStructureMatch(entity);
+		return this.doesBiomeMatch(entity) && this.doesDimensionMatch(entity) && this.doesDepthMatch(entity) && this.doesStructureMatch(entity);
 	}
 
 	@Override
 	public String toString() {
-		return String.format("WorldWhitelist{dimensions: %s, inverse_dimension_list: %s, biomes: %s, inverse_biome_list: %s, deepness: %s, moon_phases: %s, structures: %s}", this.dimensions, this.inverseDimensionList, this.biomes, this.inverseBiomeList, this.deepness, this.moonPhases, this.structures);
-	}
-
-	enum MoonPhase {
-		@SerializedName("full_moon")
-		FULL_MOON,
-		@SerializedName("waning_gibbous")
-		WANING_GIBBOUS,
-		@SerializedName("last_quarter")
-		LAST_QUARTER,
-		@SerializedName("waning_crescent")
-		WANING_CRESCENT,
-		@SerializedName("new_moon")
-		NEW_MOON,
-		@SerializedName("waxing_crescent")
-		WAXING_CRESCENT,
-		@SerializedName("first_quarter")
-		FIRST_QUARTER,
-		@SerializedName("waxing_gibbous")
-		WAXING_GIBBOUS;
-
-		private static final MoonPhase[] PHASES = MoonPhase.values();
-
-		public static MoonPhase of(int moonPhase) {
-			return PHASES[moonPhase];
-		}
+		return String.format("WorldWhitelist{dimensions: %s, inverse_dimension_list: %s, biomes: %s, inverse_biome_list: %s, deepness: %s, structures: %s}", this.dimensions, this.inverseDimensionList, this.biomes, this.inverseBiomeList, this.deepness, this.structures);
 	}
 }

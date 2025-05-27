@@ -17,8 +17,8 @@ public class MPRChanceCondition extends MPRCondition {
     }
 
     @Override
-    public boolean conditionApplies(LivingEntity livingEntity) {
-        return tryInvert(livingEntity.getRandom().nextDouble() < this.chance.getValue(livingEntity));
+    public boolean conditionCheck(LivingEntity livingEntity) {
+        return livingEntity.getRandom().nextDouble() < this.chance.getValue(livingEntity);
     }
 
     public static class Serializer implements JsonDeserializer<MPRChanceCondition>, JsonSerializer<MPRChanceCondition> {

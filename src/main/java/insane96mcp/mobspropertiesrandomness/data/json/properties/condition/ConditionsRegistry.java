@@ -17,5 +17,6 @@ public class ConditionsRegistry {
         register("is_baby", MPRBabyCondition.class);
         register("chance", MPRChanceCondition.class);
         register("spawn_type", MPRSpawnTypeCondition.class);
+        register("moon_phase", MPRMoonPhaseCondition.class);
     }
 }

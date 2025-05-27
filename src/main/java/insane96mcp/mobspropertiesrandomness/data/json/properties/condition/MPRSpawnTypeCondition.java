@@ -20,12 +20,12 @@ public class MPRSpawnTypeCondition extends MPRCondition {
     }
 
     @Override
-    public boolean conditionApplies(LivingEntity livingEntity) {
+    public boolean conditionCheck(LivingEntity livingEntity) {
         for (MobSpawnType spawnType : this.spawnTypes) {
             if (TagsFeature.isSpawnType(spawnType, livingEntity))
-                return tryInvert(true);
+                return true;
         }
-        return tryInvert(false);
+        return false;
     }
 
     public static class Serializer implements JsonDeserializer<MPRSpawnTypeCondition>, JsonSerializer<MPRSpawnTypeCondition> {

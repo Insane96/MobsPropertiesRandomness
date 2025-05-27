@@ -13,8 +13,8 @@ public class MPRBabyCondition extends MPRCondition {
     }
 
     @Override
-    public boolean conditionApplies(LivingEntity livingEntity) {
-        return tryInvert(livingEntity.isBaby());
+    public boolean conditionCheck(LivingEntity livingEntity) {
+        return livingEntity.isBaby();
     }
 
     public static class Serializer implements JsonDeserializer<MPRBabyCondition>, JsonSerializer<MPRBabyCondition> {

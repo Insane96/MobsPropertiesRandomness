@@ -20,7 +20,11 @@ public abstract class MPRCondition {
         this.inverted = inverted;
     }
 
-    public abstract boolean conditionApplies(LivingEntity livingEntity);
+    public final boolean conditionApplies(LivingEntity livingEntity) {
+        return tryInvert(conditionCheck(livingEntity));
+    }
+
+    public abstract boolean conditionCheck(LivingEntity livingEntity);
 
     public final boolean tryInvert(boolean value) {
         return this.inverted ? !value : value;
