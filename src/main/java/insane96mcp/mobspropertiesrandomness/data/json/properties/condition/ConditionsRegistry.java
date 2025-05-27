@@ -18,5 +18,7 @@ public class ConditionsRegistry {
         register("chance", MPRChanceCondition.class);
         register("spawn_type", MPRSpawnTypeCondition.class);
         register("moon_phase", MPRMoonPhaseCondition.class);
+        register("day_time", MPRDayTimeCondition.class);
+        register("days_passed", MPRDaysPassedCondition.class);
     }
 }

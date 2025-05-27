@@ -92,6 +92,10 @@ public class MPRRange extends MPRModifiableValue implements IMPRObject {
 		return Mth.nextInt(entity.level().random, (int) this.getMin(entity), (int) this.getMax(entity));
 	}
 
+	public boolean isBetween(LivingEntity entity, float value) {
+		return value >= this.getMin(entity) && value <= this.getMax(entity);
+	}
+
 	@Override
 	public String toString() {
 		return String.format("Range{%s, max: %s}", super.toString(), this.max);
