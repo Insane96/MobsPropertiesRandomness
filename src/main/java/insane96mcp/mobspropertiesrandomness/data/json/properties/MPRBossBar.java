@@ -2,7 +2,7 @@ package insane96mcp.mobspropertiesrandomness.data.json.properties;
 
 import com.google.gson.annotations.SerializedName;
 import insane96mcp.insanelib.exception.JsonValidationException;
-import insane96mcp.mobspropertiesrandomness.MobsPropertiesRandomness;
+import insane96mcp.mobspropertiesrandomness.MPR;
 import insane96mcp.mobspropertiesrandomness.data.json.IMPRObject;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.MinecraftServer;
@@ -13,8 +13,8 @@ import net.minecraft.world.entity.LivingEntity;
 
 public class MPRBossBar implements IMPRObject {
 
-    public static final String BOSS_BAR_VISIBILITY_RANGE = MobsPropertiesRandomness.RESOURCE_PREFIX + "boss_bar_visibility_range";
-    public static final String BOSS_BAR_ID = MobsPropertiesRandomness.RESOURCE_PREFIX + "boss_bar_uuid";
+    public static final String BOSS_BAR_VISIBILITY_RANGE = MPR.RESOURCE_PREFIX + "boss_bar_visibility_range";
+    public static final String BOSS_BAR_ID = MPR.RESOURCE_PREFIX + "boss_bar_uuid";
     public String color;
     public String type;
     @SerializedName("darken_screen")
@@ -30,7 +30,7 @@ public class MPRBossBar implements IMPRObject {
     }
 
     public CustomBossEvent createBar(String id, LivingEntity entity, RandomSource random, MinecraftServer server) {
-        ResourceLocation bossBarId = ResourceLocation.fromNamespaceAndPath(MobsPropertiesRandomness.MOD_ID, id + "_" + random.nextInt(Integer.MAX_VALUE));
+        ResourceLocation bossBarId = ResourceLocation.fromNamespaceAndPath(MPR.MOD_ID, id + "_" + random.nextInt(Integer.MAX_VALUE));
         CustomBossEvent bossEvent = server.getCustomBossEvents().create(bossBarId, entity.getDisplayName());
         bossEvent.setColor(BossEvent.BossBarColor.byName(this.color));
         bossEvent.setOverlay(BossEvent.BossBarOverlay.byName(this.type));

@@ -8,7 +8,7 @@ import insane96mcp.insanelib.base.Module;
 import insane96mcp.insanelib.base.config.Config;
 import insane96mcp.insanelib.exception.JsonValidationException;
 import insane96mcp.insanelib.util.LogHelper;
-import insane96mcp.mobspropertiesrandomness.MobsPropertiesRandomness;
+import insane96mcp.mobspropertiesrandomness.MPR;
 import insane96mcp.mobspropertiesrandomness.data.json.MPRMob;
 import insane96mcp.mobspropertiesrandomness.data.json.MPRPreset;
 import insane96mcp.mobspropertiesrandomness.data.json.properties.MPRBossBar;
@@ -45,10 +45,10 @@ import java.util.Optional;
 
 import static insane96mcp.mobspropertiesrandomness.data.MPRPresetReloadListener.MPR_PRESETS;
 
-@LoadFeature(module = MobsPropertiesRandomness.RESOURCE_PREFIX + "base", canBeDisabled = false)
+@LoadFeature(module = MPR.RESOURCE_PREFIX + "base", canBeDisabled = false)
 public class MPRBase extends Feature {
-	public static final String PROCESSED = MobsPropertiesRandomness.RESOURCE_PREFIX + "processed";
-	public static final String PRESET = MobsPropertiesRandomness.RESOURCE_PREFIX + "preset";
+	public static final String PROCESSED = MPR.RESOURCE_PREFIX + "processed";
+	public static final String PRESET = MPR.RESOURCE_PREFIX + "preset";
 	/*@Config
         @Label(name = "TiCon Attack", description = "If true mob attacks with Tinker tools will use the Tinker attack method, making mobs able to use some TiCon modifiers.")
         public static Boolean ticonAttack = true;*/
@@ -106,10 +106,10 @@ public class MPRBase extends Feature {
 	@SubscribeEvent
 	public void onApplyEffect(MobEffectEvent.Applicable event) {
 		if (event.getEntity().level().isClientSide
-				|| !event.getEntity().getPersistentData().contains(MobsPropertiesRandomness.RESOURCE_PREFIX + "effect_immunity"))
+				|| !event.getEntity().getPersistentData().contains(MPR.RESOURCE_PREFIX + "effect_immunity"))
 			return;
 
-		ListTag listTag = event.getEntity().getPersistentData().getList(MobsPropertiesRandomness.RESOURCE_PREFIX + "effect_immunity", Tag.TAG_STRING);
+		ListTag listTag = event.getEntity().getPersistentData().getList(MPR.RESOURCE_PREFIX + "effect_immunity", Tag.TAG_STRING);
 		for (int i = 0; i < listTag.size(); ++i) {
 			String s = listTag.getString(i);
 			if (ForgeRegistries.MOB_EFFECTS.getKey(event.getEffectInstance().getEffect()).toString().equals(s)) {
@@ -203,7 +203,7 @@ public class MPRBase extends Feature {
 			return null;
 		ResourceLocation bossbarId = ResourceLocation.tryParse(persistentData.getString(MPRBossBar.BOSS_BAR_ID));
 		if (bossbarId == null) {
-			LogHelper.warn("[%s] Failed to find boss bar with id %s", MobsPropertiesRandomness.MOD_ID, entity.getPersistentData().getString(MPRBossBar.BOSS_BAR_ID));
+			LogHelper.warn("[%s] Failed to find boss bar with id %s", MPR.MOD_ID, entity.getPersistentData().getString(MPRBossBar.BOSS_BAR_ID));
 			return null;
 		}
 		//noinspection ConstantConditions

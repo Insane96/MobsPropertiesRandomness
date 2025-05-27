@@ -5,7 +5,7 @@ import com.mojang.brigadier.exceptions.CommandSyntaxException;
 import insane96mcp.insanelib.exception.JsonValidationException;
 import insane96mcp.insanelib.setup.ILStrings;
 import insane96mcp.insanelib.util.LogHelper;
-import insane96mcp.mobspropertiesrandomness.MobsPropertiesRandomness;
+import insane96mcp.mobspropertiesrandomness.MPR;
 import insane96mcp.mobspropertiesrandomness.data.json.properties.MPRCustomName;
 import insane96mcp.mobspropertiesrandomness.data.json.properties.MPRNbt;
 import insane96mcp.mobspropertiesrandomness.data.json.properties.MPRPotionEffect;
@@ -169,7 +169,7 @@ public abstract class MPRProperties implements IMPRObject {
 			for (String mobEffect : this.effectImmunity) {
 				listTag.add(StringTag.valueOf(mobEffect));
 			}
-			entity.getPersistentData().put(MobsPropertiesRandomness.RESOURCE_PREFIX + "effect_immunity", listTag);
+			entity.getPersistentData().put(MPR.RESOURCE_PREFIX + "effect_immunity", listTag);
 		}
 
 		for (MPRNbt mprNbt : this.setNbt) {

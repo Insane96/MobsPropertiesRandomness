@@ -9,7 +9,7 @@ import com.google.gson.annotations.JsonAdapter;
 import com.google.gson.annotations.SerializedName;
 import com.google.gson.reflect.TypeToken;
 import insane96mcp.insanelib.exception.JsonValidationException;
-import insane96mcp.mobspropertiesrandomness.MobsPropertiesRandomness;
+import insane96mcp.mobspropertiesrandomness.MPR;
 import insane96mcp.mobspropertiesrandomness.data.json.IMPRObject;
 import insane96mcp.mobspropertiesrandomness.data.json.util.modifiable.MPRRange;
 import net.minecraft.resources.ResourceLocation;
@@ -55,7 +55,7 @@ public class MPRScalePehkui implements IMPRObject {
     private static final HashMultimap<LivingEntity, MPRScalePehkui> toApply = HashMultimap.create();
 
     public void scheduleApply(LivingEntity entity) {
-        if (entity.getPersistentData().contains(MobsPropertiesRandomness.RESOURCE_PREFIX + "scale_pehkui_applied"))
+        if (entity.getPersistentData().contains(MPR.RESOURCE_PREFIX + "scale_pehkui_applied"))
             return;
         toApply.put(entity, this);
     }
@@ -75,7 +75,7 @@ public class MPRScalePehkui implements IMPRObject {
         toApply.get(entity).forEach(mprScalePehkui -> {
             mprScalePehkui.apply(entity);
         });
-        entity.getPersistentData().putBoolean(MobsPropertiesRandomness.RESOURCE_PREFIX + "scale_pehkui_applied", true);
+        entity.getPersistentData().putBoolean(MPR.RESOURCE_PREFIX + "scale_pehkui_applied", true);
         toApply.removeAll(entity);
     }
 

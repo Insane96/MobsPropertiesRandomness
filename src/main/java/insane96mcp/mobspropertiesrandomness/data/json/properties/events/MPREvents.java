@@ -3,7 +3,7 @@ package insane96mcp.mobspropertiesrandomness.data.json.properties.events;
 import com.google.gson.Gson;
 import com.google.gson.annotations.SerializedName;
 import insane96mcp.insanelib.exception.JsonValidationException;
-import insane96mcp.mobspropertiesrandomness.MobsPropertiesRandomness;
+import insane96mcp.mobspropertiesrandomness.MPR;
 import insane96mcp.mobspropertiesrandomness.data.json.IMPRObject;
 import net.minecraft.world.entity.LivingEntity;
 
@@ -11,10 +11,10 @@ import java.util.List;
 
 public class MPREvents implements IMPRObject {
 
-	public static final String ON_ATTACK = MobsPropertiesRandomness.RESOURCE_PREFIX + "on_attack";
-	public static final String ON_DAMAGED = MobsPropertiesRandomness.RESOURCE_PREFIX + "on_damaged";
-	public static final String ON_DEATH = MobsPropertiesRandomness.RESOURCE_PREFIX + "on_death";
-	public static final String ON_TICK = MobsPropertiesRandomness.RESOURCE_PREFIX + "on_tick";
+	public static final String ON_ATTACK = MPR.RESOURCE_PREFIX + "on_attack";
+	public static final String ON_DAMAGED = MPR.RESOURCE_PREFIX + "on_damaged";
+	public static final String ON_DEATH = MPR.RESOURCE_PREFIX + "on_death";
+	public static final String ON_TICK = MPR.RESOURCE_PREFIX + "on_tick";
 	@SerializedName("on_attack")
 	public List<MPROnHit> onAttack;
 

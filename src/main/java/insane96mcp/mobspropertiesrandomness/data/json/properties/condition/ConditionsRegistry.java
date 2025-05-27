@@ -1,6 +1,6 @@
 package insane96mcp.mobspropertiesrandomness.data.json.properties.condition;
 
-import insane96mcp.mobspropertiesrandomness.MobsPropertiesRandomness;
+import insane96mcp.mobspropertiesrandomness.MPR;
 import net.minecraft.resources.ResourceLocation;
 
 import java.util.HashMap;
@@ -10,7 +10,7 @@ public class ConditionsRegistry {
     public static final Map<ResourceLocation, Class<? extends MPRCondition>> CONDITIONS = new HashMap<>();
 
     public static void register(String id, Class<? extends MPRCondition> clazz) {
-        CONDITIONS.put(MobsPropertiesRandomness.location(id), clazz);
+        CONDITIONS.put(MPR.location(id), clazz);
     }
 
     public static void init() {

@@ -14,13 +14,15 @@ import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.event.lifecycle.FMLCommonSetupEvent;
 import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
 
-@Mod(MobsPropertiesRandomness.MOD_ID)
-public class MobsPropertiesRandomness
+import javax.annotation.Nullable;
+
+@Mod(MPR.MOD_ID)
+public class MPR
 {
     public static final String MOD_ID = "mobspropertiesrandomness";
     public static final String RESOURCE_PREFIX = MOD_ID + ":";
 
-    public MobsPropertiesRandomness(FMLJavaModLoadingContext modContext) {
+    public MPR(FMLJavaModLoadingContext modContext) {
         modContext.registerConfig(net.minecraftforge.fml.config.ModConfig.Type.COMMON, Config.COMMON_SPEC);
         modContext.getModEventBus().addListener(this::preInit);
         MinecraftForge.EVENT_BUS.register(this);
@@ -41,5 +43,14 @@ public class MobsPropertiesRandomness
 
     public static ResourceLocation location(String path) {
         return ResourceLocation.fromNamespaceAndPath(MOD_ID, path);
+    }
+
+    @Nullable
+    public static ResourceLocation locationFrom(String s) {
+        String[] split = s.split(":");
+        if (s.contains(":"))
+            return ResourceLocation.tryParse(s);
+        else
+            return ResourceLocation.fromNamespaceAndPath(MOD_ID, split[0]);
     }
 }
