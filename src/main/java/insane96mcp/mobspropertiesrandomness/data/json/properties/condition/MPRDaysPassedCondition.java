@@ -17,7 +17,7 @@ public class MPRDaysPassedCondition extends MPRCondition {
     }
 
     @Override
-    public boolean conditionCheck(LivingEntity livingEntity) {
+    protected boolean conditionCheck(LivingEntity livingEntity) {
         return this.daysPassed.isBetween(livingEntity, livingEntity.level().getGameTime() % 24000f);
     }
 

@@ -10,9 +10,7 @@ import net.minecraft.core.registries.Registries;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerLevel;
-import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
-import net.minecraft.world.level.Level;
 import net.minecraft.world.level.StructureManager;
 import net.minecraft.world.level.levelgen.structure.Structure;
 
@@ -20,12 +18,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class MPRWorld implements IMPRObject {
-
-	public List<String> dimensions;
-	private final transient ArrayList<ResourceKey<Level>> dimensionsResourceKeys = new ArrayList<>();
-	@SerializedName("inverse_dimension_list")
-	public Boolean inverseDimensionList;
-
 	public ArrayList<IdTagMatcher> biomes;
 	@SerializedName("inverse_biome_list")
 	public Boolean inverseBiomeList;
@@ -41,19 +33,8 @@ public class MPRWorld implements IMPRObject {
 
 	@Override
 	public void validate() throws JsonValidationException {
-		this.dimensionsResourceKeys.clear();
-		if (this.dimensions != null) {
-			for (String dimensions : this.dimensions) {
-				ResourceKey<Level> rk = ResourceKey.create(Registries.DIMENSION, ResourceLocation.parse(dimensions));
-				this.dimensionsResourceKeys.add(rk);
-			}
-		}
-
 		if (this.inverseBiomeList == null)
 			this.inverseBiomeList = false;
-
-		if (this.inverseDimensionList == null)
-			this.inverseDimensionList = false;
 
 		if (this.deepness != null)
 			this.deepness.validate();
@@ -66,17 +47,6 @@ public class MPRWorld implements IMPRObject {
 		}
 		if (this.inverseStructures == null)
 			this.inverseStructures = false;
-	}
-
-	public boolean doesDimensionMatch(Entity entity) {
-		if (this.dimensions == null)
-			return true;
-		for (ResourceKey<Level> dimension : this.dimensionsResourceKeys) {
-			if (entity.level().dimension().equals(dimension)) {
-				return !this.inverseDimensionList;
-			}
-		}
-		return this.inverseDimensionList;
 	}
 
 	public boolean doesBiomeMatch(LivingEntity entity) {
@@ -113,11 +83,11 @@ public class MPRWorld implements IMPRObject {
 	}
 
 	public boolean isWhitelisted(LivingEntity entity) {
-		return this.doesBiomeMatch(entity) && this.doesDimensionMatch(entity) && this.doesDepthMatch(entity) && this.doesStructureMatch(entity);
+		return this.doesBiomeMatch(entity) && this.doesDepthMatch(entity) && this.doesStructureMatch(entity);
 	}
 
 	@Override
 	public String toString() {
-		return String.format("WorldWhitelist{dimensions: %s, inverse_dimension_list: %s, biomes: %s, inverse_biome_list: %s, deepness: %s, structures: %s}", this.dimensions, this.inverseDimensionList, this.biomes, this.inverseBiomeList, this.deepness, this.structures);
+		return String.format("WorldWhitelist{biomes: %s, inverse_biome_list: %s, deepness: %s, structures: %s}", this.biomes, this.inverseBiomeList, this.deepness, this.structures);
 	}
 }

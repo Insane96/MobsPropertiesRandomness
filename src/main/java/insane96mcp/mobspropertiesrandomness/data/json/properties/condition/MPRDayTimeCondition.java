@@ -17,7 +17,7 @@ public class MPRDayTimeCondition extends MPRCondition {
     }
 
     @Override
-    public boolean conditionCheck(LivingEntity livingEntity) {
+    protected boolean conditionCheck(LivingEntity livingEntity) {
         return this.dayTime.isBetween(livingEntity, livingEntity.level().getDayTime());
     }
 

@@ -19,7 +19,7 @@ public class MPRMoonPhaseCondition extends MPRCondition {
     }
 
     @Override
-    public boolean conditionCheck(LivingEntity livingEntity) {
+    protected boolean conditionCheck(LivingEntity livingEntity) {
         for (MoonPhase moonPhase : this.moonPhases) {
             if (moonPhase == MoonPhase.of(livingEntity.level().getMoonPhase()))
                 return true;
@@ -31,9 +31,11 @@ public class MPRMoonPhaseCondition extends MPRCondition {
         @Override
         public MPRMoonPhaseCondition deserialize(JsonElement json, Type typeOfT, JsonDeserializationContext context) throws JsonParseException {
             JsonObject jObject = json.getAsJsonObject();
-            JsonArray aSpawnTypes = jObject.getAsJsonArray("moon_phases");
+            JsonArray aMoonPhases = jObject.getAsJsonArray("moon_phases");
+            if (aMoonPhases == null)
+                throw new JsonParseException("Missing moon_phases array");
             Type listType = new TypeToken<List<MoonPhase>>() {}.getType();
-            List<MoonPhase> values = context.deserialize(aSpawnTypes, listType);
+            List<MoonPhase> values = context.deserialize(aMoonPhases, listType);
             return new MPRMoonPhaseCondition(values, MPRCondition.deserializeInverted(jObject));
         }
 

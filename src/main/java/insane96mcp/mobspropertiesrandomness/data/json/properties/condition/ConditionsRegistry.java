@@ -20,5 +20,7 @@ public class ConditionsRegistry {
         register("moon_phase", MPRMoonPhaseCondition.class);
         register("day_time", MPRDayTimeCondition.class);
         register("days_passed", MPRDaysPassedCondition.class);
+        register("dimension", MPRDimensionCondition.class);
+        register("biome", MPRBiomeCondition.class);
     }
 }

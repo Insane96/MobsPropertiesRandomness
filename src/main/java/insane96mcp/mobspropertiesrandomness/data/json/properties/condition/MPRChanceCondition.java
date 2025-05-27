@@ -17,7 +17,7 @@ public class MPRChanceCondition extends MPRCondition {
     }
 
     @Override
-    public boolean conditionCheck(LivingEntity livingEntity) {
+    protected boolean conditionCheck(LivingEntity livingEntity) {
         return livingEntity.getRandom().nextDouble() < this.chance.getValue(livingEntity);
     }
 

@@ -20,7 +20,7 @@ public class MPRSpawnTypeCondition extends MPRCondition {
     }
 
     @Override
-    public boolean conditionCheck(LivingEntity livingEntity) {
+    protected boolean conditionCheck(LivingEntity livingEntity) {
         for (MobSpawnType spawnType : this.spawnTypes) {
             if (TagsFeature.isSpawnType(spawnType, livingEntity))
                 return true;
@@ -33,6 +33,8 @@ public class MPRSpawnTypeCondition extends MPRCondition {
         public MPRSpawnTypeCondition deserialize(JsonElement json, Type typeOfT, JsonDeserializationContext context) throws JsonParseException {
             JsonObject jObject = json.getAsJsonObject();
             JsonArray aSpawnTypes = jObject.getAsJsonArray("spawn_types");
+            if (aSpawnTypes == null)
+                throw new JsonParseException("Missing spawn_types array");
             Type listType = new TypeToken<List<MobSpawnType>>() {}.getType();
             List<MobSpawnType> values = context.deserialize(aSpawnTypes, listType);
             return new MPRSpawnTypeCondition(values, MPRCondition.deserializeInverted(jObject));

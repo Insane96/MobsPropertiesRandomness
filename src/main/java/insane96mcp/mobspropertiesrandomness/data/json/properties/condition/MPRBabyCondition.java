@@ -13,7 +13,7 @@ public class MPRBabyCondition extends MPRCondition {
     }
 
     @Override
-    public boolean conditionCheck(LivingEntity livingEntity) {
+    protected boolean conditionCheck(LivingEntity livingEntity) {
         return livingEntity.isBaby();
     }
 
