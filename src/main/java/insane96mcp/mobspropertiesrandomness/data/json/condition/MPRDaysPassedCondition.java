@@ -17,8 +17,8 @@ public class MPRDaysPassedCondition extends MPRCondition {
     }
 
     @Override
-    protected boolean conditionCheck(LivingEntity livingEntity) {
-        return this.daysPassed.isBetween(livingEntity, livingEntity.level().getGameTime() / 24000f);
+    protected boolean conditionCheck(LivingEntity living) {
+        return this.daysPassed.isBetween(living, living.level().getGameTime() / 24000f);
     }
 
     public static class Serializer implements JsonDeserializer<MPRDaysPassedCondition>, JsonSerializer<MPRDaysPassedCondition> {

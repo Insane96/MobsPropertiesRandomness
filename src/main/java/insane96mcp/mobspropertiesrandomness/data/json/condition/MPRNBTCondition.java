@@ -12,23 +12,23 @@ import java.lang.reflect.Type;
 
 @JsonAdapter(MPRNBTCondition.Serializer.class)
 public class MPRNBTCondition extends MPRCondition {
-    public String nbtTag;
+    public String nbtPath;
     public NBTType type;
     public MPRRange value;
 
     public MPRNBTCondition(String nbtPath, NBTType type, MPRRange value, boolean inverted) {
         super(inverted);
-        this.nbtTag = nbtPath;
+        this.nbtPath = nbtPath;
         this.type = type;
         this.value = value;
     }
 
     //TODO Arrays
     @Override
-    protected boolean conditionCheck(LivingEntity livingEntity) {
+    protected boolean conditionCheck(LivingEntity living) {
         CompoundTag mobTag = new CompoundTag();
-        livingEntity.saveWithoutId(mobTag);
-        String[] splitPath = this.nbtTag.split("\\.");
+        living.saveWithoutId(mobTag);
+        String[] splitPath = this.nbtPath.split("\\.");
         for (int i = 0; i < splitPath.length; i++) {
             Tag tag = mobTag.get(splitPath[i]);
             if (tag == null)
@@ -43,17 +43,17 @@ public class MPRNBTCondition extends MPRCondition {
                 switch (this.type) {
                     case DOUBLE -> {
                         if (tag instanceof DoubleTag doubleTag)
-                            return this.value.isBetween(livingEntity, doubleTag.getAsFloat());
+                            return this.value.isBetween(living, doubleTag.getAsFloat());
                         return false;
                     }
                     case INTEGER -> {
                         if (tag instanceof IntTag intTag)
-                            return this.value.isBetween(livingEntity, intTag.getAsInt());
+                            return this.value.isBetween(living, intTag.getAsInt());
                         return false;
                     }
                     case BOOLEAN -> {
                         if (tag instanceof ByteTag byteTag)
-                            return this.value.isBetween(livingEntity, byteTag.getAsByte());
+                            return this.value.isBetween(living, byteTag.getAsByte());
                         return false;
                     }
                 }
@@ -78,7 +78,7 @@ public class MPRNBTCondition extends MPRCondition {
         @Override
         public JsonElement serialize(MPRNBTCondition src, Type typeOfSrc, JsonSerializationContext context) {
             JsonObject jObject = new JsonObject();
-            jObject.add("nbt_tag", context.serialize(src.nbtTag));
+            jObject.add("nbt_tag", context.serialize(src.nbtPath));
             jObject.add("type", context.serialize(src.type));
             jObject.add("value", context.serialize(src.value));
             return src.endSerialization(jObject);

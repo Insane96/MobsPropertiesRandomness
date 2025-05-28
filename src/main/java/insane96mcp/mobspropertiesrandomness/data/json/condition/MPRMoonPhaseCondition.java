@@ -19,9 +19,9 @@ public class MPRMoonPhaseCondition extends MPRCondition {
     }
 
     @Override
-    protected boolean conditionCheck(LivingEntity livingEntity) {
+    protected boolean conditionCheck(LivingEntity living) {
         for (MoonPhase moonPhase : this.moonPhases) {
-            if (moonPhase == MoonPhase.of(livingEntity.level().getMoonPhase()))
+            if (moonPhase == MoonPhase.of(living.level().getMoonPhase()))
                 return true;
         }
         return false;

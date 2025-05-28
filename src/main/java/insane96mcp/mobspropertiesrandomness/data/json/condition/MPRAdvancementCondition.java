@@ -25,16 +25,16 @@ public class MPRAdvancementCondition extends MPRCondition {
 	}
 
 	@Override
-	protected boolean conditionCheck(LivingEntity livingEntity) {
+	protected boolean conditionCheck(LivingEntity living) {
 		List<ServerPlayer> players = new ArrayList<>();
 		if (this.player == PlayerMode.NEAREST) {
-			ServerPlayer nearestPlayer = (ServerPlayer) livingEntity.level().getNearestPlayer(livingEntity, 128d);
+			ServerPlayer nearestPlayer = (ServerPlayer) living.level().getNearestPlayer(living, 128d);
 			if (nearestPlayer == null)
 				return false;
 			players.add(nearestPlayer);
 		}
 		else {
-			players = livingEntity.level().getEntitiesOfClass(ServerPlayer.class, livingEntity.getBoundingBox().inflate(128d));
+			players = living.level().getEntitiesOfClass(ServerPlayer.class, living.getBoundingBox().inflate(128d));
 			if (players.isEmpty())
 				return false;
 		}

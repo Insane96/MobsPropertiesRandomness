@@ -22,9 +22,9 @@ public class MPRDimensionCondition extends MPRCondition {
     }
 
     @Override
-    protected boolean conditionCheck(LivingEntity livingEntity) {
+    protected boolean conditionCheck(LivingEntity living) {
         for (ResourceKey<Level> dimension : this.dimensions) {
-            if (livingEntity.level().dimension().equals(dimension)) {
+            if (living.level().dimension().equals(dimension)) {
                 return true;
             }
         }

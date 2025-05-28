@@ -26,17 +26,17 @@ public class MPRStructureCondition extends MPRCondition {
     }
 
     @Override
-    protected boolean conditionCheck(LivingEntity livingEntity) {
+    protected boolean conditionCheck(LivingEntity living) {
         for (ResourceKey<Structure> structure : this.structures) {
-            StructureManager structureManager = ((ServerLevel) livingEntity.level()).structureManager();
+            StructureManager structureManager = ((ServerLevel) living.level()).structureManager();
             Structure s = structureManager.registryAccess().registryOrThrow(Registries.STRUCTURE).get(structure);
             if (s == null) {
                 LogHelper.warn("No structure found with id %s. Ignored", structure.location());
-                if (livingEntity.getServer() != null)
-                    livingEntity.getServer().sendSystemMessage(Component.literal("No structure found with id " + structure.location()));
+                if (living.getServer() != null)
+                    living.getServer().sendSystemMessage(Component.literal("No structure found with id " + structure.location()));
                 continue;
             }
-            if (structureManager.getStructureAt(livingEntity.blockPosition(), s).isValid())
+            if (structureManager.getStructureAt(living.blockPosition(), s).isValid())
                 return true;
         }
         return false;

@@ -20,9 +20,9 @@ public class MPRSpawnTypeCondition extends MPRCondition {
     }
 
     @Override
-    protected boolean conditionCheck(LivingEntity livingEntity) {
+    protected boolean conditionCheck(LivingEntity living) {
         for (MobSpawnType spawnType : this.spawnTypes) {
-            if (TagsFeature.isSpawnType(spawnType, livingEntity))
+            if (TagsFeature.isSpawnType(spawnType, living))
                 return true;
         }
         return false;

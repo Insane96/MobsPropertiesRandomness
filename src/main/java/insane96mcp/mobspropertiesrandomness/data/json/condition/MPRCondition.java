@@ -25,7 +25,7 @@ public abstract class MPRCondition {
         return tryInvert(conditionCheck(livingEntity));
     }
 
-    protected abstract boolean conditionCheck(LivingEntity livingEntity);
+    protected abstract boolean conditionCheck(LivingEntity living);
 
     public final boolean tryInvert(boolean value) {
         return this.inverted ? !value : value;

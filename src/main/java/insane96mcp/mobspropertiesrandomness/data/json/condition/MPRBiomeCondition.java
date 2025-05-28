@@ -18,9 +18,9 @@ public class MPRBiomeCondition extends MPRCondition {
     }
 
     @Override
-    protected boolean conditionCheck(LivingEntity livingEntity) {
+    protected boolean conditionCheck(LivingEntity living) {
         for (IdTagMatcher dimension : this.biomes) {
-            if (dimension.matchesBiome(livingEntity.level().getBiome(livingEntity.blockPosition()))) {
+            if (dimension.matchesBiome(living.level().getBiome(living.blockPosition()))) {
                 return true;
             }
         }

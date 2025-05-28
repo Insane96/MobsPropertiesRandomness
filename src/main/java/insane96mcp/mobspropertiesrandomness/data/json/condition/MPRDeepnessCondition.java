@@ -20,11 +20,11 @@ public class MPRDeepnessCondition extends MPRCondition {
     }
 
     @Override
-    protected boolean conditionCheck(LivingEntity livingEntity) {
-        int livingY = livingEntity.getBlockY();
+    protected boolean conditionCheck(LivingEntity living) {
+        int livingY = living.getBlockY();
         if (this.seaLevelRelative)
-            livingY -= livingEntity.level().getSeaLevel();
-        return this.deepness.isBetween(livingEntity, livingY);
+            livingY -= living.level().getSeaLevel();
+        return this.deepness.isBetween(living, livingY);
     }
 
     public static class Serializer implements JsonDeserializer<MPRDeepnessCondition>, JsonSerializer<MPRDeepnessCondition> {

@@ -18,9 +18,9 @@ public class MPRDistanceFromSpawnCondition extends MPRCondition {
     }
 
     @Override
-    protected boolean conditionCheck(LivingEntity livingEntity) {
-        Vec3 worldSpawn = new Vec3(livingEntity.level().getLevelData().getXSpawn(), livingEntity.level().getLevelData().getYSpawn(), livingEntity.level().getLevelData().getZSpawn());
-        return this.distance.isBetween(livingEntity, (float) Math.sqrt(livingEntity.distanceToSqr(worldSpawn)));
+    protected boolean conditionCheck(LivingEntity living) {
+        Vec3 worldSpawn = new Vec3(living.level().getLevelData().getXSpawn(), living.level().getLevelData().getYSpawn(), living.level().getLevelData().getZSpawn());
+        return this.distance.isBetween(living, (float) Math.sqrt(living.distanceToSqr(worldSpawn)));
     }
 
     public static class Serializer implements JsonDeserializer<MPRDistanceFromSpawnCondition>, JsonSerializer<MPRDistanceFromSpawnCondition> {
