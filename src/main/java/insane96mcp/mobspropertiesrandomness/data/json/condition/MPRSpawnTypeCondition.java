@@ -2,8 +2,8 @@ package insane96mcp.mobspropertiesrandomness.data.json.condition;
 
 import com.google.gson.*;
 import com.google.gson.annotations.JsonAdapter;
-import com.google.gson.reflect.TypeToken;
 import insane96mcp.insanelib.module.base.TagsFeature;
+import insane96mcp.mobspropertiesrandomness.util.SerializerUtils;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.MobSpawnType;
 
@@ -32,11 +32,9 @@ public class MPRSpawnTypeCondition extends MPRCondition {
         @Override
         public MPRSpawnTypeCondition deserialize(JsonElement json, Type typeOfT, JsonDeserializationContext context) throws JsonParseException {
             JsonObject jObject = json.getAsJsonObject();
-            JsonArray aSpawnTypes = jObject.getAsJsonArray("spawn_types");
-            if (aSpawnTypes == null)
-                throw new JsonParseException("Missing spawn_types array");
-            Type listType = new TypeToken<List<MobSpawnType>>() {}.getType();
-            List<MobSpawnType> values = context.deserialize(aSpawnTypes, listType);
+            List<MobSpawnType> values = SerializerUtils.deserializeList(jObject, "spawn_types", context, MobSpawnType.class);
+            if (values.isEmpty())
+                throw new JsonParseException("No spawn_types specified for Spawn Type Condition");
             return new MPRSpawnTypeCondition(values, MPRCondition.deserializeInverted(jObject));
         }
 

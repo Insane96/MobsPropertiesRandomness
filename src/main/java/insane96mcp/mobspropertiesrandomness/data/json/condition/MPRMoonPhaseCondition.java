@@ -3,7 +3,7 @@ package insane96mcp.mobspropertiesrandomness.data.json.condition;
 import com.google.gson.*;
 import com.google.gson.annotations.JsonAdapter;
 import com.google.gson.annotations.SerializedName;
-import com.google.gson.reflect.TypeToken;
+import insane96mcp.mobspropertiesrandomness.util.SerializerUtils;
 import net.minecraft.world.entity.LivingEntity;
 
 import java.lang.reflect.Type;
@@ -31,11 +31,9 @@ public class MPRMoonPhaseCondition extends MPRCondition {
         @Override
         public MPRMoonPhaseCondition deserialize(JsonElement json, Type typeOfT, JsonDeserializationContext context) throws JsonParseException {
             JsonObject jObject = json.getAsJsonObject();
-            JsonArray aMoonPhases = jObject.getAsJsonArray("moon_phases");
-            if (aMoonPhases == null)
-                throw new JsonParseException("Missing moon_phases array");
-            Type listType = new TypeToken<List<MoonPhase>>() {}.getType();
-            List<MoonPhase> values = context.deserialize(aMoonPhases, listType);
+            List<MoonPhase> values = SerializerUtils.deserializeList(jObject, "moon_phases", context, MoonPhase.class);
+            if (values.isEmpty())
+                throw new JsonParseException("No moon_phases specified for Moon Phase Condition");
             return new MPRMoonPhaseCondition(values, MPRCondition.deserializeInverted(jObject));
         }
 

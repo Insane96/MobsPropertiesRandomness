@@ -6,7 +6,6 @@ import insane96mcp.insanelib.exception.JsonValidationException;
 import insane96mcp.insanelib.module.base.TagsFeature;
 import insane96mcp.insanelib.util.LogHelper;
 import insane96mcp.mobspropertiesrandomness.MPR;
-import insane96mcp.mobspropertiesrandomness.data.json.properties.outdated.MPRCustomName;
 import insane96mcp.mobspropertiesrandomness.data.json.properties.outdated.MPRNbt;
 import insane96mcp.mobspropertiesrandomness.data.json.properties.outdated.equipment.MPREquipment;
 import insane96mcp.mobspropertiesrandomness.data.json.properties.outdated.events.MPREvents;
@@ -31,9 +30,6 @@ public abstract class MPRPropertiesLegacy implements IMPRObject {
 
 	@SerializedName("events")
 	public MPREvents events;
-
-	@SerializedName("custom_name")
-	public MPRCustomName customName;
 
 	public MPRModifiableValue silent;
 
@@ -66,9 +62,6 @@ public abstract class MPRPropertiesLegacy implements IMPRObject {
 
 		if (this.events != null)
 			this.events.validate();
-
-		if (this.customName != null)
-			this.customName.validate();
 
 		if (this.silent != null)
 			this.silent.validate();
@@ -119,9 +112,6 @@ public abstract class MPRPropertiesLegacy implements IMPRObject {
 
 		if (this.events != null)
 			this.events.addToNBT(entity);
-
-		if (this.customName != null)
-			this.customName.applyCustomName(entity);
 
 		if (this.silent != null && entity.level().random.nextDouble() < this.silent.getValue(entity))
 			entity.setSilent(true);

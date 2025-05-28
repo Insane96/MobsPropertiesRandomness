@@ -3,8 +3,8 @@ package insane96mcp.mobspropertiesrandomness.data.json.condition;
 import com.google.gson.*;
 import com.google.gson.annotations.JsonAdapter;
 import com.google.gson.annotations.SerializedName;
-import com.google.gson.reflect.TypeToken;
 import insane96mcp.insanelib.util.MCUtils;
+import insane96mcp.mobspropertiesrandomness.util.SerializerUtils;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.entity.LivingEntity;
@@ -55,11 +55,9 @@ public class MPRAdvancementCondition extends MPRCondition {
 		@Override
 		public MPRAdvancementCondition deserialize(JsonElement json, Type typeOfT, JsonDeserializationContext context) throws JsonParseException {
 			JsonObject jObject = json.getAsJsonObject();
-			JsonArray aAdvancements = jObject.getAsJsonArray("advancements");
-			if (aAdvancements == null)
-				throw new JsonParseException("Missing advancements array");
-			Type listType = new TypeToken<List<String>>() {}.getType();
-			List<String> values = context.deserialize(aAdvancements, listType);
+			List<String> values = SerializerUtils.deserializeList(jObject, "advancements", context, String.class);
+			if (values.isEmpty())
+				throw new JsonParseException("No advancements specified for Advancement Condition");
 			List<ResourceLocation> advancementsList = new ArrayList<>();
 			for (String adv : values) {
 				ResourceLocation advancement = ResourceLocation.tryParse(adv);
