@@ -4,6 +4,7 @@ import com.google.gson.*;
 import com.google.gson.annotations.JsonAdapter;
 import insane96mcp.mobspropertiesrandomness.data.json.util.modifiable.MPRModifiableValue;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.util.GsonHelper;
 
 import java.lang.reflect.Type;
 
@@ -25,7 +26,7 @@ public class WeightedResourceLocation extends ModifiableWeightedRandom {
         public WeightedResourceLocation deserialize(JsonElement json, Type typeOfT, JsonDeserializationContext context) throws JsonParseException {
             JsonObject jObject = json.getAsJsonObject();
             return new WeightedResourceLocation(
-                    ResourceLocation.parse(jObject.get("location").getAsString()),
+                    ResourceLocation.parse(GsonHelper.getAsString(jObject, "location")),
                     context.deserialize(jObject.get("weight"), MPRModifiableValue.class)
             );
         }
