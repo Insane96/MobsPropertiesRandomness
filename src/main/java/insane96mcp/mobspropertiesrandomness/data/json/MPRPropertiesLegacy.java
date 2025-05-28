@@ -3,7 +3,6 @@ package insane96mcp.mobspropertiesrandomness.data.json;
 import com.google.gson.annotations.SerializedName;
 import com.mojang.brigadier.exceptions.CommandSyntaxException;
 import insane96mcp.insanelib.exception.JsonValidationException;
-import insane96mcp.mobspropertiesrandomness.data.json.properties.outdated.MPRNbt;
 import insane96mcp.mobspropertiesrandomness.data.json.properties.outdated.equipment.MPREquipment;
 import insane96mcp.mobspropertiesrandomness.data.json.properties.outdated.events.MPREvents;
 import insane96mcp.mobspropertiesrandomness.data.json.properties.outdated.pehuki.MPRScalePehkui;
@@ -11,7 +10,6 @@ import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.TagParser;
 import net.minecraft.world.entity.LivingEntity;
 
-import java.util.ArrayList;
 import java.util.List;
 
 public abstract class MPRPropertiesLegacy implements IMPRObject {
@@ -19,9 +17,6 @@ public abstract class MPRPropertiesLegacy implements IMPRObject {
 
 	@SerializedName("events")
 	public MPREvents events;
-
-	@SerializedName("set_nbt")
-	public List<MPRNbt> setNbt;
 
 	@SerializedName("set_raw_nbt")
 	public String setRawNbt;
@@ -38,12 +33,6 @@ public abstract class MPRPropertiesLegacy implements IMPRObject {
 
 		if (this.events != null)
 			this.events.validate();
-
-		if (this.setNbt == null)
-			this.setNbt = new ArrayList<>();
-		for (MPRNbt mprNbt : this.setNbt) {
-			mprNbt.validate();
-		}
 
 		if (this.setRawNbt != null) {
 			try {
@@ -67,10 +56,6 @@ public abstract class MPRPropertiesLegacy implements IMPRObject {
 
 		if (this.events != null)
 			this.events.addToNBT(entity);
-
-		for (MPRNbt mprNbt : this.setNbt) {
-			mprNbt.apply(entity);
-		}
 
 		if (this._rawNbt != null) {
 			entity.readAdditionalSaveData(this._rawNbt);

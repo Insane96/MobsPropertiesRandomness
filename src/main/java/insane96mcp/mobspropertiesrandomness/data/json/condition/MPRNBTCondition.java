@@ -2,7 +2,7 @@ package insane96mcp.mobspropertiesrandomness.data.json.condition;
 
 import com.google.gson.*;
 import com.google.gson.annotations.JsonAdapter;
-import com.google.gson.annotations.SerializedName;
+import insane96mcp.mobspropertiesrandomness.data.json.util.NBTType;
 import insane96mcp.mobspropertiesrandomness.data.json.util.modifiable.MPRRange;
 import net.minecraft.nbt.*;
 import net.minecraft.util.GsonHelper;
@@ -12,13 +12,13 @@ import java.lang.reflect.Type;
 
 @JsonAdapter(MPRNBTCondition.Serializer.class)
 public class MPRNBTCondition extends MPRCondition {
-    public String nbtPath;
+    public String path;
     public NBTType type;
     public MPRRange value;
 
-    public MPRNBTCondition(String nbtPath, NBTType type, MPRRange value, boolean inverted) {
+    public MPRNBTCondition(String path, NBTType type, MPRRange value, boolean inverted) {
         super(inverted);
-        this.nbtPath = nbtPath;
+        this.path = path;
         this.type = type;
         this.value = value;
     }
@@ -28,7 +28,7 @@ public class MPRNBTCondition extends MPRCondition {
     protected boolean conditionCheck(LivingEntity living) {
         CompoundTag mobTag = new CompoundTag();
         living.saveWithoutId(mobTag);
-        String[] splitPath = this.nbtPath.split("\\.");
+        String[] splitPath = this.path.split("\\.");
         for (int i = 0; i < splitPath.length; i++) {
             Tag tag = mobTag.get(splitPath[i]);
             if (tag == null)
@@ -68,7 +68,7 @@ public class MPRNBTCondition extends MPRCondition {
         public MPRNBTCondition deserialize(JsonElement json, Type typeOfT, JsonDeserializationContext context) throws JsonParseException {
             JsonObject jObject = json.getAsJsonObject();
             return new MPRNBTCondition(
-                    GsonHelper.getAsString(jObject, "nbt_tag"),
+                    GsonHelper.getAsString(jObject, "path"),
                     context.deserialize(jObject.get("type"), NBTType.class),
                     context.deserialize(jObject.get("value"), MPRRange.class),
                     MPRCondition.deserializeInverted(jObject)
@@ -78,19 +78,11 @@ public class MPRNBTCondition extends MPRCondition {
         @Override
         public JsonElement serialize(MPRNBTCondition src, Type typeOfSrc, JsonSerializationContext context) {
             JsonObject jObject = new JsonObject();
-            jObject.add("nbt_tag", context.serialize(src.nbtPath));
+            jObject.add("path", context.serialize(src.path));
             jObject.add("type", context.serialize(src.type));
             jObject.add("value", context.serialize(src.value));
             return src.endSerialization(jObject);
         }
     }
 
-    public enum NBTType {
-        @SerializedName("double")
-        DOUBLE,
-        @SerializedName("integer")
-        INTEGER,
-        @SerializedName("boolean")
-        BOOLEAN,
-    }
 }

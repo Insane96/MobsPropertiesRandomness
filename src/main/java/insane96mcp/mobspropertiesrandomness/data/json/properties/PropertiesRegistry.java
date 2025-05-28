@@ -35,5 +35,6 @@ public class PropertiesRegistry {
         register("loot_table", MPRLootTableProperty.class);
         register("effect_immunity", MPREffectImmunityProperty.class);
         register("team", MPRTeamProperty.class);
+        register("set_nbt", MPRNBTProperty.class);
     }
 }
