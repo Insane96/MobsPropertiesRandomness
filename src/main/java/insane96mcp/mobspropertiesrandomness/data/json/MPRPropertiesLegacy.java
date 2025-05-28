@@ -8,7 +8,6 @@ import insane96mcp.insanelib.util.LogHelper;
 import insane96mcp.mobspropertiesrandomness.MPR;
 import insane96mcp.mobspropertiesrandomness.data.json.properties.MPRCustomName;
 import insane96mcp.mobspropertiesrandomness.data.json.properties.MPRNbt;
-import insane96mcp.mobspropertiesrandomness.data.json.properties.attribute.MPRMobAttribute;
 import insane96mcp.mobspropertiesrandomness.data.json.properties.equipment.MPREquipment;
 import insane96mcp.mobspropertiesrandomness.data.json.properties.events.MPREvents;
 import insane96mcp.mobspropertiesrandomness.data.json.properties.mods.pehuki.MPRScalePehkui;
@@ -28,8 +27,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 public abstract class MPRPropertiesLegacy implements IMPRObject {
-	public List<MPRMobAttribute> attributes;
-
 	public MPREquipment equipment;
 
 	@SerializedName("events")
@@ -63,12 +60,6 @@ public abstract class MPRPropertiesLegacy implements IMPRObject {
 
 	@Override
 	public void validate() throws JsonValidationException {
-		if (this.attributes == null)
-			this.attributes = new ArrayList<>();
-		for (MPRMobAttribute attribute : this.attributes) {
-			attribute.validate();
-		}
-
 		if (this.equipment == null)
 			this.equipment = new MPREquipment();
 		this.equipment.validate();
@@ -124,9 +115,6 @@ public abstract class MPRPropertiesLegacy implements IMPRObject {
 	}
 
 	public boolean apply(LivingEntity entity) {
-		for (MPRMobAttribute attribute : this.attributes) {
-			attribute.apply(entity);
-		}
 		this.equipment.apply(entity);
 
 		if (this.events != null)

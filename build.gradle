@@ -69,6 +69,7 @@ repositories {
     maven {
         url = "https://jitpack.io"
     }
+    maven { url = "https://api.modrinth.com/maven" }
     flatDir {
         dirs "libs"
     }
@@ -85,6 +86,17 @@ dependencies {
     implementation fg.deobf("net.darkhax.gamestages:GameStages-Forge-${minecraft_version}:${gamestages_version}")
 
     implementation fg.deobf("com.github.Virtuoel:Pehkui:${pehkui_version}-${minecraft_version}-forge")
+
+    // compile against the JEI API but do not include it at runtime
+    compileOnly fg.deobf("mezz.jei:jei-${minecraft_version}-common-api:${jei_version}")
+    compileOnly(fg.deobf("mezz.jei:jei-${minecraft_version}-forge-api:${jei_version}"))
+    // at runtime, use the full JEI jar for Forge
+    runtimeOnly(fg.deobf("mezz.jei:jei-${minecraft_version}-forge:${jei_version}"))
+
+    // jade_version example: 11.13.1+forge
+    // Visit https://modrinth.com/mod/jade/versions?l=forge to get the latest version
+    implementation fg.deobf("maven.modrinth:jade:11.13.1+forge")
+
 }
 
 mixin {

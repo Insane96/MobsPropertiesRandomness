@@ -16,5 +16,6 @@ public class PropertiesRegistry {
 
     public static void init() {
         register("potion_effect", MPRPotionEffectProperty.class);
+        register("attribute_modifier", MPRAttributeModifierProperty.class);
     }
 }

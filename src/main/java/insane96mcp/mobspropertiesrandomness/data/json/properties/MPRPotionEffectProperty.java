@@ -48,10 +48,10 @@ public class MPRPotionEffectProperty extends MPRProperty {
             String sEffect = GsonHelper.getAsString(jObject, "effect");
             ResourceLocation effect = ResourceLocation.tryParse(sEffect);
             if (effect == null)
-                throw new JsonParseException("Invalid Potion Effect %s Id in PotionEffect Object".formatted(sEffect));
+                throw new JsonParseException("Invalid Potion Effect %s Id in PotionEffect Property".formatted(sEffect));
             MobEffect mobEffect = ForgeRegistries.MOB_EFFECTS.getValue(effect);
             if (mobEffect == null)
-                throw new JsonParseException("Potion Effect %s in PotionEffect Object doesn't exist".formatted(sEffect));
+                throw new JsonParseException("Potion Effect %s in PotionEffect Property doesn't exist".formatted(sEffect));
 
             MPRRange amplifier;
             if (jObject.has("amplifier"))
