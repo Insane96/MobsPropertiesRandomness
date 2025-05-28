@@ -1,4 +1,4 @@
-package insane96mcp.mobspropertiesrandomness.data.json.properties.equipment;
+package insane96mcp.mobspropertiesrandomness.data.json.properties.outdated.equipment;
 
 import com.google.gson.annotations.SerializedName;
 import insane96mcp.insanelib.exception.JsonValidationException;

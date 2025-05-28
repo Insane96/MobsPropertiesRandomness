@@ -1,9 +1,9 @@
-package insane96mcp.mobspropertiesrandomness.data.json.properties.events;
+package insane96mcp.mobspropertiesrandomness.data.json.properties.outdated.events;
 
 import com.google.gson.annotations.SerializedName;
 import insane96mcp.insanelib.exception.JsonValidationException;
 import insane96mcp.mobspropertiesrandomness.data.json.IMPRObject;
-import insane96mcp.mobspropertiesrandomness.data.json.properties.mods.pehuki.MPRScalePehkui;
+import insane96mcp.mobspropertiesrandomness.data.json.properties.outdated.pehuki.MPRScalePehkui;
 import insane96mcp.mobspropertiesrandomness.data.json.util.modifiable.MPRModifiableValue;
 import net.minecraft.commands.CommandFunction;
 import net.minecraft.resources.ResourceLocation;

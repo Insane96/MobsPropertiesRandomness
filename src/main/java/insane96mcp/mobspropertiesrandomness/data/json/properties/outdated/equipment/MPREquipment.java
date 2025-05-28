@@ -1,9 +1,9 @@
-package insane96mcp.mobspropertiesrandomness.data.json.properties.equipment;
+package insane96mcp.mobspropertiesrandomness.data.json.properties.outdated.equipment;
 
 import com.google.gson.annotations.SerializedName;
 import insane96mcp.insanelib.exception.JsonValidationException;
 import insane96mcp.mobspropertiesrandomness.data.json.IMPRObject;
-import insane96mcp.mobspropertiesrandomness.data.json.properties.attribute.MPRItemAttribute;
+import insane96mcp.mobspropertiesrandomness.data.json.properties.outdated.attribute.MPRItemAttribute;
 import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.Mob;

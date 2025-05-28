@@ -1,4 +1,4 @@
-package insane96mcp.mobspropertiesrandomness.data.json.properties.mods.pehuki;
+package insane96mcp.mobspropertiesrandomness.data.json.properties.outdated.pehuki;
 
 import com.google.common.collect.HashMultimap;
 import com.google.gson.JsonDeserializationContext;

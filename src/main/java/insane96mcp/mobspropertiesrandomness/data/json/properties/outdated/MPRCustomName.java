@@ -1,4 +1,4 @@
-package insane96mcp.mobspropertiesrandomness.data.json.properties;
+package insane96mcp.mobspropertiesrandomness.data.json.properties.outdated;
 
 import insane96mcp.insanelib.exception.JsonValidationException;
 import insane96mcp.mobspropertiesrandomness.data.json.IMPRObject;

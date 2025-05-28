@@ -3,7 +3,7 @@ package insane96mcp.mobspropertiesrandomness.data.json;
 import com.google.gson.annotations.JsonAdapter;
 import com.google.gson.annotations.SerializedName;
 import insane96mcp.insanelib.exception.JsonValidationException;
-import insane96mcp.mobspropertiesrandomness.data.json.properties.MPRBossBar;
+import insane96mcp.mobspropertiesrandomness.data.json.properties.outdated.MPRBossBar;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.bossevents.CustomBossEvent;
 import net.minecraft.world.entity.LivingEntity;
