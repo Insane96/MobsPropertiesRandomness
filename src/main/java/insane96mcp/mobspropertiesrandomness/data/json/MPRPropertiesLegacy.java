@@ -4,20 +4,15 @@ import com.google.gson.annotations.SerializedName;
 import com.mojang.brigadier.exceptions.CommandSyntaxException;
 import insane96mcp.insanelib.exception.JsonValidationException;
 import insane96mcp.insanelib.util.LogHelper;
-import insane96mcp.mobspropertiesrandomness.MPR;
 import insane96mcp.mobspropertiesrandomness.data.json.properties.outdated.MPRNbt;
 import insane96mcp.mobspropertiesrandomness.data.json.properties.outdated.equipment.MPREquipment;
 import insane96mcp.mobspropertiesrandomness.data.json.properties.outdated.events.MPREvents;
 import insane96mcp.mobspropertiesrandomness.data.json.properties.outdated.pehuki.MPRScalePehkui;
 import net.minecraft.nbt.CompoundTag;
-import net.minecraft.nbt.ListTag;
-import net.minecraft.nbt.StringTag;
 import net.minecraft.nbt.TagParser;
-import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.ServerScoreboard;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.scores.PlayerTeam;
-import net.minecraftforge.registries.ForgeRegistries;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -27,9 +22,6 @@ public abstract class MPRPropertiesLegacy implements IMPRObject {
 
 	@SerializedName("events")
 	public MPREvents events;
-
-	@SerializedName("effects_immunity")
-	public List<String> effectImmunity;
 
 	public String team;
 
@@ -51,14 +43,6 @@ public abstract class MPRPropertiesLegacy implements IMPRObject {
 
 		if (this.events != null)
 			this.events.validate();
-
-		if (this.effectImmunity != null) {
-			for (String mobEffect : this.effectImmunity) {
-				if (ForgeRegistries.MOB_EFFECTS.getValue(ResourceLocation.parse(mobEffect)) == null) {
-					throw new JsonValidationException("Invalid MobEffect ID " + mobEffect + " for " + this);
-				}
-			}
-		}
 
 		if (this.setNbt == null)
 			this.setNbt = new ArrayList<>();
@@ -88,14 +72,6 @@ public abstract class MPRPropertiesLegacy implements IMPRObject {
 
 		if (this.events != null)
 			this.events.addToNBT(entity);
-
-		if (this.effectImmunity != null) {
-			ListTag listTag = new ListTag();
-			for (String mobEffect : this.effectImmunity) {
-				listTag.add(StringTag.valueOf(mobEffect));
-			}
-			entity.getPersistentData().put(MPR.RESOURCE_PREFIX + "effect_immunity", listTag);
-		}
 
 		for (MPRNbt mprNbt : this.setNbt) {
 			mprNbt.apply(entity);

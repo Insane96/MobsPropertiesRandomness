@@ -74,7 +74,7 @@ public class MPRAdvancementCondition extends MPRCondition {
 		@Override
 		public JsonElement serialize(MPRAdvancementCondition src, Type typeOfSrc, JsonSerializationContext context) {
 			JsonObject jObject = new JsonObject();
-			jObject.add("advancements", context.serialize(src.advancements));
+			SerializerUtils.serializeLocationList(jObject, "advancements", context, src.advancements);
 			jObject.add("player", context.serialize(src.player));
 			return src.endSerialization(jObject);
 		}

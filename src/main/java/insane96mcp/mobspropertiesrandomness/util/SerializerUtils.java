@@ -1,6 +1,7 @@
 package insane96mcp.mobspropertiesrandomness.util;
 
 import com.google.gson.*;
+import net.minecraft.resources.ResourceLocation;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -35,5 +36,22 @@ public class SerializerUtils {
         }
         else
             throw new JsonParseException("Expected %s to be a JsonObject or JsonArray".formatted(memberName));
+    }
+
+    public static List<ResourceLocation> deserializeLocationList(JsonObject jObject, String memberName, JsonDeserializationContext context) throws JsonParseException {
+        List<String> list = deserializeList(jObject, memberName, context, String.class);
+        List<ResourceLocation> locations = new ArrayList<>(list.size());
+        for (String loc : list) {
+            locations.add(ResourceLocation.parse(loc));
+        }
+        return locations;
+    }
+
+    public static void serializeLocationList(JsonObject jObject, String memberName, JsonSerializationContext context, List<ResourceLocation> list) {
+        JsonArray jsonArray = new JsonArray();
+        for (ResourceLocation loc : list) {
+            jsonArray.add(loc.toString());
+        }
+        jObject.add(memberName, jsonArray);
     }
 }
