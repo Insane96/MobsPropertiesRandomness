@@ -2,7 +2,6 @@ package insane96mcp.mobspropertiesrandomness.data.json.properties.events;
 
 import com.google.gson.annotations.SerializedName;
 import insane96mcp.insanelib.exception.JsonValidationException;
-import insane96mcp.mobspropertiesrandomness.data.json.properties.MPRPotionEffect;
 import insane96mcp.mobspropertiesrandomness.data.json.util.modifiable.MPRModifiableValue;
 import insane96mcp.mobspropertiesrandomness.data.json.util.modifiable.MPRModifier;
 import insane96mcp.mobspropertiesrandomness.data.json.util.modifiable.MPRRange;
@@ -14,12 +13,10 @@ import net.minecraft.world.damagesource.DamageType;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraftforge.event.entity.living.LivingDamageEvent;
 
-import java.util.List;
-
 public class MPROnHit extends MPREvent {
 
-	@SerializedName("potion_effects")
-	public List<MPRPotionEffect> potionEffects;
+	//@SerializedName("potion_effects")
+	//public List<MPRPotionEffect> potionEffects;
 
 	@SerializedName("direct_indirect")
 	public DirectIndirect directIndirect;
@@ -113,11 +110,11 @@ public class MPROnHit extends MPREvent {
 		LivingEntity target = this.target == Target.THIS ? entity : other;
 		if (target == null)
 			return;
-		if (this.potionEffects != null) {
-			for (MPRPotionEffect potionEffect : this.potionEffects) {
-				potionEffect.apply(target);
-			}
-		}
+		//if (this.potionEffects != null) {
+		//	for (MPRPotionEffect potionEffect : this.potionEffects) {
+		//		potionEffect.apply(target);
+		//	}
+		//}
 		if (this.setFire != null)
 			if (!this.additiveFire)
 				target.setSecondsOnFire(this.setFire.getIntBetween(target));
@@ -130,10 +127,5 @@ public class MPROnHit extends MPREvent {
 				target.setTicksFrozen(target.getTicksFrozen() + this.setFreeze.getIntBetween(target) * 20);
 		}
 		this.tryApply(target);
-	}
-
-	@Override
-	public String toString() {
-		return String.format("OnHit{%s, potion_effects: %s, damage_modifier_operation: %s, damage_modifier: %s, target: %s, damage_type: %s, health_left: %s}", super.toString(), this.potionEffects, this.damageModifierOperation, this.damageModifier, this.target, this.directIndirect, this.healthLeft);
 	}
 }

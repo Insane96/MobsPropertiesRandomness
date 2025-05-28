@@ -4,7 +4,7 @@ import com.google.gson.annotations.SerializedName;
 import insane96mcp.insanelib.exception.JsonValidationException;
 import insane96mcp.insanelib.util.weightedrandom.WeightedRandom;
 import insane96mcp.mobspropertiesrandomness.data.json.IMPRObject;
-import insane96mcp.mobspropertiesrandomness.data.json.MPRPreset;
+import insane96mcp.mobspropertiesrandomness.data.json.MPRPresetLegacy;
 import insane96mcp.mobspropertiesrandomness.data.json.util.MPRWeightedPreset;
 import insane96mcp.mobspropertiesrandomness.data.json.util.modifiable.MPRModifiableValue;
 import net.minecraft.world.entity.LivingEntity;
@@ -50,7 +50,7 @@ public class MPRPresets implements IMPRObject {
 		if (this.applyAll) {
 			List<MPRWeightedPreset> items = this.getPresets(entity);
 			items.forEach(weightedPreset -> {
-				Optional<MPRPreset> presetFound = MPR_PRESETS.stream().filter(p -> p.id.equals(weightedPreset.id)).findFirst();
+				Optional<MPRPresetLegacy> presetFound = MPR_PRESETS.stream().filter(p -> p.id.equals(weightedPreset.id)).findFirst();
 				presetFound.ifPresent(preset -> preset.apply(entity));
 			});
 			return true;
@@ -59,7 +59,7 @@ public class MPRPresets implements IMPRObject {
 			MPRWeightedPreset weightedPreset = this.getRandomPreset(entity);
 			if (weightedPreset == null)
 				return false;
-			Optional<MPRPreset> presetFound = MPR_PRESETS.stream().filter(p -> p.id.equals(weightedPreset.id)).findFirst();
+			Optional<MPRPresetLegacy> presetFound = MPR_PRESETS.stream().filter(p -> p.id.equals(weightedPreset.id)).findFirst();
 			return presetFound.map(mprPreset -> mprPreset.apply(entity)).orElse(false);
 		}
 	}

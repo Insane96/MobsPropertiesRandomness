@@ -1,75 +1,55 @@
 package insane96mcp.mobspropertiesrandomness.data.json;
 
-import com.google.gson.annotations.SerializedName;
+import com.google.gson.*;
+import com.google.gson.annotations.JsonAdapter;
 import insane96mcp.insanelib.data.IdTagMatcher;
-import insane96mcp.insanelib.exception.JsonValidationException;
-import insane96mcp.mobspropertiesrandomness.data.json.properties.MPRPresets;
-import insane96mcp.mobspropertiesrandomness.module.base.feature.MPRBase;
-import insane96mcp.mobspropertiesrandomness.util.Logger;
-import net.minecraft.nbt.CompoundTag;
-import net.minecraft.world.entity.Entity;
+import insane96mcp.mobspropertiesrandomness.data.json.condition.MPRCondition;
+import insane96mcp.mobspropertiesrandomness.data.json.properties.MPRProperty;
+import net.minecraft.util.GsonHelper;
 import net.minecraft.world.entity.LivingEntity;
-import net.minecraftforge.event.entity.EntityJoinLevelEvent;
 
-import static insane96mcp.mobspropertiesrandomness.data.MPRMobReloadListener.MPR_MOBS;
+import java.lang.reflect.Type;
+import java.util.List;
 
-public class MPRMob extends MPRProperties implements IMPRObject {
-	@SerializedName("target")
-	public IdTagMatcher target;
+@JsonAdapter(MPRMob.Serializer.class)
+public class MPRMob extends MPRProperties {
+    public IdTagMatcher target;
 
-	public MPRPresets presets;
+    public int priority;
 
-	public Integer priority = 0;
+    public MPRMob(IdTagMatcher target, int priority, List<MPRProperty> properties, List<MPRCondition> conditions) {
+        super(properties, conditions);
+        this.target = target;
+        this.priority = priority;
+    }
 
-	@Override
-	public void validate() throws JsonValidationException {
-		super.validate();
-		if (this.target == null)
-			throw new JsonValidationException("Missing target entity. " + this);
+    public void tryApply(LivingEntity entity) {
+        if (!this.target.matchesEntity(entity)
+                || !MPRCondition.conditionsApply(this.conditions, entity))
+            return;
+        for (MPRProperty property : this.properties) {
+            property.tryApply(entity);
+        }
+    }
 
-		if (this.presets != null)
-			this.presets.validate();
-	}
+    public static class Serializer implements JsonDeserializer<MPRMob>, JsonSerializer<MPRMob> {
+        @Override
+        public MPRMob deserialize(JsonElement json, Type typeOfT, JsonDeserializationContext context) throws JsonParseException {
+            JsonObject jObject = json.getAsJsonObject();
+            return new MPRMob(
+                    context.deserialize(jObject.get("target"), IdTagMatcher.class),
+                    GsonHelper.getAsInt(jObject, "priority", 0),
+                    deserializeProperties(jObject, context),
+                    deserializeConditions(jObject, context)
+            );
+        }
 
-	public static void apply(EntityJoinLevelEvent event) {
-		if (MPR_MOBS.isEmpty())
-			return;
-
-		Entity entity = event.getEntity();
-
-		if (!(entity instanceof LivingEntity livingEntity))
-			return;
-
-		CompoundTag tags = livingEntity.getPersistentData();
-		boolean isAlreadyChecked = tags.getBoolean(MPRBase.PROCESSED);
-		if (isAlreadyChecked)
-			return;
-
-		for (MPRMob mprMob : MPR_MOBS) {
-			if (!mprMob.target.matchesEntity(livingEntity))
-				continue;
-			Logger.debug("Applying MPRMob " + mprMob + " to " + livingEntity);
-			if (mprMob.presets == null)
-				mprMob.apply(livingEntity);
-			else if (!livingEntity.getPersistentData().contains(MPRBase.PRESET)) {
-				switch (mprMob.presets.mode) {
-					case EXCLUSIVE:
-						if (!mprMob.presets.apply(livingEntity))
-							mprMob.apply(livingEntity);
-						break;
-					case BEFORE:
-						mprMob.presets.apply(livingEntity);
-						mprMob.apply(livingEntity);
-						break;
-					case AFTER:
-						mprMob.apply(livingEntity);
-						mprMob.presets.apply(livingEntity);
-						break;
-				}
-			}
-		}
-
-		tags.putBoolean(MPRBase.PROCESSED, true);
-		livingEntity.getPersistentData().remove(MPRBase.PRESET);
-	}
+        @Override
+        public JsonElement serialize(MPRMob src, Type typeOfSrc, JsonSerializationContext context) {
+            JsonObject jObject = new JsonObject();
+            jObject.add("target", context.serialize(src.target));
+            jObject.addProperty("priority", src.priority);
+            return src.endSerialization(jObject, context);
+        }
+    }
 }

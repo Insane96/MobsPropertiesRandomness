@@ -1,4 +1,4 @@
-package insane96mcp.mobspropertiesrandomness.data.json.properties.condition;
+package insane96mcp.mobspropertiesrandomness.data.json.condition;
 
 import insane96mcp.mobspropertiesrandomness.MPR;
 import net.minecraft.resources.ResourceLocation;

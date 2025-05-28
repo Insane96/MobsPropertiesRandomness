@@ -1,4 +1,4 @@
-package insane96mcp.mobspropertiesrandomness.data.json.properties.condition;
+package insane96mcp.mobspropertiesrandomness.data.json.condition;
 
 import com.google.gson.*;
 import com.google.gson.annotations.JsonAdapter;
@@ -78,7 +78,7 @@ public class MPRAdvancementCondition extends MPRCondition {
 			JsonObject jObject = new JsonObject();
 			jObject.add("advancements", context.serialize(src.advancements));
 			jObject.add("player", context.serialize(src.player));
-			return src.serializeInverted();
+			return src.endSerialization(jObject);
 		}
 	}
 

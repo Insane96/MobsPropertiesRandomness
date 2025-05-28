@@ -1,4 +1,4 @@
-package insane96mcp.mobspropertiesrandomness.data.json.properties.condition;
+package insane96mcp.mobspropertiesrandomness.data.json.condition;
 
 import com.google.gson.*;
 import com.google.gson.annotations.JsonAdapter;
@@ -32,7 +32,7 @@ public class MPRDayTimeCondition extends MPRCondition {
         public JsonElement serialize(MPRDayTimeCondition src, Type typeOfSrc, JsonSerializationContext context) {
             JsonObject jObject = new JsonObject();
             jObject.add("day_time", context.serialize(src.dayTime));
-            return src.serializeInverted();
+            return src.endSerialization(jObject);
         }
     }
 }

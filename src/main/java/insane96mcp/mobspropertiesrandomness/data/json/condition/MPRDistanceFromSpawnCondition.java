@@ -1,4 +1,4 @@
-package insane96mcp.mobspropertiesrandomness.data.json.properties.condition;
+package insane96mcp.mobspropertiesrandomness.data.json.condition;
 
 import com.google.gson.*;
 import com.google.gson.annotations.JsonAdapter;
@@ -37,7 +37,7 @@ public class MPRDistanceFromSpawnCondition extends MPRCondition {
         public JsonElement serialize(MPRDistanceFromSpawnCondition src, Type typeOfSrc, JsonSerializationContext context) {
             JsonObject jObject = new JsonObject();
             jObject.add("distance", context.serialize(src.distance));
-            return src.serializeInverted();
+            return src.endSerialization(jObject);
         }
     }
 }

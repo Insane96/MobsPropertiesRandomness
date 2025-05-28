@@ -1,191 +1,42 @@
 package insane96mcp.mobspropertiesrandomness.data.json;
 
-import com.google.gson.annotations.SerializedName;
-import com.mojang.brigadier.exceptions.CommandSyntaxException;
-import insane96mcp.insanelib.exception.JsonValidationException;
-import insane96mcp.insanelib.module.base.TagsFeature;
-import insane96mcp.insanelib.util.LogHelper;
-import insane96mcp.mobspropertiesrandomness.MPR;
-import insane96mcp.mobspropertiesrandomness.data.json.properties.MPRCustomName;
-import insane96mcp.mobspropertiesrandomness.data.json.properties.MPRNbt;
-import insane96mcp.mobspropertiesrandomness.data.json.properties.MPRPotionEffect;
-import insane96mcp.mobspropertiesrandomness.data.json.properties.attribute.MPRMobAttribute;
-import insane96mcp.mobspropertiesrandomness.data.json.properties.equipment.MPREquipment;
-import insane96mcp.mobspropertiesrandomness.data.json.properties.events.MPREvents;
-import insane96mcp.mobspropertiesrandomness.data.json.properties.mods.pehuki.MPRScalePehkui;
-import insane96mcp.mobspropertiesrandomness.data.json.util.modifiable.MPRModifiableValue;
-import net.minecraft.nbt.CompoundTag;
-import net.minecraft.nbt.ListTag;
-import net.minecraft.nbt.StringTag;
-import net.minecraft.nbt.TagParser;
-import net.minecraft.resources.ResourceLocation;
-import net.minecraft.server.ServerScoreboard;
-import net.minecraft.world.entity.LivingEntity;
-import net.minecraft.world.entity.Mob;
-import net.minecraft.world.scores.PlayerTeam;
-import net.minecraftforge.registries.ForgeRegistries;
+import com.google.gson.*;
+import insane96mcp.mobspropertiesrandomness.data.json.condition.MPRCondition;
+import insane96mcp.mobspropertiesrandomness.data.json.properties.MPRProperty;
 
-import java.util.ArrayList;
+import java.lang.reflect.Type;
 import java.util.List;
 
-public abstract class MPRProperties implements IMPRObject {
-	@SerializedName("potion_effects")
-	public List<MPRPotionEffect> potionEffects;
+public class MPRProperties {
+    List<MPRProperty> properties;
+    List<MPRCondition> conditions;
 
-	public List<MPRMobAttribute> attributes;
+    public MPRProperties(List<MPRProperty> properties, List<MPRCondition> conditions) {
+        this.properties = properties;
+        this.conditions = conditions;
+    }
 
-	public MPREquipment equipment;
+    public static List<MPRProperty> deserializeProperties(JsonObject jObject, JsonDeserializationContext context) { return MPRProperty.deserializeList(jObject, "properties", context); }
 
-	@SerializedName("events")
-	public MPREvents events;
+    public static List<MPRCondition> deserializeConditions(JsonObject jObject, JsonDeserializationContext context) { return MPRCondition.deserializeList(jObject, "conditions", context); }
 
-	@SerializedName("custom_name")
-	public MPRCustomName customName;
+    public JsonObject endSerialization(JsonObject jObject, JsonSerializationContext context) {
+        jObject.add("properties", context.serialize(this.properties));
+        jObject.add("conditions", context.serialize(this.conditions));
+        return jObject;
+    }
 
-	public MPRModifiableValue silent;
+    public static class Serializer implements JsonDeserializer<MPRProperties>, JsonSerializer<MPRProperties> {
+        @Override
+        public MPRProperties deserialize(JsonElement json, Type typeOfT, JsonDeserializationContext context) throws JsonParseException {
+            JsonObject jObject = json.getAsJsonObject();
+            return new MPRProperties(deserializeProperties(jObject, context), deserializeConditions(jObject, context));
+        }
 
-	@SerializedName("experience_multiplier")
-	public MPRModifiableValue experienceMultiplier;
-
-	@SerializedName("loot_table")
-	public String lootTable;
-
-	@SerializedName("effects_immunity")
-	public List<String> effectImmunity;
-
-	public String team;
-
-	@SerializedName("set_nbt")
-	public List<MPRNbt> setNbt;
-
-	@SerializedName("set_raw_nbt")
-	public String setRawNbt;
-	public transient CompoundTag _rawNbt = null;
-
-	@SerializedName("scale_pehkui")
-	public List<MPRScalePehkui> scalePehkui;
-
-	@Override
-	public void validate() throws JsonValidationException {
-		if (this.potionEffects == null)
-			this.potionEffects = new ArrayList<>();
-
-		if (this.attributes == null)
-			this.attributes = new ArrayList<>();
-		for (MPRMobAttribute attribute : this.attributes) {
-			attribute.validate();
-		}
-
-		if (this.equipment == null)
-			this.equipment = new MPREquipment();
-		this.equipment.validate();
-
-		if (this.events != null)
-			this.events.validate();
-
-		if (this.customName != null)
-			this.customName.validate();
-
-		if (this.silent != null)
-			this.silent.validate();
-
-		if (this.experienceMultiplier != null)
-			this.experienceMultiplier.validate();
-
-		if (this.lootTable != null) {
-			if (this.lootTable.isEmpty())
-				throw new JsonValidationException("\"loot_table\": \"\" is not valid. To use an empty loot_table use \"minecraft:empty\". " + this);
-			else if (ResourceLocation.tryParse(this.lootTable) == null)
-				throw new JsonValidationException("\"loot_table\": \"" + this.lootTable + "\" is not valid. You must use a valid Resource Location (namespace:loot_table_id). " + this);
-		}
-
-		if (this.effectImmunity != null) {
-			for (String mobEffect : this.effectImmunity) {
-				if (ForgeRegistries.MOB_EFFECTS.getValue(ResourceLocation.parse(mobEffect)) == null) {
-					throw new JsonValidationException("Invalid MobEffect ID " + mobEffect + " for " + this);
-				}
-			}
-		}
-
-		if (this.setNbt == null)
-			this.setNbt = new ArrayList<>();
-		for (MPRNbt mprNbt : this.setNbt) {
-			mprNbt.validate();
-		}
-
-		if (this.setRawNbt != null) {
-			try {
-				this._rawNbt = TagParser.parseTag(this.setRawNbt);
-			}
-			catch (CommandSyntaxException e) {
-				throw new JsonValidationException("Invalid raw nbt in properties: " + this.setRawNbt);
-			}
-		}
-
-		if (this.scalePehkui != null)
-		{
-			for (MPRScalePehkui scalePehkui1 : this.scalePehkui) {
-				scalePehkui1.validate();
-			}
-		}
-	}
-
-	public boolean apply(LivingEntity entity) {
-		for (MPRPotionEffect potionEffect : this.potionEffects) {
-			potionEffect.apply(entity);
-		}
-		for (MPRMobAttribute attribute : this.attributes) {
-			attribute.apply(entity);
-		}
-		this.equipment.apply(entity);
-
-		if (this.events != null)
-			this.events.addToNBT(entity);
-
-		if (this.customName != null)
-			this.customName.applyCustomName(entity);
-
-		if (this.silent != null && entity.level().random.nextDouble() < this.silent.getValue(entity))
-			entity.setSilent(true);
-
-		if (this.experienceMultiplier != null)
-			entity.getPersistentData().putDouble(TagsFeature.EXPERIENCE_MULTIPLIER, this.experienceMultiplier.getValue(entity));
-
-		if (this.lootTable != null && entity instanceof Mob) {
-			((Mob) entity).lootTable = ResourceLocation.parse(this.lootTable);
-		}
-
-		if (this.effectImmunity != null) {
-			ListTag listTag = new ListTag();
-			for (String mobEffect : this.effectImmunity) {
-				listTag.add(StringTag.valueOf(mobEffect));
-			}
-			entity.getPersistentData().put(MPR.RESOURCE_PREFIX + "effect_immunity", listTag);
-		}
-
-		for (MPRNbt mprNbt : this.setNbt) {
-			mprNbt.apply(entity);
-		}
-
-		if (this.team != null && entity.level().getServer() != null) {
-			ServerScoreboard scoreboard = entity.level().getServer().getScoreboard();
-			PlayerTeam playerTeam = scoreboard.getPlayerTeam(this.team);
-			if (playerTeam == null)
-				LogHelper.warn("Failed to find team %s. Ignored", this.team);
-			else
-				scoreboard.addPlayerToTeam(entity.getScoreboardName(), playerTeam);
-		}
-
-		if (this._rawNbt != null) {
-			entity.readAdditionalSaveData(this._rawNbt);
-		}
-
-		if (this.scalePehkui != null) {
-			for (MPRScalePehkui scalePehkui1 : this.scalePehkui) {
-				scalePehkui1.scheduleApply(entity);
-			}
-		}
-
-		return true;
-	}
+        @Override
+        public JsonElement serialize(MPRProperties src, Type typeOfSrc, JsonSerializationContext context) {
+            JsonObject jObject = new JsonObject();
+            return src.endSerialization(jObject, context);
+        }
+    }
 }

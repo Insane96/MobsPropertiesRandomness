@@ -2,7 +2,8 @@ package insane96mcp.mobspropertiesrandomness;
 
 import insane96mcp.mobspropertiesrandomness.data.MPRMobReloadListener;
 import insane96mcp.mobspropertiesrandomness.data.MPRPresetReloadListener;
-import insane96mcp.mobspropertiesrandomness.data.json.properties.condition.ConditionsRegistry;
+import insane96mcp.mobspropertiesrandomness.data.json.condition.ConditionsRegistry;
+import insane96mcp.mobspropertiesrandomness.data.json.properties.PropertiesRegistry;
 import insane96mcp.mobspropertiesrandomness.setup.Config;
 import insane96mcp.mobspropertiesrandomness.util.Logger;
 import net.minecraft.resources.ResourceLocation;
@@ -27,6 +28,7 @@ public class MPR
         modContext.getModEventBus().addListener(this::preInit);
         MinecraftForge.EVENT_BUS.register(this);
 
+        PropertiesRegistry.init();
         ConditionsRegistry.init();
     }
 

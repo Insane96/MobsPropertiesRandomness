@@ -1,4 +1,4 @@
-package insane96mcp.mobspropertiesrandomness.data.json.properties.condition;
+package insane96mcp.mobspropertiesrandomness.data.json.condition;
 
 import com.google.gson.*;
 import com.google.gson.annotations.JsonAdapter;
@@ -44,7 +44,7 @@ public class MPRDeepnessCondition extends MPRCondition {
             jObject.add("y", context.serialize(src.deepness));
             if (src.seaLevelRelative)
                 jObject.addProperty("sea_level_relative", true);
-            return src.serializeInverted();
+            return src.endSerialization(jObject);
         }
     }
 }

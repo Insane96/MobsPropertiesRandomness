@@ -1,4 +1,4 @@
-package insane96mcp.mobspropertiesrandomness.data.json.properties.condition;
+package insane96mcp.mobspropertiesrandomness.data.json.condition;
 
 import com.google.gson.JsonArray;
 import com.google.gson.JsonDeserializationContext;
@@ -35,9 +35,8 @@ public abstract class MPRCondition {
         return jObject.has("inverted") && jObject.get("inverted").getAsBoolean();
     }
 
-    public JsonObject serializeInverted() {
-        JsonObject jObject = new JsonObject();
-        if (inverted)
+    public JsonObject endSerialization(JsonObject jObject) {
+        if (this.inverted)
             jObject.addProperty("inverted", true);
         return jObject;
     }
@@ -46,8 +45,8 @@ public abstract class MPRCondition {
         List<MPRCondition> conditions = new ArrayList<>();
         if (!jObject.has(memberName))
             return conditions;
-        JsonArray aModifiers = GsonHelper.getAsJsonArray(jObject, memberName);
-        for (JsonElement jsonElement : aModifiers) {
+        JsonArray aConditions = GsonHelper.getAsJsonArray(jObject, memberName);
+        for (JsonElement jsonElement : aConditions) {
             JsonObject jObjectCondition = jsonElement.getAsJsonObject();
             ResourceLocation conditionId = MPR.locationFrom(GsonHelper.getAsString(jObjectCondition, "condition"));
             Type conditionType = ConditionsRegistry.CONDITIONS.get(conditionId);

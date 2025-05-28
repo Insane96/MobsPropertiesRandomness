@@ -1,4 +1,4 @@
-package insane96mcp.mobspropertiesrandomness.data.json.properties.condition;
+package insane96mcp.mobspropertiesrandomness.data.json.condition;
 
 import com.google.gson.*;
 import com.google.gson.annotations.JsonAdapter;
@@ -44,7 +44,7 @@ public class MPRSpawnTypeCondition extends MPRCondition {
         public JsonElement serialize(MPRSpawnTypeCondition src, Type typeOfSrc, JsonSerializationContext context) {
             JsonObject jObject = new JsonObject();
             jObject.add("spawn_types", context.serialize(src.spawnTypes));
-            return src.serializeInverted();
+            return src.endSerialization(jObject);
         }
     }
 }

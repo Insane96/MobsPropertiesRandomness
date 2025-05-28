@@ -1,7 +1,9 @@
 package insane96mcp.mobspropertiesrandomness.data;
 
-import com.google.gson.*;
-import insane96mcp.insanelib.exception.JsonValidationException;
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
+import com.google.gson.JsonElement;
+import com.google.gson.JsonParseException;
 import insane96mcp.mobspropertiesrandomness.data.json.MPRMob;
 import insane96mcp.mobspropertiesrandomness.util.Logger;
 import net.minecraft.resources.FileToIdConverter;
@@ -70,15 +72,8 @@ public class MPRMobReloadListener extends SimplePreparableReloadListener<Map<Res
 					continue;
 
 				MPRMob mob = GSON.fromJson(entry.getValue(), MPRMob.class);
-				mob.validate();
 				MPR_MOBS.add(mob);
 				Logger.info("Loaded Mob %s", entry.getKey());
-			}
-			catch (JsonValidationException e) {
-				Logger.error("Validation error loading Mob %s: %s", entry.getKey(), e.getMessage());
-			}
-			catch (JsonSyntaxException e) {
-				Logger.error("Parsing error loading Mob %s: %s", entry.getKey(), e.getMessage());
 			}
 			catch (Exception e) {
 				Logger.error("Failed loading Mob %s: %s", entry.getKey(), e.getMessage());

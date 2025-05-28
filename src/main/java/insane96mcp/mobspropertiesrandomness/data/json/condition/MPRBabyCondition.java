@@ -1,4 +1,4 @@
-package insane96mcp.mobspropertiesrandomness.data.json.properties.condition;
+package insane96mcp.mobspropertiesrandomness.data.json.condition;
 
 import com.google.gson.*;
 import com.google.gson.annotations.JsonAdapter;
@@ -26,7 +26,7 @@ public class MPRBabyCondition extends MPRCondition {
 
         @Override
         public JsonElement serialize(MPRBabyCondition src, Type typeOfSrc, JsonSerializationContext context) {
-            return src.serializeInverted();
+            return src.endSerialization(new JsonObject());
         }
     }
 }

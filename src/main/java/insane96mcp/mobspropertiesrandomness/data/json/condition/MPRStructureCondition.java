@@ -1,4 +1,4 @@
-package insane96mcp.mobspropertiesrandomness.data.json.properties.condition;
+package insane96mcp.mobspropertiesrandomness.data.json.condition;
 
 import com.google.gson.*;
 import com.google.gson.annotations.JsonAdapter;
@@ -65,7 +65,7 @@ public class MPRStructureCondition extends MPRCondition {
                 aStructures.add(structure.location().toString());
             }
             jObject.add("structures", aStructures);
-            return src.serializeInverted();
+            return src.endSerialization(jObject);
         }
     }
 }

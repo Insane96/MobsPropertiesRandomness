@@ -1,6 +1,6 @@
 package insane96mcp.mobspropertiesrandomness.data.json;
 
-import insane96mcp.mobspropertiesrandomness.data.json.properties.condition.MPRCondition;
+import insane96mcp.mobspropertiesrandomness.data.json.condition.MPRCondition;
 import net.minecraft.world.entity.LivingEntity;
 
 import java.util.ArrayList;

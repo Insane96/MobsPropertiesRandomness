@@ -5,7 +5,7 @@ import com.google.gson.annotations.SerializedName;
 import insane96mcp.insanelib.exception.JsonValidationException;
 import insane96mcp.insanelib.util.weightedrandom.IWeightedRandom;
 import insane96mcp.mobspropertiesrandomness.data.json.IMPRObject;
-import insane96mcp.mobspropertiesrandomness.data.json.MPRPreset;
+import insane96mcp.mobspropertiesrandomness.data.json.MPRPresetLegacy;
 import insane96mcp.mobspropertiesrandomness.data.json.util.modifiable.MPRModifiableValue;
 import insane96mcp.mobspropertiesrandomness.util.Logger;
 import net.minecraft.resources.ResourceLocation;
@@ -34,7 +34,7 @@ public class MPRWeightedPreset implements IMPRObject, IWeightedRandom {
 		if (this.id == null)
 			throw new JsonValidationException("Missing id in Weighted Preset. " + this);
 		boolean found = false;
-		for (MPRPreset preset : MPR_PRESETS) {
+		for (MPRPresetLegacy preset : MPR_PRESETS) {
 			if (preset.id.equals(this.id)) {
 				found = true;
 				break;

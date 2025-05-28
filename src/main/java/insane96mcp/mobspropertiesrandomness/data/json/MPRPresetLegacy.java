@@ -8,7 +8,7 @@ import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.bossevents.CustomBossEvent;
 import net.minecraft.world.entity.LivingEntity;
 
-public class MPRPreset extends MPRProperties implements IMPRObject {
+public class MPRPresetLegacy extends MPRPropertiesLegacy implements IMPRObject {
 	@JsonAdapter(ResourceLocation.Serializer.class)
 	public transient ResourceLocation id;
 

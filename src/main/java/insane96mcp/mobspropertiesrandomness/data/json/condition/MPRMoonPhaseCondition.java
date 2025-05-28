@@ -1,4 +1,4 @@
-package insane96mcp.mobspropertiesrandomness.data.json.properties.condition;
+package insane96mcp.mobspropertiesrandomness.data.json.condition;
 
 import com.google.gson.*;
 import com.google.gson.annotations.JsonAdapter;
@@ -43,7 +43,7 @@ public class MPRMoonPhaseCondition extends MPRCondition {
         public JsonElement serialize(MPRMoonPhaseCondition src, Type typeOfSrc, JsonSerializationContext context) {
             JsonObject jObject = new JsonObject();
             jObject.add("moon_phases", context.serialize(src.moonPhases));
-            return src.serializeInverted();
+            return src.endSerialization(jObject);
         }
     }
 

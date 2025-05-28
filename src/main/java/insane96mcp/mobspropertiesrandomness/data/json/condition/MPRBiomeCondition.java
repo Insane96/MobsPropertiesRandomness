@@ -1,4 +1,4 @@
-package insane96mcp.mobspropertiesrandomness.data.json.properties.condition;
+package insane96mcp.mobspropertiesrandomness.data.json.condition;
 
 import com.google.gson.*;
 import com.google.gson.annotations.JsonAdapter;
@@ -42,7 +42,7 @@ public class MPRBiomeCondition extends MPRCondition {
         public JsonElement serialize(MPRBiomeCondition src, Type typeOfSrc, JsonSerializationContext context) {
             JsonObject jObject = new JsonObject();
             jObject.add("biomes", context.serialize(src.biomes));
-            return src.serializeInverted();
+            return src.endSerialization(jObject);
         }
     }
 }

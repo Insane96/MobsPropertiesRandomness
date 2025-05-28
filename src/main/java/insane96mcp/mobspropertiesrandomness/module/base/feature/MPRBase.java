@@ -10,7 +10,7 @@ import insane96mcp.insanelib.exception.JsonValidationException;
 import insane96mcp.insanelib.util.LogHelper;
 import insane96mcp.mobspropertiesrandomness.MPR;
 import insane96mcp.mobspropertiesrandomness.data.json.MPRMob;
-import insane96mcp.mobspropertiesrandomness.data.json.MPRPreset;
+import insane96mcp.mobspropertiesrandomness.data.json.MPRPresetLegacy;
 import insane96mcp.mobspropertiesrandomness.data.json.properties.MPRBossBar;
 import insane96mcp.mobspropertiesrandomness.data.json.properties.events.MPREvents;
 import insane96mcp.mobspropertiesrandomness.data.json.properties.events.MPROnDeath;
@@ -43,6 +43,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
+import static insane96mcp.mobspropertiesrandomness.data.MPRMobReloadListener.MPR_MOBS;
 import static insane96mcp.mobspropertiesrandomness.data.MPRPresetReloadListener.MPR_PRESETS;
 
 @LoadFeature(module = MPR.RESOURCE_PREFIX + "base", canBeDisabled = false)
@@ -71,12 +72,22 @@ public class MPRBase extends Feature {
 		if (livingEntity.getPersistentData().contains(PRESET)) {
 			ResourceLocation rl = ResourceLocation.tryParse(livingEntity.getPersistentData().getString(PRESET));
 			if (rl != null) {
-				Optional<MPRPreset> preset = MPR_PRESETS.stream().filter(p -> p.id.equals(rl)).findFirst();
+				Optional<MPRPresetLegacy> preset = MPR_PRESETS.stream().filter(p -> p.id.equals(rl)).findFirst();
 				preset.ifPresent(mprWeightedPreset -> mprWeightedPreset.apply(livingEntity));
 			}
 		}
-		MPRMob.apply(event);
 
+		CompoundTag tags = livingEntity.getPersistentData();
+		if (tags.getBoolean(MPRBase.PROCESSED))
+			return;
+
+		if (MPR_MOBS.isEmpty())
+			return;
+
+		for (MPRMob mprMob : MPR_MOBS)
+			mprMob.tryApply(livingEntity);
+
+		tags.putBoolean(MPRBase.PROCESSED, true);
 	}
 
 	@SubscribeEvent

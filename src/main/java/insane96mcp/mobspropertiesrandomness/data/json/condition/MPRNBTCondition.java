@@ -1,4 +1,4 @@
-package insane96mcp.mobspropertiesrandomness.data.json.properties.condition;
+package insane96mcp.mobspropertiesrandomness.data.json.condition;
 
 import com.google.gson.*;
 import com.google.gson.annotations.JsonAdapter;
@@ -77,11 +77,11 @@ public class MPRNBTCondition extends MPRCondition {
 
         @Override
         public JsonElement serialize(MPRNBTCondition src, Type typeOfSrc, JsonSerializationContext context) {
-            JsonObject jObject = src.serializeInverted();
+            JsonObject jObject = new JsonObject();
             jObject.add("nbt_tag", context.serialize(src.nbtTag));
             jObject.add("type", context.serialize(src.type));
             jObject.add("value", context.serialize(src.value));
-            return jObject;
+            return src.endSerialization(jObject);
         }
     }
 
