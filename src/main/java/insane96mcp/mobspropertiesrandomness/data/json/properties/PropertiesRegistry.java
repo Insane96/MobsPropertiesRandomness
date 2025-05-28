@@ -34,5 +34,6 @@ public class PropertiesRegistry {
         register("experience_multiplier", MPRExperienceMultiplierProperty.class);
         register("loot_table", MPRLootTableProperty.class);
         register("effect_immunity", MPREffectImmunityProperty.class);
+        register("team", MPRTeamProperty.class);
     }
 }

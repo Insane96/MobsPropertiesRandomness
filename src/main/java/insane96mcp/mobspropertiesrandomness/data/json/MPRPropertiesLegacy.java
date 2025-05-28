@@ -3,16 +3,13 @@ package insane96mcp.mobspropertiesrandomness.data.json;
 import com.google.gson.annotations.SerializedName;
 import com.mojang.brigadier.exceptions.CommandSyntaxException;
 import insane96mcp.insanelib.exception.JsonValidationException;
-import insane96mcp.insanelib.util.LogHelper;
 import insane96mcp.mobspropertiesrandomness.data.json.properties.outdated.MPRNbt;
 import insane96mcp.mobspropertiesrandomness.data.json.properties.outdated.equipment.MPREquipment;
 import insane96mcp.mobspropertiesrandomness.data.json.properties.outdated.events.MPREvents;
 import insane96mcp.mobspropertiesrandomness.data.json.properties.outdated.pehuki.MPRScalePehkui;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.TagParser;
-import net.minecraft.server.ServerScoreboard;
 import net.minecraft.world.entity.LivingEntity;
-import net.minecraft.world.scores.PlayerTeam;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -22,8 +19,6 @@ public abstract class MPRPropertiesLegacy implements IMPRObject {
 
 	@SerializedName("events")
 	public MPREvents events;
-
-	public String team;
 
 	@SerializedName("set_nbt")
 	public List<MPRNbt> setNbt;
@@ -75,15 +70,6 @@ public abstract class MPRPropertiesLegacy implements IMPRObject {
 
 		for (MPRNbt mprNbt : this.setNbt) {
 			mprNbt.apply(entity);
-		}
-
-		if (this.team != null && entity.level().getServer() != null) {
-			ServerScoreboard scoreboard = entity.level().getServer().getScoreboard();
-			PlayerTeam playerTeam = scoreboard.getPlayerTeam(this.team);
-			if (playerTeam == null)
-				LogHelper.warn("Failed to find team %s. Ignored", this.team);
-			else
-				scoreboard.addPlayerToTeam(entity.getScoreboardName(), playerTeam);
 		}
 
 		if (this._rawNbt != null) {
