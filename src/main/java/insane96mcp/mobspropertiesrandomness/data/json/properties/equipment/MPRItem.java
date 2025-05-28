@@ -6,7 +6,6 @@ import insane96mcp.insanelib.exception.JsonValidationException;
 import insane96mcp.insanelib.util.weightedrandom.IWeightedRandom;
 import insane96mcp.mobspropertiesrandomness.data.json.IMPRObject;
 import insane96mcp.mobspropertiesrandomness.data.json.properties.attribute.MPRItemAttribute;
-import insane96mcp.mobspropertiesrandomness.data.json.properties.outdated.MPRConditions;
 import insane96mcp.mobspropertiesrandomness.data.json.util.modifiable.MPRModifiableValue;
 import insane96mcp.mobspropertiesrandomness.data.json.util.modifiable.MPRRange;
 import insane96mcp.mobspropertiesrandomness.util.Logger;
@@ -42,8 +41,6 @@ public class MPRItem implements IMPRObject, IWeightedRandom {
 	public List<MPRItemAttribute> attributes;
 	public String nbt;
 	private transient CompoundTag _nbt;
-
-	public MPRConditions conditions;
 
 	private transient boolean valid = true;
 
@@ -97,9 +94,6 @@ public class MPRItem implements IMPRObject, IWeightedRandom {
 				throw new JsonValidationException("Invalid nbt for Item (%s): %s".formatted(e.getMessage(), this.nbt));
 			}
 		}
-
-		if (this.conditions != null)
-			this.conditions.validate();
 	}
 
 	/**
@@ -107,9 +101,6 @@ public class MPRItem implements IMPRObject, IWeightedRandom {
 	 */
 	@Nullable
 	public MPRItem computeAndGet(LivingEntity entity) {
-		if (this.conditions != null && !this.conditions.conditionsApply(entity))
-			return null;
-
 		this._weight = (int) this.modifiableWeight.getValue(entity);
 
 		return this;
@@ -125,11 +116,6 @@ public class MPRItem implements IMPRObject, IWeightedRandom {
 
 	public boolean isValid() {
 		return this.valid;
-	}
-
-	@Override
-	public String toString() {
-		return String.format("Item{id: %s, weight: %s, drop_chance: %s, enchantments: %s, attributes: %s, conditions: %s, nbt: %s}", this.id, this.modifiableWeight, this.dropChance, this.enchantments, this.attributes, this.conditions, this._nbt);
 	}
 
 	@Override

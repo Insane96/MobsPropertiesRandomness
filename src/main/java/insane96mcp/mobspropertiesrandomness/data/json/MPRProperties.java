@@ -3,7 +3,7 @@ package insane96mcp.mobspropertiesrandomness.data.json;
 import com.google.gson.annotations.SerializedName;
 import com.mojang.brigadier.exceptions.CommandSyntaxException;
 import insane96mcp.insanelib.exception.JsonValidationException;
-import insane96mcp.insanelib.setup.ILStrings;
+import insane96mcp.insanelib.module.base.TagsFeature;
 import insane96mcp.insanelib.util.LogHelper;
 import insane96mcp.mobspropertiesrandomness.MPR;
 import insane96mcp.mobspropertiesrandomness.data.json.properties.MPRCustomName;
@@ -13,7 +13,6 @@ import insane96mcp.mobspropertiesrandomness.data.json.properties.attribute.MPRMo
 import insane96mcp.mobspropertiesrandomness.data.json.properties.equipment.MPREquipment;
 import insane96mcp.mobspropertiesrandomness.data.json.properties.events.MPREvents;
 import insane96mcp.mobspropertiesrandomness.data.json.properties.mods.pehuki.MPRScalePehkui;
-import insane96mcp.mobspropertiesrandomness.data.json.properties.outdated.MPRConditions;
 import insane96mcp.mobspropertiesrandomness.data.json.util.modifiable.MPRModifiableValue;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.ListTag;
@@ -30,9 +29,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 public abstract class MPRProperties implements IMPRObject {
-
-	public MPRConditions conditions;
-
 	@SerializedName("potion_effects")
 	public List<MPRPotionEffect> potionEffects;
 
@@ -71,9 +67,6 @@ public abstract class MPRProperties implements IMPRObject {
 
 	@Override
 	public void validate() throws JsonValidationException {
-		if (this.conditions != null)
-			this.conditions.validate();
-
 		if (this.potionEffects == null)
 			this.potionEffects = new ArrayList<>();
 
@@ -138,8 +131,6 @@ public abstract class MPRProperties implements IMPRObject {
 	}
 
 	public boolean apply(LivingEntity entity) {
-		if (this.conditions != null && !this.conditions.conditionsApply(entity))
-			return false;
 		for (MPRPotionEffect potionEffect : this.potionEffects) {
 			potionEffect.apply(entity);
 		}
@@ -158,7 +149,7 @@ public abstract class MPRProperties implements IMPRObject {
 			entity.setSilent(true);
 
 		if (this.experienceMultiplier != null)
-			entity.getPersistentData().putDouble(ILStrings.Tags.EXPERIENCE_MULTIPLIER, this.experienceMultiplier.getValue(entity));
+			entity.getPersistentData().putDouble(TagsFeature.EXPERIENCE_MULTIPLIER, this.experienceMultiplier.getValue(entity));
 
 		if (this.lootTable != null && entity instanceof Mob) {
 			((Mob) entity).lootTable = ResourceLocation.parse(this.lootTable);

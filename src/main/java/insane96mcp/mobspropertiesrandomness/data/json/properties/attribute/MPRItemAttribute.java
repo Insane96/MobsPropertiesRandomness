@@ -31,9 +31,4 @@ public class MPRItemAttribute extends MPRAttribute implements IMPRObject {
 		//TODO Bug, doesn't work as getAttributes doesn't take into account item modifiers
 		this.fixHealth(entity);
 	}
-
-	@Override
-	public String toString() {
-		return String.format("ItemAttribute{uuid: %s, id: %s, modifier_name: %s, amount: %s, operation: %s, conditions: %s, slot: %s}", this.uuid, this.id, this.modifierName, this.amount, this.operation, this.conditions, this.slot);
-	}
 }

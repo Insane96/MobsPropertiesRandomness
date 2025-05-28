@@ -3,7 +3,6 @@ package insane96mcp.mobspropertiesrandomness.data.json.properties.equipment;
 import com.google.gson.annotations.SerializedName;
 import insane96mcp.insanelib.exception.JsonValidationException;
 import insane96mcp.mobspropertiesrandomness.data.json.IMPRObject;
-import insane96mcp.mobspropertiesrandomness.data.json.properties.outdated.MPRConditions;
 import insane96mcp.mobspropertiesrandomness.data.json.util.modifiable.MPRModifiableValue;
 import insane96mcp.mobspropertiesrandomness.data.json.util.modifiable.MPRRange;
 import net.minecraft.resources.ResourceLocation;
@@ -32,8 +31,6 @@ public class MPREnchantment implements IMPRObject {
 	@SerializedName("with_levels")
 	public MPRRange withLevels;
 
-	public MPRConditions conditions;
-
 	public MPREnchantment() {
 
 	}
@@ -57,15 +54,9 @@ public class MPREnchantment implements IMPRObject {
 
 		if (this.withLevels != null)
 			this.withLevels.validate();
-
-		if (this.conditions != null)
-			this.conditions.validate();
 	}
 
 	public void applyToStack(LivingEntity entity, ItemStack itemStack) {
-		if (this.conditions != null && !this.conditions.conditionsApply(entity))
-			return;
-
 		if (this.chance != null && entity.level().random.nextFloat() >= this.chance.getValue(entity))
 			return;
 
@@ -116,10 +107,5 @@ public class MPREnchantment implements IMPRObject {
 			else
 				itemStack.enchant(enchantmentInstance.enchantment, enchantmentInstance.level);
 		}
-	}
-
-	@Override
-	public String toString() {
-		return String.format("Enchantment{id: %s, random: %s, level: %s, chance: %s, with_levels: %s, conditions: %s}", this.id, this.random, this.level, this.chance, this.withLevels, this.conditions);
 	}
 }

@@ -3,7 +3,6 @@ package insane96mcp.mobspropertiesrandomness.data.json.properties;
 import com.google.gson.annotations.SerializedName;
 import insane96mcp.insanelib.exception.JsonValidationException;
 import insane96mcp.mobspropertiesrandomness.data.json.IMPRObject;
-import insane96mcp.mobspropertiesrandomness.data.json.properties.outdated.MPRConditions;
 import insane96mcp.mobspropertiesrandomness.data.json.util.modifiable.MPRRange;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.world.entity.LivingEntity;
@@ -12,12 +11,10 @@ public class MPRNbt implements IMPRObject {
 
     @SerializedName("nbt_tag")
     public String nbtTag;
-    public Type type;
+    public NBTType type;
     public MPRRange value;
     @SerializedName("persistent_data")
     public Boolean isPersistentData;
-
-    public MPRConditions conditions;
 
     @Override
     public void validate() throws JsonValidationException {
@@ -32,15 +29,9 @@ public class MPRNbt implements IMPRObject {
 
         if (this.isPersistentData == null)
             this.isPersistentData = false;
-
-        if (this.conditions != null)
-            this.conditions.validate();
     }
 
     public void apply(LivingEntity entity) {
-        if (this.conditions != null && !this.conditions.conditionsApply(entity))
-            return;
-
         CompoundTag nbt = new CompoundTag();
         if (!this.isPersistentData) {
             entity.saveWithoutId(nbt);
@@ -61,17 +52,12 @@ public class MPRNbt implements IMPRObject {
         }
     }
 
-    public enum Type {
+    public enum NBTType {
         @SerializedName("double")
         DOUBLE,
         @SerializedName("integer")
         INTEGER,
         @SerializedName("boolean")
         BOOLEAN,
-    }
-
-    @Override
-    public String toString() {
-        return String.format("Nbt{nbt_tag: %s, type: %s, value: %s, conditions: %s}", this.nbtTag, this.type, this.value, this.conditions);
     }
 }

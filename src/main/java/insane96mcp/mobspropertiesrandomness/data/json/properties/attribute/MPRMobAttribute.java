@@ -34,9 +34,4 @@ public class MPRMobAttribute extends MPRAttribute implements IMPRObject {
 
 		this.fixHealth(entity);
 	}
-
-	@Override
-	public String toString() {
-		return String.format("MobAttribute{uuid: %s, id: %s, amount: %s, operation: %s, conditions: %s}", uuid, id, amount, operation, conditions);
-	}
 }

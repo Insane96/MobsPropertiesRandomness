@@ -3,7 +3,6 @@ package insane96mcp.mobspropertiesrandomness.data.json.properties.attribute;
 import com.google.gson.annotations.SerializedName;
 import insane96mcp.insanelib.exception.JsonValidationException;
 import insane96mcp.mobspropertiesrandomness.data.json.IMPRObject;
-import insane96mcp.mobspropertiesrandomness.data.json.properties.outdated.MPRConditions;
 import insane96mcp.mobspropertiesrandomness.data.json.util.modifiable.MPRModifiableValue;
 import insane96mcp.mobspropertiesrandomness.data.json.util.modifiable.MPRRange;
 import net.minecraft.world.entity.LivingEntity;
@@ -21,7 +20,6 @@ public abstract class MPRAttribute implements IMPRObject {
 	public MPRRange amount;
 	public Operation operation;
 	public MPRModifiableValue chance;
-	public MPRConditions conditions;
 
 	@Override
 	public void validate() throws JsonValidationException {
@@ -43,16 +41,12 @@ public abstract class MPRAttribute implements IMPRObject {
 
 		if (this.chance != null)
 			this.chance.validate();
-
-		if (this.conditions != null)
-			this.conditions.validate();
 	}
 
 	public boolean shouldApply(LivingEntity entity) {
 		if (this.chance != null && entity.level().random.nextFloat() >= this.chance.getValue(entity))
 			return false;
-
-		return this.conditions == null || this.conditions.conditionsApply(entity);
+		return true;
 	}
 
 	protected void fixHealth(LivingEntity entity) {
@@ -62,11 +56,6 @@ public abstract class MPRAttribute implements IMPRObject {
 				entity.setHealth((float) attributeInstance.getValue());
 			entity.setHealth((float) entity.getAttributeValue(Attributes.MAX_HEALTH));
 		}
-	}
-
-	@Override
-	public String toString() {
-		return String.format("Attribute{uuid: %s, id: %s, modifier_name: %s, amount: %s, operation: %s, conditions: %s}", this.uuid, this.id, this.modifierName, this.amount, this.operation, this.conditions);
 	}
 
 	public enum Operation {
