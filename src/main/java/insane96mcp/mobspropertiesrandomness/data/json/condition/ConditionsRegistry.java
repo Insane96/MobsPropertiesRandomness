@@ -9,8 +9,21 @@ import java.util.Map;
 public class ConditionsRegistry {
     public static final Map<ResourceLocation, Class<? extends MPRCondition>> CONDITIONS = new HashMap<>();
 
-    public static void register(String id, Class<? extends MPRCondition> clazz) {
+    /// Use you own namespace
+    private static void register(String id, Class<? extends MPRCondition> clazz) {
         CONDITIONS.put(MPR.location(id), clazz);
+    }
+
+    public static Class<? extends MPRCondition> get(ResourceLocation id) {
+        return CONDITIONS.get(id);
+    }
+
+    public static ResourceLocation get(Class<? extends MPRCondition> clazz) {
+        for (Map.Entry<ResourceLocation, Class<? extends MPRCondition>> entry : CONDITIONS.entrySet()) {
+            if (entry.getValue() == clazz)
+                return entry.getKey();
+        }
+        return null;
     }
 
     public static void init() {
