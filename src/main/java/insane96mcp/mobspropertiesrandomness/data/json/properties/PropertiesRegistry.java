@@ -14,9 +14,23 @@ public class PropertiesRegistry {
         PROPERTIES.put(MPR.location(id), clazz);
     }
 
+    public static Class<? extends MPRProperty> get(ResourceLocation id) {
+        return PROPERTIES.get(id);
+    }
+
+    public static ResourceLocation get(Class<? extends MPRProperty> clazz) {
+        for (Map.Entry<ResourceLocation, Class<? extends MPRProperty>> entry : PROPERTIES.entrySet()) {
+            if (entry.getValue() == clazz)
+                return entry.getKey();
+        }
+        return null;
+    }
+
     public static void init() {
         register("potion_effect", MPRPotionEffectProperty.class);
         register("attribute_modifier", MPRAttributeModifierProperty.class);
         register("custom_name", MPRCustomNameProperty.class);
+        register("silent", MPRSilentProperty.class);
+        register("experience_multiplier", MPRExperienceMultiplierProperty.class);
     }
 }

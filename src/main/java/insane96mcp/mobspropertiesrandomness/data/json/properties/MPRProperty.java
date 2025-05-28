@@ -34,6 +34,8 @@ public abstract class MPRProperty {
     }
 
     public JsonObject endSerialization(JsonObject jObject, JsonSerializationContext context) {
+        //noinspection DataFlowIssue
+        jObject.addProperty("property", PropertiesRegistry.get(this.getClass()).toString());
         if (!this.conditions.isEmpty())
             jObject.add("conditions", context.serialize(this.conditions));
         return jObject;
@@ -47,7 +49,7 @@ public abstract class MPRProperty {
         for (JsonElement jsonElement : aProperties) {
             JsonObject jObjectCondition = jsonElement.getAsJsonObject();
             ResourceLocation propertyId = MPR.locationFrom(GsonHelper.getAsString(jObjectCondition, "property"));
-            Type propertyType = PropertiesRegistry.PROPERTIES.get(propertyId);
+            Type propertyType = PropertiesRegistry.get(propertyId);
             if (propertyType == null) {
                 Logger.warn("property %s does not exist. Skipping".formatted(propertyId));
                 continue;

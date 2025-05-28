@@ -3,14 +3,12 @@ package insane96mcp.mobspropertiesrandomness.data.json;
 import com.google.gson.annotations.SerializedName;
 import com.mojang.brigadier.exceptions.CommandSyntaxException;
 import insane96mcp.insanelib.exception.JsonValidationException;
-import insane96mcp.insanelib.module.base.TagsFeature;
 import insane96mcp.insanelib.util.LogHelper;
 import insane96mcp.mobspropertiesrandomness.MPR;
 import insane96mcp.mobspropertiesrandomness.data.json.properties.outdated.MPRNbt;
 import insane96mcp.mobspropertiesrandomness.data.json.properties.outdated.equipment.MPREquipment;
 import insane96mcp.mobspropertiesrandomness.data.json.properties.outdated.events.MPREvents;
 import insane96mcp.mobspropertiesrandomness.data.json.properties.outdated.pehuki.MPRScalePehkui;
-import insane96mcp.mobspropertiesrandomness.data.json.util.modifiable.MPRModifiableValue;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.ListTag;
 import net.minecraft.nbt.StringTag;
@@ -30,11 +28,6 @@ public abstract class MPRPropertiesLegacy implements IMPRObject {
 
 	@SerializedName("events")
 	public MPREvents events;
-
-	public MPRModifiableValue silent;
-
-	@SerializedName("experience_multiplier")
-	public MPRModifiableValue experienceMultiplier;
 
 	@SerializedName("loot_table")
 	public String lootTable;
@@ -62,12 +55,6 @@ public abstract class MPRPropertiesLegacy implements IMPRObject {
 
 		if (this.events != null)
 			this.events.validate();
-
-		if (this.silent != null)
-			this.silent.validate();
-
-		if (this.experienceMultiplier != null)
-			this.experienceMultiplier.validate();
 
 		if (this.lootTable != null) {
 			if (this.lootTable.isEmpty())
@@ -112,12 +99,6 @@ public abstract class MPRPropertiesLegacy implements IMPRObject {
 
 		if (this.events != null)
 			this.events.addToNBT(entity);
-
-		if (this.silent != null && entity.level().random.nextDouble() < this.silent.getValue(entity))
-			entity.setSilent(true);
-
-		if (this.experienceMultiplier != null)
-			entity.getPersistentData().putDouble(TagsFeature.EXPERIENCE_MULTIPLIER, this.experienceMultiplier.getValue(entity));
 
 		if (this.lootTable != null && entity instanceof Mob) {
 			((Mob) entity).lootTable = ResourceLocation.parse(this.lootTable);
