@@ -76,7 +76,10 @@ public class MPRMobReloadListener extends SimplePreparableReloadListener<Map<Res
 				Logger.info("Loaded Mob %s", entry.getKey());
 			}
 			catch (Exception e) {
-				Logger.error("Failed loading Mob %s: %s", entry.getKey(), e.getMessage());
+				StringBuilder sb = new StringBuilder("Failed loading Mob " + entry.getKey() + ": " + e.getMessage());
+				for (StackTraceElement s : e.getStackTrace())
+					sb.append("\n").append(s.toString());
+				Logger.error(sb.toString());
 			}
 		}
 

@@ -16,7 +16,6 @@ import net.minecraft.nbt.TagParser;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.ServerScoreboard;
 import net.minecraft.world.entity.LivingEntity;
-import net.minecraft.world.entity.Mob;
 import net.minecraft.world.scores.PlayerTeam;
 import net.minecraftforge.registries.ForgeRegistries;
 
@@ -28,9 +27,6 @@ public abstract class MPRPropertiesLegacy implements IMPRObject {
 
 	@SerializedName("events")
 	public MPREvents events;
-
-	@SerializedName("loot_table")
-	public String lootTable;
 
 	@SerializedName("effects_immunity")
 	public List<String> effectImmunity;
@@ -55,13 +51,6 @@ public abstract class MPRPropertiesLegacy implements IMPRObject {
 
 		if (this.events != null)
 			this.events.validate();
-
-		if (this.lootTable != null) {
-			if (this.lootTable.isEmpty())
-				throw new JsonValidationException("\"loot_table\": \"\" is not valid. To use an empty loot_table use \"minecraft:empty\". " + this);
-			else if (ResourceLocation.tryParse(this.lootTable) == null)
-				throw new JsonValidationException("\"loot_table\": \"" + this.lootTable + "\" is not valid. You must use a valid Resource Location (namespace:loot_table_id). " + this);
-		}
 
 		if (this.effectImmunity != null) {
 			for (String mobEffect : this.effectImmunity) {
@@ -99,10 +88,6 @@ public abstract class MPRPropertiesLegacy implements IMPRObject {
 
 		if (this.events != null)
 			this.events.addToNBT(entity);
-
-		if (this.lootTable != null && entity instanceof Mob) {
-			((Mob) entity).lootTable = ResourceLocation.parse(this.lootTable);
-		}
 
 		if (this.effectImmunity != null) {
 			ListTag listTag = new ListTag();

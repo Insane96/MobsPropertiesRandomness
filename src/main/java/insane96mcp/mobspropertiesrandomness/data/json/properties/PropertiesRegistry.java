@@ -32,5 +32,6 @@ public class PropertiesRegistry {
         register("custom_name", MPRCustomNameProperty.class);
         register("silent", MPRSilentProperty.class);
         register("experience_multiplier", MPRExperienceMultiplierProperty.class);
+        register("loot_table", MPRLootTableProperty.class);
     }
 }
