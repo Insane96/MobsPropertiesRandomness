@@ -36,5 +36,6 @@ public class PropertiesRegistry {
         register("effect_immunity", MPREffectImmunityProperty.class);
         register("team", MPRTeamProperty.class);
         register("set_nbt", MPRNBTProperty.class);
+        register("set_raw_nbt", MPRRawNBTProperty.class);
     }
 }
