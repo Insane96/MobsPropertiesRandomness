@@ -21,7 +21,7 @@ public class MPRExperienceMultiplierProperty extends MPRProperty {
 
     @Override
     protected boolean apply(LivingEntity living) {
-        living.getPersistentData().putDouble(TagsFeature.EXPERIENCE_MULTIPLIER, this.experienceMultiplier.getValue(living));
+        TagsFeature.setExperienceMultiplier(this.experienceMultiplier.getValue(living), living);
         return true;
     }
 
