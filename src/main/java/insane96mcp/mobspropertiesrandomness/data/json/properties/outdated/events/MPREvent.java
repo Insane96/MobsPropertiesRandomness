@@ -3,7 +3,6 @@ package insane96mcp.mobspropertiesrandomness.data.json.properties.outdated.event
 import com.google.gson.annotations.SerializedName;
 import insane96mcp.insanelib.exception.JsonValidationException;
 import insane96mcp.mobspropertiesrandomness.data.json.IMPRObject;
-import insane96mcp.mobspropertiesrandomness.data.json.properties.outdated.pehuki.MPRScalePehkui;
 import insane96mcp.mobspropertiesrandomness.data.json.util.modifiable.MPRModifiableValue;
 import net.minecraft.commands.CommandFunction;
 import net.minecraft.resources.ResourceLocation;
@@ -11,8 +10,6 @@ import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.phys.Vec3;
-
-import java.util.List;
 
 public abstract class MPREvent implements IMPRObject {
 
@@ -26,8 +23,8 @@ public abstract class MPREvent implements IMPRObject {
     public String functionId;
     public transient CommandFunction.CacheableFunction function;
 
-    @SerializedName("scale_pehkui")
-    public List<MPRScalePehkui> scalePehkui;
+    //@SerializedName("scale_pehkui")
+    //public List<MPRScalePehkui> scalePehkui;
 
     @Override
     public void validate() throws JsonValidationException {
@@ -40,12 +37,12 @@ public abstract class MPREvent implements IMPRObject {
         if (this.functionId != null)
             this.function = new CommandFunction.CacheableFunction(ResourceLocation.parse(this.functionId));
 
-        if (this.scalePehkui != null)
-        {
-            for (MPRScalePehkui scalePehkui1 : this.scalePehkui) {
-                scalePehkui1.validate();
-            }
-        }
+        //if (this.scalePehkui != null)
+        //{
+        //    for (MPRScalePehkui scalePehkui1 : this.scalePehkui) {
+        //        scalePehkui1.validate();
+        //    }
+        //}
     }
 
     @SuppressWarnings("BooleanMethodIsAlwaysInverted")
@@ -76,16 +73,11 @@ public abstract class MPREvent implements IMPRObject {
     }
 
     public void tryApplyPehkuiScale(LivingEntity entity) {
-        if (this.scalePehkui == null)
-            return;
-
-        for (MPRScalePehkui scalePehkui1 : this.scalePehkui) {
-            scalePehkui1.apply(entity);
-        }
-    }
-
-    @Override
-    public String toString() {
-        return String.format("chance: %s, play_sound: %s, function: %s, scale_pehkui: %s", this.chance, this.playSound, this.functionId, this.scalePehkui);
+        //if (this.scalePehkui == null)
+        //    return;
+//
+        //for (MPRScalePehkui scalePehkui1 : this.scalePehkui) {
+        //    scalePehkui1.apply(entity);
+        //}
     }
 }

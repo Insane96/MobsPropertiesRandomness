@@ -11,12 +11,12 @@ import insane96mcp.insanelib.util.LogHelper;
 import insane96mcp.mobspropertiesrandomness.MPR;
 import insane96mcp.mobspropertiesrandomness.data.json.MPRMob;
 import insane96mcp.mobspropertiesrandomness.data.json.MPRPresetLegacy;
+import insane96mcp.mobspropertiesrandomness.data.json.properties.MPRScalePehkuiProperty;
 import insane96mcp.mobspropertiesrandomness.data.json.properties.outdated.MPRBossBar;
 import insane96mcp.mobspropertiesrandomness.data.json.properties.outdated.events.MPREvents;
 import insane96mcp.mobspropertiesrandomness.data.json.properties.outdated.events.MPROnDeath;
 import insane96mcp.mobspropertiesrandomness.data.json.properties.outdated.events.MPROnHit;
 import insane96mcp.mobspropertiesrandomness.data.json.properties.outdated.events.MPROnTick;
-import insane96mcp.mobspropertiesrandomness.data.json.properties.outdated.pehuki.MPRScalePehkui;
 import insane96mcp.mobspropertiesrandomness.util.Logger;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.ListTag;
@@ -144,7 +144,7 @@ public class MPRBase extends Feature {
 
 	public void tryApplyPehkui(LivingEntity entity) {
 		if (entity.tickCount == 1)
-			MPRScalePehkui.applyScheduled(entity);
+			MPRScalePehkuiProperty.applyScheduled(entity);
 	}
 
 	public void onDeathEvent(LivingDeathEvent event) {

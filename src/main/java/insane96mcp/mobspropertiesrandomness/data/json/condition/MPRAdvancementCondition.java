@@ -55,16 +55,7 @@ public class MPRAdvancementCondition extends MPRCondition {
 		@Override
 		public MPRAdvancementCondition deserialize(JsonElement json, Type typeOfT, JsonDeserializationContext context) throws JsonParseException {
 			JsonObject jObject = json.getAsJsonObject();
-			List<String> values = SerializerUtils.deserializeList(jObject, "advancements", context, String.class);
-			if (values.isEmpty())
-				throw new JsonParseException("No advancements specified for Advancement Condition");
-			List<ResourceLocation> advancementsList = new ArrayList<>();
-			for (String adv : values) {
-				ResourceLocation advancement = ResourceLocation.tryParse(adv);
-				if (advancement == null)
-					throw new JsonParseException("Invalid advancement: " + adv);
-				advancementsList.add(advancement);
-			}
+			List<ResourceLocation> advancementsList = SerializerUtils.deserializeLocationList(jObject, "advancements", context);
 			PlayerMode playerMode = PlayerMode.NEAREST;
 			if (jObject.has("player"))
 				playerMode = context.deserialize(jObject.get("player"), PlayerMode.class);

@@ -2,6 +2,7 @@ package insane96mcp.mobspropertiesrandomness.data.json.condition;
 
 import insane96mcp.mobspropertiesrandomness.MPR;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraftforge.fml.ModList;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -39,7 +40,8 @@ public class ConditionsRegistry {
         register("deepness", MPRDeepnessCondition.class);
         register("distance_from_spawn", MPRDistanceFromSpawnCondition.class);
         register("advancement", MPRAdvancementCondition.class);
-        register("game_stage", MPRGameStageCondition.class);
+        if (ModList.get().isLoaded("gamestages"))
+            register("game_stage", MPRGameStageCondition.class);
         register("nbt", MPRNBTCondition.class);
     }
 }
