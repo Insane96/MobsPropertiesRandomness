@@ -56,7 +56,7 @@ public class MPREquipment implements IMPRObject {
 		if (slot.chance != null && entity.level().random.nextFloat() >= slot.chance.getValue(entity))
 			return;
 
-		MPRItem chosenItem = slot.getRandomItem(entity);
+		MPRItemOld chosenItem = slot.getRandomItem(entity);
 		ItemStack itemStack;
 		if (chosenItem == null)
 			itemStack = entity.getItemBySlot(equipmentSlotType);
@@ -68,7 +68,7 @@ public class MPREquipment implements IMPRObject {
 			itemStack.setTag(slot.getNBT());
 
 		if (slot.enchantments != null) {
-			for (MPREnchantment enchantment : slot.enchantments) {
+			for (MPREnchantmentOld enchantment : slot.enchantments) {
 				enchantment.applyToStack(entity, itemStack);
 			}
 		}
@@ -86,7 +86,7 @@ public class MPREquipment implements IMPRObject {
 			if (chosenItem.nbt != null)
 				itemStack.setTag(chosenItem.getNBT());
 			if (chosenItem.enchantments != null) {
-				for (MPREnchantment enchantment : chosenItem.enchantments) {
+				for (MPREnchantmentOld enchantment : chosenItem.enchantments) {
 					enchantment.applyToStack(entity, itemStack);
 				}
 			}

@@ -6,7 +6,8 @@ import com.google.gson.annotations.SerializedName;
 import insane96mcp.mobspropertiesrandomness.data.json.condition.MPRCondition;
 import insane96mcp.mobspropertiesrandomness.data.json.util.modifiable.MPRRange;
 import insane96mcp.mobspropertiesrandomness.util.Logger;
-import net.minecraft.resources.ResourceLocation;
+import insane96mcp.mobspropertiesrandomness.util.SerializerUtils;
+import net.minecraft.core.registries.Registries;
 import net.minecraft.util.GsonHelper;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.ai.attributes.Attribute;
@@ -65,14 +66,7 @@ public class MPRAttributeModifierProperty extends MPRProperty {
         @Override
         public MPRAttributeModifierProperty deserialize(JsonElement json, Type typeOfT, JsonDeserializationContext context) throws JsonParseException {
             JsonObject jObject = json.getAsJsonObject();
-
-            String sAttribute = GsonHelper.getAsString(jObject, "attribute");
-            ResourceLocation attributeLocation = ResourceLocation.tryParse(sAttribute);
-            if (attributeLocation == null)
-                throw new JsonParseException("Invalid Attribute %s Id in AttributeModifier Property".formatted(sAttribute));
-            Attribute attribute = ForgeRegistries.ATTRIBUTES.getValue(attributeLocation);
-            if (attribute == null)
-                throw new JsonParseException("Attribute %s in AttributeModifier Property doesn't exist".formatted(sAttribute));
+            Attribute attribute = SerializerUtils.deserializeRegistryObject(jObject.get("attribute"), Registries.ATTRIBUTE);
 
             UUID uuid = jObject.has("uuid") ? UUID.fromString(GsonHelper.getAsString(jObject, "uuid")) : UUID.randomUUID();
             String modifierName = GsonHelper.getAsString(jObject, "modifier_name", null);
@@ -85,7 +79,7 @@ public class MPRAttributeModifierProperty extends MPRProperty {
         @Override
         public JsonElement serialize(MPRAttributeModifierProperty src, Type typeOfSrc, JsonSerializationContext context) {
             JsonObject jObject = new JsonObject();
-            jObject.addProperty("attribute", ForgeRegistries.ATTRIBUTES.getKey(src.attribute).toString());
+            jObject.add("attribute", SerializerUtils.serializeRegistryObject(src.attribute, Registries.ATTRIBUTE));
             jObject.addProperty("uuid", src.uuid.toString());
             jObject.addProperty("modifier_name", src.modifierName);
             jObject.add("amount", context.serialize(src.amount));

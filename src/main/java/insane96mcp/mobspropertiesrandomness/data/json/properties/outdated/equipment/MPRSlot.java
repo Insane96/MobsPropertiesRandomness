@@ -24,10 +24,10 @@ public class MPRSlot implements IMPRObject {
 	public boolean replaceOnly;
 	public MPRModifiableValue chance;
 	@Nullable
-	public List<MPRItem> items;
+	public List<MPRItemOld> items;
 	@SerializedName("drop_chance")
 	public MPRModifiableValue dropChance;
-	public List<MPREnchantment> enchantments;
+	public List<MPREnchantmentOld> enchantments;
 	public List<MPRItemAttribute> attributes;
 	public String nbt;
 	private transient CompoundTag _nbt;
@@ -44,8 +44,8 @@ public class MPRSlot implements IMPRObject {
 		}
 
         if (this.items != null) {
-			List<MPRItem> invalid = new ArrayList<>();
-            for (MPRItem item : this.items) {
+			List<MPRItemOld> invalid = new ArrayList<>();
+            for (MPRItemOld item : this.items) {
                 item.validate();
 				if (!item.isValid())
 					invalid.add(item);
@@ -57,7 +57,7 @@ public class MPRSlot implements IMPRObject {
 			this.dropChance.validate();
 
 		if (this.enchantments != null)
-			for (MPREnchantment enchantment : this.enchantments)
+			for (MPREnchantmentOld enchantment : this.enchantments)
 				enchantment.validate();
 
 		if (this.attributes != null)
@@ -74,14 +74,14 @@ public class MPRSlot implements IMPRObject {
 		}
 	}
 
-	private List<MPRItem> getItems(LivingEntity entity){
-		ArrayList<MPRItem> items = new ArrayList<>();
+	private List<MPRItemOld> getItems(LivingEntity entity){
+		ArrayList<MPRItemOld> items = new ArrayList<>();
 		if (this.items == null)
 			return items;
-		for (MPRItem item : this.items) {
-			MPRItem mprItem = item.computeAndGet(entity);
-			if (mprItem != null)
-				items.add(mprItem);
+		for (MPRItemOld item : this.items) {
+			MPRItemOld mprItemOld = item.computeAndGet(entity);
+			if (mprItemOld != null)
+				items.add(mprItemOld);
 		}
 		return items;
 	}
@@ -91,8 +91,8 @@ public class MPRSlot implements IMPRObject {
 	 * @return an Item or null if no items were available
 	 */
 	@Nullable
-	public MPRItem getRandomItem(LivingEntity entity) {
-		List<MPRItem> items = getItems(entity);
+	public MPRItemOld getRandomItem(LivingEntity entity) {
+		List<MPRItemOld> items = getItems(entity);
 		if (items.isEmpty())
 			return null;
 		return WeightedRandom.getRandomItem(entity.level().random, items);

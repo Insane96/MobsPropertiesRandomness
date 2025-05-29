@@ -4,7 +4,6 @@ import com.google.gson.annotations.SerializedName;
 import com.mojang.brigadier.exceptions.CommandSyntaxException;
 import insane96mcp.insanelib.exception.JsonValidationException;
 import insane96mcp.insanelib.util.weightedrandom.IWeightedRandom;
-import insane96mcp.mobspropertiesrandomness.data.json.IMPRObject;
 import insane96mcp.mobspropertiesrandomness.data.json.properties.outdated.attribute.MPRItemAttribute;
 import insane96mcp.mobspropertiesrandomness.data.json.util.modifiable.MPRModifiableValue;
 import insane96mcp.mobspropertiesrandomness.data.json.util.modifiable.MPRRange;
@@ -20,7 +19,7 @@ import net.minecraftforge.registries.ForgeRegistries;
 import javax.annotation.Nullable;
 import java.util.List;
 
-public class MPRItem implements IMPRObject, IWeightedRandom {
+public class MPRItemOld implements IWeightedRandom {
 
 	public String id;
 	private transient Item item;
@@ -32,7 +31,7 @@ public class MPRItem implements IMPRObject, IWeightedRandom {
 
 	@SerializedName("drop_chance")
 	public MPRModifiableValue dropChance;
-	public List<MPREnchantment> enchantments;
+	public List<MPREnchantmentOld> enchantments;
 	//@SerializedName("ticon_modifiers")
 	//public List<MPRTiConModifier> ticonModifiers;
 	//@SerializedName("ticon_materials")
@@ -44,7 +43,6 @@ public class MPRItem implements IMPRObject, IWeightedRandom {
 
 	private transient boolean valid = true;
 
-	@Override
 	public void validate() throws JsonValidationException {
 		if (this.id == null)
 			throw new JsonValidationException("Missing id. %s".formatted(this));
@@ -72,7 +70,7 @@ public class MPRItem implements IMPRObject, IWeightedRandom {
 			this.dropChance.validate();
 
 		if (this.enchantments != null)
-			for (MPREnchantment enchantment : this.enchantments)
+			for (MPREnchantmentOld enchantment : this.enchantments)
 				enchantment.validate();
 
 		/*if (this.ticonModifiers != null)
@@ -100,7 +98,7 @@ public class MPRItem implements IMPRObject, IWeightedRandom {
 	 * Returns this MPRItem with the weight calculated based off the modifiers, or null if the world whitelist doesn't match
 	 */
 	@Nullable
-	public MPRItem computeAndGet(LivingEntity entity) {
+	public MPRItemOld computeAndGet(LivingEntity entity) {
 		this._weight = (int) this.modifiableWeight.getValue(entity);
 
 		return this;

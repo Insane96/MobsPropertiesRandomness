@@ -20,18 +20,18 @@ import net.minecraftforge.registries.ForgeRegistries;
 import java.util.List;
 import java.util.Map;
 
-public class MPREnchantment implements IMPRObject {
+public class MPREnchantmentOld implements IMPRObject {
 
 	public String id;
 	public MPRRandomEnchantment random;
+	@SerializedName("with_levels")
+	public MPRRange withLevels;
 	public MPRRange level;
 	public MPRModifiableValue chance;
 	@SerializedName("allow_incompatible")
 	public boolean allowIncompatible;
-	@SerializedName("with_levels")
-	public MPRRange withLevels;
 
-	public MPREnchantment() {
+	public MPREnchantmentOld() {
 
 	}
 

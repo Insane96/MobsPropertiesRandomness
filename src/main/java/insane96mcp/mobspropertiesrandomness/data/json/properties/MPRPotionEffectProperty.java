@@ -5,12 +5,12 @@ import com.google.gson.annotations.JsonAdapter;
 import insane96mcp.mobspropertiesrandomness.data.json.condition.MPRCondition;
 import insane96mcp.mobspropertiesrandomness.data.json.util.modifiable.MPRRange;
 import insane96mcp.mobspropertiesrandomness.util.Logger;
-import net.minecraft.resources.ResourceLocation;
+import insane96mcp.mobspropertiesrandomness.util.SerializerUtils;
+import net.minecraft.core.registries.Registries;
 import net.minecraft.util.GsonHelper;
 import net.minecraft.world.effect.MobEffect;
 import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.entity.LivingEntity;
-import net.minecraftforge.registries.ForgeRegistries;
 
 import java.lang.reflect.Type;
 import java.util.List;
@@ -45,13 +45,7 @@ public class MPRPotionEffectProperty extends MPRProperty {
         public MPRPotionEffectProperty deserialize(JsonElement json, Type typeOfT, JsonDeserializationContext context) throws JsonParseException {
             JsonObject jObject = json.getAsJsonObject();
 
-            String sEffect = GsonHelper.getAsString(jObject, "effect");
-            ResourceLocation effect = ResourceLocation.tryParse(sEffect);
-            if (effect == null)
-                throw new JsonParseException("Invalid Potion Effect %s Id in PotionEffect Property".formatted(sEffect));
-            MobEffect mobEffect = ForgeRegistries.MOB_EFFECTS.getValue(effect);
-            if (mobEffect == null)
-                throw new JsonParseException("Potion Effect %s in PotionEffect Property doesn't exist".formatted(sEffect));
+            MobEffect mobEffect = SerializerUtils.deserializeRegistryObject(jObject.get("effect"), Registries.MOB_EFFECT);
 
             MPRRange amplifier;
             if (jObject.has("amplifier"))
@@ -69,7 +63,7 @@ public class MPRPotionEffectProperty extends MPRProperty {
             boolean hideParticles = GsonHelper.getAsBoolean(jObject, "hide_particles", false);
 
             if (ambient && hideParticles)
-                Logger.warn("Particles are hidden, but ambient is enabled for %s. Ambient doesn't work if particles are hidden.".formatted(sEffect));
+                Logger.warn("Particles are hidden, but ambient is enabled for %s. Ambient doesn't work if particles are hidden.".formatted(mobEffect));
 
             return new MPRPotionEffectProperty(mobEffect, amplifier, duration, ambient, hideParticles, deserializeConditions(jObject, context));
         }
@@ -77,7 +71,7 @@ public class MPRPotionEffectProperty extends MPRProperty {
         @Override
         public JsonElement serialize(MPRPotionEffectProperty src, Type typeOfSrc, JsonSerializationContext context) {
             JsonObject jObject = new JsonObject();
-            jObject.addProperty("effect", ForgeRegistries.MOB_EFFECTS.getKey(src.mobEffect).toString());
+            jObject.add("effect", SerializerUtils.serializeRegistryObject(src.mobEffect, Registries.MOB_EFFECT));
             jObject.add("amplifier", context.serialize(src.amplifier));
             jObject.add("duration", context.serialize(src.duration));
             jObject.addProperty("ambient", src.ambient);
