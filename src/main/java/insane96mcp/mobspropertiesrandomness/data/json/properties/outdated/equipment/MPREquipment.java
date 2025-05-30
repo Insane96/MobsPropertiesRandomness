@@ -3,11 +3,8 @@ package insane96mcp.mobspropertiesrandomness.data.json.properties.outdated.equip
 import com.google.gson.annotations.SerializedName;
 import insane96mcp.insanelib.exception.JsonValidationException;
 import insane96mcp.mobspropertiesrandomness.data.json.IMPRObject;
-import insane96mcp.mobspropertiesrandomness.data.json.properties.outdated.attribute.MPRItemAttribute;
 import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.entity.LivingEntity;
-import net.minecraft.world.entity.Mob;
-import net.minecraft.world.item.ItemStack;
 
 public class MPREquipment implements IMPRObject {
 
@@ -46,64 +43,6 @@ public class MPREquipment implements IMPRObject {
 	}
 
 	private void applyEquipmentToSlot(LivingEntity entity, MPRSlot slot, EquipmentSlot equipmentSlotType) {
-		if (slot == null)
-			return;
 
-		if ((slot.keepSpawned && !entity.getItemBySlot(equipmentSlotType).isEmpty())
-			|| (slot.replaceOnly && entity.getItemBySlot(equipmentSlotType).isEmpty()))
-			return;
-
-		if (slot.chance != null && entity.level().random.nextFloat() >= slot.chance.getValue(entity))
-			return;
-
-		MPRItemOld chosenItem = slot.getRandomItem(entity);
-		ItemStack itemStack;
-		if (chosenItem == null)
-			itemStack = entity.getItemBySlot(equipmentSlotType);
-		else {
-			itemStack = new ItemStack(chosenItem.getItem(), chosenItem.count.getIntBetween(entity));
-		}
-
-		if (slot.nbt != null)
-			itemStack.setTag(slot.getNBT());
-
-		if (slot.enchantments != null) {
-			for (MPREnchantmentOld enchantment : slot.enchantments) {
-				enchantment.applyToStack(entity, itemStack);
-			}
-		}
-
-		if (slot.attributes != null) {
-			for (MPRItemAttribute itemAttribute : slot.attributes) {
-				itemAttribute.applyToStack(entity, itemStack, equipmentSlotType);
-			}
-		}
-
-		//Drop Chance
-		if (slot.dropChance != null && entity instanceof Mob)
-			((Mob) entity).setDropChance(equipmentSlotType, slot.dropChance.getValue(entity));
-		if (chosenItem != null) {
-			if (chosenItem.nbt != null)
-				itemStack.setTag(chosenItem.getNBT());
-			if (chosenItem.enchantments != null) {
-				for (MPREnchantmentOld enchantment : chosenItem.enchantments) {
-					enchantment.applyToStack(entity, itemStack);
-				}
-			}
-			if (chosenItem.attributes != null) {
-				for (MPRItemAttribute itemAttribute : chosenItem.attributes) {
-					itemAttribute.applyToStack(entity, itemStack, equipmentSlotType);
-				}
-			}
-			if (chosenItem.dropChance != null && entity instanceof Mob)
-				((Mob) entity).setDropChance(equipmentSlotType, chosenItem.dropChance.getValue(entity));
-		}
-
-		entity.setItemSlot(equipmentSlotType, itemStack);
-	}
-
-	@Override
-	public String toString() {
-		return String.format("Equipment{head: %s, chest: %s, legs: %s, feet: %s, main_hand: %s, off_hand: %s}", head, chest, legs, feet, mainHand, offHand);
 	}
 }
