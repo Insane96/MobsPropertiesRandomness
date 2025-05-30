@@ -48,6 +48,11 @@ public abstract class MPRCondition {
         if (!jObject.has(memberName))
             return conditions;
         JsonArray aConditions = GsonHelper.getAsJsonArray(jObject, memberName);
+        return deserializeList(aConditions, context);
+    }
+
+    public static List<MPRCondition> deserializeList(JsonArray aConditions, JsonDeserializationContext context) {
+        List<MPRCondition> conditions = new ArrayList<>();
         for (JsonElement jsonElement : aConditions) {
             JsonObject jObjectCondition = jsonElement.getAsJsonObject();
             ResourceLocation conditionId = MPR.locationFrom(GsonHelper.getAsString(jObjectCondition, "condition"));

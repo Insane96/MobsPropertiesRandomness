@@ -9,6 +9,7 @@ import insane96mcp.insanelib.base.config.Config;
 import insane96mcp.insanelib.exception.JsonValidationException;
 import insane96mcp.insanelib.util.LogHelper;
 import insane96mcp.mobspropertiesrandomness.MPR;
+import insane96mcp.mobspropertiesrandomness.data.json.MPRAttributeModifier;
 import insane96mcp.mobspropertiesrandomness.data.json.MPRMob;
 import insane96mcp.mobspropertiesrandomness.data.json.MPRPresetLegacy;
 import insane96mcp.mobspropertiesrandomness.data.json.properties.MPRScalePehkuiProperty;
@@ -88,6 +89,7 @@ public class MPRBase extends Feature {
 			mprMob.tryApply(livingEntity);
 
 		tags.putBoolean(MPRBase.PROCESSED, true);
+		MPRAttributeModifier.fixHealth(livingEntity);
 	}
 
 	@SubscribeEvent

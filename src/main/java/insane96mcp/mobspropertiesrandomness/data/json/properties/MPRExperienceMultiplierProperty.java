@@ -3,6 +3,7 @@ package insane96mcp.mobspropertiesrandomness.data.json.properties;
 import com.google.gson.*;
 import com.google.gson.annotations.JsonAdapter;
 import insane96mcp.insanelib.module.base.TagsFeature;
+import insane96mcp.mobspropertiesrandomness.data.json.MPRProperties;
 import insane96mcp.mobspropertiesrandomness.data.json.condition.MPRCondition;
 import insane96mcp.mobspropertiesrandomness.data.json.util.modifiable.MPRRange;
 import net.minecraft.world.entity.LivingEntity;
@@ -29,7 +30,7 @@ public class MPRExperienceMultiplierProperty extends MPRProperty {
         @Override
         public MPRExperienceMultiplierProperty deserialize(JsonElement json, Type typeOfT, JsonDeserializationContext context) throws JsonParseException {
             JsonObject jObject = json.getAsJsonObject();
-            return new MPRExperienceMultiplierProperty(context.deserialize(jObject.get("multiplier"), MPRRange.class), deserializeConditions(jObject, context));
+            return new MPRExperienceMultiplierProperty(context.deserialize(jObject.get("multiplier"), MPRRange.class), MPRProperties.deserializeConditions(jObject, context));
         }
 
         @Override

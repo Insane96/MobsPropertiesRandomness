@@ -2,6 +2,7 @@ package insane96mcp.mobspropertiesrandomness.data.json.properties;
 
 import com.google.gson.*;
 import com.google.gson.annotations.JsonAdapter;
+import insane96mcp.mobspropertiesrandomness.data.json.MPRProperties;
 import insane96mcp.mobspropertiesrandomness.data.json.condition.MPRCondition;
 import insane96mcp.mobspropertiesrandomness.data.json.util.NBTType;
 import insane96mcp.mobspropertiesrandomness.data.json.util.modifiable.MPRRange;
@@ -78,7 +79,7 @@ public class MPRNBTProperty extends MPRProperty {
                     GsonHelper.getAsString(jObject, "path"),
                     context.deserialize(jObject.get("type"), NBTType.class),
                     context.deserialize(jObject.get("value"), MPRRange.class),
-                    deserializeConditions(jObject, context)
+                    MPRProperties.deserializeConditions(jObject, context)
             );
         }
 

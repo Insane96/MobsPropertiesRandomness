@@ -2,6 +2,7 @@ package insane96mcp.mobspropertiesrandomness.data.json.properties.equipment;
 
 import com.google.gson.*;
 import com.google.gson.annotations.JsonAdapter;
+import insane96mcp.mobspropertiesrandomness.data.json.MPRProperties;
 import insane96mcp.mobspropertiesrandomness.data.json.condition.MPRCondition;
 import insane96mcp.mobspropertiesrandomness.data.json.properties.MPRProperty;
 import insane96mcp.mobspropertiesrandomness.util.SerializerUtils;
@@ -20,20 +21,22 @@ public class MPREquipmentProperty extends MPRProperty {
     EquipmentSlot slot;
     Item item;
     @Nullable
-    MPREnchantments enchantments;
+    MPRItemProperties properties;
 
-    public MPREquipmentProperty(EquipmentSlot slot, Item item, @Nullable MPREnchantments enchantments, List<MPRCondition> conditions) {
+    public MPREquipmentProperty(EquipmentSlot slot, Item item, @Nullable MPRItemProperties properties, List<MPRCondition> conditions) {
         super(conditions);
         this.slot = slot;
         this.item = item;
-        this.enchantments = enchantments;
+        this.properties = properties;
     }
 
     @Override
     protected boolean apply(LivingEntity living) {
+        if (!MPRCondition.conditionsApply(this.conditions, living))
+            return false;
         ItemStack stack = new ItemStack(this.item, 1);
-        if (this.enchantments != null)
-            this.enchantments.apply(living, stack);
+        if (this.properties != null)
+            this.properties.apply(living, stack, slot);
         living.setItemSlot(this.slot, stack);
         return true;
     }
@@ -44,17 +47,16 @@ public class MPREquipmentProperty extends MPRProperty {
             JsonObject jObject = json.getAsJsonObject();
             EquipmentSlot slot = context.deserialize(jObject.get("slot"), EquipmentSlot.class);
             Item item = SerializerUtils.deserializeRegistryObject(jObject.get("item"), Registries.ITEM);
-            MPREnchantments enchantments = context.deserialize(jObject.get("enchant"), MPREnchantments.class);
+            MPRItemProperties enchantments = context.deserialize(jObject, MPRItemProperties.class);
 
-            return new MPREquipmentProperty(slot, item, enchantments, deserializeConditions(jObject, context));
+            return new MPREquipmentProperty(slot, item, enchantments, MPRProperties.deserializeConditions(jObject, context));
         }
 
         @Override
         public JsonElement serialize(MPREquipmentProperty src, Type typeOfSrc, JsonSerializationContext context) {
-            JsonObject jObject = new JsonObject();
+            JsonObject jObject = context.serialize(src.properties).getAsJsonObject();
             jObject.add("slot", context.serialize(src.slot));
             jObject.add("item", context.serialize(src.item));
-            jObject.add("enchant", context.serialize(src.enchantments));
             return src.endSerialization(jObject, context);
         }
     }

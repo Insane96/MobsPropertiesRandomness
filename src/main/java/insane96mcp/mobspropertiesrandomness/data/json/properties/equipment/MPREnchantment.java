@@ -3,6 +3,8 @@ package insane96mcp.mobspropertiesrandomness.data.json.properties.equipment;
 import com.google.gson.*;
 import com.google.gson.annotations.JsonAdapter;
 import insane96mcp.mobspropertiesrandomness.MPR;
+import insane96mcp.mobspropertiesrandomness.data.json.condition.MPRCondition;
+import insane96mcp.mobspropertiesrandomness.data.json.condition.MPRConditionable;
 import insane96mcp.mobspropertiesrandomness.data.json.util.modifiable.MPRRange;
 import insane96mcp.mobspropertiesrandomness.util.SerializerUtils;
 import net.minecraft.core.registries.Registries;
@@ -25,7 +27,7 @@ import java.util.List;
 import java.util.Map;
 
 @JsonAdapter(MPREnchantment.Serializer.class)
-public abstract class MPREnchantment {
+public abstract class MPREnchantment extends MPRConditionable {
     public static final Map<ResourceLocation, Class<? extends MPREnchantment>> TYPES = Map.of(
         MPR.location("single"), SingleEnchantment.class,
         MPR.location("random"), RandomEnchantment.class,
@@ -36,7 +38,8 @@ public abstract class MPREnchantment {
     public MPRRange level;
     public boolean allowIncompatible;
 
-    public MPREnchantment(@Nullable MPRRange level, boolean allowIncompatible) {
+    public MPREnchantment(@Nullable MPRRange level, boolean allowIncompatible, List<MPRCondition> conditions) {
+        super(conditions);
         this.level = level;
         this.allowIncompatible = allowIncompatible;
     }
@@ -85,7 +88,7 @@ public abstract class MPREnchantment {
             jObject.add("lvl", context.serialize(this.level));
         if (this.allowIncompatible)
             jObject.addProperty("allow_incompatible", true);
-        return jObject;
+        return super.endSerialization(jObject, context);
     }
 
     public static class Serializer implements JsonSerializer<MPREnchantment>, JsonDeserializer<MPREnchantment> {
@@ -118,8 +121,8 @@ public abstract class MPREnchantment {
     public static class SingleEnchantment extends MPREnchantment {
         public Enchantment enchantment;
 
-        public SingleEnchantment(Enchantment enchantment, MPRRange level, boolean allowIncompatible) {
-            super(level, allowIncompatible);
+        public SingleEnchantment(Enchantment enchantment, MPRRange level, boolean allowIncompatible, List<MPRCondition> conditions) {
+            super(level, allowIncompatible, conditions);
             this.enchantment = enchantment;
         }
 
@@ -139,7 +142,11 @@ public abstract class MPREnchantment {
             @Override
             public SingleEnchantment deserialize(JsonElement json, Type typeOfT, JsonDeserializationContext context) throws JsonParseException {
                 JsonObject jObject = json.getAsJsonObject();
-                return new SingleEnchantment(SerializerUtils.deserializeRegistryObject(jObject.get("enchantment"), Registries.ENCHANTMENT), deserializeLvl(jObject, context), deserializeAllowIncompatible(jObject));
+                return new SingleEnchantment(
+                        SerializerUtils.deserializeRegistryObject(jObject.get("enchantment"), Registries.ENCHANTMENT),
+                        deserializeLvl(jObject, context), deserializeAllowIncompatible(jObject),
+                        MPRConditionable.deserializeList(jObject, context)
+                );
             }
 
             @Override
@@ -157,8 +164,8 @@ public abstract class MPREnchantment {
         public boolean allowTreasure;
         public List<Enchantment> enchantments;
 
-        public RandomEnchantment(boolean allowCurses, boolean allowTreasure, List<Enchantment> enchantments, MPRRange level, boolean allowIncompatible) {
-            super(level, allowIncompatible);
+        public RandomEnchantment(boolean allowCurses, boolean allowTreasure, List<Enchantment> enchantments, MPRRange level, boolean allowIncompatible, List<MPRCondition> conditions) {
+            super(level, allowIncompatible, conditions);
             this.allowCurses = allowCurses;
             this.allowTreasure = allowTreasure;
             this.enchantments = enchantments;
@@ -203,7 +210,8 @@ public abstract class MPREnchantment {
                         GsonHelper.getAsBoolean(jObject, "allow_treasure", true),
                         SerializerUtils.deserializeRegistryObjectList(jObject, "enchantments", context, Registries.ENCHANTMENT),
                         deserializeLvl(jObject, context),
-                        deserializeAllowIncompatible(jObject)
+                        deserializeAllowIncompatible(jObject),
+                        MPRConditionable.deserializeList(jObject, context)
                 );
             }
 
@@ -225,8 +233,8 @@ public abstract class MPREnchantment {
         public boolean allowTreasure;
         public boolean allowCurses;
 
-        public WithLevel(boolean allowCurses, boolean allowTreasure, MPRRange level, boolean allowIncompatible) {
-            super(level, allowIncompatible);
+        public WithLevel(boolean allowCurses, boolean allowTreasure, MPRRange level, boolean allowIncompatible, List<MPRCondition> conditions) {
+            super(level, allowIncompatible, conditions);
             this.allowCurses = allowCurses;
             this.allowTreasure = allowTreasure;
         }
@@ -251,7 +259,8 @@ public abstract class MPREnchantment {
                         GsonHelper.getAsBoolean(jObject, "allow_curses", true),
                         GsonHelper.getAsBoolean(jObject, "allow_treasure", true),
                         deserializeLvl(jObject, context),
-                        deserializeAllowIncompatible(jObject)
+                        deserializeAllowIncompatible(jObject),
+                        MPRConditionable.deserializeList(jObject, context)
                 );
             }
 

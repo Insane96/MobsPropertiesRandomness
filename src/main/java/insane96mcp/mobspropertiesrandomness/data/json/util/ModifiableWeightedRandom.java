@@ -4,7 +4,7 @@ import insane96mcp.insanelib.util.weightedrandom.IWeightedRandom;
 import insane96mcp.mobspropertiesrandomness.data.json.util.modifiable.MPRModifiableValue;
 import net.minecraft.world.entity.LivingEntity;
 
-public abstract class ModifiableWeightedRandom implements IWeightedRandom {
+public class ModifiableWeightedRandom implements IWeightedRandom {
     private final MPRModifiableValue modifiableWeight;
     private transient int _weight;
 

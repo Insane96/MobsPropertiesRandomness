@@ -2,6 +2,7 @@ package insane96mcp.mobspropertiesrandomness.data.json.properties;
 
 import com.google.gson.*;
 import com.google.gson.annotations.JsonAdapter;
+import insane96mcp.mobspropertiesrandomness.data.json.MPRProperties;
 import insane96mcp.mobspropertiesrandomness.data.json.condition.MPRCondition;
 import net.minecraft.world.entity.LivingEntity;
 
@@ -24,7 +25,7 @@ public class MPRSilentProperty extends MPRProperty {
         @Override
         public MPRSilentProperty deserialize(JsonElement json, Type typeOfT, JsonDeserializationContext context) throws JsonParseException {
             JsonObject jObject = json.getAsJsonObject();
-            return new MPRSilentProperty(deserializeConditions(jObject, context));
+            return new MPRSilentProperty(MPRProperties.deserializeConditions(jObject, context));
         }
 
         @Override

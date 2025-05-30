@@ -1,8 +1,12 @@
 package insane96mcp.mobspropertiesrandomness.data.json.properties;
 
-import com.google.gson.*;
+import com.google.gson.JsonArray;
+import com.google.gson.JsonDeserializationContext;
+import com.google.gson.JsonElement;
+import com.google.gson.JsonObject;
 import insane96mcp.mobspropertiesrandomness.MPR;
 import insane96mcp.mobspropertiesrandomness.data.json.condition.MPRCondition;
+import insane96mcp.mobspropertiesrandomness.data.json.condition.MPRConditionable;
 import insane96mcp.mobspropertiesrandomness.util.Logger;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.GsonHelper;
@@ -12,11 +16,9 @@ import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.List;
 
-public abstract class MPRProperty {
-    public List<MPRCondition> conditions;
-
+public abstract class MPRProperty extends MPRConditionable {
     public MPRProperty(List<MPRCondition> conditions) {
-        this.conditions = conditions;
+        super(conditions);
     }
 
     public final boolean tryApply(LivingEntity livingEntity) {
@@ -26,20 +28,6 @@ public abstract class MPRProperty {
     }
 
     protected abstract boolean apply(LivingEntity living);
-
-    public static List<MPRCondition> deserializeConditions(JsonObject jObject, JsonDeserializationContext context) {
-        if (!jObject.has("conditions"))
-            return new ArrayList<>();
-        return MPRCondition.deserializeList(jObject, "conditions", context);
-    }
-
-    public JsonObject endSerialization(JsonObject jObject, JsonSerializationContext context) {
-        //noinspection DataFlowIssue
-        jObject.addProperty("property", PropertiesRegistry.get(this.getClass()).toString());
-        if (!this.conditions.isEmpty())
-            jObject.add("conditions", context.serialize(this.conditions));
-        return jObject;
-    }
 
     public static List<MPRProperty> deserializeList(JsonObject jObject, String memberName, JsonDeserializationContext context) {
         List<MPRProperty> properties = new ArrayList<>();

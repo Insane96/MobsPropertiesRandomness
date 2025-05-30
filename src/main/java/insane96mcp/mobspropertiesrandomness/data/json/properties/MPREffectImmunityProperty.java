@@ -3,6 +3,7 @@ package insane96mcp.mobspropertiesrandomness.data.json.properties;
 import com.google.gson.*;
 import com.google.gson.annotations.JsonAdapter;
 import insane96mcp.mobspropertiesrandomness.MPR;
+import insane96mcp.mobspropertiesrandomness.data.json.MPRProperties;
 import insane96mcp.mobspropertiesrandomness.data.json.condition.MPRCondition;
 import insane96mcp.mobspropertiesrandomness.util.SerializerUtils;
 import net.minecraft.nbt.ListTag;
@@ -36,7 +37,7 @@ public class MPREffectImmunityProperty extends MPRProperty {
         @Override
         public MPREffectImmunityProperty deserialize(JsonElement json, Type typeOfT, JsonDeserializationContext context) throws JsonParseException {
             JsonObject jObject = json.getAsJsonObject();
-            return new MPREffectImmunityProperty(SerializerUtils.deserializeLocationList(jObject, "effects", context), deserializeConditions(jObject, context));
+            return new MPREffectImmunityProperty(SerializerUtils.deserializeLocationList(jObject, "effects", context), MPRProperties.deserializeConditions(jObject, context));
         }
 
         @Override

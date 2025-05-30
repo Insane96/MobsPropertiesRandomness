@@ -3,6 +3,7 @@ package insane96mcp.mobspropertiesrandomness.data.json.properties;
 import com.google.gson.*;
 import com.google.gson.annotations.JsonAdapter;
 import insane96mcp.insanelib.util.weightedrandom.WeightedRandom;
+import insane96mcp.mobspropertiesrandomness.data.json.MPRProperties;
 import insane96mcp.mobspropertiesrandomness.data.json.condition.MPRCondition;
 import insane96mcp.mobspropertiesrandomness.data.json.util.ModifiableWeightedRandom;
 import insane96mcp.mobspropertiesrandomness.data.json.util.WeightedResourceLocation;
@@ -46,7 +47,7 @@ public class MPRLootTableProperty extends MPRProperty {
             List<WeightedResourceLocation> weightedResourceLocations = SerializerUtils.deserializeList(jObject, "loot_tables", context, WeightedResourceLocation.class, true);
             if (weightedResourceLocations.isEmpty())
                 throw new JsonParseException("No loot_tables specified for Loot Table Property");
-            return new MPRLootTableProperty(weightedResourceLocations, deserializeConditions(jObject, context));
+            return new MPRLootTableProperty(weightedResourceLocations, MPRProperties.deserializeConditions(jObject, context));
         }
 
         @Override

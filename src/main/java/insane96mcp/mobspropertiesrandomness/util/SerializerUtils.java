@@ -53,6 +53,14 @@ public class SerializerUtils {
         return list;
     }
 
+    public static JsonArray serializeList(List<?> list, JsonSerializationContext context) throws JsonParseException {
+        JsonArray jsonArray = new JsonArray();
+        for (Object item : list) {
+            jsonArray.add(context.serialize(item));
+        }
+        return jsonArray;
+    }
+
     public static List<ResourceLocation> deserializeLocationList(JsonObject jObject, String memberName, JsonDeserializationContext context) throws JsonParseException {
         List<String> list = deserializeList(jObject, memberName, context, String.class);
         List<ResourceLocation> locations = new ArrayList<>(list.size());

@@ -6,6 +6,7 @@ import com.google.gson.annotations.JsonAdapter;
 import com.google.gson.annotations.SerializedName;
 import insane96mcp.insanelib.util.ModNBTData;
 import insane96mcp.mobspropertiesrandomness.MPR;
+import insane96mcp.mobspropertiesrandomness.data.json.MPRProperties;
 import insane96mcp.mobspropertiesrandomness.data.json.condition.MPRCondition;
 import insane96mcp.mobspropertiesrandomness.data.json.util.modifiable.MPRRange;
 import insane96mcp.mobspropertiesrandomness.util.SerializerUtils;
@@ -67,7 +68,7 @@ public class MPRScalePehkuiProperty extends MPRProperty {
                     context.deserialize(jObject.get("scale"), MPRRange.class),
                     SerializerUtils.deserializeLocationList(jObject, "scale_types", context),
                     context.deserialize(jObject.get("operation"), Operation.class),
-                    deserializeConditions(jObject, context)
+                    MPRProperties.deserializeConditions(jObject, context)
             );
         }
 
