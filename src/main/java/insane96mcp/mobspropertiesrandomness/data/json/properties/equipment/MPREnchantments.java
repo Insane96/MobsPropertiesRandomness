@@ -27,6 +27,8 @@ public class MPREnchantments {
         @Override
         public MPREnchantments deserialize(JsonElement json, Type typeOfT, JsonDeserializationContext context) throws JsonParseException {
             JsonArray array = json.getAsJsonArray();
+            if (array == null)
+                return new MPREnchantments(List.of());
             List<MPREnchantment> enchantments = SerializerUtils.deserializeList(array, context, MPREnchantment.class);
             return new MPREnchantments(enchantments);
         }
@@ -34,8 +36,10 @@ public class MPREnchantments {
         @Override
         public JsonElement serialize(MPREnchantments src, Type typeOfSrc, JsonSerializationContext context) {
             JsonArray jArray = new JsonArray();
-            for (MPREnchantment enchantment : src.enchantments) {
-                jArray.add(context.serialize(enchantment));
+            if (src.enchantments != null) {
+                for (MPREnchantment enchantment : src.enchantments) {
+                    jArray.add(context.serialize(enchantment));
+                }
             }
             return jArray;
         }

@@ -1,12 +1,18 @@
 package insane96mcp.mobspropertiesrandomness;
 
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 import insane96mcp.mobspropertiesrandomness.data.MPRMobReloadListener;
 import insane96mcp.mobspropertiesrandomness.data.MPRPresetReloadListener;
 import insane96mcp.mobspropertiesrandomness.data.json.condition.ConditionsRegistry;
 import insane96mcp.mobspropertiesrandomness.data.json.properties.PropertiesRegistry;
+import insane96mcp.mobspropertiesrandomness.data.serializer.AttributeModifierOperationSerializer;
+import insane96mcp.mobspropertiesrandomness.data.serializer.EquipmentSlotSerializer;
 import insane96mcp.mobspropertiesrandomness.setup.Config;
 import insane96mcp.mobspropertiesrandomness.util.Logger;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.entity.EquipmentSlot;
+import net.minecraft.world.entity.ai.attributes.AttributeModifier;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.event.AddReloadListenerEvent;
 import net.minecraftforge.eventbus.api.EventPriority;
@@ -54,5 +60,12 @@ public class MPR
             return ResourceLocation.tryParse(s);
         else
             return ResourceLocation.fromNamespaceAndPath(MOD_ID, split[0]);
+    }
+
+    public static Gson createGson() {
+        return new GsonBuilder()
+                .registerTypeAdapter(EquipmentSlot.class, new EquipmentSlotSerializer())
+                .registerTypeAdapter(AttributeModifier.Operation.class, new AttributeModifierOperationSerializer())
+                .create();
     }
 }

@@ -11,6 +11,7 @@ import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 
+import javax.annotation.Nullable;
 import java.lang.reflect.Type;
 import java.util.List;
 
@@ -18,9 +19,10 @@ import java.util.List;
 public class MPREquipmentProperty extends MPRProperty {
     EquipmentSlot slot;
     Item item;
+    @Nullable
     MPREnchantments enchantments;
 
-    public MPREquipmentProperty(EquipmentSlot slot, Item item, MPREnchantments enchantments, List<MPRCondition> conditions) {
+    public MPREquipmentProperty(EquipmentSlot slot, Item item, @Nullable MPREnchantments enchantments, List<MPRCondition> conditions) {
         super(conditions);
         this.slot = slot;
         this.item = item;
@@ -30,7 +32,8 @@ public class MPREquipmentProperty extends MPRProperty {
     @Override
     protected boolean apply(LivingEntity living) {
         ItemStack stack = new ItemStack(this.item, 1);
-        enchantments.apply(living, stack);
+        if (this.enchantments != null)
+            this.enchantments.apply(living, stack);
         living.setItemSlot(this.slot, stack);
         return true;
     }

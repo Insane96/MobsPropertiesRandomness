@@ -3,7 +3,6 @@ package insane96mcp.mobspropertiesrandomness.data.json.properties.equipment;
 import com.google.gson.*;
 import com.google.gson.annotations.JsonAdapter;
 import insane96mcp.mobspropertiesrandomness.MPR;
-import insane96mcp.mobspropertiesrandomness.data.json.properties.PropertiesRegistry;
 import insane96mcp.mobspropertiesrandomness.data.json.util.modifiable.MPRRange;
 import insane96mcp.mobspropertiesrandomness.util.SerializerUtils;
 import net.minecraft.core.registries.Registries;
@@ -19,7 +18,6 @@ import net.minecraft.world.item.enchantment.Enchantment;
 import net.minecraft.world.item.enchantment.EnchantmentHelper;
 import net.minecraft.world.item.enchantment.EnchantmentInstance;
 import net.minecraftforge.registries.ForgeRegistries;
-import org.apache.commons.lang3.NotImplementedException;
 
 import javax.annotation.Nullable;
 import java.lang.reflect.Type;
@@ -29,9 +27,9 @@ import java.util.Map;
 @JsonAdapter(MPREnchantment.Serializer.class)
 public abstract class MPREnchantment {
     public static final Map<ResourceLocation, Class<? extends MPREnchantment>> TYPES = Map.of(
-        MPR.location("single_enchantment"), SingleEnchantment.class,
-        MPR.location("random_enchantment"), RandomEnchantment.class,
-        MPR.location("enchant_with_levels"), WithLevel.class
+        MPR.location("single"), SingleEnchantment.class,
+        MPR.location("random"), RandomEnchantment.class,
+        MPR.location("with_levels"), WithLevel.class
     );
 
     @Nullable
@@ -95,7 +93,7 @@ public abstract class MPREnchantment {
         public MPREnchantment deserialize(JsonElement json, Type typeOfT, JsonDeserializationContext context) throws JsonParseException {
             JsonObject jObject = json.getAsJsonObject();
             ResourceLocation propertyId = MPR.locationFrom(GsonHelper.getAsString(jObject, "type"));
-            Type propertyType = PropertiesRegistry.get(propertyId);
+            Type propertyType = TYPES.get(propertyId);
             if (propertyType == null) {
                 throw new JsonParseException("enchantment type %s does not exist. Skipping".formatted(propertyId));
             }
@@ -104,46 +102,50 @@ public abstract class MPREnchantment {
 
         @Override
         public JsonElement serialize(MPREnchantment src, Type typeOfSrc, JsonSerializationContext context) {
-            JsonObject jObject = new JsonObject();
-            throw new NotImplementedException();
-            //return jObject;
+            JsonObject jObject = context.serialize(src).getAsJsonObject();
+            for (var type : TYPES.entrySet()) {
+                if (type.getValue().isInstance(src)) {
+                    jObject.addProperty("type", type.getKey().toString());
+                    break;
+                }
+            }
+            return jObject;
         }
     }
 
 
     @JsonAdapter(SingleEnchantment.Serializer.class)
     public static class SingleEnchantment extends MPREnchantment {
-        public ResourceLocation id;
+        public Enchantment enchantment;
 
-        public SingleEnchantment(ResourceLocation id, MPRRange level, boolean allowIncompatible) {
+        public SingleEnchantment(Enchantment enchantment, MPRRange level, boolean allowIncompatible) {
             super(level, allowIncompatible);
-            this.id = id;
+            this.enchantment = enchantment;
         }
 
         @Override
         public void applyToStack(LivingEntity entity, ItemStack itemStack) {
             Map<Enchantment, Integer> enchantmentsOnStack = EnchantmentHelper.getEnchantments(itemStack);
-            Enchantment enchantment = ForgeRegistries.ENCHANTMENTS.getValue(id);
             //noinspection ConstantConditions can't be null as it's checked to exist when the data is reloaded
-            boolean canApply = this.allowIncompatible || EnchantmentHelper.isEnchantmentCompatible(enchantmentsOnStack.keySet(), enchantment);
+            boolean canApply = this.allowIncompatible || EnchantmentHelper.isEnchantmentCompatible(enchantmentsOnStack.keySet(), this.enchantment);
             if (!canApply)
-                enchantment = null;
-            int lvl = getLvl(entity, enchantment);
-            if (enchantment != null)
-                addEnchantmentToItemStack(itemStack, enchantment, lvl);
+                this.enchantment = null;
+            int lvl = getLvl(entity, this.enchantment);
+            if (this.enchantment != null)
+                addEnchantmentToItemStack(itemStack, this.enchantment, lvl);
         }
 
         public static class Serializer implements JsonSerializer<SingleEnchantment>, JsonDeserializer<SingleEnchantment> {
             @Override
             public SingleEnchantment deserialize(JsonElement json, Type typeOfT, JsonDeserializationContext context) throws JsonParseException {
                 JsonObject jObject = json.getAsJsonObject();
-                return new SingleEnchantment(ResourceLocation.parse(jObject.get("enchantment").getAsString()), deserializeLvl(jObject, context), deserializeAllowIncompatible(jObject));
+                return new SingleEnchantment(SerializerUtils.deserializeRegistryObject(jObject.get("enchantment"), Registries.ENCHANTMENT), deserializeLvl(jObject, context), deserializeAllowIncompatible(jObject));
             }
 
             @Override
             public JsonElement serialize(SingleEnchantment src, Type typeOfSrc, JsonSerializationContext context) {
                 JsonObject jObject = new JsonObject();
-                jObject.addProperty("enchantment", src.id.toString());
+                jObject.add("enchantment", SerializerUtils.serializeRegistryObject(src.enchantment, Registries.ENCHANTMENT));
                 return src.endSerialization(jObject, context);
             }
         }
@@ -172,7 +174,7 @@ public abstract class MPREnchantment {
                 if (!enchantment.isDiscoverable()
                         || (enchantment.isCurse() && !allowCurses)
                         || (enchantment.isTreasureOnly() && !allowTreasure)
-                        ||  !this.enchantments.contains(enchantment))
+                        ||  (!this.enchantments.isEmpty() && !this.enchantments.contains(enchantment)))
                     return false;
 
                 if (!this.allowIncompatible) {
@@ -185,6 +187,8 @@ public abstract class MPREnchantment {
 
                 return isBook || enchantment.canEnchant(itemStack);
             }).toList();
+            if (possibleEnchantments.isEmpty())
+                return;
 
             Enchantment enchantment = possibleEnchantments.get(entity.getRandom().nextInt(possibleEnchantments.size()));
             addEnchantmentToItemStack(itemStack, enchantment, getLvl(entity, enchantment));

@@ -2,7 +2,6 @@ package insane96mcp.mobspropertiesrandomness.data.json.properties;
 
 import com.google.gson.*;
 import com.google.gson.annotations.JsonAdapter;
-import com.google.gson.annotations.SerializedName;
 import insane96mcp.mobspropertiesrandomness.data.json.condition.MPRCondition;
 import insane96mcp.mobspropertiesrandomness.data.json.util.modifiable.MPRRange;
 import insane96mcp.mobspropertiesrandomness.util.Logger;
@@ -26,9 +25,9 @@ public class MPRAttributeModifierProperty extends MPRProperty {
     public Attribute attribute;
     public String modifierName;
     public MPRRange amount;
-    public Operation operation;
+    public AttributeModifier.Operation operation;
 
-    public MPRAttributeModifierProperty(Attribute attribute, UUID uuid, String modifierName, MPRRange amount, Operation operation, List<MPRCondition> conditions) {
+    public MPRAttributeModifierProperty(Attribute attribute, UUID uuid, String modifierName, MPRRange amount, AttributeModifier.Operation operation, List<MPRCondition> conditions) {
         super(conditions);
         this.uuid = uuid;
         this.attribute = attribute;
@@ -46,7 +45,7 @@ public class MPRAttributeModifierProperty extends MPRProperty {
             return false;
         }
 
-        AttributeModifier modifier = new AttributeModifier(UUID.randomUUID(), this.modifierName, this.amount.getFloatBetween(living), this.operation.get());
+        AttributeModifier modifier = new AttributeModifier(UUID.randomUUID(), this.modifierName, this.amount.getFloatBetween(living), this.operation);
         attributeInstance.addPermanentModifier(modifier);
 
         this.fixHealth(living);
@@ -71,7 +70,7 @@ public class MPRAttributeModifierProperty extends MPRProperty {
             UUID uuid = jObject.has("uuid") ? UUID.fromString(GsonHelper.getAsString(jObject, "uuid")) : UUID.randomUUID();
             String modifierName = GsonHelper.getAsString(jObject, "modifier_name", null);
             MPRRange amount = context.deserialize(jObject.get("amount"), MPRRange.class);
-            Operation operation = context.deserialize(jObject.get("operation"), Operation.class);
+            AttributeModifier.Operation operation = context.deserialize(jObject.get("operation"), AttributeModifier.Operation.class);
 
             return new MPRAttributeModifierProperty(attribute, uuid, modifierName, amount, operation, deserializeConditions(jObject, context));
         }
@@ -85,24 +84,6 @@ public class MPRAttributeModifierProperty extends MPRProperty {
             jObject.add("amount", context.serialize(src.amount));
             jObject.add("operation", context.serialize(src.operation));
             return src.endSerialization(jObject, context);
-        }
-    }
-
-    public enum Operation {
-        @SerializedName("addition")
-        ADDITION(AttributeModifier.Operation.ADDITION),
-        @SerializedName("multiply_base")
-        MULTIPLY_BASE(AttributeModifier.Operation.MULTIPLY_BASE),
-        @SerializedName("multiply_total")
-        MULTIPLY_TOTAL(AttributeModifier.Operation.MULTIPLY_TOTAL);
-
-        final AttributeModifier.Operation operation;
-        public AttributeModifier.Operation get() {
-            return this.operation;
-        }
-
-        Operation(AttributeModifier.Operation operation) {
-            this.operation = operation;
         }
     }
 }

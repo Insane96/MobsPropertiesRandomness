@@ -1,7 +1,11 @@
 package insane96mcp.mobspropertiesrandomness.data;
 
-import com.google.gson.*;
+import com.google.gson.Gson;
+import com.google.gson.JsonElement;
+import com.google.gson.JsonParseException;
+import com.google.gson.JsonSyntaxException;
 import insane96mcp.insanelib.exception.JsonValidationException;
+import insane96mcp.mobspropertiesrandomness.MPR;
 import insane96mcp.mobspropertiesrandomness.data.json.MPRPresetLegacy;
 import insane96mcp.mobspropertiesrandomness.util.Logger;
 import net.minecraft.resources.FileToIdConverter;
@@ -23,7 +27,7 @@ import java.util.Map;
 public class MPRPresetReloadListener extends SimplePreparableReloadListener<Map<ResourceLocation, JsonElement>> {
 	public static final List<MPRPresetLegacy> MPR_PRESETS = new ArrayList<>();
 	public static final MPRPresetReloadListener INSTANCE;
-	private static final Gson GSON = new GsonBuilder().create();
+	private static final Gson GSON;
 	private final String directory;
 
 	public MPRPresetReloadListener() {
@@ -31,6 +35,7 @@ public class MPRPresetReloadListener extends SimplePreparableReloadListener<Map<
 	}
 
 	static {
+		GSON = MPR.createGson();
 		INSTANCE = new MPRPresetReloadListener();
 	}
 
