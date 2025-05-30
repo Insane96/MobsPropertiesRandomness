@@ -4,7 +4,6 @@ import com.google.gson.*;
 import com.google.gson.annotations.JsonAdapter;
 import insane96mcp.insanelib.util.MCUtils;
 import insane96mcp.mobspropertiesrandomness.data.json.MPRAttributeModifier;
-import insane96mcp.mobspropertiesrandomness.data.json.MPRProperties;
 import insane96mcp.mobspropertiesrandomness.data.json.condition.MPRCondition;
 import insane96mcp.mobspropertiesrandomness.data.json.condition.MPRConditionable;
 import insane96mcp.mobspropertiesrandomness.util.SerializerUtils;
@@ -48,7 +47,7 @@ public class MPRItemAttributeModifier extends MPRConditionable {
             return new MPRItemAttributeModifier(
                     SerializerUtils.deserializeList(jObject, "slots", context, EquipmentSlot.class, false),
                     context.deserialize(jObject, MPRAttributeModifier.class),
-                    MPRProperties.deserializeConditions(jObject, context)
+                    MPRCondition.deserializeConditions(jObject, context)
             );
         }
 

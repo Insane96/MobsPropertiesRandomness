@@ -2,7 +2,6 @@ package insane96mcp.mobspropertiesrandomness.data.json.properties;
 
 import com.google.gson.*;
 import com.google.gson.annotations.JsonAdapter;
-import insane96mcp.mobspropertiesrandomness.data.json.MPRProperties;
 import insane96mcp.mobspropertiesrandomness.data.json.condition.MPRCondition;
 import insane96mcp.mobspropertiesrandomness.util.SerializerUtils;
 import net.minecraft.network.chat.Component;
@@ -52,7 +51,7 @@ public class MPRCustomNameProperty extends MPRProperty {
             List<String> suffixes = SerializerUtils.deserializeList(jObject, "suffixes", context, String.class, false);
             if (overrides.isEmpty() && prefixes.isEmpty() && suffixes.isEmpty())
                 throw new JsonParseException("No overrides, prefixes or suffixes specified for Custom Name Property");
-            return new MPRCustomNameProperty(overrides, prefixes, suffixes, MPRProperties.deserializeConditions(jObject, context));
+            return new MPRCustomNameProperty(overrides, prefixes, suffixes, MPRCondition.deserializeConditions(jObject, context));
         }
 
         @Override

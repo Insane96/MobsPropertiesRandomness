@@ -3,7 +3,6 @@ package insane96mcp.mobspropertiesrandomness.data.json.properties;
 import com.google.gson.*;
 import com.google.gson.annotations.JsonAdapter;
 import insane96mcp.insanelib.util.LogHelper;
-import insane96mcp.mobspropertiesrandomness.data.json.MPRProperties;
 import insane96mcp.mobspropertiesrandomness.data.json.condition.MPRCondition;
 import net.minecraft.server.ServerScoreboard;
 import net.minecraft.util.GsonHelper;
@@ -39,7 +38,7 @@ public class MPRTeamProperty extends MPRProperty {
         @Override
         public MPRTeamProperty deserialize(JsonElement json, Type typeOfT, JsonDeserializationContext context) throws JsonParseException {
             JsonObject jObject = json.getAsJsonObject();
-            return new MPRTeamProperty(GsonHelper.getAsString(jObject, "team"), MPRProperties.deserializeConditions(jObject, context));
+            return new MPRTeamProperty(GsonHelper.getAsString(jObject, "team"), MPRCondition.deserializeConditions(jObject, context));
         }
 
         @Override

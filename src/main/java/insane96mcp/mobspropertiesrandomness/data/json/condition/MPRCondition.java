@@ -43,6 +43,8 @@ public abstract class MPRCondition {
         return jObject;
     }
 
+    public static List<MPRCondition> deserializeConditions(JsonObject jObject, JsonDeserializationContext context) { return deserializeList(jObject, "conditions", context); }
+
     public static List<MPRCondition> deserializeList(JsonObject jObject, String memberName, JsonDeserializationContext context) {
         List<MPRCondition> conditions = new ArrayList<>();
         if (!jObject.has(memberName))

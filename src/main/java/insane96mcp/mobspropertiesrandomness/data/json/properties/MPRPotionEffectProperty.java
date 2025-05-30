@@ -2,7 +2,6 @@ package insane96mcp.mobspropertiesrandomness.data.json.properties;
 
 import com.google.gson.*;
 import com.google.gson.annotations.JsonAdapter;
-import insane96mcp.mobspropertiesrandomness.data.json.MPRProperties;
 import insane96mcp.mobspropertiesrandomness.data.json.condition.MPRCondition;
 import insane96mcp.mobspropertiesrandomness.data.json.util.modifiable.MPRRange;
 import insane96mcp.mobspropertiesrandomness.util.Logger;
@@ -66,7 +65,7 @@ public class MPRPotionEffectProperty extends MPRProperty {
             if (ambient && hideParticles)
                 Logger.warn("Particles are hidden, but ambient is enabled for %s. Ambient doesn't work if particles are hidden.".formatted(mobEffect));
 
-            return new MPRPotionEffectProperty(mobEffect, amplifier, duration, ambient, hideParticles, MPRProperties.deserializeConditions(jObject, context));
+            return new MPRPotionEffectProperty(mobEffect, amplifier, duration, ambient, hideParticles, MPRCondition.deserializeConditions(jObject, context));
         }
 
         @Override

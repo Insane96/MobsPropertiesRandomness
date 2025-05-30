@@ -3,10 +3,8 @@ package insane96mcp.mobspropertiesrandomness.data.json.properties;
 import com.google.gson.*;
 import com.google.gson.annotations.JsonAdapter;
 import insane96mcp.insanelib.util.weightedrandom.WeightedRandom;
-import insane96mcp.mobspropertiesrandomness.data.json.MPRProperties;
+import insane96mcp.mobspropertiesrandomness.data.json.WeightedLootTable;
 import insane96mcp.mobspropertiesrandomness.data.json.condition.MPRCondition;
-import insane96mcp.mobspropertiesrandomness.data.json.util.ModifiableWeightedRandom;
-import insane96mcp.mobspropertiesrandomness.data.json.util.WeightedResourceLocation;
 import insane96mcp.mobspropertiesrandomness.util.SerializerUtils;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.Mob;
@@ -17,9 +15,9 @@ import java.util.List;
 
 @JsonAdapter(MPRLootTableProperty.Serializer.class)
 public class MPRLootTableProperty extends MPRProperty {
-    public List<WeightedResourceLocation> lootTables;
+    public List<WeightedLootTable> lootTables;
 
-    public MPRLootTableProperty(List<WeightedResourceLocation> lootTables, List<MPRCondition> conditions) {
+    public MPRLootTableProperty(List<WeightedLootTable> lootTables, List<MPRCondition> conditions) {
         super(conditions);
         this.lootTables = lootTables;
     }
@@ -28,15 +26,15 @@ public class MPRLootTableProperty extends MPRProperty {
     protected boolean apply(LivingEntity living) {
         if (!(living instanceof Mob mob))
             return false;
-        ArrayList<ModifiableWeightedRandom> weightedList = new ArrayList<>();
-        for (WeightedResourceLocation weightedResourceLocation : this.lootTables) {
-            ModifiableWeightedRandom computedWeighted = weightedResourceLocation.computeAndGet(living);
+        ArrayList<WeightedLootTable> weightedList = new ArrayList<>();
+        for (WeightedLootTable lootTable : this.lootTables) {
+            WeightedLootTable computedWeighted = lootTable.computeAndGet(living);
             if (computedWeighted != null)
                 weightedList.add(computedWeighted);
         }
         if (weightedList.isEmpty())
             return false;
-        mob.lootTable = ((WeightedResourceLocation) WeightedRandom.getRandomItem(living.getRandom(), weightedList)).getLocation();
+        mob.lootTable = WeightedRandom.getRandomItem(living.getRandom(), weightedList).getLocation();
         return true;
     }
 
@@ -44,10 +42,10 @@ public class MPRLootTableProperty extends MPRProperty {
         @Override
         public MPRLootTableProperty deserialize(JsonElement json, Type typeOfT, JsonDeserializationContext context) throws JsonParseException {
             JsonObject jObject = json.getAsJsonObject();
-            List<WeightedResourceLocation> weightedResourceLocations = SerializerUtils.deserializeList(jObject, "loot_tables", context, WeightedResourceLocation.class, true);
-            if (weightedResourceLocations.isEmpty())
+            List<WeightedLootTable> weightedLootTables = SerializerUtils.deserializeList(jObject, "loot_tables", context, WeightedLootTable.class, true);
+            if (weightedLootTables.isEmpty())
                 throw new JsonParseException("No loot_tables specified for Loot Table Property");
-            return new MPRLootTableProperty(weightedResourceLocations, MPRProperties.deserializeConditions(jObject, context));
+            return new MPRLootTableProperty(weightedLootTables, MPRCondition.deserializeConditions(jObject, context));
         }
 
         @Override

@@ -18,8 +18,6 @@ public class MPRProperties {
 
     public static List<MPRProperty> deserializeProperties(JsonObject jObject, JsonDeserializationContext context) { return MPRProperty.deserializeList(jObject, "properties", context); }
 
-    public static List<MPRCondition> deserializeConditions(JsonObject jObject, JsonDeserializationContext context) { return MPRCondition.deserializeList(jObject, "conditions", context); }
-
     public JsonObject endSerialization(JsonObject jObject, JsonSerializationContext context) {
         jObject.add("properties", context.serialize(this.properties));
         jObject.add("conditions", context.serialize(this.conditions));
@@ -30,7 +28,7 @@ public class MPRProperties {
         @Override
         public MPRProperties deserialize(JsonElement json, Type typeOfT, JsonDeserializationContext context) throws JsonParseException {
             JsonObject jObject = json.getAsJsonObject();
-            return new MPRProperties(deserializeProperties(jObject, context), deserializeConditions(jObject, context));
+            return new MPRProperties(deserializeProperties(jObject, context), MPRCondition.deserializeConditions(jObject, context));
         }
 
         @Override

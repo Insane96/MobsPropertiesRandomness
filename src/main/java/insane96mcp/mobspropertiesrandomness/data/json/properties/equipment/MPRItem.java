@@ -3,7 +3,6 @@ package insane96mcp.mobspropertiesrandomness.data.json.properties.equipment;
 import com.google.gson.*;
 import com.google.gson.annotations.JsonAdapter;
 import insane96mcp.insanelib.util.weightedrandom.IWeightedRandom;
-import insane96mcp.mobspropertiesrandomness.data.json.MPRProperties;
 import insane96mcp.mobspropertiesrandomness.data.json.condition.MPRCondition;
 import insane96mcp.mobspropertiesrandomness.data.json.condition.MPRConditionable;
 import insane96mcp.mobspropertiesrandomness.data.json.util.modifiable.MPRModifiableValue;
@@ -70,7 +69,7 @@ public class MPRItem extends MPRConditionable implements IWeightedRandom {
                     item,
                     GsonHelper.getAsObject(jObject, "weight", new MPRModifiableValue(1f), context, MPRModifiableValue.class),
                     context.deserialize(jObject, MPRItemProperties.class),
-                    MPRProperties.deserializeConditions(jObject, context)
+                    MPRCondition.deserializeConditions(jObject, context)
             );
             if (item == Items.AIR && !sItem.equals("minecraft:air"))
                 mprItem.valid = false;

@@ -40,7 +40,7 @@ public class MPRMob extends MPRProperties {
                     context.deserialize(jObject.get("target"), IdTagMatcher.class),
                     GsonHelper.getAsInt(jObject, "priority", 0),
                     deserializeProperties(jObject, context),
-                    deserializeConditions(jObject, context)
+                    MPRCondition.deserializeConditions(jObject, context)
             );
         }
 

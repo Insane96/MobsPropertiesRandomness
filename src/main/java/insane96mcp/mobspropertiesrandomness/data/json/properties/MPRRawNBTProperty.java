@@ -2,7 +2,6 @@ package insane96mcp.mobspropertiesrandomness.data.json.properties;
 
 import com.google.gson.*;
 import com.google.gson.annotations.JsonAdapter;
-import insane96mcp.mobspropertiesrandomness.data.json.MPRProperties;
 import insane96mcp.mobspropertiesrandomness.data.json.condition.MPRCondition;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.TagParser;
@@ -41,7 +40,7 @@ public class MPRRawNBTProperty extends MPRProperty {
             } catch (Exception e) {
                 throw new JsonParseException("Failed to parse NBT for Set Raw NBT property: " + sNBT, e);
             }
-            return new MPRRawNBTProperty(nbt, MPRProperties.deserializeConditions(jObject, context));
+            return new MPRRawNBTProperty(nbt, MPRCondition.deserializeConditions(jObject, context));
         }
 
         @Override

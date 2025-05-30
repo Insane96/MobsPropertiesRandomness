@@ -3,7 +3,6 @@ package insane96mcp.mobspropertiesrandomness.data.json.properties;
 import com.google.gson.*;
 import com.google.gson.annotations.JsonAdapter;
 import insane96mcp.mobspropertiesrandomness.data.json.MPRAttributeModifier;
-import insane96mcp.mobspropertiesrandomness.data.json.MPRProperties;
 import insane96mcp.mobspropertiesrandomness.data.json.condition.MPRCondition;
 import insane96mcp.mobspropertiesrandomness.util.Logger;
 import net.minecraft.world.entity.LivingEntity;
@@ -42,7 +41,7 @@ public class MPRAttributeModifierProperty extends MPRProperty {
             JsonObject jObject = json.getAsJsonObject();
             return new MPRAttributeModifierProperty(
                     context.deserialize(jObject, MPRAttributeModifier.class),
-                    MPRProperties.deserializeConditions(jObject, context)
+                    MPRCondition.deserializeConditions(jObject, context)
             );
         }
 
