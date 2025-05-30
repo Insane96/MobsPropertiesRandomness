@@ -47,7 +47,7 @@ public class MPRRawNBTProperty extends MPRProperty {
         @Override
         public JsonElement serialize(MPRRawNBTProperty src, Type typeOfSrc, JsonSerializationContext context) {
             JsonObject jObject = new JsonObject();
-            jObject.addProperty("nbt", src.nbt.toString());
+            jObject.addProperty("nbt", src.nbt.getAsString());
             return src.endSerialization(jObject, context);
         }
     }

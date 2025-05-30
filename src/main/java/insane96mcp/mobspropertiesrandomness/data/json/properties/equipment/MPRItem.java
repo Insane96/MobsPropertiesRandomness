@@ -9,11 +9,14 @@ import insane96mcp.mobspropertiesrandomness.data.json.condition.MPRConditionable
 import insane96mcp.mobspropertiesrandomness.data.json.util.modifiable.MPRModifiableValue;
 import insane96mcp.mobspropertiesrandomness.util.SerializerUtils;
 import net.minecraft.core.registries.Registries;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.GsonHelper;
 import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.Items;
+import net.minecraftforge.registries.ForgeRegistries;
 
 import javax.annotation.Nullable;
 import java.lang.reflect.Type;
@@ -25,6 +28,8 @@ public class MPRItem extends MPRConditionable implements IWeightedRandom {
     private final MPRModifiableValue modifiableWeight;
     private int _weight;
     public MPRItemProperties properties;
+
+    private boolean valid = true;
 
     public MPRItem(Item item, MPRModifiableValue modifiableWeight, MPRItemProperties properties, List<MPRCondition> conditions) {
         super(conditions);
@@ -42,7 +47,8 @@ public class MPRItem extends MPRConditionable implements IWeightedRandom {
 
     @Nullable
     public MPRItem computeAndGet(LivingEntity entity) {
-        if (!MPRCondition.conditionsApply(this.conditions, entity))
+        if (!this.valid
+                || !MPRCondition.conditionsApply(this.conditions, entity))
             return null;
         this._weight = (int) this.modifiableWeight.getValue(entity);
 
@@ -58,12 +64,17 @@ public class MPRItem extends MPRConditionable implements IWeightedRandom {
         @Override
         public MPRItem deserialize(JsonElement json, Type typeOfT, JsonDeserializationContext context) throws JsonParseException {
             JsonObject jObject = json.getAsJsonObject();
-            return new MPRItem(
-                    SerializerUtils.deserializeRegistryObject(jObject.get("item"), Registries.ITEM),
+            String sItem = GsonHelper.getAsString(jObject, "item");
+            Item item = ForgeRegistries.ITEMS.getValue(ResourceLocation.parse(sItem));
+            MPRItem mprItem = new MPRItem(
+                    item,
                     GsonHelper.getAsObject(jObject, "weight", new MPRModifiableValue(1f), context, MPRModifiableValue.class),
                     context.deserialize(jObject, MPRItemProperties.class),
                     MPRProperties.deserializeConditions(jObject, context)
             );
+            if (item == Items.AIR && !sItem.equals("minecraft:air"))
+                mprItem.valid = false;
+            return mprItem;
         }
 
         @Override
