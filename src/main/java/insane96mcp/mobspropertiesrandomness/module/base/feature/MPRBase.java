@@ -12,6 +12,7 @@ import insane96mcp.mobspropertiesrandomness.data.json.MPRAttributeModifier;
 import insane96mcp.mobspropertiesrandomness.data.json.MPRMob;
 import insane96mcp.mobspropertiesrandomness.data.json.MPRPresetLegacy;
 import insane96mcp.mobspropertiesrandomness.data.json.properties.MPRBossBarProperty;
+import insane96mcp.mobspropertiesrandomness.data.json.properties.MPREffectImmunityProperty;
 import insane96mcp.mobspropertiesrandomness.data.json.properties.MPRScalePehkuiProperty;
 import insane96mcp.mobspropertiesrandomness.data.json.properties.outdated.events.MPREvents;
 import insane96mcp.mobspropertiesrandomness.data.json.properties.outdated.events.MPROnDeath;
@@ -19,8 +20,6 @@ import insane96mcp.mobspropertiesrandomness.data.json.properties.outdated.events
 import insane96mcp.mobspropertiesrandomness.data.json.properties.outdated.events.MPROnTick;
 import insane96mcp.mobspropertiesrandomness.util.Logger;
 import net.minecraft.nbt.CompoundTag;
-import net.minecraft.nbt.ListTag;
-import net.minecraft.nbt.Tag;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraftforge.event.entity.EntityJoinLevelEvent;
@@ -33,7 +32,6 @@ import net.minecraftforge.event.entity.player.PlayerEvent;
 import net.minecraftforge.eventbus.api.Event;
 import net.minecraftforge.eventbus.api.EventPriority;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
-import net.minecraftforge.registries.ForgeRegistries;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -106,18 +104,8 @@ public class MPRBase extends Feature {
 
 	@SubscribeEvent
 	public void onApplyEffect(MobEffectEvent.Applicable event) {
-		if (event.getEntity().level().isClientSide
-				|| !event.getEntity().getPersistentData().contains(MPR.RESOURCE_PREFIX + "effect_immunity"))
-			return;
-
-		ListTag listTag = event.getEntity().getPersistentData().getList(MPR.RESOURCE_PREFIX + "effect_immunity", Tag.TAG_STRING);
-		for (int i = 0; i < listTag.size(); ++i) {
-			String s = listTag.getString(i);
-			if (ForgeRegistries.MOB_EFFECTS.getKey(event.getEffectInstance().getEffect()).toString().equals(s)) {
-				event.setResult(Event.Result.DENY);
-				break;
-			}
-		}
+		if (MPREffectImmunityProperty.shouldPreventEffect(event.getEntity(), event.getEffectInstance().getEffect()))
+			event.setResult(Event.Result.DENY);
 	}
 
 	public static final java.lang.reflect.Type MPR_ON_TICK_LIST_TYPE = new TypeToken<ArrayList<MPROnTick>>(){}.getType();
