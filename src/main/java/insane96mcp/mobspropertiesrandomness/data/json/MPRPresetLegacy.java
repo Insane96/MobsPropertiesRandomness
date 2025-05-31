@@ -1,35 +1,15 @@
 package insane96mcp.mobspropertiesrandomness.data.json;
 
 import com.google.gson.annotations.JsonAdapter;
-import com.google.gson.annotations.SerializedName;
 import insane96mcp.insanelib.exception.JsonValidationException;
-import insane96mcp.mobspropertiesrandomness.data.json.properties.outdated.MPRBossBar;
 import net.minecraft.resources.ResourceLocation;
-import net.minecraft.server.bossevents.CustomBossEvent;
-import net.minecraft.world.entity.LivingEntity;
 
 public class MPRPresetLegacy extends MPRPropertiesLegacy implements IMPRObject {
 	@JsonAdapter(ResourceLocation.Serializer.class)
 	public transient ResourceLocation id;
 
-	@SerializedName("boss_bar")
-	public MPRBossBar bossBar;
-
 	@Override
 	public void validate() throws JsonValidationException {
 		super.validate();
-	}
-
-	@Override
-	public boolean apply(LivingEntity entity) {
-		boolean ret = super.apply(entity);
-		if (!ret)
-			return false;
-		if (this.bossBar != null) {
-			//noinspection ConstantConditions
-			CustomBossEvent bossBar = this.bossBar.createBar(this.id.getPath(), entity, entity.getRandom(), entity.getServer());
-			entity.getPersistentData().putString(MPRBossBar.BOSS_BAR_ID, bossBar.getTextId().toString());
-		}
-		return true;
 	}
 }

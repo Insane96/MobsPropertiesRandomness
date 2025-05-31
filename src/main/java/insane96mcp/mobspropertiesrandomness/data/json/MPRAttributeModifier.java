@@ -50,8 +50,8 @@ public class MPRAttributeModifier {
 
             UUID uuid = jObject.has("uuid") ? UUID.fromString(GsonHelper.getAsString(jObject, "uuid")) : UUID.randomUUID();
             String modifierName = GsonHelper.getAsString(jObject, "modifier_name");
-            MPRRange amount = context.deserialize(jObject.get("amount"), MPRRange.class);
-            AttributeModifier.Operation operation = context.deserialize(jObject.get("operation"), AttributeModifier.Operation.class);
+            MPRRange amount = GsonHelper.getAsObject(jObject, "amount", context, MPRRange.class);
+            AttributeModifier.Operation operation = GsonHelper.getAsObject(jObject, "operation", context, AttributeModifier.Operation.class);
 
             return new MPRAttributeModifier(attribute, uuid, modifierName, amount, operation);
         }

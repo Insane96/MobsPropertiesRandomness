@@ -7,13 +7,12 @@ import insane96mcp.insanelib.base.LoadFeature;
 import insane96mcp.insanelib.base.Module;
 import insane96mcp.insanelib.base.config.Config;
 import insane96mcp.insanelib.exception.JsonValidationException;
-import insane96mcp.insanelib.util.LogHelper;
 import insane96mcp.mobspropertiesrandomness.MPR;
 import insane96mcp.mobspropertiesrandomness.data.json.MPRAttributeModifier;
 import insane96mcp.mobspropertiesrandomness.data.json.MPRMob;
 import insane96mcp.mobspropertiesrandomness.data.json.MPRPresetLegacy;
+import insane96mcp.mobspropertiesrandomness.data.json.properties.MPRBossBarProperty;
 import insane96mcp.mobspropertiesrandomness.data.json.properties.MPRScalePehkuiProperty;
-import insane96mcp.mobspropertiesrandomness.data.json.properties.outdated.MPRBossBar;
 import insane96mcp.mobspropertiesrandomness.data.json.properties.outdated.events.MPREvents;
 import insane96mcp.mobspropertiesrandomness.data.json.properties.outdated.events.MPROnDeath;
 import insane96mcp.mobspropertiesrandomness.data.json.properties.outdated.events.MPROnHit;
@@ -23,9 +22,6 @@ import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.ListTag;
 import net.minecraft.nbt.Tag;
 import net.minecraft.resources.ResourceLocation;
-import net.minecraft.server.bossevents.CustomBossEvent;
-import net.minecraft.server.bossevents.CustomBossEvents;
-import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraftforge.event.entity.EntityJoinLevelEvent;
 import net.minecraftforge.event.entity.EntityLeaveLevelEvent;
@@ -38,7 +34,6 @@ import net.minecraftforge.eventbus.api.Event;
 import net.minecraftforge.eventbus.api.EventPriority;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.registries.ForgeRegistries;
-import org.jetbrains.annotations.Nullable;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -102,19 +97,11 @@ public class MPRBase extends Feature {
 	@SubscribeEvent
 	public void onLivingDeath(LivingDeathEvent event) {
 		onDeathEvent(event);
-		removePlayerFromBossBar(event);
 	}
 
 	@SubscribeEvent
 	public void onEntityLeaveLevel(EntityLeaveLevelEvent event) {
-		if (!(event.getEntity() instanceof LivingEntity livingEntity)
-				|| livingEntity.getServer() == null)
-			return;
-
-		CustomBossEvent bossEvent = getBarFromEntity(livingEntity);
-		if (bossEvent == null)
-			return;
-		livingEntity.getServer().getCustomBossEvents().remove(bossEvent);
+		MPRBossBarProperty.removeBar(event.getEntity());
 	}
 
 	@SubscribeEvent
@@ -140,8 +127,8 @@ public class MPRBase extends Feature {
 			return;
 		tryApplyPehkui(event.getEntity());
 		checkOnTick(event.getEntity());
-		showBossBar(event.getEntity());
-		updateBossBar(event.getEntity());
+		MPRBossBarProperty.showBar(event.getEntity(), true);
+		MPRBossBarProperty.updateBar(event.getEntity());
 	}
 
 	public void tryApplyPehkui(LivingEntity entity) {
@@ -150,8 +137,6 @@ public class MPRBase extends Feature {
 	}
 
 	public void onDeathEvent(LivingDeathEvent event) {
-		removeBossBar(event.getEntity());
-
 		CompoundTag compoundTag = event.getEntity().getPersistentData();
         if (!compoundTag.contains(MPREvents.ON_DEATH))
 			return;
@@ -173,80 +158,9 @@ public class MPRBase extends Feature {
 		}
 	}
 
-	public void removePlayerFromBossBar(LivingDeathEvent event) {
-		if (event.getEntity().level().isClientSide
-				|| !(event.getSource().getEntity() instanceof LivingEntity livingEntity)
-				|| !(event.getEntity() instanceof ServerPlayer player))
-			return;
-		CustomBossEvent bossEvent = getBarFromEntity(livingEntity);
-		if (bossEvent == null)
-			return;
-		bossEvent.removePlayer(player);
-	}
-
-	public void removeBossBar(LivingEntity entity) {
-		if (entity.getServer() == null)
-			return;
-		CompoundTag compoundTag = entity.getPersistentData();
-		if (!compoundTag.contains(MPRBossBar.BOSS_BAR_ID))
-			return;
-		CustomBossEvents customBossEvents = entity.getServer().getCustomBossEvents();
-		CustomBossEvent bossEvent = customBossEvents.get(ResourceLocation.parse(compoundTag.getString(MPRBossBar.BOSS_BAR_ID)));
-		if (bossEvent != null) {
-			bossEvent.removeAllPlayers();
-			customBossEvents.remove(bossEvent);
-		}
-	}
-
 	@SubscribeEvent
 	public void onStopTracking(PlayerEvent.StopTracking event) {
-		if (event.getEntity().level().isClientSide
-				|| !(event.getTarget() instanceof LivingEntity livingEntity)
-				|| !(event.getEntity() instanceof ServerPlayer player))
-			return;
-		CustomBossEvent bossEvent = getBarFromEntity(livingEntity);
-		if (bossEvent == null)
-			return;
-		bossEvent.removePlayer(player);
-	}
-
-	@Nullable
-	private CustomBossEvent getBarFromEntity(LivingEntity entity) {
-		CompoundTag persistentData = entity.getPersistentData();
-		if (!persistentData.contains(MPRBossBar.BOSS_BAR_ID))
-			return null;
-		ResourceLocation bossbarId = ResourceLocation.tryParse(persistentData.getString(MPRBossBar.BOSS_BAR_ID));
-		if (bossbarId == null) {
-			LogHelper.warn("[%s] Failed to find boss bar with id %s", MPR.MOD_ID, entity.getPersistentData().getString(MPRBossBar.BOSS_BAR_ID));
-			return null;
-		}
-		//noinspection ConstantConditions
-		return entity.getServer().getCustomBossEvents().get(bossbarId);
-	}
-
-	private void updateBossBar(LivingEntity entity) {
-		if (entity.isDeadOrDying())
-			return;
-
-		CustomBossEvent bossBar = getBarFromEntity(entity);
-		if (bossBar == null)
-			return;
-		bossBar.setProgress(entity.getHealth() / entity.getMaxHealth());
-	}
-
-	private void showBossBar(LivingEntity entity) {
-		if (entity.tickCount % 20 != entity.getId() % 20)
-			return;
-
-		CustomBossEvent bossBar = getBarFromEntity(entity);
-		if (bossBar == null)
-			return;
-		int range = entity.getPersistentData().getInt(MPRBossBar.BOSS_BAR_VISIBILITY_RANGE);
-		bossBar.removeAllPlayers();
-		entity.level().players()
-				.stream()
-				.filter(p -> p.distanceToSqr(entity) < range * range)
-				.forEach(player -> bossBar.addPlayer((ServerPlayer) player));
+		MPRBossBarProperty.removePlayer(event.getTarget(), event.getEntity());
 	}
 
 	private void checkOnTick(LivingEntity entity) {

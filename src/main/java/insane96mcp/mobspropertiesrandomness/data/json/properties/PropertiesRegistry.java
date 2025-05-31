@@ -40,6 +40,7 @@ public class PropertiesRegistry {
         register("set_nbt", MPRNBTProperty.class);
         register("set_raw_nbt", MPRRawNBTProperty.class);
         register("equipment", MPREquipmentProperty.class);
+        register("boss_bar", MPRBossBarProperty.class);
         if (ModList.get().isLoaded("pehkui"))
             register("scale", MPRScalePehkuiProperty.class);
     }

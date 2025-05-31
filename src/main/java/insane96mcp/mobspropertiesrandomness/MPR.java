@@ -8,10 +8,13 @@ import insane96mcp.mobspropertiesrandomness.data.json.condition.ConditionsRegist
 import insane96mcp.mobspropertiesrandomness.data.json.properties.PropertiesRegistry;
 import insane96mcp.mobspropertiesrandomness.data.json.properties.equipment.ItemFunctionsRegistry;
 import insane96mcp.mobspropertiesrandomness.data.serializer.AttributeModifierOperationSerializer;
+import insane96mcp.mobspropertiesrandomness.data.serializer.BossBarColorSerializer;
+import insane96mcp.mobspropertiesrandomness.data.serializer.BossBarOverlaySerializer;
 import insane96mcp.mobspropertiesrandomness.data.serializer.EquipmentSlotSerializer;
 import insane96mcp.mobspropertiesrandomness.setup.Config;
 import insane96mcp.mobspropertiesrandomness.util.Logger;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.BossEvent;
 import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.entity.ai.attributes.AttributeModifier;
 import net.minecraftforge.common.MinecraftForge;
@@ -68,6 +71,8 @@ public class MPR
         return new GsonBuilder()
                 .registerTypeAdapter(EquipmentSlot.class, new EquipmentSlotSerializer())
                 .registerTypeAdapter(AttributeModifier.Operation.class, new AttributeModifierOperationSerializer())
+                .registerTypeAdapter(BossEvent.BossBarColor.class, new BossBarColorSerializer())
+                .registerTypeAdapter(BossEvent.BossBarOverlay.class, new BossBarOverlaySerializer())
                 .create();
     }
 }
