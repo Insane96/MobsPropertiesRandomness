@@ -30,15 +30,14 @@ public class MPREquipmentProperty extends MPRProperty {
     public EquipmentSlot slot;
     public List<MPRItem> items;
     public List<WeightedLootTable> lootTables;
-    @Nullable
-    MPRItemProperties properties;
+    public List<MPRItemFunction> functions;
 
-    public MPREquipmentProperty(EquipmentSlot slot, List<MPRItem> items, List<WeightedLootTable> lootTables, @Nullable MPRItemProperties properties, List<MPRCondition> conditions) {
+    public MPREquipmentProperty(EquipmentSlot slot, List<MPRItem> items, List<WeightedLootTable> lootTables, List<MPRItemFunction> functions, List<MPRCondition> conditions) {
         super(conditions);
         this.slot = slot;
         this.items = items;
+        this.functions = functions;
         this.lootTables = lootTables;
-        this.properties = properties;
     }
 
     @Override
@@ -66,8 +65,8 @@ public class MPREquipmentProperty extends MPRProperty {
         }
         else
             stack = randomItem.getStack(living, this.slot);
-        if (this.properties != null)
-            this.properties.apply(living, stack, slot);
+        for (MPRItemFunction function : this.functions)
+            function.tryApply(living, stack, slot);
         living.setItemSlot(this.slot, stack);
         return true;
     }
@@ -116,17 +115,18 @@ public class MPREquipmentProperty extends MPRProperty {
         @Override
         public MPREquipmentProperty deserialize(JsonElement json, Type typeOfT, JsonDeserializationContext context) throws JsonParseException {
             JsonObject jObject = json.getAsJsonObject();
-            EquipmentSlot slot = GsonHelper.getAsObject(jObject, "slot", context, EquipmentSlot.class);
-            List<MPRItem> items = SerializerUtils.deserializeList(jObject, "items", context, MPRItem.class, false);
-            List<WeightedLootTable> lootTables = SerializerUtils.deserializeList(jObject, "loot_tables", context, WeightedLootTable.class, false);
-            MPRItemProperties enchantments = context.deserialize(jObject, MPRItemProperties.class);
-
-            return new MPREquipmentProperty(slot, items, lootTables, enchantments, MPRCondition.deserializeConditions(jObject, context));
+            return new MPREquipmentProperty(
+                    GsonHelper.getAsObject(jObject, "slot", context, EquipmentSlot.class),
+                    SerializerUtils.deserializeList(jObject, "items", context, MPRItem.class, false),
+                    SerializerUtils.deserializeList(jObject, "loot_tables", context, WeightedLootTable.class, false),
+                    MPRItemFunction.deserializeList(jObject, "functions", context),
+                    MPRCondition.deserializeConditions(jObject, context)
+            );
         }
 
         @Override
         public JsonElement serialize(MPREquipmentProperty src, Type typeOfSrc, JsonSerializationContext context) {
-            JsonObject jObject = context.serialize(src.properties).getAsJsonObject();
+            JsonObject jObject = context.serialize(src.functions).getAsJsonObject();
             jObject.add("slot", context.serialize(src.slot));
             jObject.add("items", SerializerUtils.serializeList(src.items, context));
             jObject.add("loot_tables", SerializerUtils.serializeList(src.lootTables, context));

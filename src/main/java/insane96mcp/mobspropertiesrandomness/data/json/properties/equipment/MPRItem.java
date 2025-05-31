@@ -39,9 +39,8 @@ public class MPRItem extends MPRConditionable implements IWeightedRandom {
 
     public ItemStack getStack(LivingEntity living, EquipmentSlot slot) {
         ItemStack stack = new ItemStack(this.item);
-        for (MPRItemFunction function : this.functions) {
+        for (MPRItemFunction function : this.functions)
             function.tryApply(living, stack, slot);
-        }
         return stack;
     }
 

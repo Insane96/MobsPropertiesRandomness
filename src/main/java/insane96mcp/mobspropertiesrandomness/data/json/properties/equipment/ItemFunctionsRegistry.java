@@ -32,5 +32,6 @@ public class ItemFunctionsRegistry {
         register("set_nbt", MPRNBTItemFunction.class);
         register("set_raw_nbt", MPRRawNBTItemFunction.class);
         register("add_attribute_modifier", MPRAttributeModifierItemFunction.class);
+        register("enchant", MPREnchantItemFunction.class);
     }
 }

@@ -8,10 +8,13 @@ import insane96mcp.mobspropertiesrandomness.data.json.condition.MPRConditionable
 import insane96mcp.mobspropertiesrandomness.data.json.util.modifiable.MPRRange;
 import insane96mcp.mobspropertiesrandomness.util.SerializerUtils;
 import net.minecraft.core.registries.Registries;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.nbt.ListTag;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.GsonHelper;
 import net.minecraft.util.Mth;
 import net.minecraft.util.RandomSource;
+import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.item.EnchantedBookItem;
 import net.minecraft.world.item.ItemStack;
@@ -26,9 +29,9 @@ import java.lang.reflect.Type;
 import java.util.List;
 import java.util.Map;
 
-@JsonAdapter(MPREnchantment.Serializer.class)
-public abstract class MPREnchantment extends MPRConditionable {
-    public static final Map<ResourceLocation, Class<? extends MPREnchantment>> TYPES = Map.of(
+@JsonAdapter(MPREnchantItemFunction.Serializer.class)
+public abstract class MPREnchantItemFunction extends MPRItemFunction {
+    public static final Map<ResourceLocation, Class<? extends MPREnchantItemFunction>> TYPES = Map.of(
         MPR.location("single"), SingleEnchantment.class,
         MPR.location("random"), RandomEnchantment.class,
         MPR.location("with_levels"), WithLevel.class
@@ -38,13 +41,11 @@ public abstract class MPREnchantment extends MPRConditionable {
     public MPRRange level;
     public boolean allowIncompatible;
 
-    public MPREnchantment(@Nullable MPRRange level, boolean allowIncompatible, List<MPRCondition> conditions) {
+    public MPREnchantItemFunction(@Nullable MPRRange level, boolean allowIncompatible, List<MPRCondition> conditions) {
         super(conditions);
         this.level = level;
         this.allowIncompatible = allowIncompatible;
     }
-
-    public abstract void applyToStack(LivingEntity entity, ItemStack itemStack);
 
     public int getLvl(LivingEntity entity, Enchantment enchantment) {
         int minLevel = this.level != null ? (int) this.level.getMin(entity) : enchantment.getMinLevel();
@@ -57,6 +58,27 @@ public abstract class MPREnchantment extends MPRConditionable {
             EnchantedBookItem.addEnchantment(itemStack, new EnchantmentInstance(enchantment, lvl));
         else
             itemStack.enchant(enchantment, lvl);
+    }
+
+    private static void removeEnchantmentFromItemStack(ItemStack stack, Enchantment enchantment) {
+        if (stack.getItem() == Items.ENCHANTED_BOOK)
+            //TODO Implement
+            return;
+        else {
+            if (stack.getTag() == null)
+                return;
+            if (!stack.getTag().contains("Enchantments", 9))
+                return;
+            ListTag listTag = stack.getTag().getList("Enchantments", 10);
+            for (int i = 0; i < listTag.size(); ++i) {
+                CompoundTag compound = listTag.getCompound(i);
+                Enchantment foundEnchantment = ForgeRegistries.ENCHANTMENTS.getValue(EnchantmentHelper.getEnchantmentId(compound));
+                if (foundEnchantment == enchantment) {
+                    listTag.remove(i);
+                    return;
+                }
+            }
+        }
     }
 
     public static void enchantItem(RandomSource random, ItemStack itemStack, int lvl, boolean treasure) {
@@ -91,9 +113,9 @@ public abstract class MPREnchantment extends MPRConditionable {
         return super.endSerialization(jObject, context);
     }
 
-    public static class Serializer implements JsonSerializer<MPREnchantment>, JsonDeserializer<MPREnchantment> {
+    public static class Serializer implements JsonSerializer<MPREnchantItemFunction>, JsonDeserializer<MPREnchantItemFunction> {
         @Override
-        public MPREnchantment deserialize(JsonElement json, Type typeOfT, JsonDeserializationContext context) throws JsonParseException {
+        public MPREnchantItemFunction deserialize(JsonElement json, Type typeOfT, JsonDeserializationContext context) throws JsonParseException {
             JsonObject jObject = json.getAsJsonObject();
             ResourceLocation propertyId = MPR.locationFrom(GsonHelper.getAsString(jObject, "type"));
             Type propertyType = TYPES.get(propertyId);
@@ -104,7 +126,7 @@ public abstract class MPREnchantment extends MPRConditionable {
         }
 
         @Override
-        public JsonElement serialize(MPREnchantment src, Type typeOfSrc, JsonSerializationContext context) {
+        public JsonElement serialize(MPREnchantItemFunction src, Type typeOfSrc, JsonSerializationContext context) {
             JsonObject jObject = context.serialize(src).getAsJsonObject();
             for (var type : TYPES.entrySet()) {
                 if (type.getValue().isInstance(src)) {
@@ -118,7 +140,7 @@ public abstract class MPREnchantment extends MPRConditionable {
 
 
     @JsonAdapter(SingleEnchantment.Serializer.class)
-    public static class SingleEnchantment extends MPREnchantment {
+    public static class SingleEnchantment extends MPREnchantItemFunction {
         public Enchantment enchantment;
 
         public SingleEnchantment(Enchantment enchantment, MPRRange level, boolean allowIncompatible, List<MPRCondition> conditions) {
@@ -127,15 +149,16 @@ public abstract class MPREnchantment extends MPRConditionable {
         }
 
         @Override
-        public void applyToStack(LivingEntity entity, ItemStack itemStack) {
-            Map<Enchantment, Integer> enchantmentsOnStack = EnchantmentHelper.getEnchantments(itemStack);
+        protected boolean apply(LivingEntity living, ItemStack stack, EquipmentSlot slot) {
+            Map<Enchantment, Integer> enchantmentsOnStack = EnchantmentHelper.getEnchantments(stack);
             //noinspection ConstantConditions can't be null as it's checked to exist when the data is reloaded
             boolean canApply = this.allowIncompatible || EnchantmentHelper.isEnchantmentCompatible(enchantmentsOnStack.keySet(), this.enchantment);
             if (!canApply)
-                this.enchantment = null;
-            int lvl = getLvl(entity, this.enchantment);
+                return false;
+            int lvl = getLvl(living, this.enchantment);
             if (this.enchantment != null)
-                addEnchantmentToItemStack(itemStack, this.enchantment, lvl);
+                addEnchantmentToItemStack(stack, this.enchantment, lvl);
+            return true;
         }
 
         public static class Serializer implements JsonSerializer<SingleEnchantment>, JsonDeserializer<SingleEnchantment> {
@@ -159,7 +182,7 @@ public abstract class MPREnchantment extends MPRConditionable {
     }
 
     @JsonAdapter(RandomEnchantment.Serializer.class)
-    public static class RandomEnchantment extends MPREnchantment {
+    public static class RandomEnchantment extends MPREnchantItemFunction {
         public boolean allowCurses;
         public boolean allowTreasure;
         public List<Enchantment> enchantments;
@@ -172,10 +195,10 @@ public abstract class MPREnchantment extends MPRConditionable {
         }
 
         @Override
-        public void applyToStack(LivingEntity entity, ItemStack itemStack) {
-            Map<Enchantment, Integer> enchantmentsOnStack = EnchantmentHelper.getEnchantments(itemStack);
+        protected boolean apply(LivingEntity living, ItemStack stack, EquipmentSlot slot) {
+            Map<Enchantment, Integer> enchantmentsOnStack = EnchantmentHelper.getEnchantments(stack);
 
-            boolean isBook = itemStack.getItem() == Items.ENCHANTED_BOOK;
+            boolean isBook = stack.getItem() == Items.ENCHANTED_BOOK;
 
             List<Enchantment> possibleEnchantments = ForgeRegistries.ENCHANTMENTS.getValues().stream().filter((enchantment) -> {
                 if (!enchantment.isDiscoverable()
@@ -192,13 +215,14 @@ public abstract class MPREnchantment extends MPRConditionable {
                     }
                 }
 
-                return isBook || enchantment.canEnchant(itemStack);
+                return isBook || enchantment.canEnchant(stack);
             }).toList();
             if (possibleEnchantments.isEmpty())
-                return;
+                return false;
 
-            Enchantment enchantment = possibleEnchantments.get(entity.getRandom().nextInt(possibleEnchantments.size()));
-            addEnchantmentToItemStack(itemStack, enchantment, getLvl(entity, enchantment));
+            Enchantment enchantment = possibleEnchantments.get(living.getRandom().nextInt(possibleEnchantments.size()));
+            addEnchantmentToItemStack(stack, enchantment, getLvl(living, enchantment));
+            return true;
         }
 
         public static class Serializer implements JsonSerializer<RandomEnchantment>, JsonDeserializer<RandomEnchantment> {
@@ -229,7 +253,7 @@ public abstract class MPREnchantment extends MPRConditionable {
     }
 
     @JsonAdapter(WithLevel.Serializer.class)
-    public static class WithLevel extends MPREnchantment {
+    public static class WithLevel extends MPREnchantItemFunction {
         public boolean allowTreasure;
         public boolean allowCurses;
 
@@ -240,15 +264,24 @@ public abstract class MPREnchantment extends MPRConditionable {
         }
 
         @Override
-        public void applyToStack(LivingEntity entity, ItemStack itemStack) {
-            int lvl = Math.max(1, getLvl(entity, null));
-            List<EnchantmentInstance> list = EnchantmentHelper.selectEnchantment(entity.level().random, itemStack, lvl, true);
-            for (EnchantmentInstance enchantmentInstance : list) {
-                if ((enchantmentInstance.enchantment.isCurse() && !allowCurses)
-                        || (enchantmentInstance.enchantment.isTreasureOnly() && !allowTreasure))
+        protected boolean apply(LivingEntity living, ItemStack stack, EquipmentSlot slot) {
+            int lvl = Math.max(1, getLvl(living, null));
+            List<EnchantmentInstance> list = EnchantmentHelper.selectEnchantment(living.level().random, stack, lvl, true);
+            for (EnchantmentInstance instance : list) {
+                if ((instance.enchantment.isCurse() && !allowCurses)
+                        || (instance.enchantment.isTreasureOnly() && !allowTreasure))
                     continue;
-                addEnchantmentToItemStack(itemStack, enchantmentInstance.enchantment, enchantmentInstance.level);
+                int lvlOnStack = stack.getEnchantmentLevel(instance.enchantment);
+                if (lvlOnStack >= instance.level)
+                    continue;
+                else if (lvlOnStack == 0)
+                    addEnchantmentToItemStack(stack, instance.enchantment, instance.level);
+                else {
+                    removeEnchantmentFromItemStack(stack, instance.enchantment);
+                    addEnchantmentToItemStack(stack, instance.enchantment, instance.level);
+                }
             }
+            return true;
         }
 
         public static class Serializer implements JsonSerializer<WithLevel>, JsonDeserializer<WithLevel> {
