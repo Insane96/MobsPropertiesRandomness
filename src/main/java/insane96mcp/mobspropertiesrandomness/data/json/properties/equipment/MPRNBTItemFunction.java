@@ -61,7 +61,7 @@ public class MPRNBTItemFunction extends MPRItemFunction {
 
         @Override
         public JsonElement serialize(MPRNBTItemFunction src, Type typeOfSrc, JsonSerializationContext context) {
-            JsonObject jObject = new JsonObject();
+            JsonObject jObject = context.serialize(src.nbt).getAsJsonObject();
             return src.endSerialization(jObject, context);
         }
     }
