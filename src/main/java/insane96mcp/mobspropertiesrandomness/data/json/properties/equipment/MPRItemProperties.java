@@ -3,14 +3,11 @@ package insane96mcp.mobspropertiesrandomness.data.json.properties.equipment;
 import com.google.gson.*;
 import com.google.gson.annotations.JsonAdapter;
 import insane96mcp.mobspropertiesrandomness.data.json.MPRNBT;
-import insane96mcp.mobspropertiesrandomness.data.json.util.modifiable.MPRModifiableValue;
-import insane96mcp.mobspropertiesrandomness.data.json.util.modifiable.MPRRange;
 import insane96mcp.mobspropertiesrandomness.util.SerializerUtils;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.util.GsonHelper;
 import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.entity.LivingEntity;
-import net.minecraft.world.entity.Mob;
 import net.minecraft.world.item.ItemStack;
 
 import javax.annotation.Nullable;
@@ -20,19 +17,13 @@ import java.util.List;
 @JsonAdapter(MPRItemProperties.Serializer.class)
 public class MPRItemProperties {
     public List<MPREnchantment> enchantments;
-    @Nullable
-    public MPRRange count;
-    @Nullable
-    public MPRModifiableValue dropChance;
     public List<MPRItemAttributeModifier> attributeModifier;
     public List<MPRItemNBT> nbt;
     @Nullable
     public CompoundTag rawNbt;
 
-    public MPRItemProperties(List<MPREnchantment> enchantments, @Nullable MPRRange count, @Nullable MPRModifiableValue dropChance, List<MPRItemNBT> nbt, @Nullable CompoundTag rawNbt, List<MPRItemAttributeModifier> attributeModifier) {
+    public MPRItemProperties(List<MPREnchantment> enchantments, List<MPRItemNBT> nbt, @Nullable CompoundTag rawNbt, List<MPRItemAttributeModifier> attributeModifier) {
         this.enchantments = enchantments;
-        this.count = count;
-        this.dropChance = dropChance;
         this.attributeModifier = attributeModifier;
         this.nbt = nbt;
         this.rawNbt = rawNbt;
@@ -43,10 +34,6 @@ public class MPRItemProperties {
             enchantment.applyToStack(entity, itemStack);
         }
 
-        if (this.count != null)
-            itemStack.setCount(this.count.getIntBetween(entity));
-        if (this.dropChance != null && entity instanceof Mob mob)
-            mob.setDropChance(slot, this.dropChance.getValue(entity));
         for (MPRItemAttributeModifier attributeModifier : this.attributeModifier)
             attributeModifier.apply(entity, itemStack, slot);
         for (MPRItemNBT nbtProperty : this.nbt)
@@ -61,8 +48,6 @@ public class MPRItemProperties {
             JsonObject jObject = json.getAsJsonObject();
             return new MPRItemProperties(
                     SerializerUtils.deserializeList(jObject.getAsJsonArray("enchant"), context, MPREnchantment.class),
-                    GsonHelper.getAsObject(jObject, "count", null, context, MPRRange.class),
-                    GsonHelper.getAsObject(jObject, "drop_chance", null, context, MPRModifiableValue.class),
                     SerializerUtils.deserializeList(jObject, "nbt", context, MPRItemNBT.class, false),
                     MPRNBT.deserialize(GsonHelper.getAsString(jObject, "raw_nbt", null)),
                     SerializerUtils.deserializeList(jObject.getAsJsonArray("attribute_modifiers"), context, MPRItemAttributeModifier.class)
@@ -79,8 +64,6 @@ public class MPRItemProperties {
                 }
             }
             jObject.add("enchant", aEnchantments);
-            jObject.add("count", context.serialize(src.count));
-            jObject.add("drop_chance", context.serialize(src.dropChance));
             jObject.add("attribute_modifiers", SerializerUtils.serializeList(src.attributeModifier, context));
             jObject.add("nbt", SerializerUtils.serializeList(src.nbt, context));
             if (src.rawNbt != null)

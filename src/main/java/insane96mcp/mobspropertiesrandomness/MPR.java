@@ -6,6 +6,7 @@ import insane96mcp.mobspropertiesrandomness.data.MPRMobReloadListener;
 import insane96mcp.mobspropertiesrandomness.data.MPRPresetReloadListener;
 import insane96mcp.mobspropertiesrandomness.data.json.condition.ConditionsRegistry;
 import insane96mcp.mobspropertiesrandomness.data.json.properties.PropertiesRegistry;
+import insane96mcp.mobspropertiesrandomness.data.json.properties.equipment.ItemFunctionsRegistry;
 import insane96mcp.mobspropertiesrandomness.data.serializer.AttributeModifierOperationSerializer;
 import insane96mcp.mobspropertiesrandomness.data.serializer.EquipmentSlotSerializer;
 import insane96mcp.mobspropertiesrandomness.setup.Config;
@@ -34,8 +35,9 @@ public class MPR
         modContext.getModEventBus().addListener(this::preInit);
         MinecraftForge.EVENT_BUS.register(this);
 
-        PropertiesRegistry.init();
         ConditionsRegistry.init();
+        PropertiesRegistry.init();
+        ItemFunctionsRegistry.init();
     }
 
     @SubscribeEvent(priority = EventPriority.LOW)

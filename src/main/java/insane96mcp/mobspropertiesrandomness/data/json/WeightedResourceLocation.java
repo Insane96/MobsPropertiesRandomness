@@ -46,22 +46,12 @@ public class WeightedResourceLocation extends MPRConditionable implements IWeigh
     }
 
     public static class Serializer implements JsonSerializer<WeightedResourceLocation>, JsonDeserializer<WeightedResourceLocation> {
-        private final String locationKey;
-
-        public Serializer() {
-            this("location");
-        }
-
-        public Serializer(String locationKey) {
-            this.locationKey = locationKey;
-        }
-
         @Override
         public WeightedResourceLocation deserialize(JsonElement json, Type typeOfT, JsonDeserializationContext context) throws JsonParseException {
             JsonObject jObject = json.getAsJsonObject();
             return new WeightedResourceLocation(
                     GsonHelper.getAsObject(jObject, "weight", new MPRModifiableValue(1f), context, MPRModifiableValue.class),
-                    ResourceLocation.parse(GsonHelper.getAsString(jObject, locationKey)),
+                    ResourceLocation.parse(GsonHelper.getAsString(jObject, "location")),
                     MPRCondition.deserializeConditions(jObject, context)
             );
         }
@@ -70,7 +60,7 @@ public class WeightedResourceLocation extends MPRConditionable implements IWeigh
         public JsonElement serialize(WeightedResourceLocation src, Type typeOfSrc, JsonSerializationContext context) {
             JsonObject jObject = new JsonObject();
             jObject.add("weight", context.serialize(src.modifiableWeight));
-            jObject.add(locationKey, context.serialize(src.location));
+            jObject.add("location", context.serialize(src.location));
             return src.endSerialization(jObject, context);
         }
     }

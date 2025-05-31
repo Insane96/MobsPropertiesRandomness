@@ -26,21 +26,22 @@ public class MPRItem extends MPRConditionable implements IWeightedRandom {
     public Item item;
     private final MPRModifiableValue modifiableWeight;
     private int _weight;
-    public MPRItemProperties properties;
+    public List<MPRItemFunction> functions;
 
     private boolean valid = true;
 
-    public MPRItem(Item item, MPRModifiableValue modifiableWeight, MPRItemProperties properties, List<MPRCondition> conditions) {
+    public MPRItem(Item item, MPRModifiableValue modifiableWeight, List<MPRItemFunction> functions, List<MPRCondition> conditions) {
         super(conditions);
         this.item = item;
         this.modifiableWeight = modifiableWeight;
-        this.properties = properties;
+        this.functions = functions;
     }
 
     public ItemStack getStack(LivingEntity living, EquipmentSlot slot) {
         ItemStack stack = new ItemStack(this.item);
-        if (this.properties != null)
-            this.properties.apply(living, stack, slot);
+        for (MPRItemFunction function : this.functions) {
+            function.tryApply(living, stack, slot);
+        }
         return stack;
     }
 
@@ -68,7 +69,7 @@ public class MPRItem extends MPRConditionable implements IWeightedRandom {
             MPRItem mprItem = new MPRItem(
                     item,
                     GsonHelper.getAsObject(jObject, "weight", new MPRModifiableValue(1f), context, MPRModifiableValue.class),
-                    context.deserialize(jObject, MPRItemProperties.class),
+                    MPRItemFunction.deserializeList(jObject, "functions", context),
                     MPRCondition.deserializeConditions(jObject, context)
             );
             if (item == Items.AIR && !sItem.equals("minecraft:air"))
@@ -78,10 +79,10 @@ public class MPRItem extends MPRConditionable implements IWeightedRandom {
 
         @Override
         public JsonElement serialize(MPRItem src, Type typeOfSrc, JsonSerializationContext context) {
-            JsonObject jObject = context.serialize(src.properties).getAsJsonObject();
+            JsonObject jObject = context.serialize(src.functions).getAsJsonObject();
             jObject.add("item", SerializerUtils.serializeRegistryObject(src.item, Registries.ITEM));
             jObject.add("weight", context.serialize(src.modifiableWeight));
-            return jObject;
+            return src.endSerialization(jObject, context);
         }
     }
 }
