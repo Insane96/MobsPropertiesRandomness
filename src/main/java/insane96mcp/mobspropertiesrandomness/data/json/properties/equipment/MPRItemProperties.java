@@ -2,15 +2,11 @@ package insane96mcp.mobspropertiesrandomness.data.json.properties.equipment;
 
 import com.google.gson.*;
 import com.google.gson.annotations.JsonAdapter;
-import insane96mcp.mobspropertiesrandomness.data.json.MPRNBT;
 import insane96mcp.mobspropertiesrandomness.util.SerializerUtils;
-import net.minecraft.nbt.CompoundTag;
-import net.minecraft.util.GsonHelper;
 import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.item.ItemStack;
 
-import javax.annotation.Nullable;
 import java.lang.reflect.Type;
 import java.util.List;
 
@@ -18,15 +14,10 @@ import java.util.List;
 public class MPRItemProperties {
     public List<MPREnchantment> enchantments;
     public List<MPRItemAttributeModifier> attributeModifier;
-    public List<MPRItemNBT> nbt;
-    @Nullable
-    public CompoundTag rawNbt;
 
-    public MPRItemProperties(List<MPREnchantment> enchantments, List<MPRItemNBT> nbt, @Nullable CompoundTag rawNbt, List<MPRItemAttributeModifier> attributeModifier) {
+    public MPRItemProperties(List<MPREnchantment> enchantments, List<MPRItemAttributeModifier> attributeModifier) {
         this.enchantments = enchantments;
         this.attributeModifier = attributeModifier;
-        this.nbt = nbt;
-        this.rawNbt = rawNbt;
     }
 
     public void apply(LivingEntity entity, ItemStack itemStack, EquipmentSlot slot) {
@@ -36,10 +27,6 @@ public class MPRItemProperties {
 
         for (MPRItemAttributeModifier attributeModifier : this.attributeModifier)
             attributeModifier.apply(entity, itemStack, slot);
-        for (MPRItemNBT nbtProperty : this.nbt)
-            nbtProperty.setStackNBT(entity, itemStack);
-        if (this.rawNbt != null)
-            itemStack.setTag(this.rawNbt.copy());
     }
 
     public static class Serializer implements JsonSerializer<MPRItemProperties>, JsonDeserializer<MPRItemProperties> {
@@ -48,8 +35,6 @@ public class MPRItemProperties {
             JsonObject jObject = json.getAsJsonObject();
             return new MPRItemProperties(
                     SerializerUtils.deserializeList(jObject.getAsJsonArray("enchant"), context, MPREnchantment.class),
-                    SerializerUtils.deserializeList(jObject, "nbt", context, MPRItemNBT.class, false),
-                    MPRNBT.deserialize(GsonHelper.getAsString(jObject, "raw_nbt", null)),
                     SerializerUtils.deserializeList(jObject.getAsJsonArray("attribute_modifiers"), context, MPRItemAttributeModifier.class)
             );
         }
@@ -65,9 +50,6 @@ public class MPRItemProperties {
             }
             jObject.add("enchant", aEnchantments);
             jObject.add("attribute_modifiers", SerializerUtils.serializeList(src.attributeModifier, context));
-            jObject.add("nbt", SerializerUtils.serializeList(src.nbt, context));
-            if (src.rawNbt != null)
-                jObject.addProperty("raw_nbt", src.rawNbt.getAsString());
             return jObject;
         }
     }

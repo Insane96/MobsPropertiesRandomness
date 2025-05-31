@@ -29,5 +29,7 @@ public class ItemFunctionsRegistry {
     public static void init() {
         register("set_count", MPRSetCountItemFunction.class);
         register("set_drop_chance", MPRSetDropChanceItemFunction.class);
+        register("set_nbt", MPRNBTItemFunction.class);
+        register("set_raw_nbt", MPRRawNBTItemFunction.class);
     }
 }

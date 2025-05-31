@@ -4,25 +4,26 @@ import com.google.gson.*;
 import com.google.gson.annotations.JsonAdapter;
 import insane96mcp.mobspropertiesrandomness.data.json.MPRNBT;
 import insane96mcp.mobspropertiesrandomness.data.json.condition.MPRCondition;
-import insane96mcp.mobspropertiesrandomness.data.json.condition.MPRConditionable;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.Tag;
+import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.item.ItemStack;
 
 import java.lang.reflect.Type;
 import java.util.List;
 
-@JsonAdapter(MPRItemNBT.Serializer.class)
-public class MPRItemNBT extends MPRConditionable {
+@JsonAdapter(MPRNBTItemFunction.Serializer.class)
+public class MPRNBTItemFunction extends MPRItemFunction {
     public MPRNBT nbt;
 
-    public MPRItemNBT(MPRNBT nbt,List<MPRCondition> conditions) {
+    public MPRNBTItemFunction(MPRNBT nbt, List<MPRCondition> conditions) {
         super(conditions);
         this.nbt = nbt;
     }
 
-    public void setStackNBT(LivingEntity living, ItemStack stack) {
+    @Override
+    protected boolean apply(LivingEntity living, ItemStack stack, EquipmentSlot slot) {
         CompoundTag stackTag = stack.getOrCreateTag();
         String[] splitPath = this.nbt.path.split("\\.");
         CompoundTag innerCompoundTag = stackTag;
@@ -45,21 +46,22 @@ public class MPRItemNBT extends MPRConditionable {
                 }
             }
         }
+        return true;
     }
 
-    public static class Serializer implements JsonDeserializer<MPRItemNBT>, JsonSerializer<MPRItemNBT> {
+    public static class Serializer implements JsonDeserializer<MPRNBTItemFunction>, JsonSerializer<MPRNBTItemFunction> {
         @Override
-        public MPRItemNBT deserialize(JsonElement json, Type typeOfT, JsonDeserializationContext context) throws JsonParseException {
+        public MPRNBTItemFunction deserialize(JsonElement json, Type typeOfT, JsonDeserializationContext context) throws JsonParseException {
             JsonObject jObject = json.getAsJsonObject();
-            return new MPRItemNBT(
+            return new MPRNBTItemFunction(
                     context.deserialize(jObject, MPRNBT.class),
                     MPRCondition.deserializeConditions(jObject, context)
             );
         }
 
         @Override
-        public JsonElement serialize(MPRItemNBT src, Type typeOfSrc, JsonSerializationContext context) {
-            JsonObject jObject = context.serialize(src.nbt).getAsJsonObject();
+        public JsonElement serialize(MPRNBTItemFunction src, Type typeOfSrc, JsonSerializationContext context) {
+            JsonObject jObject = new JsonObject();
             return src.endSerialization(jObject, context);
         }
     }

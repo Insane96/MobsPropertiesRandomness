@@ -1,6 +1,7 @@
 package insane96mcp.mobspropertiesrandomness.data.json;
 
 import com.google.gson.*;
+import com.google.gson.annotations.JsonAdapter;
 import insane96mcp.mobspropertiesrandomness.data.json.util.NBTType;
 import insane96mcp.mobspropertiesrandomness.data.json.util.modifiable.MPRRange;
 import net.minecraft.nbt.CompoundTag;
@@ -10,6 +11,7 @@ import net.minecraft.util.GsonHelper;
 import javax.annotation.Nullable;
 import java.lang.reflect.Type;
 
+@JsonAdapter(MPRNBT.Serializer.class)
 public class MPRNBT {
     public String path;
     public NBTType type;
