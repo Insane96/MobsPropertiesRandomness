@@ -7,14 +7,12 @@ import insane96mcp.mobspropertiesrandomness.data.MPRPresetReloadListener;
 import insane96mcp.mobspropertiesrandomness.data.json.condition.ConditionsRegistry;
 import insane96mcp.mobspropertiesrandomness.data.json.properties.PropertiesRegistry;
 import insane96mcp.mobspropertiesrandomness.data.json.properties.equipment.ItemFunctionsRegistry;
-import insane96mcp.mobspropertiesrandomness.data.serializer.AttributeModifierOperationSerializer;
-import insane96mcp.mobspropertiesrandomness.data.serializer.BossBarColorSerializer;
-import insane96mcp.mobspropertiesrandomness.data.serializer.BossBarOverlaySerializer;
-import insane96mcp.mobspropertiesrandomness.data.serializer.EquipmentSlotSerializer;
+import insane96mcp.mobspropertiesrandomness.data.serializer.*;
 import insane96mcp.mobspropertiesrandomness.setup.Config;
 import insane96mcp.mobspropertiesrandomness.util.Logger;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.BossEvent;
+import net.minecraft.world.Difficulty;
 import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.entity.ai.attributes.AttributeModifier;
 import net.minecraftforge.common.MinecraftForge;
@@ -73,6 +71,7 @@ public class MPR
                 .registerTypeAdapter(AttributeModifier.Operation.class, new AttributeModifierOperationSerializer())
                 .registerTypeAdapter(BossEvent.BossBarColor.class, new BossBarColorSerializer())
                 .registerTypeAdapter(BossEvent.BossBarOverlay.class, new BossBarOverlaySerializer())
+                .registerTypeAdapter(Difficulty.class, new DifficultySerializer())
                 .create();
     }
 }

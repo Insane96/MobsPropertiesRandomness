@@ -40,6 +40,7 @@ public class ConditionsRegistry {
         register("deepness", MPRDeepnessCondition.class);
         register("distance_from_spawn", MPRDistanceFromSpawnCondition.class);
         register("advancement", MPRAdvancementCondition.class);
+        register("difficulty", MPRDifficultyCondition.class);
         if (ModList.get().isLoaded("gamestages"))
             register("game_stage", MPRGameStageCondition.class);
         register("nbt", MPRNBTCondition.class);
