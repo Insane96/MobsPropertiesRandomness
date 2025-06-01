@@ -2,11 +2,12 @@ package insane96mcp.mobspropertiesrandomness.data.json.condition;
 
 import com.google.gson.*;
 import com.google.gson.annotations.JsonAdapter;
-import com.google.gson.annotations.SerializedName;
 import insane96mcp.insanelib.util.MCUtils;
+import insane96mcp.mobspropertiesrandomness.data.json.util.PlayerMode;
 import insane96mcp.mobspropertiesrandomness.util.SerializerUtils;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.util.GsonHelper;
 import net.minecraft.world.entity.LivingEntity;
 
 import java.lang.reflect.Type;
@@ -58,7 +59,7 @@ public class MPRAdvancementCondition extends MPRCondition {
 			List<ResourceLocation> advancementsList = SerializerUtils.deserializeLocationList(jObject, "advancements", context);
 			PlayerMode playerMode = PlayerMode.NEAREST;
 			if (jObject.has("player"))
-				playerMode = context.deserialize(jObject.get("player"), PlayerMode.class);
+				playerMode = GsonHelper.getAsObject(jObject, "player", context, PlayerMode.class);
 			return new MPRAdvancementCondition(advancementsList, playerMode, MPRCondition.deserializeInverted(jObject));
 		}
 
@@ -71,10 +72,4 @@ public class MPRAdvancementCondition extends MPRCondition {
 		}
 	}
 
-	public enum PlayerMode {
-		@SerializedName("nearest")
-		NEAREST,
-		@SerializedName("any")
-		ANY
-	}
 }
