@@ -33,7 +33,7 @@ public class ConditionsRegistry {
         register("spawn_type", MPRSpawnTypeCondition.class);
         register("moon_phase", MPRMoonPhaseCondition.class);
         register("day_time", MPRDayTimeCondition.class);
-        register("days_passed", MPRTimePlayedCondition.class);
+        register("time_played", MPRTimePlayedCondition.class);
         register("dimension", MPRDimensionCondition.class);
         register("biome", MPRBiomeCondition.class);
         register("structure", MPRStructureCondition.class);
