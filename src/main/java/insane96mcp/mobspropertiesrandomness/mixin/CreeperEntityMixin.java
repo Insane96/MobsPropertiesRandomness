@@ -13,7 +13,7 @@ import java.util.Collection;
 
 @Mixin(Creeper.class)
 public abstract class CreeperEntityMixin {
-	//Remove any effect that has duration higher than 1 hour
+	//Remove any effect that has duration higher than 30m
 	@ModifyVariable(at = @At(value = "STORE"), method = "spawnLingeringCloud", ordinal = 0)
 	private Collection<MobEffectInstance> changeCollection(Collection<MobEffectInstance> collection) {
 		collection.removeIf(mobEffectInstance -> mobEffectInstance.getDuration() > 36000 || mobEffectInstance.isInfiniteDuration());
@@ -22,7 +22,7 @@ public abstract class CreeperEntityMixin {
 
 	@ModifyArg(at = @At(value = "INVOKE", target = "Lnet/minecraft/world/entity/AreaEffectCloud;setRadius(F)V"), method = "spawnLingeringCloud", index = 0)
 	private float adjustRadius(float radius) {
-		if (!MPRBase.isBetterCreeperLingeringActivated())
+		if (!MPRBase.isBetterCreeperLingeringEnabled())
 			return radius;
 		Creeper $this = (Creeper)(Object)this;
 		CompoundTag compoundNBT = new CompoundTag();
@@ -34,6 +34,6 @@ public abstract class CreeperEntityMixin {
 
 	@ModifyArg(at = @At(value = "INVOKE", target = "Lnet/minecraft/world/entity/AreaEffectCloud;setWaitTime(I)V"), method = "spawnLingeringCloud", index = 0)
 	private int adjustWaitTime(int waitTime) {
-		return MPRBase.isBetterCreeperLingeringActivated() ? 0 : waitTime;
+		return MPRBase.isBetterCreeperLingeringEnabled() ? 0 : waitTime;
 	}
 }

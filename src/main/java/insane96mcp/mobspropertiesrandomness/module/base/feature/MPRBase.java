@@ -218,7 +218,7 @@ public class MPRBase extends Feature {
 		}
 	}
 
-	public static boolean isBetterCreeperLingeringActivated() {
+	public static boolean isBetterCreeperLingeringEnabled() {
 		return Feature.isEnabled(MPRBase.class) && betterCreeperLingering;
 	}
 }
