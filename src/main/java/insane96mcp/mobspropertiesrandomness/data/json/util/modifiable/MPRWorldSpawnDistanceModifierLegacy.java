@@ -4,9 +4,8 @@ import com.google.gson.annotations.SerializedName;
 import insane96mcp.insanelib.exception.JsonValidationException;
 import insane96mcp.mobspropertiesrandomness.data.json.IMPRObject;
 import net.minecraft.world.entity.LivingEntity;
-import net.minecraft.world.phys.Vec3;
 
-public class MPRWorldSpawnDistanceModifier extends MPRModifier implements IMPRObject {
+public class MPRWorldSpawnDistanceModifierLegacy extends MPRModifierLegacy implements IMPRObject {
 
 	/*
 	 Each 'step' blocks from spawn will increase the value to modify by 'amount_per_step'.
@@ -27,8 +26,8 @@ public class MPRWorldSpawnDistanceModifier extends MPRModifier implements IMPROb
 	@SerializedName("distance_cap")
 	public MPRModifiableValue distanceCap;
 
-	public MPRWorldSpawnDistanceModifier() {
-		this.shift = new MPRModifiableValue(0f);
+	public MPRWorldSpawnDistanceModifierLegacy() {
+		this.shift = new MPRModifiableValue(0d);
 	}
 
 	@Override
@@ -40,18 +39,19 @@ public class MPRWorldSpawnDistanceModifier extends MPRModifier implements IMPROb
 	}
 
 	public float applyModifier(LivingEntity entity, float value) {
-		Vec3 spawnPos = new Vec3(entity.level().getLevelData().getXSpawn(), entity.level().getLevelData().getYSpawn(), entity.level().getLevelData().getZSpawn());
-		float distance = (float) spawnPos.distanceTo(entity.position());
+		/*Vec3 spawnPos = new Vec3(entity.level().getLevelData().getXSpawn(), entity.level().getLevelData().getYSpawn(), entity.level().getLevelData().getZSpawn());
+		double distance = (float) spawnPos.distanceTo(entity.position());
 		if (this.distanceCap != null) {
-			float distanceCap = this.distanceCap.getValue(entity);
+			double distanceCap = this.distanceCap.getValue(entity);
 			if (distance > distanceCap)
 				distance = distanceCap;
 		}
 		distance += this.shift.getValue(entity);
-		float totalBonus = (distance / this.step.getValue(entity)) * this.amountPerStep.getValue(entity);
+		double totalBonus = (distance / this.step.getValue(entity)) * this.amountPerStep.getValue(entity);
 
 		if (this.getOperation() == Operation.ADD) return value + totalBonus;
-		else return value * (1 + totalBonus);
+		else return value * (1 + totalBonus);*/
+		return value;
 	}
 
 	@Override

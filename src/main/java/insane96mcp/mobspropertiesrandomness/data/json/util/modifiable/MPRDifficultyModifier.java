@@ -1,68 +1,66 @@
 package insane96mcp.mobspropertiesrandomness.data.json.util.modifiable;
 
-import insane96mcp.insanelib.exception.JsonValidationException;
-import insane96mcp.mobspropertiesrandomness.data.json.IMPRObject;
+import com.google.gson.*;
+import com.google.gson.annotations.JsonAdapter;
+import insane96mcp.mobspropertiesrandomness.data.json.condition.MPRCondition;
+import insane96mcp.mobspropertiesrandomness.data.json.util.MPRModifier;
+import net.minecraft.util.GsonHelper;
 import net.minecraft.world.Difficulty;
 import net.minecraft.world.entity.LivingEntity;
+import org.jetbrains.annotations.Nullable;
 
-public class MPRDifficultyModifier extends MPRModifier implements IMPRObject {
-	public Float easy;
-	public Float normal;
-	public Float hard;
+import java.lang.reflect.Type;
+import java.util.List;
 
-	@Override
-	public void validate() throws JsonValidationException {
-		if (this.getOperation() == null)
-			throw new JsonValidationException("Missing Operation for Difficulty object. " + this);
+@JsonAdapter(MPRDifficultyModifier.Serializer.class)
+public class MPRDifficultyModifier extends MPRModifier {
+    @Nullable
+    public MPRModifiableValue easy;
+    @Nullable
+    public MPRModifiableValue normal;
+    @Nullable
+    public MPRModifiableValue hard;
 
-		if (this.getOperation() == Operation.ADD) {
-			if (this.easy == null)
-				this.easy = 0f;
-			if (this.normal == null)
-				this.normal = 0f;
-			if (this.hard == null)
-				this.hard = 0f;
-		}
-		else if (this.getOperation() == Operation.MULTIPLY) {
-			if (this.easy == null)
-				this.easy = 1f;
-			if (this.normal == null)
-				this.normal = 1f;
-			if (this.hard == null)
-				this.hard = 1f;
-		}
+    public MPRDifficultyModifier(@Nullable MPRModifiableValue easy, @Nullable MPRModifiableValue normal, @Nullable MPRModifiableValue hard, Operation operation, List<MPRCondition> conditions) {
+        super(operation, conditions);
+        this.easy = easy;
+        this.normal = normal;
+        this.hard = hard;
+    }
 
-		super.validate();
-	}
+    @Override
+    protected double getModifier(LivingEntity living) {
+        Difficulty worldDifficulty = living.level().getDifficulty();
+        double modifier = this.operation == Operation.ADD ? 0d : 1d;
+        if (worldDifficulty == Difficulty.EASY && this.easy != null)
+            modifier = this.easy.getValue(living);
+        else if (worldDifficulty == Difficulty.NORMAL && this.normal != null)
+            modifier = this.normal.getValue(living);
+        else if (worldDifficulty == Difficulty.HARD && this.hard != null)
+            modifier = this.hard.getValue(living);
+        return modifier;
+    }
 
-	@Override
-	public float applyModifier(LivingEntity entity, float value) {
-		Difficulty worldDifficulty = entity.level().getDifficulty();
-		switch (worldDifficulty) {
-			case EASY -> {
-				if (this.getOperation() == Operation.ADD)
-					value += this.easy;
-				if (this.getOperation() == Operation.MULTIPLY)
-					value *= this.easy;
-			}
-			case NORMAL -> {
-				if (this.getOperation() == Operation.ADD)
-					value += this.normal;
-				if (this.getOperation() == Operation.MULTIPLY)
-					value *= this.normal;
-			}
-			case HARD -> {
-				if (this.getOperation() == Operation.ADD)
-					value += this.hard;
-				if (this.getOperation() == Operation.MULTIPLY)
-					value *= this.hard;
-			}
-		}
-		return value;
-	}
+    public static class Serializer implements JsonDeserializer<MPRDifficultyModifier>, JsonSerializer<MPRDifficultyModifier> {
+        @Override
+        public MPRDifficultyModifier deserialize(JsonElement json, Type typeOfT, JsonDeserializationContext context) throws JsonParseException {
+            JsonObject jObject = json.getAsJsonObject();
+            return new MPRDifficultyModifier(
+                    GsonHelper.getAsObject(jObject, "easy", null, context, MPRModifiableValue.class),
+                    GsonHelper.getAsObject(jObject, "normal", null, context, MPRModifiableValue.class),
+                    GsonHelper.getAsObject(jObject, "hard", null, context, MPRModifiableValue.class),
+                    deserializeOperation(jObject, context),
+                    MPRCondition.deserializeConditions(jObject, context)
+            );
+        }
 
-	@Override
-	public String toString() {
-		return String.format("DifficultyModifier{operation: %s, easy: %f, normal: %f, hard: %f}", this.getOperation(), this.easy, this.normal, this.hard);
-	}
+        @Override
+        public JsonElement serialize(MPRDifficultyModifier src, Type typeOfSrc, JsonSerializationContext context) {
+            JsonObject jObject = new JsonObject();
+            jObject.add("easy", context.serialize(src.easy));
+            jObject.add("normal", context.serialize(src.normal));
+            jObject.add("hard", context.serialize(src.hard));
+            return src.endSerialization(jObject, context);
+        }
+    }
 }

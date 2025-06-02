@@ -11,7 +11,7 @@ import net.minecraft.world.entity.LivingEntity;
 import java.util.ArrayList;
 import java.util.List;
 
-public class MPRTimeExistedModifier extends MPRModifier implements IMPRObject {
+public class MPRTimeExistedModifierLegacy extends MPRModifierLegacy implements IMPRObject {
 	@SerializedName("bonus_per_seconds")
 	public MPRModifiableValue bonusPerSeconds;
 	public MPRModifiableValue seconds;
@@ -19,7 +19,7 @@ public class MPRTimeExistedModifier extends MPRModifier implements IMPRObject {
 	public MPRModifiableValue maxBonusPercentage;
 	public Mode mode;
 
-	public MPRTimeExistedModifier() {
+	public MPRTimeExistedModifierLegacy() {
 		this.mode = Mode.AVERAGE;
 	}
 

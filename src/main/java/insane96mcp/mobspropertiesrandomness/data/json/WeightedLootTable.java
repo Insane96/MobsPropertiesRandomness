@@ -33,7 +33,7 @@ public class WeightedLootTable extends WeightedResourceLocation {
         public WeightedLootTable deserialize(JsonElement json, Type typeOfT, JsonDeserializationContext context) throws JsonParseException {
             JsonObject jObject = json.getAsJsonObject();
             return new WeightedLootTable(
-                    GsonHelper.getAsObject(jObject, "weight", new MPRModifiableValue(1f), context, MPRModifiableValue.class),
+                    GsonHelper.getAsObject(jObject, "weight", new MPRModifiableValue(1d), context, MPRModifiableValue.class),
                     ResourceLocation.parse(GsonHelper.getAsString(jObject, "loot_table")),
                     MPRCondition.deserializeConditions(jObject, context)
             );

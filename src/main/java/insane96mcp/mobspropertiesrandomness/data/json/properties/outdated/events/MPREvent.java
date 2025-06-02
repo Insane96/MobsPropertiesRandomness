@@ -28,9 +28,6 @@ public abstract class MPREvent implements IMPRObject {
 
     @Override
     public void validate() throws JsonValidationException {
-        if (this.chance != null)
-            this.chance.validate();
-
         if (this.playSound != null)
             this.playSound.validate();
 

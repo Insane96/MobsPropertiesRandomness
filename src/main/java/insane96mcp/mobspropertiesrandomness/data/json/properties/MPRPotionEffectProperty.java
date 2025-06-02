@@ -51,13 +51,13 @@ public class MPRPotionEffectProperty extends MPRProperty {
             if (jObject.has("amplifier"))
                 amplifier = context.deserialize(jObject.get("amplifier"), MPRRange.class);
             else
-                amplifier = new MPRRange(0f);
+                amplifier = new MPRRange(0d);
 
             MPRRange duration;
             if (jObject.has("duration"))
                 duration = context.deserialize(jObject.get("duration"), MPRRange.class);
             else
-                duration = new MPRRange(-1f);
+                duration = new MPRRange(-1d);
 
             boolean ambient = GsonHelper.getAsBoolean(jObject, "ambient", false);
             boolean hideParticles = GsonHelper.getAsBoolean(jObject, "hide_particles", false);

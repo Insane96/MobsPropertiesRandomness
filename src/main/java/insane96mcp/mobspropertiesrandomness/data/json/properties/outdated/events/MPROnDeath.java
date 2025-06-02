@@ -24,10 +24,6 @@ public class MPROnDeath extends MPREvent {
 		super.validate();
 		if (this.target == null)
 			throw new JsonValidationException("Missing \"target\" for OnDeath object: %s".formatted(this));
-		if (this.setFire != null)
-			this.setFire.validate();
-		if (this.setFreeze != null)
-			this.setFreeze.validate();
 	}
 
 	public void apply(LivingEntity entity, @Nullable LivingEntity other, boolean isDirectDamage) {

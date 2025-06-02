@@ -5,7 +5,7 @@ import insane96mcp.insanelib.exception.JsonValidationException;
 import insane96mcp.mobspropertiesrandomness.data.json.IMPRObject;
 import net.minecraft.world.entity.LivingEntity;
 
-public abstract class MPRModifier implements IMPRObject {
+public abstract class MPRModifierLegacy implements IMPRObject {
 	private Operation operation;
 
 	@Override

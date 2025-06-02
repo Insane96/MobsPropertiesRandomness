@@ -67,7 +67,7 @@ public class MPRItem extends MPRConditionable implements IWeightedRandom {
             Item item = ForgeRegistries.ITEMS.getValue(ResourceLocation.parse(sItem));
             MPRItem mprItem = new MPRItem(
                     item,
-                    GsonHelper.getAsObject(jObject, "weight", new MPRModifiableValue(1f), context, MPRModifiableValue.class),
+                    GsonHelper.getAsObject(jObject, "weight", new MPRModifiableValue(1d), context, MPRModifiableValue.class),
                     MPRItemFunction.deserializeList(jObject, "functions", context),
                     MPRCondition.deserializeConditions(jObject, context)
             );

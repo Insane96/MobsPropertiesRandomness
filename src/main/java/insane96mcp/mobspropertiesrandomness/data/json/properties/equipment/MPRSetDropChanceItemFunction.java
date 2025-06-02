@@ -25,7 +25,7 @@ public class MPRSetDropChanceItemFunction extends MPRItemFunction {
     protected boolean apply(LivingEntity living, ItemStack stack, EquipmentSlot slot) {
         if (!(living instanceof Mob mob))
             return false;
-        mob.setDropChance(slot, this.dropChance.getValue(mob));
+        mob.setDropChance(slot, (float) this.dropChance.getValue(mob));
         return true;
     }
 

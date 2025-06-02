@@ -1,62 +1,52 @@
 package insane96mcp.mobspropertiesrandomness.data.json.util.modifiable;
 
-import com.google.gson.JsonDeserializationContext;
-import com.google.gson.JsonDeserializer;
-import com.google.gson.JsonElement;
-import com.google.gson.JsonParseException;
+import com.google.gson.*;
 import com.google.gson.annotations.JsonAdapter;
-import insane96mcp.insanelib.exception.JsonValidationException;
-import insane96mcp.mobspropertiesrandomness.data.json.IMPRObject;
+import insane96mcp.mobspropertiesrandomness.data.json.util.MPRModifier;
+import net.minecraft.util.GsonHelper;
 import net.minecraft.world.entity.LivingEntity;
+import org.jetbrains.annotations.Nullable;
 
-import javax.annotation.Nullable;
 import java.lang.reflect.Type;
 import java.util.List;
 
-@JsonAdapter(MPRModifiableValue.Deserializer.class)
-public class MPRModifiableValue extends MPRModifiable implements IMPRObject {
-	protected Float value;
+@JsonAdapter(MPRModifiableValue.Serializer.class)
+public class MPRModifiableValue extends MPRModifiable {
+	protected Double value;
 
-	public MPRModifiableValue(Float value) {
-		this(value, null, null, null, null, null, null);
+	public MPRModifiableValue(Double value) {
+		this(value, List.of(), null);
 	}
 
-	//TODO think about a builder
-	public MPRModifiableValue(Float value, @Nullable MPRDifficultyModifier difficultyModifier, @Nullable MPRWorldSpawnDistanceModifier worldSpawnDistanceModifier, @Nullable MPRDepthModifier depthModifier, @Nullable MPRTimeExistedModifier timeExistedModifier, @Nullable List<MPRConditionModifier> conditionsModifier, @Nullable Integer round) {
-		super(difficultyModifier, worldSpawnDistanceModifier, depthModifier, timeExistedModifier, conditionsModifier, round);
+	public MPRModifiableValue(Double value, List<MPRModifier> modifiers, @Nullable Integer round) {
+		super(modifiers, round);
 		this.value = value;
 	}
 
-	public void validate() throws JsonValidationException {
-		if (this.value == null)
-			throw new JsonValidationException("Missing \"value\" in Modifiable Value. " + this);
-
-		super.validate();
+	public double getValue(LivingEntity living) {
+		return this.applyModifiersAndRound(this.value, living);
 	}
 
-	public float getValue(LivingEntity entity) {
-		return this.applyModifiersAndRound(entity, this.value);
-	}
-
-	public float getValue() { return this.value; }
-
-	@Override
-	public String toString() {
-		return String.format("ModifiableValue{value: %f, %s}", this.value, super.toString());
-	}
-
-	public static class Deserializer implements JsonDeserializer<MPRModifiableValue> {
+	public static class Serializer implements JsonSerializer<MPRModifiableValue>, JsonDeserializer<MPRModifiableValue> {
 		@Override
 		public MPRModifiableValue deserialize(JsonElement json, Type typeOfT, JsonDeserializationContext context) throws JsonParseException {
 			if (json.isJsonPrimitive())
-				return new MPRModifiableValue(json.getAsFloat());
-			return new MPRModifiableValue(context.deserialize(json.getAsJsonObject().get("value"), Float.class),
-					context.deserialize(json.getAsJsonObject().get("difficulty_modifier"), MPRDifficultyModifier.class),
-					context.deserialize(json.getAsJsonObject().get("world_spawn_distance_modifier"), MPRWorldSpawnDistanceModifier.class),
-					context.deserialize(json.getAsJsonObject().get("depth_modifier"), MPRDepthModifier.class),
-					context.deserialize(json.getAsJsonObject().get("time_existed_modifier"), MPRTimeExistedModifier.class),
-					context.deserialize(json.getAsJsonObject().get("condition_modifiers"), MPRConditionModifier.LIST_TYPE),
-					context.deserialize(json.getAsJsonObject().get("round"), Integer.class));
+				return new MPRModifiableValue(json.getAsDouble(), List.of(), null);
+			JsonObject jObject = json.getAsJsonObject();
+			return new MPRModifiableValue(
+					GsonHelper.getAsDouble(jObject, "value"),
+					deserializeList(jObject, context),
+					GsonHelper.getAsObject(jObject, "round", null, context, Integer.class)
+			);
+		}
+
+		@Override
+		public JsonElement serialize(MPRModifiableValue src, Type typeOfSrc, JsonSerializationContext context) {
+			if (src.modifiers.isEmpty() && src.round == null)
+				return new JsonPrimitive(src.value);
+			JsonObject jObject = new JsonObject();
+			jObject.addProperty("value", src.value);
+			return src.endSerialization(jObject, context);
 		}
 	}
 }

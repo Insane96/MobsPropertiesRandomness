@@ -26,8 +26,6 @@ public class MPRPresets implements IMPRObject {
 
 	@Override
 	public void validate() throws JsonValidationException {
-		if (this.chance != null)
-			this.chance.validate();
 		if (this.mode == null)
 			this.mode = Mode.EXCLUSIVE;
 		if (this.list == null || this.list.isEmpty())

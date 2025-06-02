@@ -50,7 +50,7 @@ public class WeightedResourceLocation extends MPRConditionable implements IWeigh
         public WeightedResourceLocation deserialize(JsonElement json, Type typeOfT, JsonDeserializationContext context) throws JsonParseException {
             JsonObject jObject = json.getAsJsonObject();
             return new WeightedResourceLocation(
-                    GsonHelper.getAsObject(jObject, "weight", new MPRModifiableValue(1f), context, MPRModifiableValue.class),
+                    GsonHelper.getAsObject(jObject, "weight", new MPRModifiableValue(1d), context, MPRModifiableValue.class),
                     ResourceLocation.parse(GsonHelper.getAsString(jObject, "location")),
                     MPRCondition.deserializeConditions(jObject, context)
             );

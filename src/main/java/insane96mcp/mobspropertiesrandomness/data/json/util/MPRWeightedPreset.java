@@ -48,14 +48,14 @@ public class MPRWeightedPreset implements IMPRObject, IWeightedRandom {
 
 		if (this.modifiableWeight == null) {
 			Logger.debug("Weight value missing for %s, will default to 1", this);
-			this.modifiableWeight = new MPRModifiableValue(1f);
+			this.modifiableWeight = new MPRModifiableValue(1d);
 		}
-		else if (this.modifiableWeight.getValue() < 1)
+		/*else if (this.modifiableWeight.getValue() < 1)
 			throw new JsonValidationException("Invalid weight for Weighted Preset. Must be > 0. " + this);
 		this.modifiableWeight.validate();
 
 		if (this.chance != null)
-			this.chance.validate();
+			this.chance.validate();*/
 	}
 
 	/**

@@ -40,7 +40,7 @@ public class MPRNBTProperty extends MPRProperty {
             else {
                 switch (this.nbt.type) {
                     case DOUBLE -> {
-                        innerCompoundTag.putDouble(splitPath[i], this.nbt.value.getFloatBetween(living));
+                        innerCompoundTag.putDouble(splitPath[i], this.nbt.value.getDoubleBetween(living));
                         living.load(mobTag);
                         return true;
                     }
@@ -50,7 +50,7 @@ public class MPRNBTProperty extends MPRProperty {
                         return true;
                     }
                     case BOOLEAN -> {
-                        innerCompoundTag.putBoolean(splitPath[i], living.getRandom().nextFloat() < this.nbt.value.getFloatBetween(living));
+                        innerCompoundTag.putBoolean(splitPath[i], living.getRandom().nextFloat() < this.nbt.value.getDoubleBetween(living));
                         living.load(mobTag);
                         return true;
                     }

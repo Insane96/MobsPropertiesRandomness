@@ -40,9 +40,9 @@ public class MPRNBTItemFunction extends MPRItemFunction {
             }
             else {
                 switch (this.nbt.type) {
-                    case DOUBLE -> innerCompoundTag.putDouble(splitPath[i], this.nbt.value.getFloatBetween(living));
+                    case DOUBLE -> innerCompoundTag.putDouble(splitPath[i], this.nbt.value.getDoubleBetween(living));
                     case INTEGER -> innerCompoundTag.putInt(splitPath[i], this.nbt.value.getIntBetween(living));
-                    case BOOLEAN -> innerCompoundTag.putBoolean(splitPath[i], living.getRandom().nextFloat() < this.nbt.value.getFloatBetween(living));
+                    case BOOLEAN -> innerCompoundTag.putBoolean(splitPath[i], living.getRandom().nextFloat() < this.nbt.value.getDoubleBetween(living));
                 }
             }
         }

@@ -51,11 +51,11 @@ public class MPRScalePehkuiProperty extends MPRProperty {
     }
 
     public void actuallyApply(LivingEntity living) {
-        float scale = this.scale.getFloatBetween(living);
+        double scale = this.scale.getDoubleBetween(living);
         for (ResourceLocation scaleType : this.scaleTypes) {
             ScaleType type = ScaleRegistries.SCALE_TYPES.get(scaleType);
             ScaleData scaleData = type.getScaleData(living);
-            this.operation.applyScale(scaleData, scale, living);
+            this.operation.applyScale(scaleData, (float) scale, living);
         }
     }
 

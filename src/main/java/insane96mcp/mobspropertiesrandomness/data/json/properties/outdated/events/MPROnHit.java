@@ -3,7 +3,7 @@ package insane96mcp.mobspropertiesrandomness.data.json.properties.outdated.event
 import com.google.gson.annotations.SerializedName;
 import insane96mcp.insanelib.exception.JsonValidationException;
 import insane96mcp.mobspropertiesrandomness.data.json.util.modifiable.MPRModifiableValue;
-import insane96mcp.mobspropertiesrandomness.data.json.util.modifiable.MPRModifier;
+import insane96mcp.mobspropertiesrandomness.data.json.util.modifiable.MPRModifierLegacy;
 import insane96mcp.mobspropertiesrandomness.data.json.util.modifiable.MPRRange;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.resources.ResourceKey;
@@ -26,10 +26,10 @@ public class MPROnHit extends MPREvent {
 	private transient TagKey<DamageType> _damageTypeTag;
 
 	@SerializedName("damage_amount")
-	public MPRRange damageAmount = new MPRRange(0f, Float.MAX_VALUE);
+	public MPRRange damageAmount = new MPRRange(0d);
 
 	@SerializedName("damage_modifier_operation")
-	public MPRModifier.Operation damageModifierOperation;
+	public MPRModifierLegacy.Operation damageModifierOperation;
 	@SerializedName("damage_modifier")
 	public MPRModifiableValue damageModifier;
 	@SerializedName("set_fire")
@@ -67,13 +67,7 @@ public class MPROnHit extends MPREvent {
 		if (this.damageModifier != null) {
 			if (this.damageModifierOperation == null)
 				throw new JsonValidationException("Missing 'damage_modifier_operation' for OnHit object: %s".formatted(this));
-			else
-				this.damageModifier.validate();
 		}
-		if (this.setFire != null)
-			this.setFire.validate();
-		if (this.setFreeze != null)
-			this.setFreeze.validate();
 	}
 
 	public void apply(LivingEntity entity, LivingEntity other, LivingDamageEvent event, boolean attacked) {
@@ -95,10 +89,10 @@ public class MPROnHit extends MPREvent {
 			return;
 
 		if (this.damageModifier != null) {
-			if (this.damageModifierOperation == MPRModifier.Operation.ADD)
-				event.setAmount(event.getAmount() + this.damageModifier.getValue(entity));
+			if (this.damageModifierOperation == MPRModifierLegacy.Operation.ADD)
+				event.setAmount((float) (event.getAmount() + this.damageModifier.getValue(entity)));
 			else
-				event.setAmount(event.getAmount() * this.damageModifier.getValue(entity));
+				event.setAmount((float) (event.getAmount() * this.damageModifier.getValue(entity)));
 		}
 
 		if (this.healthLeft != null && attacked) {

@@ -32,7 +32,7 @@ public class MPRAttributeModifier {
     }
 
     public AttributeModifier getModifier(LivingEntity living) {
-        return new AttributeModifier(UUID.randomUUID(), this.modifierName, this.amount.getFloatBetween(living), this.operation);
+        return new AttributeModifier(UUID.randomUUID(), this.modifierName, this.amount.getDoubleBetween(living), this.operation);
     }
 
     public static void fixHealth(LivingEntity entity) {
