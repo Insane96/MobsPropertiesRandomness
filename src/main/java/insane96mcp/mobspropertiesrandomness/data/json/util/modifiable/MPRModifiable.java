@@ -4,7 +4,6 @@ import com.google.gson.JsonDeserializationContext;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonSerializationContext;
 import insane96mcp.insanelib.util.MathHelper;
-import insane96mcp.mobspropertiesrandomness.data.json.util.MPRModifier;
 import net.minecraft.world.entity.LivingEntity;
 
 import java.util.ArrayList;

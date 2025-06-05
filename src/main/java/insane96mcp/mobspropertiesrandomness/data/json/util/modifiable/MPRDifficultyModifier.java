@@ -3,7 +3,6 @@ package insane96mcp.mobspropertiesrandomness.data.json.util.modifiable;
 import com.google.gson.*;
 import com.google.gson.annotations.JsonAdapter;
 import insane96mcp.mobspropertiesrandomness.data.json.condition.MPRCondition;
-import insane96mcp.mobspropertiesrandomness.data.json.util.MPRModifier;
 import net.minecraft.util.GsonHelper;
 import net.minecraft.world.Difficulty;
 import net.minecraft.world.entity.LivingEntity;
@@ -31,7 +30,7 @@ public class MPRDifficultyModifier extends MPRModifier {
     @Override
     protected double getModifier(LivingEntity living) {
         Difficulty worldDifficulty = living.level().getDifficulty();
-        double modifier = this.operation == Operation.ADD ? 0d : 1d;
+        double modifier = this.getNoModifier();
         if (worldDifficulty == Difficulty.EASY && this.easy != null)
             modifier = this.easy.getValue(living);
         else if (worldDifficulty == Difficulty.NORMAL && this.normal != null)

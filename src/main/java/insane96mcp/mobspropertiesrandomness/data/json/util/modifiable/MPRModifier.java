@@ -1,11 +1,10 @@
-package insane96mcp.mobspropertiesrandomness.data.json.util;
+package insane96mcp.mobspropertiesrandomness.data.json.util.modifiable;
 
 import com.google.gson.*;
 import com.google.gson.annotations.SerializedName;
 import insane96mcp.mobspropertiesrandomness.MPR;
 import insane96mcp.mobspropertiesrandomness.data.json.condition.MPRCondition;
 import insane96mcp.mobspropertiesrandomness.data.json.condition.MPRConditionable;
-import insane96mcp.mobspropertiesrandomness.data.json.util.modifiable.ModifiersRegistry;
 import insane96mcp.mobspropertiesrandomness.util.Logger;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.GsonHelper;
@@ -30,6 +29,10 @@ public abstract class MPRModifier extends MPRConditionable {
     }
 
     protected abstract double getModifier(LivingEntity living);
+
+    protected double getNoModifier() {
+        return this.operation == Operation.ADD ? 0d : 1d;
+    }
 
     public static Operation deserializeOperation(JsonObject json, JsonDeserializationContext context) {
         return GsonHelper.getAsObject(json, "operation", context, Operation.class);

@@ -3,7 +3,6 @@ package insane96mcp.mobspropertiesrandomness.data.json.util.modifiable;
 import com.google.gson.*;
 import com.google.gson.annotations.JsonAdapter;
 import com.google.gson.annotations.SerializedName;
-import insane96mcp.mobspropertiesrandomness.data.json.util.MPRModifier;
 import net.minecraft.util.GsonHelper;
 import net.minecraft.util.Mth;
 import net.minecraft.world.entity.LivingEntity;

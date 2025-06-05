@@ -3,7 +3,7 @@ package insane96mcp.mobspropertiesrandomness.data.json.properties.outdated.event
 import com.google.gson.annotations.SerializedName;
 import insane96mcp.insanelib.exception.JsonValidationException;
 import insane96mcp.mobspropertiesrandomness.data.json.util.modifiable.MPRModifiableValue;
-import insane96mcp.mobspropertiesrandomness.data.json.util.modifiable.MPRModifierLegacy;
+import insane96mcp.mobspropertiesrandomness.data.json.util.modifiable.MPRModifier;
 import insane96mcp.mobspropertiesrandomness.data.json.util.modifiable.MPRRange;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.resources.ResourceKey;
@@ -29,7 +29,7 @@ public class MPROnHit extends MPREvent {
 	public MPRRange damageAmount = new MPRRange(0d);
 
 	@SerializedName("damage_modifier_operation")
-	public MPRModifierLegacy.Operation damageModifierOperation;
+	public MPRModifier.Operation damageModifierOperation;
 	@SerializedName("damage_modifier")
 	public MPRModifiableValue damageModifier;
 	@SerializedName("set_fire")
@@ -89,7 +89,7 @@ public class MPROnHit extends MPREvent {
 			return;
 
 		if (this.damageModifier != null) {
-			if (this.damageModifierOperation == MPRModifierLegacy.Operation.ADD)
+			if (this.damageModifierOperation == MPRModifier.Operation.ADD)
 				event.setAmount((float) (event.getAmount() + this.damageModifier.getValue(entity)));
 			else
 				event.setAmount((float) (event.getAmount() * this.damageModifier.getValue(entity)));

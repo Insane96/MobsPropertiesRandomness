@@ -1,7 +1,6 @@
 package insane96mcp.mobspropertiesrandomness.data.json.util.modifiable;
 
 import insane96mcp.mobspropertiesrandomness.MPR;
-import insane96mcp.mobspropertiesrandomness.data.json.util.MPRModifier;
 import net.minecraft.resources.ResourceLocation;
 
 import java.util.HashMap;
@@ -31,5 +30,7 @@ public class ModifiersRegistry {
         register("difficulty", MPRDifficultyModifier.class);
         register("condition", MPRConditionModifier.class);
         register("deepness", MPRDeepnessModifier.class);
+        register("time_played", MPRTimePlayedModifier.class);
+        register("distance_from_spawn", MPRDistanceFromSpawnModifier.class);
     }
 }

@@ -15,12 +15,12 @@ import java.util.List;
 
 @JsonAdapter(MPRTimePlayedCondition.Serializer.class)
 public class MPRTimePlayedCondition extends MPRCondition {
-    protected MPRRange timePlayed;
+    protected MPRRange minutesPlayed;
     protected PlayerMode mode;
 
-    public MPRTimePlayedCondition(MPRRange timePlayed, PlayerMode mode, boolean inverted) {
+    public MPRTimePlayedCondition(MPRRange minutesPlayed, PlayerMode mode, boolean inverted) {
         super(inverted);
-        this.timePlayed = timePlayed;
+        this.minutesPlayed = minutesPlayed;
         this.mode = mode;
     }
 
@@ -40,7 +40,8 @@ public class MPRTimePlayedCondition extends MPRCondition {
         }
 
         int ticksPlayed = players.get(0).getStats().getValue(Stats.CUSTOM.get(Stats.PLAY_TIME));
-        return this.timePlayed.isBetween(living, ticksPlayed);
+        double minutesPlayed = ticksPlayed / 20d / 60d;
+        return this.minutesPlayed.isBetween(living, minutesPlayed);
     }
 
     public static class Serializer implements JsonDeserializer<MPRTimePlayedCondition>, JsonSerializer<MPRTimePlayedCondition> {
@@ -51,7 +52,7 @@ public class MPRTimePlayedCondition extends MPRCondition {
             if (jObject.has("player"))
                 playerMode = context.deserialize(jObject.get("player"), PlayerMode.class);
             return new MPRTimePlayedCondition(
-                    GsonHelper.getAsObject(jObject, "ticks_played", context, MPRRange.class),
+                    GsonHelper.getAsObject(jObject, "minutes_played", context, MPRRange.class),
                     playerMode,
                     MPRCondition.deserializeInverted(jObject)
             );
@@ -60,8 +61,8 @@ public class MPRTimePlayedCondition extends MPRCondition {
         @Override
         public JsonElement serialize(MPRTimePlayedCondition src, Type typeOfSrc, JsonSerializationContext context) {
             JsonObject jObject = new JsonObject();
-            jObject.add("ticks_played", context.serialize(src.timePlayed));
-            jObject.add("player", context.serialize(src.timePlayed));
+            jObject.add("minutes_played", context.serialize(src.minutesPlayed));
+            jObject.add("player", context.serialize(src.minutesPlayed));
             return src.endSerialization(jObject);
         }
     }
