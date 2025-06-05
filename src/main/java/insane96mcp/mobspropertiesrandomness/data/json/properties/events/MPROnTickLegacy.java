@@ -1,10 +1,10 @@
-package insane96mcp.mobspropertiesrandomness.data.json.properties.outdated.events;
+package insane96mcp.mobspropertiesrandomness.data.json.properties.events;
 
 import com.google.gson.annotations.SerializedName;
 import insane96mcp.insanelib.exception.JsonValidationException;
 import net.minecraft.world.entity.LivingEntity;
 
-public class MPROnTick extends MPREvent {
+public class MPROnTickLegacy extends MPREventLegacy {
 
     @SerializedName("update_speed")
     public Integer updateSpeed;

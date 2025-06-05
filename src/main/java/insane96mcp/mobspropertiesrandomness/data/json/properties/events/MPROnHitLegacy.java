@@ -1,4 +1,4 @@
-package insane96mcp.mobspropertiesrandomness.data.json.properties.outdated.events;
+package insane96mcp.mobspropertiesrandomness.data.json.properties.events;
 
 import com.google.gson.annotations.SerializedName;
 import insane96mcp.insanelib.exception.JsonValidationException;
@@ -13,7 +13,7 @@ import net.minecraft.world.damagesource.DamageType;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraftforge.event.entity.living.LivingDamageEvent;
 
-public class MPROnHit extends MPREvent {
+public class MPROnHitLegacy extends MPREventLegacy {
 
 	//@SerializedName("potion_effects")
 	//public List<MPRPotionEffect> potionEffects;

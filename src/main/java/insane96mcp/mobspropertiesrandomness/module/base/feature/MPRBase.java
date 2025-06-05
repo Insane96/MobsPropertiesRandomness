@@ -14,10 +14,10 @@ import insane96mcp.mobspropertiesrandomness.data.json.MPRPresetLegacy;
 import insane96mcp.mobspropertiesrandomness.data.json.properties.MPRBossBarProperty;
 import insane96mcp.mobspropertiesrandomness.data.json.properties.MPREffectImmunityProperty;
 import insane96mcp.mobspropertiesrandomness.data.json.properties.MPRScalePehkuiProperty;
-import insane96mcp.mobspropertiesrandomness.data.json.properties.outdated.events.MPREvents;
-import insane96mcp.mobspropertiesrandomness.data.json.properties.outdated.events.MPROnDeath;
-import insane96mcp.mobspropertiesrandomness.data.json.properties.outdated.events.MPROnHit;
-import insane96mcp.mobspropertiesrandomness.data.json.properties.outdated.events.MPROnTick;
+import insane96mcp.mobspropertiesrandomness.data.json.properties.events.MPREvents;
+import insane96mcp.mobspropertiesrandomness.data.json.properties.events.MPROnDeathLegacy;
+import insane96mcp.mobspropertiesrandomness.data.json.properties.events.MPROnHitLegacy;
+import insane96mcp.mobspropertiesrandomness.data.json.properties.events.MPROnTickLegacy;
 import insane96mcp.mobspropertiesrandomness.util.Logger;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.resources.ResourceLocation;
@@ -91,7 +91,7 @@ public class MPRBase extends Feature {
 		onAttacked(event);
 	}
 
-	public static final java.lang.reflect.Type MPR_ON_DEATH_LIST_TYPE = new TypeToken<ArrayList<MPROnDeath>>(){}.getType();
+	public static final java.lang.reflect.Type MPR_ON_DEATH_LIST_TYPE = new TypeToken<ArrayList<MPROnDeathLegacy>>(){}.getType();
 	@SubscribeEvent
 	public void onLivingDeath(LivingDeathEvent event) {
 		onDeathEvent(event);
@@ -108,7 +108,7 @@ public class MPRBase extends Feature {
 			event.setResult(Event.Result.DENY);
 	}
 
-	public static final java.lang.reflect.Type MPR_ON_TICK_LIST_TYPE = new TypeToken<ArrayList<MPROnTick>>(){}.getType();
+	public static final java.lang.reflect.Type MPR_ON_TICK_LIST_TYPE = new TypeToken<ArrayList<MPROnTickLegacy>>(){}.getType();
 	@SubscribeEvent
 	public void onLivingTick(LivingEvent.LivingTickEvent event) {
 		if (event.getEntity().level().isClientSide)
@@ -130,11 +130,11 @@ public class MPRBase extends Feature {
 			return;
 
 		LivingEntity attacker = (LivingEntity) event.getSource().getEntity();
-		List<MPROnDeath> onDeaths = new Gson().fromJson(compoundTag.getString(MPREvents.ON_DEATH), MPR_ON_DEATH_LIST_TYPE);
+		List<MPROnDeathLegacy> onDeaths = new Gson().fromJson(compoundTag.getString(MPREvents.ON_DEATH), MPR_ON_DEATH_LIST_TYPE);
 		if (onDeaths == null)
 			return;
 
-		for (MPROnDeath onDeath : onDeaths) {
+		for (MPROnDeathLegacy onDeath : onDeaths) {
 			//Does it impact performance?
 			try {
 				onDeath.validate();
@@ -158,11 +158,11 @@ public class MPRBase extends Feature {
 		if (!persistentData.contains(MPREvents.ON_TICK))
 			return;
 
-		List<MPROnTick> onTicks = new Gson().fromJson(persistentData.getString(MPREvents.ON_TICK), MPR_ON_TICK_LIST_TYPE);
+		List<MPROnTickLegacy> onTicks = new Gson().fromJson(persistentData.getString(MPREvents.ON_TICK), MPR_ON_TICK_LIST_TYPE);
 		if (onTicks == null)
 			return;
 
-		for (MPROnTick onTick : onTicks) {
+		for (MPROnTickLegacy onTick : onTicks) {
 			//Does it impact performance?
 			try {
 				onTick.validate();
@@ -175,17 +175,17 @@ public class MPRBase extends Feature {
 		}
 	}
 
-	public static final java.lang.reflect.Type MPR_ON_HIT_LIST_TYPE = new TypeToken<ArrayList<MPROnHit>>(){}.getType();
+	public static final java.lang.reflect.Type MPR_ON_HIT_LIST_TYPE = new TypeToken<ArrayList<MPROnHitLegacy>>(){}.getType();
 	private void onAttack(LivingDamageEvent event) {
 		if (!(event.getSource().getEntity() instanceof LivingEntity attacker)
 				|| !attacker.getPersistentData().contains(MPREvents.ON_ATTACK))
 			return;
 
-		List<MPROnHit> onHitEffects = new Gson().fromJson(attacker.getPersistentData().getString(MPREvents.ON_ATTACK), MPR_ON_HIT_LIST_TYPE);
+		List<MPROnHitLegacy> onHitEffects = new Gson().fromJson(attacker.getPersistentData().getString(MPREvents.ON_ATTACK), MPR_ON_HIT_LIST_TYPE);
 		if (onHitEffects == null)
 			return;
 
-		for (MPROnHit mprOnHit : onHitEffects) {
+		for (MPROnHitLegacy mprOnHit : onHitEffects) {
 			//Does it impact performance?
 			try {
 				mprOnHit.validate();
@@ -202,11 +202,11 @@ public class MPRBase extends Feature {
 		if (!attacked.getPersistentData().contains(MPREvents.ON_DAMAGED))
 			return;
 
-		List<MPROnHit> onHitEffects = new Gson().fromJson(attacked.getPersistentData().getString(MPREvents.ON_DAMAGED), MPR_ON_HIT_LIST_TYPE);
+		List<MPROnHitLegacy> onHitEffects = new Gson().fromJson(attacked.getPersistentData().getString(MPREvents.ON_DAMAGED), MPR_ON_HIT_LIST_TYPE);
 		if (onHitEffects == null)
 			return;
 
-		for (MPROnHit mprOnHit : onHitEffects) {
+		for (MPROnHitLegacy mprOnHit : onHitEffects) {
 			//Does it impact performance?
 			try {
 				mprOnHit.validate();

@@ -1,4 +1,4 @@
-package insane96mcp.mobspropertiesrandomness.data.json.properties.outdated.events;
+package insane96mcp.mobspropertiesrandomness.data.json.properties.events;
 
 import com.google.gson.annotations.SerializedName;
 import insane96mcp.insanelib.exception.JsonValidationException;
@@ -11,7 +11,7 @@ import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.phys.Vec3;
 
-public abstract class MPREvent implements IMPRObject {
+public abstract class MPREventLegacy implements IMPRObject {
 
     public Target target;
     public MPRModifiableValue chance;

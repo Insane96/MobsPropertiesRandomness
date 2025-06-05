@@ -1,4 +1,4 @@
-package insane96mcp.mobspropertiesrandomness.data.json.properties.outdated.events;
+package insane96mcp.mobspropertiesrandomness.data.json.properties.events;
 
 import com.google.gson.Gson;
 import com.google.gson.annotations.SerializedName;
@@ -16,33 +16,33 @@ public class MPREvents implements IMPRObject {
 	public static final String ON_DEATH = MPR.RESOURCE_PREFIX + "on_death";
 	public static final String ON_TICK = MPR.RESOURCE_PREFIX + "on_tick";
 	@SerializedName("on_attack")
-	public List<MPROnHit> onAttack;
+	public List<MPROnHitLegacy> onAttack;
 
 	@SerializedName("on_damaged")
-	public List<MPROnHit> onDamaged;
+	public List<MPROnHitLegacy> onDamaged;
 
 	@SerializedName("on_death")
-	public List<MPROnDeath> onDeath;
+	public List<MPROnDeathLegacy> onDeath;
 
 	@SerializedName("on_tick")
-	public List<MPROnTick> onTick;
+	public List<MPROnTickLegacy> onTick;
 
 	@Override
 	public void validate() throws JsonValidationException {
 		if (this.onAttack != null)
-			for (MPROnHit onHit : this.onAttack)
+			for (MPROnHitLegacy onHit : this.onAttack)
 				onHit.validate();
 
 		if (this.onDamaged != null)
-			for (MPROnHit onHit : this.onDamaged)
+			for (MPROnHitLegacy onHit : this.onDamaged)
 				onHit.validate();
 
 		if (this.onDeath != null)
-			for (MPROnDeath onDeath : this.onDeath)
+			for (MPROnDeathLegacy onDeath : this.onDeath)
 				onDeath.validate();
 
 		if (this.onTick != null)
-			for (MPROnTick onTick : this.onTick)
+			for (MPROnTickLegacy onTick : this.onTick)
 				onTick.validate();
 	}
 

@@ -1,4 +1,4 @@
-package insane96mcp.mobspropertiesrandomness.data.json.properties.outdated.events;
+package insane96mcp.mobspropertiesrandomness.data.json.properties.events;
 
 import com.google.gson.annotations.SerializedName;
 import insane96mcp.insanelib.exception.JsonValidationException;
@@ -7,7 +7,7 @@ import net.minecraft.world.entity.LivingEntity;
 
 import javax.annotation.Nullable;
 
-public class MPROnDeath extends MPREvent {
+public class MPROnDeathLegacy extends MPREventLegacy {
 	@SerializedName("damage_type")
 	public DirectIndirect directIndirect;
 	@SerializedName("set_fire")

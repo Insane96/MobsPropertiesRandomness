@@ -2,7 +2,7 @@ package insane96mcp.mobspropertiesrandomness.data.json;
 
 import com.google.gson.annotations.SerializedName;
 import insane96mcp.insanelib.exception.JsonValidationException;
-import insane96mcp.mobspropertiesrandomness.data.json.properties.outdated.events.MPREvents;
+import insane96mcp.mobspropertiesrandomness.data.json.properties.events.MPREvents;
 import net.minecraft.world.entity.LivingEntity;
 
 public abstract class MPRPropertiesLegacy implements IMPRObject {
