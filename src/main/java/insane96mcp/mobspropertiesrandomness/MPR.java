@@ -7,6 +7,7 @@ import insane96mcp.mobspropertiesrandomness.data.MPRPresetReloadListener;
 import insane96mcp.mobspropertiesrandomness.data.json.condition.ConditionsRegistry;
 import insane96mcp.mobspropertiesrandomness.data.json.properties.PropertiesRegistry;
 import insane96mcp.mobspropertiesrandomness.data.json.properties.equipment.ItemFunctionsRegistry;
+import insane96mcp.mobspropertiesrandomness.data.json.properties.events.EventsRegistry;
 import insane96mcp.mobspropertiesrandomness.data.json.util.modifiable.ModifiersRegistry;
 import insane96mcp.mobspropertiesrandomness.data.serializer.*;
 import insane96mcp.mobspropertiesrandomness.setup.Config;
@@ -41,6 +42,7 @@ public class MPR
         PropertiesRegistry.init();
         ItemFunctionsRegistry.init();
         ModifiersRegistry.init();
+        EventsRegistry.init();
     }
 
     @SubscribeEvent(priority = EventPriority.LOW)
