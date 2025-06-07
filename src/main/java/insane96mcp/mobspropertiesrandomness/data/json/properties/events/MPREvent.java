@@ -5,6 +5,8 @@ import insane96mcp.insanelib.util.ModNBTData;
 import insane96mcp.mobspropertiesrandomness.MPR;
 import insane96mcp.mobspropertiesrandomness.data.json.condition.MPRCondition;
 import insane96mcp.mobspropertiesrandomness.data.json.condition.MPRConditionable;
+import insane96mcp.mobspropertiesrandomness.data.json.properties.MPRProperty;
+import insane96mcp.mobspropertiesrandomness.data.json.properties.MPRScalePehkuiProperty;
 import insane96mcp.mobspropertiesrandomness.util.Logger;
 import net.minecraft.commands.CommandFunction;
 import net.minecraft.nbt.CompoundTag;
@@ -23,7 +25,6 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
-//Inherith directly from MPRProperty
 public abstract class MPREvent extends MPRConditionable {
     public static final HashMap<ResourceLocation, MPREvent> LOADED_EVENTS = new HashMap<>();
 
@@ -31,12 +32,15 @@ public abstract class MPREvent extends MPRConditionable {
     public Target target;
     @Nullable
     public CommandFunction.CacheableFunction function;
+    @Nullable
+    public MPRProperty applyProperty;
 
-    public MPREvent(ResourceLocation id, Target target, @Nullable CommandFunction.CacheableFunction function, List<MPRCondition> conditions) {
+    public MPREvent(ResourceLocation id, Target target, @Nullable CommandFunction.CacheableFunction function, @Nullable MPRProperty applyProperty, List<MPRCondition> conditions) {
         super(conditions);
         this.id = id;
         this.target = target;
         this.function = function;
+        this.applyProperty = applyProperty;
     }
 
     public boolean apply(LivingEntity living) {
@@ -57,7 +61,7 @@ public abstract class MPREvent extends MPRConditionable {
     protected void executeFor(LivingEntity living) {
         tryPlaySound(living);
         tryExecuteFunction(living);
-        tryApplyPehkuiScale(living);
+        tryApplyProperty(living);
     }
 
     protected void tryPlaySound(LivingEntity entity) {
@@ -76,13 +80,12 @@ public abstract class MPREvent extends MPRConditionable {
                 server.getFunctions().execute(commandFunction, server.getFunctions().getGameLoopSender().withPosition(new Vec3(entity.getX(), entity.getY(), entity.getZ())).withLevel((ServerLevel) entity.level()).withEntity(entity)));
     }
 
-    public void tryApplyPehkuiScale(LivingEntity entity) {
-        //if (this.scalePehkui == null)
-        //    return;
-//
-        //for (MPRScalePehkui scalePehkui1 : this.scalePehkui) {
-        //    scalePehkui1.apply(entity);
-        //}
+    public void tryApplyProperty(LivingEntity entity) {
+        if (this.applyProperty == null)
+            return;
+
+        this.applyProperty.tryApply(entity);
+        MPRScalePehkuiProperty.applyScheduled(entity);
     }
 
     public static List<MPREvent> getEvents(LivingEntity living, String typeId) {
@@ -99,9 +102,19 @@ public abstract class MPREvent extends MPRConditionable {
 
     public abstract String typeId();
 
+    @Nullable
     public static CommandFunction.CacheableFunction deserializeFunction(JsonObject jObject) {
+        if (!jObject.has("function"))
+            return null;
         String functionId = GsonHelper.getAsString(jObject, "function");
         return new CommandFunction.CacheableFunction(ResourceLocation.parse(functionId));
+    }
+
+    @Nullable
+    public static MPRProperty deserializeProperty(JsonObject jObject, JsonDeserializationContext context) {
+        if (!jObject.has("apply_property"))
+            return null;
+        return MPRProperty.deserialize(jObject.get("apply_property"), context);
     }
 
     public JsonObject endSerialization(JsonObject jObject, JsonSerializationContext context, boolean includeTarget) {

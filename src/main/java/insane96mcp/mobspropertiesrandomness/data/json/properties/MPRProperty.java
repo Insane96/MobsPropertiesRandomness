@@ -11,6 +11,7 @@ import insane96mcp.mobspropertiesrandomness.util.Logger;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.GsonHelper;
 import net.minecraft.world.entity.LivingEntity;
+import org.jetbrains.annotations.Nullable;
 
 import java.lang.reflect.Type;
 import java.util.ArrayList;
@@ -29,6 +30,18 @@ public abstract class MPRProperty extends MPRConditionable {
 
     protected abstract boolean apply(LivingEntity living);
 
+    @Nullable
+    public static MPRProperty deserialize(JsonElement element, JsonDeserializationContext context) {
+        JsonObject jObjectProperty = element.getAsJsonObject();
+        ResourceLocation propertyId = MPR.locationFrom(GsonHelper.getAsString(jObjectProperty, "property"));
+        Type propertyType = PropertiesRegistry.get(propertyId);
+        if (propertyType == null) {
+            Logger.warn("property %s does not exist. Skipping".formatted(propertyId));
+            return null;
+        }
+        return context.deserialize(jObjectProperty, propertyType);
+    }
+
     public static List<MPRProperty> deserializeList(JsonObject jObject, String memberName, JsonDeserializationContext context) {
         List<MPRProperty> properties = new ArrayList<>();
         if (!jObject.has(memberName))
@@ -42,6 +55,9 @@ public abstract class MPRProperty extends MPRConditionable {
                 Logger.warn("property %s does not exist. Skipping".formatted(propertyId));
                 continue;
             }
+            MPRProperty property = deserialize(jsonElement, context);
+            if (property == null)
+                continue;
             properties.add(context.deserialize(jObjectProperty, propertyType));
         }
         return properties;

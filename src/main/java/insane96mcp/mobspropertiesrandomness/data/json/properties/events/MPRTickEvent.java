@@ -3,6 +3,7 @@ package insane96mcp.mobspropertiesrandomness.data.json.properties.events;
 import com.google.gson.*;
 import com.google.gson.annotations.JsonAdapter;
 import insane96mcp.mobspropertiesrandomness.data.json.condition.MPRCondition;
+import insane96mcp.mobspropertiesrandomness.data.json.properties.MPRProperty;
 import net.minecraft.commands.CommandFunction;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.GsonHelper;
@@ -17,8 +18,8 @@ public class MPRTickEvent extends MPREvent {
 	//TODO Random update interval
 	public int updateInterval;
 
-	public MPRTickEvent(int updateInterval, ResourceLocation id, Target target, @Nullable CommandFunction.CacheableFunction function, List<MPRCondition> conditions) {
-		super(id, target, function, conditions);
+	public MPRTickEvent(int updateInterval, ResourceLocation id, Target target, @Nullable CommandFunction.CacheableFunction function, @Nullable MPRProperty property, List<MPRCondition> conditions) {
+		super(id, target, function, property, conditions);
 		this.updateInterval = updateInterval;
 	}
 
@@ -47,8 +48,9 @@ public class MPRTickEvent extends MPREvent {
 			//Target target = GsonHelper.getAsObject(jObject, "target", context, Target.class);
 			CommandFunction.CacheableFunction function = deserializeFunction(jObject);
 			List<MPRCondition> conditions = MPRCondition.deserializeConditions(jObject, context);
+			MPRProperty property = MPREvent.deserializeProperty(jObject, context);
 
-			return new MPRTickEvent(GsonHelper.getAsInt(jObject, "update_interval", 20), ResourceLocation.parse(id), Target.THIS, function, conditions);
+			return new MPRTickEvent(GsonHelper.getAsInt(jObject, "update_interval", 20), ResourceLocation.parse(id), Target.THIS, function, property, conditions);
 		}
 
 		@Override
