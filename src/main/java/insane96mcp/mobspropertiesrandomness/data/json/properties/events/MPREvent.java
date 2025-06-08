@@ -61,15 +61,8 @@ public abstract class MPREvent extends MPRConditionable {
     }
 
     protected void executeFor(LivingEntity living) {
-        tryPlaySound(living);
         tryExecuteFunction(living);
         tryApplyProperty(living);
-    }
-
-    protected void tryPlaySound(LivingEntity entity) {
-        /*if (this.playSound == null)
-            return;
-        this.playSound.playSound(this.target, entity);*/
     }
 
     protected void tryExecuteFunction(LivingEntity entity) {

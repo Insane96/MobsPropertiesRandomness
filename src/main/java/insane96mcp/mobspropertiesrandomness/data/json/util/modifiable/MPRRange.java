@@ -18,6 +18,9 @@ public class MPRRange extends MPRModifiableValue {
 	@SerializedName("modifiers_behaviour")
 	private ModifiersBehaviour modifiersBehaviour;
 
+	public static final MPRRange ZERO = new MPRRange(0d);
+	public static final MPRRange ONE = new MPRRange(1d);
+
 	public MPRRange(Double value) {
 		this(value, null, null, List.of(), null);
 	}

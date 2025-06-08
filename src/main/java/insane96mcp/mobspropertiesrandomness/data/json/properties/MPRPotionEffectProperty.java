@@ -51,7 +51,7 @@ public class MPRPotionEffectProperty extends MPRProperty {
             if (jObject.has("amplifier"))
                 amplifier = context.deserialize(jObject.get("amplifier"), MPRRange.class);
             else
-                amplifier = new MPRRange(0d);
+                amplifier = MPRRange.ZERO;
 
             MPRRange duration;
             if (jObject.has("duration"))
