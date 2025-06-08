@@ -30,7 +30,7 @@ public class MPRTickEvent extends MPREvent {
 			return;
 		if (entity.tickCount % updateInterval != 0)
 			return;
-		this.executeFor(entity);
+		this.execute(entity, entity);
 	}
 
 	public static void tickEvents(LivingEntity entity) {

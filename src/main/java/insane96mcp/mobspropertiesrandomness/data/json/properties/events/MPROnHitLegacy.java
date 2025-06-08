@@ -15,7 +15,7 @@ import net.minecraftforge.event.entity.living.LivingDamageEvent;
 
 public class MPROnHitLegacy extends MPREventLegacy {
 	@SerializedName("direct_indirect")
-	public DirectIndirect directIndirect;
+	public MPRHurtData.DirectIndirect directIndirect;
 	@SerializedName("damage_type")
 	public String damageType;
 	private transient ResourceKey<DamageType> _damageType;
@@ -65,7 +65,7 @@ public class MPROnHitLegacy extends MPREventLegacy {
 
 		boolean isDirectDamage = event.getSource().getDirectEntity() == event.getSource().getEntity();
 		if (this.directIndirect != null
-				&& ((isDirectDamage && this.directIndirect == DirectIndirect.INDIRECT) || (!isDirectDamage && this.directIndirect == DirectIndirect.DIRECT)))
+				&& ((isDirectDamage && this.directIndirect == MPRHurtData.DirectIndirect.INDIRECT) || (!isDirectDamage && this.directIndirect == MPRHurtData.DirectIndirect.DIRECT)))
 			return;
 
 		if ((this._damageType != null && !event.getSource().is(this._damageType))

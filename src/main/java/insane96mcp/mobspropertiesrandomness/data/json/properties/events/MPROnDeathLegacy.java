@@ -8,7 +8,7 @@ import javax.annotation.Nullable;
 
 public class MPROnDeathLegacy extends MPREventLegacy {
 	@SerializedName("damage_type")
-	public DirectIndirect directIndirect;
+	public MPRHurtData.DirectIndirect directIndirect;
 
 	@Override
 	public void validate() throws JsonValidationException {
@@ -21,7 +21,7 @@ public class MPROnDeathLegacy extends MPREventLegacy {
 		if (!super.shouldApply(entity))
 			return;
 
-		if (this.directIndirect != null && ((isDirectDamage && this.directIndirect == DirectIndirect.INDIRECT) || (!isDirectDamage && this.directIndirect == DirectIndirect.DIRECT)))
+		if (this.directIndirect != null && ((isDirectDamage && this.directIndirect == MPRHurtData.DirectIndirect.INDIRECT) || (!isDirectDamage && this.directIndirect == MPRHurtData.DirectIndirect.DIRECT)))
 			return;
 
 		LivingEntity target = this.target == Target.THIS ? entity : other;

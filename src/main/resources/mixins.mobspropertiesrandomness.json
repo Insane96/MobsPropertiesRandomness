@@ -9,8 +9,7 @@
     "mixins": [
         "CreeperEntityMixin",
         "LivingEntityMixin",
-        "MobMixin",
-        "PlayerMixin"
+        "MobMixin"
     ],
     "minVersion": "0.8"
 }

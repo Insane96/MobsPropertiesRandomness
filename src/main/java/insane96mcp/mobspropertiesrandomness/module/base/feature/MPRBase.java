@@ -14,10 +14,7 @@ import insane96mcp.mobspropertiesrandomness.data.json.MPRPresetLegacy;
 import insane96mcp.mobspropertiesrandomness.data.json.properties.MPRBossBarProperty;
 import insane96mcp.mobspropertiesrandomness.data.json.properties.MPREffectImmunityProperty;
 import insane96mcp.mobspropertiesrandomness.data.json.properties.MPRScalePehkuiProperty;
-import insane96mcp.mobspropertiesrandomness.data.json.properties.events.MPREvents;
-import insane96mcp.mobspropertiesrandomness.data.json.properties.events.MPROnDeathLegacy;
-import insane96mcp.mobspropertiesrandomness.data.json.properties.events.MPROnHitLegacy;
-import insane96mcp.mobspropertiesrandomness.data.json.properties.events.MPRTickEvent;
+import insane96mcp.mobspropertiesrandomness.data.json.properties.events.*;
 import insane96mcp.mobspropertiesrandomness.util.Logger;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.resources.ResourceLocation;
@@ -100,6 +97,7 @@ public class MPRBase extends Feature {
 	@SubscribeEvent
 	public void onLivingDeath(LivingDeathEvent event) {
 		onDeathEvent(event);
+		MPRDeathEvent.onDeath(event);
 	}
 
 	@SubscribeEvent

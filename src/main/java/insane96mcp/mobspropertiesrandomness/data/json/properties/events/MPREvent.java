@@ -54,10 +54,13 @@ public abstract class MPREvent extends MPRConditionable {
         return true;
     }
 
-    protected void execute(LivingEntity living, LivingEntity other) {
+    protected void execute(LivingEntity living, @Nullable LivingEntity other) {
         if (!MPRCondition.conditionsApply(this.conditions, living))
             return;
-        executeFor(this.target == Target.THIS ? living : other);
+        LivingEntity target = this.target == Target.THIS ? living : other;
+        if (target == null)
+            return;
+        executeFor(target);
     }
 
     protected void executeFor(LivingEntity living) {
