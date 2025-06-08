@@ -21,6 +21,7 @@ import insane96mcp.mobspropertiesrandomness.data.json.properties.events.MPRTickE
 import insane96mcp.mobspropertiesrandomness.util.Logger;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraftforge.event.entity.EntityJoinLevelEvent;
 import net.minecraftforge.event.entity.EntityLeaveLevelEvent;
@@ -54,6 +55,10 @@ public class MPRBase extends Feature {
 
 	public MPRBase(Module module, boolean enabledByDefault, boolean canBeDisabled) {
 		super(module, enabledByDefault, canBeDisabled);
+	}
+
+	public static void postActualHurt(LivingEntity living, DamageSource source, float amount) {
+
 	}
 
 	@SubscribeEvent(priority = EventPriority.LOW)

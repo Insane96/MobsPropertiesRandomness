@@ -14,10 +14,6 @@ import net.minecraft.world.entity.LivingEntity;
 import net.minecraftforge.event.entity.living.LivingDamageEvent;
 
 public class MPROnHitLegacy extends MPREventLegacy {
-
-	//@SerializedName("potion_effects")
-	//public List<MPRPotionEffect> potionEffects;
-
 	@SerializedName("direct_indirect")
 	public DirectIndirect directIndirect;
 	@SerializedName("damage_type")
@@ -32,14 +28,6 @@ public class MPROnHitLegacy extends MPREventLegacy {
 	public MPRModifier.Operation damageModifierOperation;
 	@SerializedName("damage_modifier")
 	public MPRModifiableValue damageModifier;
-	@SerializedName("set_fire")
-	public MPRRange setFire;
-	@SerializedName("additive_fire")
-	public boolean additiveFire;
-	@SerializedName("set_freeze")
-	public MPRRange setFreeze;
-	@SerializedName("additive_freeze")
-	public boolean additiveFreeze;
 	@SerializedName("health_left")
 	public MPRRange healthLeft;
 
@@ -104,22 +92,6 @@ public class MPROnHitLegacy extends MPREventLegacy {
 		LivingEntity target = this.target == Target.THIS ? entity : other;
 		if (target == null)
 			return;
-		//if (this.potionEffects != null) {
-		//	for (MPRPotionEffect potionEffect : this.potionEffects) {
-		//		potionEffect.apply(target);
-		//	}
-		//}
-		if (this.setFire != null)
-			if (!this.additiveFire)
-				target.setSecondsOnFire(this.setFire.getIntBetween(target));
-			else
-				target.setSecondsOnFire(target.getRemainingFireTicks() / 20 + this.setFire.getIntBetween(target));
-		if (this.setFreeze != null) {
-			if (!this.additiveFreeze)
-				target.setTicksFrozen(this.setFreeze.getIntBetween(target) * 20);
-			else
-				target.setTicksFrozen(target.getTicksFrozen() + this.setFreeze.getIntBetween(target) * 20);
-		}
 		this.tryApply(target);
 	}
 }

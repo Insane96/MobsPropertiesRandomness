@@ -2,7 +2,6 @@ package insane96mcp.mobspropertiesrandomness.data.json.properties.events;
 
 import com.google.gson.annotations.SerializedName;
 import insane96mcp.insanelib.exception.JsonValidationException;
-import insane96mcp.mobspropertiesrandomness.data.json.util.modifiable.MPRRange;
 import net.minecraft.world.entity.LivingEntity;
 
 import javax.annotation.Nullable;
@@ -10,10 +9,6 @@ import javax.annotation.Nullable;
 public class MPROnDeathLegacy extends MPREventLegacy {
 	@SerializedName("damage_type")
 	public DirectIndirect directIndirect;
-	@SerializedName("set_freeze")
-	public MPRRange setFreeze;
-	@SerializedName("additive_freeze")
-	public boolean additiveFreeze;
 
 	@Override
 	public void validate() throws JsonValidationException {
@@ -32,12 +27,6 @@ public class MPROnDeathLegacy extends MPREventLegacy {
 		LivingEntity target = this.target == Target.THIS ? entity : other;
 		if (target == null)
 			return;
-		if (this.target == Target.OTHER && this.setFreeze != null) {
-			if (!this.additiveFreeze)
-				target.setTicksFrozen(this.setFreeze.getIntBetween(target));
-			else
-				target.setTicksFrozen(target.getTicksFrozen() + this.setFreeze.getIntBetween(target));
-		}
 		this.tryApply(target);
 	}
 
