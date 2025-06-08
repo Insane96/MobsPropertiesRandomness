@@ -14,7 +14,10 @@ import insane96mcp.mobspropertiesrandomness.data.json.MPRPresetLegacy;
 import insane96mcp.mobspropertiesrandomness.data.json.properties.MPRBossBarProperty;
 import insane96mcp.mobspropertiesrandomness.data.json.properties.MPREffectImmunityProperty;
 import insane96mcp.mobspropertiesrandomness.data.json.properties.MPRScalePehkuiProperty;
-import insane96mcp.mobspropertiesrandomness.data.json.properties.events.*;
+import insane96mcp.mobspropertiesrandomness.data.json.properties.events.MPRDeathEvent;
+import insane96mcp.mobspropertiesrandomness.data.json.properties.events.MPREvents;
+import insane96mcp.mobspropertiesrandomness.data.json.properties.events.MPROnHitLegacy;
+import insane96mcp.mobspropertiesrandomness.data.json.properties.events.MPRTickEvent;
 import insane96mcp.mobspropertiesrandomness.util.Logger;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.resources.ResourceLocation;
@@ -93,10 +96,8 @@ public class MPRBase extends Feature {
 		onAttacked(event);
 	}
 
-	public static final java.lang.reflect.Type MPR_ON_DEATH_LIST_TYPE = new TypeToken<ArrayList<MPROnDeathLegacy>>(){}.getType();
 	@SubscribeEvent
 	public void onLivingDeath(LivingDeathEvent event) {
-		onDeathEvent(event);
 		MPRDeathEvent.onDeath(event);
 	}
 
@@ -124,28 +125,6 @@ public class MPRBase extends Feature {
 	public void tryApplyPehkui(LivingEntity entity) {
 		if (entity.tickCount == 1)
 			MPRScalePehkuiProperty.applyScheduled(entity);
-	}
-
-	public void onDeathEvent(LivingDeathEvent event) {
-		CompoundTag compoundTag = event.getEntity().getPersistentData();
-        if (!compoundTag.contains(MPREvents.ON_DEATH))
-			return;
-
-		LivingEntity attacker = (LivingEntity) event.getSource().getEntity();
-		List<MPROnDeathLegacy> onDeaths = new Gson().fromJson(compoundTag.getString(MPREvents.ON_DEATH), MPR_ON_DEATH_LIST_TYPE);
-		if (onDeaths == null)
-			return;
-
-		for (MPROnDeathLegacy onDeath : onDeaths) {
-			//Does it impact performance?
-			try {
-				onDeath.validate();
-			} catch (JsonValidationException e) {
-				Logger.error("Failed to validate MPROnDeath: " + e);
-				continue;
-			}
-			onDeath.apply(event.getEntity(), attacker, event.getSource().getDirectEntity() == event.getSource().getEntity());
-		}
 	}
 
 	@SubscribeEvent

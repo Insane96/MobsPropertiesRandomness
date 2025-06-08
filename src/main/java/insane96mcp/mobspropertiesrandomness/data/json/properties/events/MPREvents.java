@@ -13,16 +13,12 @@ public class MPREvents implements IMPRObject {
 
 	public static final String ON_ATTACK = MPR.RESOURCE_PREFIX + "on_attack";
 	public static final String ON_DAMAGED = MPR.RESOURCE_PREFIX + "on_damaged";
-	public static final String ON_DEATH = MPR.RESOURCE_PREFIX + "on_death";
 
 	@SerializedName("on_attack")
 	public List<MPROnHitLegacy> onAttack;
 
 	@SerializedName("on_damaged")
 	public List<MPROnHitLegacy> onDamaged;
-
-	@SerializedName("on_death")
-	public List<MPROnDeathLegacy> onDeath;
 
 	@Override
 	public void validate() throws JsonValidationException {
@@ -33,10 +29,6 @@ public class MPREvents implements IMPRObject {
 		if (this.onDamaged != null)
 			for (MPROnHitLegacy onHit : this.onDamaged)
 				onHit.validate();
-
-		if (this.onDeath != null)
-			for (MPROnDeathLegacy onDeath : this.onDeath)
-				onDeath.validate();
 	}
 
 	public void addToNBT(LivingEntity entity) {
@@ -44,7 +36,5 @@ public class MPREvents implements IMPRObject {
 			entity.getPersistentData().putString(ON_ATTACK, new Gson().toJson(this.onAttack));
 		if (this.onDamaged != null)
 			entity.getPersistentData().putString(ON_DAMAGED, new Gson().toJson(this.onDamaged));
-		if (this.onDeath != null)
-			entity.getPersistentData().putString(ON_DEATH, new Gson().toJson(this.onDeath));
 	}
 }
