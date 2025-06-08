@@ -10,10 +10,6 @@ import javax.annotation.Nullable;
 public class MPROnDeathLegacy extends MPREventLegacy {
 	@SerializedName("damage_type")
 	public DirectIndirect directIndirect;
-	@SerializedName("set_fire")
-	public MPRRange setFire;
-	@SerializedName("additive_fire")
-	public boolean additiveFire;
 	@SerializedName("set_freeze")
 	public MPRRange setFreeze;
 	@SerializedName("additive_freeze")
@@ -36,11 +32,6 @@ public class MPROnDeathLegacy extends MPREventLegacy {
 		LivingEntity target = this.target == Target.THIS ? entity : other;
 		if (target == null)
 			return;
-		if (this.target == Target.OTHER && this.setFire != null)
-			if (!this.additiveFire)
-				target.setSecondsOnFire(this.setFire.getIntBetween(target));
-			else
-				target.setSecondsOnFire(target.getRemainingFireTicks() / 20 + this.setFire.getIntBetween(target));
 		if (this.target == Target.OTHER && this.setFreeze != null) {
 			if (!this.additiveFreeze)
 				target.setTicksFrozen(this.setFreeze.getIntBetween(target));

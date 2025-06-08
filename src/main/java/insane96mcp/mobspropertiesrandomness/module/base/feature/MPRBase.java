@@ -14,7 +14,10 @@ import insane96mcp.mobspropertiesrandomness.data.json.MPRPresetLegacy;
 import insane96mcp.mobspropertiesrandomness.data.json.properties.MPRBossBarProperty;
 import insane96mcp.mobspropertiesrandomness.data.json.properties.MPREffectImmunityProperty;
 import insane96mcp.mobspropertiesrandomness.data.json.properties.MPRScalePehkuiProperty;
-import insane96mcp.mobspropertiesrandomness.data.json.properties.events.*;
+import insane96mcp.mobspropertiesrandomness.data.json.properties.events.MPREvents;
+import insane96mcp.mobspropertiesrandomness.data.json.properties.events.MPROnDeathLegacy;
+import insane96mcp.mobspropertiesrandomness.data.json.properties.events.MPROnHitLegacy;
+import insane96mcp.mobspropertiesrandomness.data.json.properties.events.MPRTickEvent;
 import insane96mcp.mobspropertiesrandomness.util.Logger;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.resources.ResourceLocation;
@@ -105,13 +108,11 @@ public class MPRBase extends Feature {
 			event.setResult(Event.Result.DENY);
 	}
 
-	public static final java.lang.reflect.Type MPR_ON_TICK_LIST_TYPE = new TypeToken<ArrayList<MPROnTickLegacy>>(){}.getType();
 	@SubscribeEvent
 	public void onLivingTick(LivingEvent.LivingTickEvent event) {
 		if (event.getEntity().level().isClientSide)
 			return;
 		tryApplyPehkui(event.getEntity());
-		checkOnTick(event.getEntity());
 		MPRBossBarProperty.showBar(event.getEntity(), true);
 		MPRBossBarProperty.updateBar(event.getEntity());
 		MPRTickEvent.tickEvents(event.getEntity());
@@ -147,30 +148,6 @@ public class MPRBase extends Feature {
 	@SubscribeEvent
 	public void onStopTracking(PlayerEvent.StopTracking event) {
 		MPRBossBarProperty.removePlayer(event.getTarget(), event.getEntity());
-	}
-
-	private void checkOnTick(LivingEntity entity) {
-		if (entity.isDeadOrDying())
-			return;
-		CompoundTag persistentData = entity.getPersistentData();
-		if (!persistentData.contains(MPREvents.ON_TICK))
-			return;
-
-		List<MPROnTickLegacy> onTicks = new Gson().fromJson(persistentData.getString(MPREvents.ON_TICK), MPR_ON_TICK_LIST_TYPE);
-		if (onTicks == null)
-			return;
-
-		for (MPROnTickLegacy onTick : onTicks) {
-			//Does it impact performance?
-			try {
-				onTick.validate();
-			}
-			catch (JsonValidationException e) {
-				Logger.error("Failed to validate MPROnTick: " + e);
-				continue;
-			}
-			onTick.apply(entity);
-		}
 	}
 
 	public static final java.lang.reflect.Type MPR_ON_HIT_LIST_TYPE = new TypeToken<ArrayList<MPROnHitLegacy>>(){}.getType();
