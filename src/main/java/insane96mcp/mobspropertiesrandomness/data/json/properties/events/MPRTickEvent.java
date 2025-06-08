@@ -18,14 +18,9 @@ public class MPRTickEvent extends MPREvent {
 	//TODO Random update interval
 	public int updateInterval;
 
-	public MPRTickEvent(int updateInterval, ResourceLocation id, Target target, @Nullable CommandFunction.CacheableFunction function, @Nullable MPRProperty property, List<MPRCondition> conditions) {
-		super(id, target, function, property, conditions);
+	public MPRTickEvent(int updateInterval, ResourceLocation id, Target target, @Nullable CommandFunction.CacheableFunction function, @Nullable List<MPRProperty> applyProperties, List<MPRCondition> conditions) {
+		super(id, target, function, applyProperties, conditions);
 		this.updateInterval = updateInterval;
-	}
-
-	@Override
-	public String typeId() {
-		return "tick";
 	}
 
 	public void tick(LivingEntity entity) {
@@ -35,7 +30,7 @@ public class MPRTickEvent extends MPREvent {
 	}
 
 	public static void tickEvents(LivingEntity entity) {
-		List<MPREvent> events = getEvents(entity, "tick");
+		List<MPREvent> events = getEvents(entity, MPRTickEvent.class);
 		for (MPREvent event : events)
 			((MPRTickEvent) event).tick(entity);
 	}
@@ -48,9 +43,9 @@ public class MPRTickEvent extends MPREvent {
 			//Target target = GsonHelper.getAsObject(jObject, "target", context, Target.class);
 			CommandFunction.CacheableFunction function = deserializeFunction(jObject);
 			List<MPRCondition> conditions = MPRCondition.deserializeConditions(jObject, context);
-			MPRProperty property = MPREvent.deserializeProperty(jObject, context);
+			List<MPRProperty> properties = MPRProperty.deserializeList(jObject, "apply_properties", context);
 
-			return new MPRTickEvent(GsonHelper.getAsInt(jObject, "update_interval", 20), ResourceLocation.parse(id), Target.THIS, function, property, conditions);
+			return new MPRTickEvent(GsonHelper.getAsInt(jObject, "update_interval", 20), ResourceLocation.parse(id), Target.THIS, function, properties, conditions);
 		}
 
 		@Override

@@ -39,6 +39,7 @@ public abstract class MPREventLegacy implements IMPRObject {
         //    for (MPRScalePehkui scalePehkui1 : this.scalePehkui) {
         //        scalePehkui1.validate();
         //    }
+        //    }
         //}
     }
 

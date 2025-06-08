@@ -48,17 +48,10 @@ public abstract class MPRProperty extends MPRConditionable {
             return properties;
         JsonArray aProperties = GsonHelper.getAsJsonArray(jObject, memberName);
         for (JsonElement jsonElement : aProperties) {
-            JsonObject jObjectProperty = jsonElement.getAsJsonObject();
-            ResourceLocation propertyId = MPR.locationFrom(GsonHelper.getAsString(jObjectProperty, "property"));
-            Type propertyType = PropertiesRegistry.get(propertyId);
-            if (propertyType == null) {
-                Logger.warn("property %s does not exist. Skipping".formatted(propertyId));
-                continue;
-            }
             MPRProperty property = deserialize(jsonElement, context);
             if (property == null)
                 continue;
-            properties.add(context.deserialize(jObjectProperty, propertyType));
+            properties.add(property);
         }
         return properties;
     }

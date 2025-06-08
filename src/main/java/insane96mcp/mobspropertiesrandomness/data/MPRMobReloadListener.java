@@ -5,6 +5,7 @@ import com.google.gson.JsonElement;
 import com.google.gson.JsonParseException;
 import insane96mcp.mobspropertiesrandomness.MPR;
 import insane96mcp.mobspropertiesrandomness.data.json.MPRMob;
+import insane96mcp.mobspropertiesrandomness.data.json.properties.events.MPREvent;
 import insane96mcp.mobspropertiesrandomness.util.Logger;
 import net.minecraft.resources.FileToIdConverter;
 import net.minecraft.resources.ResourceLocation;
@@ -86,6 +87,7 @@ public class MPRMobReloadListener extends SimplePreparableReloadListener<Map<Res
 
 		MPR_MOBS.sort(Comparator.comparing(mob -> mob.priority, Comparator.reverseOrder()));
 
+		MPREvent.LOADED_EVENTS.clear();
 		Logger.info("Loaded %s Mob(s)", MPR_MOBS.size());
 	}
 }

@@ -32,21 +32,23 @@ public abstract class MPREvent extends MPRConditionable {
     public Target target;
     @Nullable
     public CommandFunction.CacheableFunction function;
-    @Nullable
-    public MPRProperty applyProperty;
+    public List<MPRProperty> applyProperties;
 
-    public MPREvent(ResourceLocation id, Target target, @Nullable CommandFunction.CacheableFunction function, @Nullable MPRProperty applyProperty, List<MPRCondition> conditions) {
+    public MPREvent(ResourceLocation id, Target target, @Nullable CommandFunction.CacheableFunction function, List<MPRProperty> applyProperties, List<MPRCondition> conditions) {
         super(conditions);
         this.id = id;
         this.target = target;
         this.function = function;
-        this.applyProperty = applyProperty;
+        this.applyProperties = applyProperties;
     }
 
     public boolean apply(LivingEntity living) {
-        ListTag list = ModNBTData.getList(living, MPR.location(typeId()), CompoundTag.TAG_STRING);
+        ResourceLocation eventId = EventsRegistry.getId(this.getClass());
+        if (eventId == null)
+            return false;
+        ListTag list = ModNBTData.getList(living, eventId, CompoundTag.TAG_STRING);
         list.add(StringTag.valueOf(id.toString()));
-        ModNBTData.put(living, MPR.location(typeId()), list);
+        ModNBTData.put(living, eventId, list);
         if (!LOADED_EVENTS.containsKey(id))
             LOADED_EVENTS.put(id, this);
         return true;
@@ -81,16 +83,17 @@ public abstract class MPREvent extends MPRConditionable {
     }
 
     public void tryApplyProperty(LivingEntity entity) {
-        if (this.applyProperty == null)
-            return;
-
-        this.applyProperty.tryApply(entity);
+        for (MPRProperty applyProperty : this.applyProperties)
+            applyProperty.tryApply(entity);
         MPRScalePehkuiProperty.applyScheduled(entity);
     }
 
-    public static List<MPREvent> getEvents(LivingEntity living, String typeId) {
-        ListTag list = ModNBTData.getList(living, MPR.location(typeId), CompoundTag.TAG_STRING);
+    public static List<MPREvent> getEvents(LivingEntity living, Class<? extends MPREvent> typeId) {
         List<MPREvent> events = new ArrayList<>();
+        ResourceLocation eventId = EventsRegistry.getId(typeId);
+        if (eventId == null)
+            return events;
+        ListTag list = ModNBTData.getList(living, eventId, CompoundTag.TAG_STRING);
         for (int i = 0; i < list.size(); i++) {
             ResourceLocation id = ResourceLocation.parse(list.getString(i));
             if (LOADED_EVENTS.containsKey(id))
@@ -99,8 +102,6 @@ public abstract class MPREvent extends MPRConditionable {
         return events;
 
     }
-
-    public abstract String typeId();
 
     @Nullable
     public static CommandFunction.CacheableFunction deserializeFunction(JsonObject jObject) {
@@ -123,6 +124,8 @@ public abstract class MPREvent extends MPRConditionable {
             jObject.add("target", context.serialize(this.target));
         if (this.function != null)
             jObject.addProperty("function", this.function.getId().toString());
+        if (!this.applyProperties.isEmpty())
+            jObject.add("apply_properties", context.serialize(this.applyProperties));
         return super.endSerialization(jObject, context);
     }
 

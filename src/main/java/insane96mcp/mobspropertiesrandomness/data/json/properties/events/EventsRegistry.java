@@ -2,6 +2,7 @@ package insane96mcp.mobspropertiesrandomness.data.json.properties.events;
 
 import insane96mcp.mobspropertiesrandomness.MPR;
 import net.minecraft.resources.ResourceLocation;
+import org.jetbrains.annotations.Nullable;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -18,7 +19,8 @@ public class EventsRegistry {
         return EVENTS.get(id);
     }
 
-    public static ResourceLocation get(Class<? extends MPREvent> clazz) {
+    @Nullable
+    public static ResourceLocation getId(Class<? extends MPREvent> clazz) {
         for (Map.Entry<ResourceLocation, Class<? extends MPREvent>> entry : EVENTS.entrySet()) {
             if (entry.getValue() == clazz)
                 return entry.getKey();
