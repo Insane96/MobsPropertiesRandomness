@@ -18,6 +18,7 @@ import java.util.List;
 @JsonAdapter(MPRDeathEvent.Serializer.class)
 public class MPRDeathEvent extends MPREvent {
 	public MPRHurtData hurtData;
+	//TODO Allow canceling death
 
 	public MPRDeathEvent(MPRHurtData hurtData, ResourceLocation id, Target target, @Nullable CommandFunction.CacheableFunction function, @Nullable List<MPRProperty> applyProperties, List<MPRCondition> conditions) {
 		super(id, target, function, applyProperties, conditions);
@@ -34,9 +35,9 @@ public class MPRDeathEvent extends MPREvent {
 	public static void onDeath(LivingDeathEvent event) {
 		LivingEntity living = event.getEntity();
 		LivingEntity attacker = (LivingEntity) event.getSource().getEntity();
-		List<MPREvent> events = getEvents(living, MPRDeathEvent.class);
-		for (MPREvent deathEvent : events)
-			((MPRDeathEvent) deathEvent).death(living, attacker, event.getSource(), event.getSource().getDirectEntity() == event.getSource().getEntity());
+		List<MPRDeathEvent> events = getEvents(living, MPRDeathEvent.class);
+		for (MPRDeathEvent deathEvent : events)
+			deathEvent.death(living, attacker, event.getSource(), event.getSource().getDirectEntity() == event.getSource().getEntity());
 	}
 
 	public static class Serializer implements JsonDeserializer<MPRDeathEvent>, JsonSerializer<MPRDeathEvent> {

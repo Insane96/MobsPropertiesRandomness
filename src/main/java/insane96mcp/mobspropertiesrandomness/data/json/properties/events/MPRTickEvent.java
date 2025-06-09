@@ -34,9 +34,9 @@ public class MPRTickEvent extends MPREvent {
 	}
 
 	public static void tickEvents(LivingEntity entity) {
-		List<MPREvent> events = getEvents(entity, MPRTickEvent.class);
-		for (MPREvent event : events)
-			((MPRTickEvent) event).tick(entity);
+		List<MPRTickEvent> events = getEvents(entity, MPRTickEvent.class);
+		for (MPRTickEvent tickEvent : events)
+			tickEvent.tick(entity);
 	}
 
 	public static class Serializer implements JsonDeserializer<MPRTickEvent>, JsonSerializer<MPRTickEvent> {

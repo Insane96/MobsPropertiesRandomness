@@ -35,6 +35,7 @@ public class MPRPotionEffectProperty extends MPRProperty {
     @Override
     protected boolean apply(LivingEntity living) {
         int duration = this.duration.getIntBetween(living);
+        //TODO Cumulate flag
         MobEffectInstance effectInstance = new MobEffectInstance(mobEffect, duration == -1 ? -1 : duration * 20, this.amplifier.getIntBetween(living), this.ambient, !this.hideParticles, false);
         living.addEffect(effectInstance);
         return true;

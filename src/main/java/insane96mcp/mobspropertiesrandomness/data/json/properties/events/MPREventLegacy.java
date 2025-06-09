@@ -16,9 +16,6 @@ public abstract class MPREventLegacy implements IMPRObject {
     public Target target;
     public MPRModifiableValue chance;
 
-    @SerializedName("play_sound")
-    public MPRPlaySound playSound;
-
     @SerializedName("function")
     public String functionId;
     public transient CommandFunction.CacheableFunction function;
@@ -28,9 +25,6 @@ public abstract class MPREventLegacy implements IMPRObject {
 
     @Override
     public void validate() throws JsonValidationException {
-        if (this.playSound != null)
-            this.playSound.validate();
-
         if (this.functionId != null)
             this.function = new CommandFunction.CacheableFunction(ResourceLocation.parse(this.functionId));
 
@@ -49,15 +43,8 @@ public abstract class MPREventLegacy implements IMPRObject {
     }
 
     public void tryApply(LivingEntity entity) {
-        this.tryPlaySound(entity);
         this.tryExecuteFunction(entity);
         this.tryApplyPehkuiScale(entity);
-    }
-
-    public void tryPlaySound(LivingEntity entity) {
-        if (this.playSound == null)
-            return;
-        this.playSound.playSound(this.target, entity);
     }
 
     public void tryExecuteFunction(LivingEntity entity) {

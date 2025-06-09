@@ -84,19 +84,21 @@ public abstract class MPREvent extends MPRConditionable {
         MPRScalePehkuiProperty.applyScheduled(entity);
     }
 
-    public static List<MPREvent> getEvents(LivingEntity living, Class<? extends MPREvent> typeId) {
-        List<MPREvent> events = new ArrayList<>();
+    public static <T extends MPREvent> List<T> getEvents(LivingEntity living, Class<T> typeId) {
+        List<T> events = new ArrayList<>();
         ResourceLocation eventId = EventsRegistry.getId(typeId);
         if (eventId == null)
             return events;
         ListTag list = ModNBTData.getList(living, eventId, CompoundTag.TAG_STRING);
         for (int i = 0; i < list.size(); i++) {
             ResourceLocation id = ResourceLocation.parse(list.getString(i));
-            if (LOADED_EVENTS.containsKey(id))
-                events.add(LOADED_EVENTS.get(id));
+            if (LOADED_EVENTS.containsKey(id)) {
+                MPREvent event = LOADED_EVENTS.get(id);
+                if (typeId.isInstance(event))
+                    events.add(typeId.cast(event));
+            }
         }
         return events;
-
     }
 
     @Nullable

@@ -31,5 +31,7 @@ public class EventsRegistry {
     public static void init() {
         register("tick", MPRTickEvent.class);
         register("death", MPRDeathEvent.class);
+        register("attacked", MPRAttackedEvent.class);
+        register("attack", MPRAttackEvent.class);
     }
 }
