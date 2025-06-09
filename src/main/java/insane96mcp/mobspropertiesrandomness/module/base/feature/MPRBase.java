@@ -1,12 +1,9 @@
 package insane96mcp.mobspropertiesrandomness.module.base.feature;
 
-import com.google.gson.Gson;
-import com.google.gson.reflect.TypeToken;
 import insane96mcp.insanelib.base.Feature;
 import insane96mcp.insanelib.base.LoadFeature;
 import insane96mcp.insanelib.base.Module;
 import insane96mcp.insanelib.base.config.Config;
-import insane96mcp.insanelib.exception.JsonValidationException;
 import insane96mcp.mobspropertiesrandomness.MPR;
 import insane96mcp.mobspropertiesrandomness.data.json.MPRAttributeModifier;
 import insane96mcp.mobspropertiesrandomness.data.json.MPRMob;
@@ -14,8 +11,9 @@ import insane96mcp.mobspropertiesrandomness.data.json.MPRPresetLegacy;
 import insane96mcp.mobspropertiesrandomness.data.json.properties.MPRBossBarProperty;
 import insane96mcp.mobspropertiesrandomness.data.json.properties.MPREffectImmunityProperty;
 import insane96mcp.mobspropertiesrandomness.data.json.properties.MPRScalePehkuiProperty;
-import insane96mcp.mobspropertiesrandomness.data.json.properties.events.*;
-import insane96mcp.mobspropertiesrandomness.util.Logger;
+import insane96mcp.mobspropertiesrandomness.data.json.properties.events.MPRDeathEvent;
+import insane96mcp.mobspropertiesrandomness.data.json.properties.events.MPROnHitEvent;
+import insane96mcp.mobspropertiesrandomness.data.json.properties.events.MPRTickEvent;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.damagesource.DamageSource;
@@ -31,8 +29,6 @@ import net.minecraftforge.eventbus.api.Event;
 import net.minecraftforge.eventbus.api.EventPriority;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 
-import java.util.ArrayList;
-import java.util.List;
 import java.util.Optional;
 
 import static insane96mcp.mobspropertiesrandomness.data.MPRMobReloadListener.MPR_MOBS;
@@ -89,8 +85,6 @@ public class MPRBase extends Feature {
 
 	@SubscribeEvent
 	public void onLivingDamage(LivingDamageEvent event) {
-		onAttack(event);
-		onAttacked(event);
 		MPROnHitEvent.onHit(event);
 	}
 
@@ -128,49 +122,6 @@ public class MPRBase extends Feature {
 	@SubscribeEvent
 	public void onStopTracking(PlayerEvent.StopTracking event) {
 		MPRBossBarProperty.removePlayer(event.getTarget(), event.getEntity());
-	}
-
-	public static final java.lang.reflect.Type MPR_ON_HIT_LIST_TYPE = new TypeToken<ArrayList<MPROnHitLegacy>>(){}.getType();
-	private void onAttack(LivingDamageEvent event) {
-		if (!(event.getSource().getEntity() instanceof LivingEntity attacker)
-				|| !attacker.getPersistentData().contains(MPREvents.ON_ATTACK))
-			return;
-
-		List<MPROnHitLegacy> onHitEffects = new Gson().fromJson(attacker.getPersistentData().getString(MPREvents.ON_ATTACK), MPR_ON_HIT_LIST_TYPE);
-		if (onHitEffects == null)
-			return;
-
-		for (MPROnHitLegacy mprOnHit : onHitEffects) {
-			//Does it impact performance?
-			try {
-				mprOnHit.validate();
-			} catch (JsonValidationException e) {
-				Logger.error("Failed to validate MPROnHit: " + e);
-				continue;
-			}
-			mprOnHit.apply(attacker, event.getEntity(), event, false);
-		}
-	}
-
-	private void onAttacked(LivingDamageEvent event) {
-		LivingEntity attacked = event.getEntity();
-		if (!attacked.getPersistentData().contains(MPREvents.ON_DAMAGED))
-			return;
-
-		List<MPROnHitLegacy> onHitEffects = new Gson().fromJson(attacked.getPersistentData().getString(MPREvents.ON_DAMAGED), MPR_ON_HIT_LIST_TYPE);
-		if (onHitEffects == null)
-			return;
-
-		for (MPROnHitLegacy mprOnHit : onHitEffects) {
-			//Does it impact performance?
-			try {
-				mprOnHit.validate();
-			} catch (JsonValidationException e) {
-				Logger.error("Failed to validate MPROnHit: " + e);
-				continue;
-			}
-			mprOnHit.apply(attacked, (LivingEntity) event.getSource().getEntity(), event, true);
-		}
 	}
 
 	public static boolean isBetterCreeperLingeringEnabled() {
