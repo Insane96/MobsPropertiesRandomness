@@ -1,9 +1,11 @@
 # Changelog
 
 ## Upcoming
-* The mod is now fully server sided
-* Potion effects
-  * Renamed `id` to `effect`
+The mod has been rewritten and reworked from scratch.  
+Older data packs will no longer work, you'll have to migrate them as the json format has changed.
+Check here for a simple example data pack: https://github.com/Insane96/MobsPropertiesRandomness/tree/1.20.1/src/main/resources/example_data_pack
+
+Also now fully server sided
 
 ## 4.11.1
 * Requires InsaneLib 1.12.0

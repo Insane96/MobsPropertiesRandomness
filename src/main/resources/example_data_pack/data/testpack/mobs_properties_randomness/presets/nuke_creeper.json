@@ -1,0 +1,37 @@
+{
+    "properties": [
+        {
+            "property": "potion_effect",
+            "effect": "minecraft:speed",
+            "amplifier": 3
+        },
+        {
+            "property": "set_nbt",
+            "path": "ExplosionRadius",
+            "type": "integer",
+            "value": 8
+        },
+        {
+            "property": "silent"
+        },
+        {
+            "property": "set_nbt",
+            "path": "Fuse",
+            "type": "integer",
+            "value": 1
+        },
+        {
+            "property": "scale",
+            "scale": 0.5,
+            "scale_types": [
+                "pehkui:width",
+                "pehkui:height"
+            ],
+            "operation": "set"
+        },
+        {
+            "property": "custom_name",
+            "prefixes": "Nuke "
+        }
+    ]
+}

@@ -1,0 +1,45 @@
+{
+    "properties": [
+        {
+            "property": "boss_bar",
+            "color": "yellow",
+            "type": "notched_10"
+        },
+        {
+            "property": "potion_effect",
+            "effect": "minecraft:resistance",
+            "amplifier": 2
+        },
+        {
+            "property": "potion_effect",
+            "effect": "minecraft:invisibility",
+            "hide_particles": true
+        },
+        {
+            "property": "attribute_modifier",
+            "attribute": "generic.max_health",
+            "modifier_name": "Bonus health",
+            "amount": 20,
+            "operation": "addition"
+        },
+        {
+            "property": "set_nbt",
+            "path": "Glowing",
+            "type": "boolean",
+            "value": 1
+        },
+        {
+            "property": "scale",
+            "scale": 1.5,
+            "scale_types": [
+                "pehkui:width",
+                "pehkui:height"
+            ],
+            "operation": "set"
+        },
+        {
+            "property": "custom_name",
+            "prefixes": "Ghost "
+        }
+    ]
+}

@@ -1,0 +1,267 @@
+{
+    "target": "minecraft:zombie",
+    "properties": [
+        {
+            "property": "potion_effect",
+            "effect": "minecraft:resistance"
+        },
+        {
+            "property": "attribute_modifier",
+            "attribute": "generic.max_health",
+            "modifier_name": "Bonus health",
+            "conditions": [
+                {
+                    "condition": "deepness",
+                    "y": {
+                        "min": -64,
+                        "max": 64
+                    },
+                    "sea_level_relative": true
+                }
+            ],
+            "amount": {
+                "value": 0,
+                "modifiers": [
+                    {
+                        "modifier": "distance_from_spawn",
+                        "operation": "add",
+                        "amount_per_blocks": 0.01,
+                        "blocks": 100
+                    }
+                ]
+            },
+            "operation": "multiply_base"
+        },
+        {
+            "property": "attribute_modifier",
+            "attribute": "forge:step_height_addition",
+            "modifier_name": "Step height",
+            "amount": 0.5,
+            "operation": "addition"
+        },
+        {
+            "property": "custom_name",
+            "conditions": [
+                {
+                    "condition": "deepness",
+                    "y": {
+                        "min": 1,
+                        "max": 64
+                    },
+                    "sea_level_relative": true
+                }
+            ],
+            "overrides": "Test"
+        },
+        {
+            "property": "silent",
+            "conditions": [
+                {
+                    "condition": "day_time",
+                    "day_time": {
+                        "min": 0,
+                        "max": 12000
+                    }
+                }
+            ]
+        },
+        {
+            "property": "experience_multiplier",
+            "multiplier": 100,
+            "conditions": [
+                {
+                    "condition": "day_time",
+                    "day_time": {
+                        "min": 12000,
+                        "max": 24000
+                    }
+                }
+            ]
+        },
+        {
+            "property": "loot_table",
+            "loot_tables": [
+                {
+                    "weight": 1,
+                    "loot_table": "minecraft:chests/nether_bridge"
+                },
+                {
+                    "weight": 1,
+                    "loot_table": "minecraft:chests/end_city_treasure"
+                }
+            ]
+        },
+        {
+            "property": "effect_immunity",
+            "effects": [ "minecraft:slowness" ]
+        },
+        {
+            "property": "set_nbt",
+            "path": "powered",
+            "type": "boolean",
+            "value": 1
+        },
+        {
+            "property": "scale",
+            "scale": 1.5,
+            "scale_types": "pehkui:base",
+            "operation": "set"
+        },
+        {
+            "property": "equipment",
+            "slot": "head",
+            "items": [
+                {
+                    "item": "minecraft:iron_helmet",
+                    "functions": [
+                        {
+                            "function": "enchant",
+                            "type": "random",
+                            "lvl": 1
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "property": "equipment",
+            "slot": "chest",
+            "items": [
+                {
+                    "item": "minecraft:leather_chestplate",
+                    "functions": [
+                        {
+                            "function": "enchant",
+                            "type": "with_levels",
+                            "lvl": 40
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "property": "equipment",
+            "slot": "legs",
+            "items": [
+                {
+                    "item": "minecraft:golden_leggings",
+                    "functions": [
+                        {
+                            "function": "enchant",
+                            "type": "single",
+                            "enchantment": "minecraft:protection",
+                            "lvl": 4
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "property": "equipment",
+            "slot": "feet",
+            "items": [
+                {
+                    "item": "minecraft:diamond_boots",
+                    "functions": [
+                        {
+                            "function": "add_attribute_modifier",
+                            "attribute": "generic.movement_speed",
+                            "modifier_name": "Attribute modifier test",
+                            "amount": 0.1,
+                            "operation": "multiply_base"
+                        }
+                    ]
+                },
+                {
+                    "item": "minecraft:netherite_boots",
+                    "functions": [
+                        {
+                            "function": "set_nbt",
+                            "path": "test.inner_test.sub_inner_test",
+                            "type": "integer",
+                            "value": {
+                                "min": 1,
+                                "max": 100
+                            }
+                        }
+                    ]
+                }
+            ],
+            "functions": [
+                {
+                    "function": "set_drop_chance",
+                    "drop_chance": 1
+                }
+            ]
+        },
+        {
+            "property": "equipment",
+            "slot": "mainhand",
+            "items": [
+                {
+                    "item": "minecraft:ender_pearl",
+                    "functions": [
+                        {
+                            "function": "set_count",
+                            "count": {
+                                "min": 1,
+                                "max": 64
+                            }
+                        },
+                        {
+                            "function": "set_drop_chance",
+                            "drop_chance": 1
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "property": "freeze",
+            "seconds_frozen": 10
+        },
+        {
+            "property": "event",
+            "event": "tick",
+            "id": "test:effect_every_3_seconds",
+            "update_interval": 3,
+            "apply_properties": [
+                {
+                    "property": "potion_effect",
+                    "effect": "minecraft:slowness",
+                    "amplifier": 0,
+                    "duration": 1
+                }
+            ]
+        },
+        {
+            "property": "event",
+            "event": "death",
+            "id": "test:add_effect_to_killer",
+            "target": "other",
+            "apply_properties": [
+                {
+                    "property": "potion_effect",
+                    "effect": "minecraft:strength",
+                    "amplifier": 4,
+                    "duration": 20
+                }
+            ]
+        },
+        {
+            "property": "event",
+            "event": "attacked",
+            "id": "test:speed_on_shot",
+            "target": "this",
+            "direct_indirect": "indirect",
+            "apply_properties": [
+                {
+                    "property": "potion_effect",
+                    "effect": "minecraft:speed",
+                    "amplifier": 4,
+                    "duration": 1
+                }
+            ]
+        }
+    ]
+}

@@ -1,0 +1,23 @@
+{
+    "target": "minecraft:creeper",
+    "properties": [
+        {
+            "property": "presets",
+            "presets": [
+                {
+                    "preset": "testpack:ghost_creeper"
+                },
+                {
+                    "preset": "testpack:nuke_creeper",
+                    "weight": 2
+                }
+            ],
+            "conditions": [
+                {
+                    "condition": "chance",
+                    "chance": 0.5
+                }
+            ]
+        }
+    ]
+}
