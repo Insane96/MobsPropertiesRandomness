@@ -13,7 +13,6 @@ import net.minecraft.nbt.ListTag;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.GsonHelper;
 import net.minecraft.util.Mth;
-import net.minecraft.util.RandomSource;
 import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.item.EnchantedBookItem;
@@ -61,36 +60,22 @@ public abstract class MPREnchantItemFunction extends MPRItemFunction {
     }
 
     private static void removeEnchantmentFromItemStack(ItemStack stack, Enchantment enchantment) {
-        if (stack.getItem() == Items.ENCHANTED_BOOK)
-            //TODO Implement
+        if (stack.getTag() == null)
             return;
-        else {
-            if (stack.getTag() == null)
+        ListTag listTag = new ListTag();
+        if (stack.getTag().contains("Enchantments"))
+            listTag = stack.getTag().getList("Enchantments", 10);
+        else if (stack.getItem() == Items.ENCHANTED_BOOK)
+            listTag = EnchantedBookItem.getEnchantments(stack);
+        if (listTag.isEmpty())
+            return;
+        for (int i = 0; i < listTag.size(); ++i) {
+            CompoundTag compound = listTag.getCompound(i);
+            Enchantment foundEnchantment = ForgeRegistries.ENCHANTMENTS.getValue(EnchantmentHelper.getEnchantmentId(compound));
+            if (foundEnchantment == enchantment) {
+                listTag.remove(i);
                 return;
-            if (!stack.getTag().contains("Enchantments", 9))
-                return;
-            ListTag listTag = stack.getTag().getList("Enchantments", 10);
-            for (int i = 0; i < listTag.size(); ++i) {
-                CompoundTag compound = listTag.getCompound(i);
-                Enchantment foundEnchantment = ForgeRegistries.ENCHANTMENTS.getValue(EnchantmentHelper.getEnchantmentId(compound));
-                if (foundEnchantment == enchantment) {
-                    listTag.remove(i);
-                    return;
-                }
             }
-        }
-    }
-
-    public static void enchantItem(RandomSource random, ItemStack itemStack, int lvl, boolean treasure) {
-        lvl = Mth.clamp(lvl, 1, 40);
-        List<EnchantmentInstance> list = EnchantmentHelper.selectEnchantment(random, itemStack, lvl, treasure);
-        boolean isEnchantedBook = itemStack.is(Items.ENCHANTED_BOOK);
-
-        for (EnchantmentInstance enchantmentInstance : list) {
-            if (isEnchantedBook)
-                EnchantedBookItem.addEnchantment(itemStack, enchantmentInstance);
-            else
-                itemStack.enchant(enchantmentInstance.enchantment, enchantmentInstance.level);
         }
     }
 
