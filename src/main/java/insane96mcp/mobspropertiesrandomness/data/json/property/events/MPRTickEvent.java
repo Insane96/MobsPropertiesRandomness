@@ -16,7 +16,6 @@ import java.util.List;
 
 @JsonAdapter(MPRTickEvent.Serializer.class)
 public class MPRTickEvent extends MPREvent {
-	//TODO Random update interval
 	public MPRModifiableValue updateInterval;
 
 	public MPRTickEvent(MPRModifiableValue updateInterval, ResourceLocation id, Target target, @Nullable CommandFunction.CacheableFunction function, @Nullable List<MPRProperty> applyProperties, List<MPRCondition> conditions) {

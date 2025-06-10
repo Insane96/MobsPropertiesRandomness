@@ -39,7 +39,6 @@ public class MPRPlaySoundProperty extends MPRProperty {
             JsonObject jObject = json.getAsJsonObject();
             ResourceLocation rl = ResourceLocation.parse(GsonHelper.getAsString(jObject, "sound"));
             SoundEvent soundEvent = Holder.direct(SoundEvent.createVariableRangeEvent(rl)).value();
-            //TODO limit to valid values
             MPRRange volume = GsonHelper.getAsObject(jObject, "volume", MPRRange.ONE, context, MPRRange.class);
             MPRRange pitch = GsonHelper.getAsObject(jObject, "pitch", MPRRange.ONE, context, MPRRange.class);
             return new MPRPlaySoundProperty(soundEvent, volume, pitch, MPRCondition.deserializeConditions(jObject, context));

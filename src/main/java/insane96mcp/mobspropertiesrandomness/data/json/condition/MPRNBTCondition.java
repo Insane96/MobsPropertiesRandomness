@@ -23,7 +23,6 @@ public class MPRNBTCondition extends MPRCondition {
         this.value = value;
     }
 
-    //TODO Arrays
     @Override
     protected boolean conditionCheck(LivingEntity living) {
         CompoundTag mobTag = new CompoundTag();

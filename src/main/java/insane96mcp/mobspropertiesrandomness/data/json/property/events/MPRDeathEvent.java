@@ -18,7 +18,6 @@ import java.util.List;
 @JsonAdapter(MPRDeathEvent.Serializer.class)
 public class MPRDeathEvent extends MPREvent {
 	public MPRHurtData hurtData;
-	//TODO Allow canceling death
 
 	public MPRDeathEvent(MPRHurtData hurtData, ResourceLocation id, Target target, @Nullable CommandFunction.CacheableFunction function, @Nullable List<MPRProperty> applyProperties, List<MPRCondition> conditions) {
 		super(id, target, function, applyProperties, conditions);
