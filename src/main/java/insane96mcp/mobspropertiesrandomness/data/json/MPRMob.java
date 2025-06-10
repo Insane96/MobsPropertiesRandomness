@@ -4,7 +4,7 @@ import com.google.gson.*;
 import com.google.gson.annotations.JsonAdapter;
 import insane96mcp.insanelib.data.IdTagMatcher;
 import insane96mcp.mobspropertiesrandomness.data.json.condition.MPRCondition;
-import insane96mcp.mobspropertiesrandomness.data.json.properties.MPRProperty;
+import insane96mcp.mobspropertiesrandomness.data.json.property.MPRProperty;
 import net.minecraft.util.GsonHelper;
 import net.minecraft.world.entity.LivingEntity;
 

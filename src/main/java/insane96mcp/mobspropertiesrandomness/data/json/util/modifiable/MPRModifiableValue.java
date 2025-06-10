@@ -13,6 +13,9 @@ import java.util.List;
 public class MPRModifiableValue extends MPRModifiable {
 	protected Double value;
 
+	public static final MPRModifiableValue ZERO = new MPRModifiableValue(0d);
+	public static final MPRModifiableValue ONE = new MPRModifiableValue(1d);
+
 	public MPRModifiableValue(Double value) {
 		this(value, List.of(), null);
 	}

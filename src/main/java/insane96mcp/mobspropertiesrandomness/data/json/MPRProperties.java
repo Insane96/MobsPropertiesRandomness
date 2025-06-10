@@ -2,7 +2,7 @@ package insane96mcp.mobspropertiesrandomness.data.json;
 
 import com.google.gson.*;
 import insane96mcp.mobspropertiesrandomness.data.json.condition.MPRCondition;
-import insane96mcp.mobspropertiesrandomness.data.json.properties.MPRProperty;
+import insane96mcp.mobspropertiesrandomness.data.json.property.MPRProperty;
 
 import java.lang.reflect.Type;
 import java.util.List;

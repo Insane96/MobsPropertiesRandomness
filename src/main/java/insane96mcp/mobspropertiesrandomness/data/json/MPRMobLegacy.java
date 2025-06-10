@@ -3,7 +3,7 @@ package insane96mcp.mobspropertiesrandomness.data.json;
 import com.google.gson.annotations.SerializedName;
 import insane96mcp.insanelib.data.IdTagMatcher;
 import insane96mcp.insanelib.exception.JsonValidationException;
-import insane96mcp.mobspropertiesrandomness.data.json.properties.outdated.MPRPresets;
+import insane96mcp.mobspropertiesrandomness.data.json.property.outdated.MPRPresets;
 import insane96mcp.mobspropertiesrandomness.module.base.feature.MPRBase;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
