@@ -22,7 +22,7 @@ public class MPRFreezeProperty extends MPRProperty {
     }
 
     @Override
-    protected boolean apply(LivingEntity living) {
+    public boolean apply(LivingEntity living) {
         int freezeTicks = (int) (this.secondsFrozen.getDoubleBetween(living) * 20);
         if (this.additive)
             freezeTicks += living.getTicksFrozen();

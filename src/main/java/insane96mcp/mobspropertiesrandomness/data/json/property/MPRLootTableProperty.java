@@ -23,7 +23,7 @@ public class MPRLootTableProperty extends MPRProperty {
     }
 
     @Override
-    protected boolean apply(LivingEntity living) {
+    public boolean apply(LivingEntity living) {
         if (!(living instanceof Mob mob))
             return false;
         ArrayList<WeightedLootTable> weightedList = new ArrayList<>();

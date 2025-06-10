@@ -19,7 +19,7 @@ public class MPREventProperty extends MPRProperty {
     }
 
     @Override
-    protected boolean apply(LivingEntity living) {
+    public boolean apply(LivingEntity living) {
         this.event.apply(living);
         return true;
     }

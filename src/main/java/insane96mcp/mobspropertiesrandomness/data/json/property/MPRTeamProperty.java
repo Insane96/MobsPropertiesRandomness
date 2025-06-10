@@ -22,7 +22,7 @@ public class MPRTeamProperty extends MPRProperty {
     }
 
     @Override
-    protected boolean apply(LivingEntity living) {
+    public boolean apply(LivingEntity living) {
         if (living.level().getServer() == null)
             return false;
         ServerScoreboard scoreboard = living.level().getServer().getScoreboard();

@@ -42,7 +42,7 @@ public class MPRBossBarProperty extends MPRProperty {
     }
 
     @Override
-    protected boolean apply(LivingEntity living) {
+    public boolean apply(LivingEntity living) {
         if (living.getServer() == null)
             return false;
         MinecraftServer server = living.getServer();

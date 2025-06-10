@@ -21,7 +21,7 @@ public class MPRRawNBTProperty extends MPRProperty {
     }
 
     @Override
-    protected boolean apply(LivingEntity living) {
+    public boolean apply(LivingEntity living) {
         CompoundTag mobTag = new CompoundTag();
         living.saveWithoutId(mobTag);
         mobTag = mobTag.copy().merge(this.nbt);

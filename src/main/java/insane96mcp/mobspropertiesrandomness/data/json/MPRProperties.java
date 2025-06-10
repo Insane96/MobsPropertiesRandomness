@@ -19,11 +19,30 @@ public class MPRProperties extends MPRConditionable {
         this.properties = properties;
     }
 
-    public void tryApply(LivingEntity entity) {
-        if (!MPRCondition.conditionsApply(this.conditions, entity))
+    /**
+     * If conditions apply, applies all properties
+     */
+    public void tryApply(LivingEntity living) {
+        if (!MPRCondition.conditionsApply(this.conditions, living))
             return;
+
+        apply(living);
+    }
+
+    /**
+     * Applies all properties checking each property condition
+     */
+    public void apply(LivingEntity living) {
         for (MPRProperty property : this.properties)
-            property.tryApply(entity);
+            property.tryApply(living);
+    }
+
+    /**
+     * Applies all properties ignoring conditions
+     */
+    public void forceApply(LivingEntity living) {
+        for (MPRProperty property : this.properties)
+            property.apply(living);
     }
 
     public static List<MPRProperty> deserializeProperties(JsonObject jObject, JsonDeserializationContext context) { return MPRProperty.deserializeList(jObject, "properties", context); }

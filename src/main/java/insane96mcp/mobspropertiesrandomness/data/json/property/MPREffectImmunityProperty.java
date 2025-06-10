@@ -29,7 +29,7 @@ public class MPREffectImmunityProperty extends MPRProperty {
     }
 
     @Override
-    protected boolean apply(LivingEntity living) {
+    public boolean apply(LivingEntity living) {
         ListTag listTag = new ListTag();
         for (ResourceLocation mobEffect : this.mobEffects) {
             listTag.add(StringTag.valueOf(mobEffect.toString()));

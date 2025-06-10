@@ -29,7 +29,7 @@ public class MPRProperty extends MPRConditionable {
     }
 
     /// Applies the property
-    protected boolean apply(LivingEntity living) {
+    public boolean apply(LivingEntity living) {
         throw new UnsupportedOperationException("apply(LivingEntity) not implemented");
     }
 

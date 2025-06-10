@@ -4,16 +4,18 @@ import insane96mcp.insanelib.base.Feature;
 import insane96mcp.insanelib.base.LoadFeature;
 import insane96mcp.insanelib.base.Module;
 import insane96mcp.insanelib.base.config.Config;
+import insane96mcp.insanelib.util.ModNBTData;
 import insane96mcp.mobspropertiesrandomness.MPR;
 import insane96mcp.mobspropertiesrandomness.data.json.MPRAttributeModifier;
 import insane96mcp.mobspropertiesrandomness.data.json.MPRMob;
+import insane96mcp.mobspropertiesrandomness.data.json.MPRProperties;
 import insane96mcp.mobspropertiesrandomness.data.json.property.MPRBossBarProperty;
 import insane96mcp.mobspropertiesrandomness.data.json.property.MPREffectImmunityProperty;
 import insane96mcp.mobspropertiesrandomness.data.json.property.MPRScalePehkuiProperty;
 import insane96mcp.mobspropertiesrandomness.data.json.property.events.MPRDeathEvent;
 import insane96mcp.mobspropertiesrandomness.data.json.property.events.MPROnHitEvent;
 import insane96mcp.mobspropertiesrandomness.data.json.property.events.MPRTickEvent;
-import net.minecraft.nbt.CompoundTag;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraftforge.event.entity.EntityJoinLevelEvent;
@@ -28,14 +30,12 @@ import net.minecraftforge.eventbus.api.EventPriority;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 
 import static insane96mcp.mobspropertiesrandomness.data.MPRMobReloadListener.MPR_MOBS;
+import static insane96mcp.mobspropertiesrandomness.data.MPRPresetReloadListener.PRESETS;
 
 @LoadFeature(module = MPR.RESOURCE_PREFIX + "base", canBeDisabled = false)
 public class MPRBase extends Feature {
-	public static final String PROCESSED = MPR.RESOURCE_PREFIX + "processed";
-	public static final String PRESET = MPR.RESOURCE_PREFIX + "preset";
-	/*@Config
-        @Label(name = "TiCon Attack", description = "If true mob attacks with Tinker tools will use the Tinker attack method, making mobs able to use some TiCon modifiers.")
-        public static Boolean ticonAttack = true;*/
+	public static final ResourceLocation PROCESSED = MPR.location("processed");
+	public static final ResourceLocation PRESET = MPR.location("preset");
 	@Config(description = "If true creeper lingering clouds size changes based off their explosion radius.")
 	public static Boolean betterCreeperLingering = true;
 	@Config
@@ -56,17 +56,10 @@ public class MPRBase extends Feature {
 
 		if (!(event.getEntity() instanceof LivingEntity livingEntity))
 			return;
-		//TODO
-		/*if (livingEntity.getPersistentData().contains(PRESET)) {
-			ResourceLocation rl = ResourceLocation.tryParse(livingEntity.getPersistentData().getString(PRESET));
-			if (rl != null) {
-				Optional<MPRPresetLegacy> preset = MPR_PRESETS.stream().filter(p -> p.id.equals(rl)).findFirst();
-				preset.ifPresent(mprWeightedPreset -> mprWeightedPreset.apply(livingEntity));
-			}
-		}*/
 
-		CompoundTag tags = livingEntity.getPersistentData();
-		if (tags.getBoolean(MPRBase.PROCESSED))
+		tryApplyPreset(livingEntity);
+
+		if (ModNBTData.get(livingEntity, PROCESSED, Boolean.class))
 			return;
 
 		if (MPR_MOBS.isEmpty())
@@ -75,9 +68,24 @@ public class MPRBase extends Feature {
 		for (MPRMob mprMob : MPR_MOBS)
 			mprMob.tryApply(livingEntity);
 
-		tags.putBoolean(MPRBase.PROCESSED, true);
+		ModNBTData.put(livingEntity, PROCESSED, true);
 		MPRAttributeModifier.fixHealth(livingEntity);
 	}
+
+	public static void tryApplyPreset(LivingEntity living) {
+        if (!ModNBTData.contains(living, PRESET))
+            return;
+
+        ResourceLocation rl = ResourceLocation.tryParse(ModNBTData.get(living, PRESET, String.class));
+        if (rl == null)
+            return;
+
+        MPRProperties preset = PRESETS.get(rl);
+        if (preset == null)
+            return;
+
+        preset.forceApply(living);
+    }
 
 	@SubscribeEvent
 	public void onLivingDamage(LivingDamageEvent event) {

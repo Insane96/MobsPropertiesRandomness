@@ -57,7 +57,7 @@ public class MPRWeightedPreset extends MPRConditionable implements IWeightedRand
             JsonObject jObject = json.getAsJsonObject();
             String sPreset = GsonHelper.getAsString(jObject, "preset");
             ResourceLocation presetLocation = ResourceLocation.parse(sPreset);
-            MPRProperties preset = MPRPresetReloadListener.MPR_PRESETS.get(presetLocation);
+            MPRProperties preset = MPRPresetReloadListener.PRESETS.get(presetLocation);
             MPRWeightedPreset weightedPreset = new MPRWeightedPreset(
                     preset,
                     GsonHelper.getAsObject(jObject, "weight", MPRModifiableValue.ONE, context, MPRModifiableValue.class),

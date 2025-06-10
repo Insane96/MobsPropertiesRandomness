@@ -24,10 +24,10 @@ public class MPRMob extends MPRProperties {
     }
 
     @Override
-    public void tryApply(LivingEntity entity) {
-        if (!this.target.matchesEntity(entity))
+    public void tryApply(LivingEntity living) {
+        if (!this.target.matchesEntity(living))
             return;
-        super.tryApply(entity);
+        super.tryApply(living);
     }
 
     public static class Serializer implements JsonDeserializer<MPRMob>, JsonSerializer<MPRMob> {

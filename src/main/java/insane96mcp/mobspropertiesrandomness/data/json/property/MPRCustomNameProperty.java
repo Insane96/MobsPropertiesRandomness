@@ -24,7 +24,7 @@ public class MPRCustomNameProperty extends MPRProperty {
     }
 
     @Override
-    protected boolean apply(LivingEntity living) {
+    public boolean apply(LivingEntity living) {
         String prefix = "";
         if (this.prefixes != null && !this.prefixes.isEmpty())
             prefix = this.prefixes.get(living.getRandom().nextInt(this.prefixes.size()));

@@ -20,7 +20,7 @@ public class MPRExperienceMultiplierProperty extends MPRProperty {
     }
 
     @Override
-    protected boolean apply(LivingEntity living) {
+    public boolean apply(LivingEntity living) {
         TagsFeature.setExperienceMultiplier(this.experienceMultiplier.getValue(living), living);
         return true;
     }

@@ -37,7 +37,7 @@ public class MPRScalePehkuiProperty extends MPRProperty {
     private static final HashMultimap<LivingEntity, MPRScalePehkuiProperty> TO_APPLY = HashMultimap.create();
 
     @Override
-    protected boolean apply(LivingEntity living) {
+    public boolean apply(LivingEntity living) {
         TO_APPLY.put(living, this);
         return true;
     }

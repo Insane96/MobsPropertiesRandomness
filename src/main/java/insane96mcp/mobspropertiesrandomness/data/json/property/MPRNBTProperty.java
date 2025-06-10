@@ -21,7 +21,7 @@ public class MPRNBTProperty extends MPRProperty {
     }
 
     @Override
-    protected boolean apply(LivingEntity living) {
+    public boolean apply(LivingEntity living) {
         CompoundTag mobTag = new CompoundTag();
         living.saveWithoutId(mobTag);
         String[] splitPath = this.nbt.path.split("\\.");

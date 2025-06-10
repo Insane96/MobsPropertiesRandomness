@@ -22,7 +22,7 @@ public class MPRFireProperty extends MPRProperty {
     }
 
     @Override
-    protected boolean apply(LivingEntity living) {
+    public boolean apply(LivingEntity living) {
         int fireTicks = (int) (this.secondsOnFire.getDoubleBetween(living) * 20);
         if (this.additive)
             fireTicks += living.getRemainingFireTicks();

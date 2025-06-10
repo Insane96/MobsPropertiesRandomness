@@ -21,7 +21,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 public class MPRPresetReloadListener extends SimplePreparableReloadListener<Map<ResourceLocation, JsonElement>> {
-	public static final Map<ResourceLocation, MPRProperties> MPR_PRESETS = new HashMap<>();
+	public static final Map<ResourceLocation, MPRProperties> PRESETS = new HashMap<>();
 	public static final MPRPresetReloadListener INSTANCE;
 	private static final Gson GSON;
 	private final String directory;
@@ -64,7 +64,7 @@ public class MPRPresetReloadListener extends SimplePreparableReloadListener<Map<
 
 	@Override
 	protected void apply(@NotNull Map<ResourceLocation, JsonElement> map, @NotNull ResourceManager resourceManager, @NotNull ProfilerFiller profilerFiller) {
-		MPR_PRESETS.clear();
+		PRESETS.clear();
 		for (var entry : map.entrySet()) {
 			try {
 				ResourceLocation name = entry.getKey();
@@ -74,8 +74,8 @@ public class MPRPresetReloadListener extends SimplePreparableReloadListener<Map<
 					continue;
 
 				MPRProperties preset = GSON.fromJson(entry.getValue(), MPRProperties.class);
-				MPR_PRESETS.put(name, preset);
-				Logger.info("Loaded Preset %s", entry.getKey());
+				PRESETS.put(name, preset);
+				//Logger.info("Loaded Preset %s", entry.getKey());
 			}
 			catch (JsonSyntaxException e) {
 				Logger.error("Parsing error loading Preset %s: %s", entry.getKey(), e.getMessage());
@@ -85,12 +85,12 @@ public class MPRPresetReloadListener extends SimplePreparableReloadListener<Map<
 			}
 		}
 
-		Logger.info("Loaded %s Presets", MPR_PRESETS.size());
+		Logger.info("Loaded %s Presets", PRESETS.size());
 	}
 
 	@Nullable
 	public static ResourceLocation getKey(@NotNull MPRProperties preset) {
-		for (Map.Entry<ResourceLocation, MPRProperties> entry : MPR_PRESETS.entrySet()) {
+		for (Map.Entry<ResourceLocation, MPRProperties> entry : PRESETS.entrySet()) {
 			if (entry.getValue().equals(preset))
 				return entry.getKey();
 		}

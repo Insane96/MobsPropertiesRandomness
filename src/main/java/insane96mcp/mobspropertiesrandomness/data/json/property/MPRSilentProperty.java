@@ -15,7 +15,7 @@ public class MPRSilentProperty extends MPRProperty {
     }
 
     @Override
-    protected boolean apply(LivingEntity living) {
+    public boolean apply(LivingEntity living) {
         living.setSilent(true);
         return true;
     }

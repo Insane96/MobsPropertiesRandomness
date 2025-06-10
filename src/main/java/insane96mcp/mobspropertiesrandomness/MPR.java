@@ -2,6 +2,8 @@ package insane96mcp.mobspropertiesrandomness;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
+import com.mojang.brigadier.CommandDispatcher;
+import insane96mcp.mobspropertiesrandomness.command.MPRCommand;
 import insane96mcp.mobspropertiesrandomness.data.MPRMobReloadListener;
 import insane96mcp.mobspropertiesrandomness.data.MPRPresetReloadListener;
 import insane96mcp.mobspropertiesrandomness.data.json.condition.ConditionsRegistry;
@@ -14,6 +16,8 @@ import insane96mcp.mobspropertiesrandomness.data.json.util.modifiable.ModifiersR
 import insane96mcp.mobspropertiesrandomness.data.serializer.*;
 import insane96mcp.mobspropertiesrandomness.setup.Config;
 import insane96mcp.mobspropertiesrandomness.util.Logger;
+import net.minecraft.commands.CommandBuildContext;
+import net.minecraft.commands.CommandSourceStack;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.BossEvent;
 import net.minecraft.world.Difficulty;
@@ -21,6 +25,7 @@ import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.entity.ai.attributes.AttributeModifier;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.event.AddReloadListenerEvent;
+import net.minecraftforge.event.RegisterCommandsEvent;
 import net.minecraftforge.eventbus.api.EventPriority;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
@@ -51,6 +56,13 @@ public class MPR
     public void onAddReloadListener(AddReloadListenerEvent event) {
         event.addListener(MPRPresetReloadListener.INSTANCE);
         event.addListener(MPRMobReloadListener.INSTANCE);
+    }
+
+    @SubscribeEvent
+    public void onRegisterCommands(RegisterCommandsEvent event) {
+        CommandDispatcher<CommandSourceStack> dispatcher = event.getDispatcher();
+        CommandBuildContext context = event.getBuildContext();
+        MPRCommand.register(dispatcher, context);
     }
 
     public void preInit(FMLCommonSetupEvent event) {
