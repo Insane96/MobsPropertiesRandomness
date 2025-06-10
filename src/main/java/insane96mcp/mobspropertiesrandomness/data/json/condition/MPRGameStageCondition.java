@@ -2,7 +2,7 @@ package insane96mcp.mobspropertiesrandomness.data.json.condition;
 
 import com.google.gson.*;
 import com.google.gson.annotations.JsonAdapter;
-import com.google.gson.annotations.SerializedName;
+import insane96mcp.mobspropertiesrandomness.data.json.util.PlayerMode;
 import insane96mcp.mobspropertiesrandomness.util.SerializerUtils;
 import net.darkhax.gamestages.GameStageHelper;
 import net.minecraft.server.level.ServerPlayer;
@@ -65,12 +65,5 @@ public class MPRGameStageCondition extends MPRCondition {
 			jObject.add("player", context.serialize(src.player));
 			return src.endSerialization(jObject);
 		}
-	}
-
-	public enum PlayerMode {
-		@SerializedName("nearest")
-		NEAREST,
-		@SerializedName("any")
-		ANY
 	}
 }

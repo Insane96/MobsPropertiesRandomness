@@ -2,11 +2,9 @@ package insane96mcp.mobspropertiesrandomness.data;
 
 import com.google.gson.Gson;
 import com.google.gson.JsonElement;
-import com.google.gson.JsonParseException;
 import com.google.gson.JsonSyntaxException;
-import insane96mcp.insanelib.exception.JsonValidationException;
 import insane96mcp.mobspropertiesrandomness.MPR;
-import insane96mcp.mobspropertiesrandomness.data.json.MPRPresetLegacy;
+import insane96mcp.mobspropertiesrandomness.data.json.MPRProperties;
 import insane96mcp.mobspropertiesrandomness.util.Logger;
 import net.minecraft.resources.FileToIdConverter;
 import net.minecraft.resources.ResourceLocation;
@@ -16,16 +14,14 @@ import net.minecraft.server.packs.resources.SimplePreparableReloadListener;
 import net.minecraft.util.GsonHelper;
 import net.minecraft.util.profiling.ProfilerFiller;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
-import java.io.IOException;
 import java.io.Reader;
-import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
 public class MPRPresetReloadListener extends SimplePreparableReloadListener<Map<ResourceLocation, JsonElement>> {
-	public static final List<MPRPresetLegacy> MPR_PRESETS = new ArrayList<>();
+	public static final Map<ResourceLocation, MPRProperties> MPR_PRESETS = new HashMap<>();
 	public static final MPRPresetReloadListener INSTANCE;
 	private static final Gson GSON;
 	private final String directory;
@@ -59,7 +55,7 @@ public class MPRPresetReloadListener extends SimplePreparableReloadListener<Map<
 				if (duplicated != null)
 					throw new IllegalStateException("Duplicate data file ignored with ID " + id);
 			}
-			catch (IllegalArgumentException | IOException | JsonParseException exception) {
+			catch (Exception exception) {
 				Logger.error("Error loading Preset %s: %s", key, exception.getMessage());
 			}
 		}
@@ -77,14 +73,9 @@ public class MPRPresetReloadListener extends SimplePreparableReloadListener<Map<
 				if (split[split.length - 1].startsWith("_"))
 					continue;
 
-				MPRPresetLegacy preset = GSON.fromJson(entry.getValue(), MPRPresetLegacy.class);
-				preset.validate();
-				preset.id = name;
-				MPR_PRESETS.add(preset);
+				MPRProperties preset = GSON.fromJson(entry.getValue(), MPRProperties.class);
+				MPR_PRESETS.put(name, preset);
 				Logger.info("Loaded Preset %s", entry.getKey());
-			}
-			catch (JsonValidationException e) {
-				Logger.error("Validation error loading Preset %s: %s", entry.getKey(), e.getMessage());
 			}
 			catch (JsonSyntaxException e) {
 				Logger.error("Parsing error loading Preset %s: %s", entry.getKey(), e.getMessage());
@@ -95,5 +86,14 @@ public class MPRPresetReloadListener extends SimplePreparableReloadListener<Map<
 		}
 
 		Logger.info("Loaded %s Presets", MPR_PRESETS.size());
+	}
+
+	@Nullable
+	public static ResourceLocation getKey(@NotNull MPRProperties preset) {
+		for (Map.Entry<ResourceLocation, MPRProperties> entry : MPR_PRESETS.entrySet()) {
+			if (entry.getValue().equals(preset))
+				return entry.getKey();
+		}
+		return null;
 	}
 }

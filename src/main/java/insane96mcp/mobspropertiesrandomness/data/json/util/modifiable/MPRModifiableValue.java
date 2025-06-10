@@ -11,7 +11,7 @@ import java.util.List;
 
 @JsonAdapter(MPRModifiableValue.Serializer.class)
 public class MPRModifiableValue extends MPRModifiable {
-	protected Double value;
+	protected final Double value;
 
 	public static final MPRModifiableValue ZERO = new MPRModifiableValue(0d);
 	public static final MPRModifiableValue ONE = new MPRModifiableValue(1d);

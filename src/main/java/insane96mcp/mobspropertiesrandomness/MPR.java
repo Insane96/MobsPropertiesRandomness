@@ -8,6 +8,8 @@ import insane96mcp.mobspropertiesrandomness.data.json.condition.ConditionsRegist
 import insane96mcp.mobspropertiesrandomness.data.json.property.PropertiesRegistry;
 import insane96mcp.mobspropertiesrandomness.data.json.property.equipment.ItemFunctionsRegistry;
 import insane96mcp.mobspropertiesrandomness.data.json.property.events.EventsRegistry;
+import insane96mcp.mobspropertiesrandomness.data.json.util.NBTType;
+import insane96mcp.mobspropertiesrandomness.data.json.util.PlayerMode;
 import insane96mcp.mobspropertiesrandomness.data.json.util.modifiable.ModifiersRegistry;
 import insane96mcp.mobspropertiesrandomness.data.serializer.*;
 import insane96mcp.mobspropertiesrandomness.setup.Config;
@@ -76,6 +78,8 @@ public class MPR
                 .registerTypeAdapter(BossEvent.BossBarColor.class, new BossBarColorSerializer())
                 .registerTypeAdapter(BossEvent.BossBarOverlay.class, new BossBarOverlaySerializer())
                 .registerTypeAdapter(Difficulty.class, new DifficultySerializer())
+                .registerTypeAdapter(NBTType.class, new StrictEnumDeserializer<>(NBTType.class))
+                .registerTypeAdapter(PlayerMode.class, new StrictEnumDeserializer<>(PlayerMode.class))
                 .create();
     }
 }

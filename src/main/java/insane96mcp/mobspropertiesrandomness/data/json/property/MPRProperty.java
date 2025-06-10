@@ -1,9 +1,7 @@
 package insane96mcp.mobspropertiesrandomness.data.json.property;
 
-import com.google.gson.JsonArray;
-import com.google.gson.JsonDeserializationContext;
-import com.google.gson.JsonElement;
-import com.google.gson.JsonObject;
+import com.google.gson.*;
+import com.google.gson.annotations.JsonAdapter;
 import insane96mcp.mobspropertiesrandomness.MPR;
 import insane96mcp.mobspropertiesrandomness.data.json.condition.MPRCondition;
 import insane96mcp.mobspropertiesrandomness.data.json.condition.MPRConditionable;
@@ -17,18 +15,23 @@ import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.List;
 
-public abstract class MPRProperty extends MPRConditionable {
+@JsonAdapter(MPRProperty.Serializer.class)
+public class MPRProperty extends MPRConditionable {
     public MPRProperty(List<MPRCondition> conditions) {
         super(conditions);
     }
 
+    /// Checks for conditions and applies the property
     public final boolean tryApply(LivingEntity livingEntity) {
         if (!MPRCondition.conditionsApply(this.conditions, livingEntity))
             return false;
         return apply(livingEntity);
     }
 
-    protected abstract boolean apply(LivingEntity living);
+    /// Applies the property
+    protected boolean apply(LivingEntity living) {
+        throw new UnsupportedOperationException("apply(LivingEntity) not implemented");
+    }
 
     @Nullable
     public static MPRProperty deserialize(JsonElement element, JsonDeserializationContext context) {
@@ -54,5 +57,18 @@ public abstract class MPRProperty extends MPRConditionable {
             properties.add(property);
         }
         return properties;
+    }
+
+    public static class Serializer implements JsonDeserializer<MPRProperty>, JsonSerializer<MPRProperty> {
+        @Override
+        public MPRProperty deserialize(JsonElement json, Type typeOfT, JsonDeserializationContext context) throws JsonParseException {
+            return new MPRProperty(MPRCondition.deserializeList(json.getAsJsonObject(), "conditions", context));
+        }
+
+        @Override
+        public JsonElement serialize(MPRProperty src, Type typeOfSrc, JsonSerializationContext context) {
+            JsonObject jObject = new JsonObject();
+            return src.endSerialization(jObject, context);
+        }
     }
 }

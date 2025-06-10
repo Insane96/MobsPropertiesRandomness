@@ -23,13 +23,11 @@ public class MPRMob extends MPRProperties {
         this.priority = priority;
     }
 
+    @Override
     public void tryApply(LivingEntity entity) {
-        if (!this.target.matchesEntity(entity)
-                || !MPRCondition.conditionsApply(this.conditions, entity))
+        if (!this.target.matchesEntity(entity))
             return;
-        for (MPRProperty property : this.properties) {
-            property.tryApply(entity);
-        }
+        super.tryApply(entity);
     }
 
     public static class Serializer implements JsonDeserializer<MPRMob>, JsonSerializer<MPRMob> {

@@ -7,7 +7,6 @@ import insane96mcp.insanelib.base.config.Config;
 import insane96mcp.mobspropertiesrandomness.MPR;
 import insane96mcp.mobspropertiesrandomness.data.json.MPRAttributeModifier;
 import insane96mcp.mobspropertiesrandomness.data.json.MPRMob;
-import insane96mcp.mobspropertiesrandomness.data.json.MPRPresetLegacy;
 import insane96mcp.mobspropertiesrandomness.data.json.property.MPRBossBarProperty;
 import insane96mcp.mobspropertiesrandomness.data.json.property.MPREffectImmunityProperty;
 import insane96mcp.mobspropertiesrandomness.data.json.property.MPRScalePehkuiProperty;
@@ -15,7 +14,6 @@ import insane96mcp.mobspropertiesrandomness.data.json.property.events.MPRDeathEv
 import insane96mcp.mobspropertiesrandomness.data.json.property.events.MPROnHitEvent;
 import insane96mcp.mobspropertiesrandomness.data.json.property.events.MPRTickEvent;
 import net.minecraft.nbt.CompoundTag;
-import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraftforge.event.entity.EntityJoinLevelEvent;
@@ -29,10 +27,7 @@ import net.minecraftforge.eventbus.api.Event;
 import net.minecraftforge.eventbus.api.EventPriority;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 
-import java.util.Optional;
-
 import static insane96mcp.mobspropertiesrandomness.data.MPRMobReloadListener.MPR_MOBS;
-import static insane96mcp.mobspropertiesrandomness.data.MPRPresetReloadListener.MPR_PRESETS;
 
 @LoadFeature(module = MPR.RESOURCE_PREFIX + "base", canBeDisabled = false)
 public class MPRBase extends Feature {
@@ -61,13 +56,14 @@ public class MPRBase extends Feature {
 
 		if (!(event.getEntity() instanceof LivingEntity livingEntity))
 			return;
-		if (livingEntity.getPersistentData().contains(PRESET)) {
+		//TODO
+		/*if (livingEntity.getPersistentData().contains(PRESET)) {
 			ResourceLocation rl = ResourceLocation.tryParse(livingEntity.getPersistentData().getString(PRESET));
 			if (rl != null) {
 				Optional<MPRPresetLegacy> preset = MPR_PRESETS.stream().filter(p -> p.id.equals(rl)).findFirst();
 				preset.ifPresent(mprWeightedPreset -> mprWeightedPreset.apply(livingEntity));
 			}
-		}
+		}*/
 
 		CompoundTag tags = livingEntity.getPersistentData();
 		if (tags.getBoolean(MPRBase.PROCESSED))

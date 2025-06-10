@@ -42,8 +42,8 @@ public class MPRNBT {
             JsonObject jObject = json.getAsJsonObject();
             return new MPRNBT(
                     GsonHelper.getAsString(jObject, "path"),
-                    context.deserialize(jObject.get("type"), NBTType.class),
-                    context.deserialize(jObject.get("value"), MPRRange.class)
+                    GsonHelper.getAsObject(jObject, "type", context, NBTType.class),
+                    GsonHelper.getAsObject(jObject, "value", context, MPRRange.class)
             );
         }
 

@@ -2,6 +2,7 @@ package insane96mcp.mobspropertiesrandomness.data.json.property;
 
 import insane96mcp.mobspropertiesrandomness.MPR;
 import insane96mcp.mobspropertiesrandomness.data.json.property.equipment.MPREquipmentProperty;
+import insane96mcp.mobspropertiesrandomness.data.json.property.preset.MPRPresetsProperty;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraftforge.fml.ModList;
 
@@ -45,6 +46,7 @@ public class PropertiesRegistry {
         register("fire", MPRFireProperty.class);
         register("freeze", MPRFreezeProperty.class);
         register("event", MPREventProperty.class);
+        register("presets", MPRPresetsProperty.class);
         if (ModList.get().isLoaded("pehkui"))
             register("scale", MPRScalePehkuiProperty.class);
     }
