@@ -5,6 +5,7 @@ import com.google.gson.annotations.JsonAdapter;
 import com.google.gson.annotations.SerializedName;
 import net.minecraft.util.GsonHelper;
 import net.minecraft.util.Mth;
+import net.minecraft.util.RandomSource;
 import net.minecraft.world.entity.LivingEntity;
 
 import javax.annotation.Nullable;
@@ -15,22 +16,24 @@ import java.util.Objects;
 @JsonAdapter(MPRRange.Serializer.class)
 public class MPRRange extends MPRModifiableValue {
 	private final Double max;
-	@SerializedName("modifiers_behaviour")
+	@Nullable
+	private final Bias bias;
 	private ModifiersBehaviour modifiersBehaviour;
 
 	public static final MPRRange ZERO = new MPRRange(0d);
 	public static final MPRRange ONE = new MPRRange(1d);
 
 	public MPRRange(Double value) {
-		this(value, null, null, List.of(), null);
+		this(value, null, null, null, List.of(), null);
 	}
 
-	public MPRRange(Double min, @Nullable Double max, @Nullable ModifiersBehaviour modifiersBehaviour, List<MPRModifier> conditionsModifier, @Nullable Integer round) {
+	public MPRRange(Double min, @Nullable Double max, @Nullable ModifiersBehaviour modifiersBehaviour, @Nullable Bias bias, List<MPRModifier> conditionsModifier, @Nullable Integer round) {
 		super(min, conditionsModifier, round);
         this.max = max != null ? max : min;
 		this.modifiersBehaviour = modifiersBehaviour;
 		if (this.modifiersBehaviour == null)
 			this.modifiersBehaviour = ModifiersBehaviour.BOTH;
+		this.bias = bias;
 	}
 
 	public double getMin(LivingEntity living) {
@@ -54,14 +57,22 @@ public class MPRRange extends MPRModifiableValue {
 	 * Returns a random double value between min and max
 	 */
 	public double getDoubleBetween(LivingEntity entity) {
-		return Mth.nextDouble(entity.level().random, this.applyModifiers(this.value, entity), this.applyModifiers(this.max, entity));
+		RandomSource random = entity.level().random;
+		double min = this.applyModifiers(this.value, entity);
+		double max = this.applyModifiers(this.max, entity);
+		if (this.bias == null)
+			return Mth.nextDouble(random, min, max);
+		else {
+			double v = min + this.bias.next(random) * (max - min);
+			return v;
+		}
 	}
 
 	/**
 	 * Returns a random int value between min and max
 	 */
 	public int getIntBetween(LivingEntity entity) {
-		return Mth.nextInt(entity.level().random, (int) this.getMin(entity), (int) this.getMax(entity));
+		return (int) this.getDoubleBetween(entity);
 	}
 
 	public boolean isBetween(LivingEntity entity, double value) {
@@ -72,9 +83,9 @@ public class MPRRange extends MPRModifiableValue {
 		@Override
 		public MPRRange deserialize(JsonElement json, Type typeOfT, JsonDeserializationContext context) throws JsonParseException {
 			if (json.isJsonPrimitive())
-				return new MPRRange(json.getAsDouble(), null, null, List.of(), null);
+				return new MPRRange(json.getAsDouble());
 			JsonObject jObject = json.getAsJsonObject();
-			double min = 0;
+			double min;
 			if (!jObject.has("min")) {
 				if (!jObject.has("value"))
 					throw new JsonParseException("Missing min or value");
@@ -83,10 +94,15 @@ public class MPRRange extends MPRModifiableValue {
 			else {
 				min = GsonHelper.getAsDouble(jObject, "min");
 			}
+
+			Bias bias = null;
+			if (jObject.has("bias"))
+				bias = new Bias(GsonHelper.getAsFloat(jObject, "bias"), 0.5f);
 			return new MPRRange(
 					min,
 					GsonHelper.getAsDouble(jObject, "max", min),
 					GsonHelper.getAsObject(jObject, "modifiers_behaviour", null, context, ModifiersBehaviour.class),
+					bias,
 					deserializeList(jObject, context),
 					GsonHelper.getAsObject(jObject, "round", null, context, Integer.class)
 			);
@@ -112,5 +128,28 @@ public class MPRRange extends MPRModifiableValue {
 		MIN_ONLY,
 		@SerializedName("max_only")
 		MAX_ONLY
+	}
+
+	public static class Bias {
+		private final double mean, deviation;
+
+		public Bias(Float mean, Float deviation) {
+			if (mean <= 0.1f)
+				this.mean = 0.1f;
+			else if (mean >= 0.9f)
+				this.mean = 0.9f;
+			else
+				this.mean = mean;
+			this.deviation = deviation;
+		}
+
+		public double next(RandomSource random) {
+			double value;
+			do {
+				value = random.nextGaussian() * this.deviation + this.mean;
+			} while (value < 0 || value > 1);
+			return value;
+		}
+
 	}
 }
