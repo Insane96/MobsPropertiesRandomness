@@ -18,6 +18,14 @@ public class MPREventProperty extends MPRProperty {
         this.event = event;
     }
 
+    /**
+     * Events should check for conditions only when trying to execute and not on apply
+     */
+    @Override
+    public boolean tryApply(LivingEntity livingEntity) {
+        return this.apply(livingEntity);
+    }
+
     @Override
     public boolean apply(LivingEntity living) {
         this.event.apply(living);

@@ -22,7 +22,7 @@ public class MPRProperty extends MPRConditionable {
     }
 
     /// Checks for conditions and applies the property
-    public final boolean tryApply(LivingEntity livingEntity) {
+    public boolean tryApply(LivingEntity livingEntity) {
         if (!MPRCondition.conditionsApply(this.conditions, livingEntity))
             return false;
         return apply(livingEntity);
