@@ -24,6 +24,8 @@ public class WeightedLootTable extends WeightedResourceLocation {
         if (!MPRCondition.conditionsApply(this.conditions, entity))
             return null;
         this._weight = (int) this.modifiableWeight.getValue(entity);
+        if (this._weight <= 0)
+            return null;
 
         return this;
     }
