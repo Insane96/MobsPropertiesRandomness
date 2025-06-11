@@ -45,6 +45,7 @@ public class PropertiesRegistry {
         register("play_sound", MPRPlaySoundProperty.class);
         register("fire", MPRFireProperty.class);
         register("freeze", MPRFreezeProperty.class);
+        register("heal", MPRHealProperty.class);
         register("event", MPREventProperty.class);
         register("presets", MPRPresetsProperty.class);
         if (ModList.get().isLoaded("pehkui"))
