@@ -23,6 +23,7 @@ import net.minecraft.world.BossEvent;
 import net.minecraft.world.Difficulty;
 import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.entity.ai.attributes.AttributeModifier;
+import net.minecraft.world.level.LightLayer;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.event.AddReloadListenerEvent;
 import net.minecraftforge.event.RegisterCommandsEvent;
@@ -90,6 +91,7 @@ public class MPR
                 .registerTypeAdapter(BossEvent.BossBarColor.class, new BossBarColorSerializer())
                 .registerTypeAdapter(BossEvent.BossBarOverlay.class, new BossBarOverlaySerializer())
                 .registerTypeAdapter(Difficulty.class, new DifficultySerializer())
+                .registerTypeAdapter(LightLayer.class, new LightLayerSerializer())
                 .registerTypeAdapter(NBTType.class, new StrictEnumDeserializer<>(NBTType.class))
                 .registerTypeAdapter(PlayerMode.class, new StrictEnumDeserializer<>(PlayerMode.class))
                 .create();

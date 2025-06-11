@@ -42,6 +42,8 @@ public class ConditionsRegistry {
         register("advancement", MPRAdvancementCondition.class);
         register("difficulty", MPRDifficultyCondition.class);
         register("temperature", MPRTemperatureCondition.class);
+        register("has_target", MPRHasTargetCondition.class);
+        register("light_level", MPRLightLevelCondition.class);
         if (ModList.get().isLoaded("gamestages"))
             register("game_stage", MPRGameStageCondition.class);
         register("nbt", MPRNBTCondition.class);
