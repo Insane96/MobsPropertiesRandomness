@@ -45,7 +45,7 @@ public abstract class MPREvent extends MPRConditionable {
     }
 
     public boolean apply(LivingEntity living) {
-        ResourceLocation eventId = EventsRegistry.getId(this.getClass());
+        ResourceLocation eventId = getId(this.getClass());
         if (eventId == null)
             return false;
         ListTag list = ModNBTData.getList(living, eventId, CompoundTag.TAG_STRING);
@@ -86,7 +86,7 @@ public abstract class MPREvent extends MPRConditionable {
 
     public static <T extends MPREvent> List<T> getEvents(LivingEntity living, Class<T> typeId) {
         List<T> events = new ArrayList<>();
-        ResourceLocation eventId = EventsRegistry.getId(typeId);
+        ResourceLocation eventId = getId(typeId);
         if (eventId == null)
             return events;
         ListTag list = ModNBTData.getList(living, eventId, CompoundTag.TAG_STRING);
@@ -99,6 +99,13 @@ public abstract class MPREvent extends MPRConditionable {
             }
         }
         return events;
+    }
+
+    public static ResourceLocation getId(Class<? extends MPREvent> clazz) {
+        ResourceLocation eventId = EventsRegistry.getId(clazz);
+        if (eventId == null)
+            return null;
+        return ResourceLocation.parse(eventId.getNamespace() + ":" + "events/" + eventId.getPath());
     }
 
     @Nullable
