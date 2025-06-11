@@ -40,6 +40,8 @@ public abstract class MPREvent extends MPRConditionable {
         this.target = target;
         this.function = function;
         this.applyProperties = applyProperties;
+        if (!LOADED_EVENTS.containsKey(id))
+            LOADED_EVENTS.put(id, this);
     }
 
     public boolean apply(LivingEntity living) {
@@ -49,9 +51,6 @@ public abstract class MPREvent extends MPRConditionable {
         ListTag list = ModNBTData.getList(living, eventId, CompoundTag.TAG_STRING);
         list.add(StringTag.valueOf(id.toString()));
         ModNBTData.put(living, eventId, list);
-        //TODO Relogging doesn't load events on already existing mobs
-        if (!LOADED_EVENTS.containsKey(id))
-            LOADED_EVENTS.put(id, this);
         return true;
     }
 

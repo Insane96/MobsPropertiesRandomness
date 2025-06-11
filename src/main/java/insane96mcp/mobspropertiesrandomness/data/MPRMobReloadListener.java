@@ -65,6 +65,7 @@ public class MPRMobReloadListener extends SimplePreparableReloadListener<Map<Res
 	@Override
 	protected void apply(@NotNull Map<ResourceLocation, JsonElement> map, @NotNull ResourceManager resourceManager, @NotNull ProfilerFiller profilerFiller) {
 		MPR_MOBS.clear();
+		MPREvent.LOADED_EVENTS.clear();
 		for (var entry : map.entrySet()) {
 			try {
 				ResourceLocation name = entry.getKey();
@@ -87,7 +88,6 @@ public class MPRMobReloadListener extends SimplePreparableReloadListener<Map<Res
 
 		MPR_MOBS.sort(Comparator.comparing(mob -> mob.priority, Comparator.reverseOrder()));
 
-		MPREvent.LOADED_EVENTS.clear();
 		Logger.info("Loaded %s Mob(s)", MPR_MOBS.size());
 	}
 }
