@@ -2,9 +2,11 @@ package insane96mcp.mobspropertiesrandomness.data.json.property.events;
 
 import com.google.gson.*;
 import com.google.gson.annotations.JsonAdapter;
+import insane96mcp.insanelib.util.ModNBTData;
+import insane96mcp.mobspropertiesrandomness.MPR;
 import insane96mcp.mobspropertiesrandomness.data.json.condition.MPRCondition;
 import insane96mcp.mobspropertiesrandomness.data.json.property.MPRProperty;
-import insane96mcp.mobspropertiesrandomness.data.json.util.modifiable.MPRModifiableValue;
+import insane96mcp.mobspropertiesrandomness.data.json.util.modifiable.MPRRange;
 import net.minecraft.commands.CommandFunction;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.GsonHelper;
@@ -16,20 +18,22 @@ import java.util.List;
 
 @JsonAdapter(MPRTickEvent.Serializer.class)
 public class MPRTickEvent extends MPREvent {
-	public MPRModifiableValue updateInterval;
+	private static final ResourceLocation TAG_UPDATE_INTERVAL = MPR.location("next_tick");
 
-	public MPRTickEvent(MPRModifiableValue updateInterval, ResourceLocation id, Target target, @Nullable CommandFunction.CacheableFunction function, @Nullable List<MPRProperty> applyProperties, List<MPRCondition> conditions) {
+	public MPRRange updateInterval;
+
+	public MPRTickEvent(MPRRange updateInterval, ResourceLocation id, Target target, @Nullable CommandFunction.CacheableFunction function, @Nullable List<MPRProperty> applyProperties, List<MPRCondition> conditions) {
 		super(id, target, function, applyProperties, conditions);
 		this.updateInterval = updateInterval;
 	}
 
-	public void tick(LivingEntity entity) {
-		int updateInterval = (int) (this.updateInterval.getValue(entity) * 20);
-		if (updateInterval <= 0)
+	public void tick(LivingEntity living) {
+        if (living.level().getGameTime() < ModNBTData.get(living, TAG_UPDATE_INTERVAL, Long.class))
 			return;
-		if (entity.tickCount % updateInterval != 0)
-			return;
-		this.execute(entity, entity);
+
+		if (living.tickCount > 1)
+			this.execute(living, living);
+		ModNBTData.put(living, TAG_UPDATE_INTERVAL, (int) (this.updateInterval.getDoubleBetween(living) * 20) + living.level().getGameTime());
 	}
 
 	public static void tickEvents(LivingEntity entity) {
@@ -42,13 +46,14 @@ public class MPRTickEvent extends MPREvent {
 		@Override
 		public MPRTickEvent deserialize(JsonElement json, Type typeOfT, JsonDeserializationContext context) throws JsonParseException {
 			JsonObject jObject = json.getAsJsonObject();
-			String id = GsonHelper.getAsString(jObject, "id");
-			//Target target = GsonHelper.getAsObject(jObject, "target", context, Target.class);
-			CommandFunction.CacheableFunction function = deserializeFunction(jObject);
-			List<MPRCondition> conditions = MPRCondition.deserializeConditions(jObject, context);
-			List<MPRProperty> properties = MPRProperty.deserializeList(jObject, "apply_properties", context);
-
-			return new MPRTickEvent(GsonHelper.getAsObject(jObject, "update_interval", new MPRModifiableValue(20d), context, MPRModifiableValue.class), ResourceLocation.parse(id), Target.THIS, function, properties, conditions);
+			return new MPRTickEvent(
+					GsonHelper.getAsObject(jObject, "update_interval", context, MPRRange.class),
+					ResourceLocation.parse(GsonHelper.getAsString(jObject, "id")),
+					Target.THIS,
+					deserializeFunction(jObject),
+					MPRProperty.deserializeList(jObject, "apply_properties", context),
+					MPRCondition.deserializeConditions(jObject, context)
+			);
 		}
 
 		@Override
