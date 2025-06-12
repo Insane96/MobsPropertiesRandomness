@@ -28,15 +28,15 @@ public class MPRKillEvent extends MPREvent {
 		if (!this.hurtData.shouldApply(source, isDirectDamage))
 			return;
 
-		this.execute(entity, killedEntity);
+		this.tryExecute(entity, killedEntity);
 	}
 
 	public static void onKill(LivingDeathEvent event) {
 		LivingEntity living = event.getEntity();
 		LivingEntity killer = (LivingEntity) event.getSource().getEntity();
 		List<MPRKillEvent> events = getEvents(killer, MPRKillEvent.class);
-		for (MPRKillEvent deathEvent : events) {
-			deathEvent.kill(killer, living, event.getSource(), event.getSource().getDirectEntity() == event.getSource().getEntity());
+		for (MPRKillEvent killEvent : events) {
+			killEvent.kill(killer, living, event.getSource(), event.getSource().getDirectEntity() == event.getSource().getEntity());
 		}
 	}
 

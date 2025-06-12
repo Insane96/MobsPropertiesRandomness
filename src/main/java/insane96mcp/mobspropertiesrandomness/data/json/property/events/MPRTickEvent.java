@@ -32,7 +32,7 @@ public class MPRTickEvent extends MPREvent {
 			return;
 
 		if (living.tickCount > 1)
-			this.execute(living, living);
+			this.tryExecute(living, living);
 		ModNBTData.put(living, TAG_UPDATE_INTERVAL, (int) (this.updateInterval.getDoubleBetween(living) * 20) + living.level().getGameTime());
 	}
 

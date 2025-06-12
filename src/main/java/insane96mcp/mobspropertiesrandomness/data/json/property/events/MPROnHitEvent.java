@@ -60,7 +60,7 @@ public abstract class MPROnHitEvent extends MPREvent {
 				return;
 		}
 
-		this.execute(living, other);
+		this.tryExecute(living, other);
 	}
 
 	public static void onHit(LivingDamageEvent event) {

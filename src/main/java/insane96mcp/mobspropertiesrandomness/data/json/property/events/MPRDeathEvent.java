@@ -32,7 +32,7 @@ public class MPRDeathEvent extends MPREvent {
 		if (!this.hurtData.shouldApply(source, isDirectDamage))
 			return false;
 
-		return this.execute(entity, other) && this.cancelDeath;
+		return this.tryExecute(entity, other) && this.cancelDeath;
 	}
 
 	public static void onDeath(LivingDeathEvent event) {

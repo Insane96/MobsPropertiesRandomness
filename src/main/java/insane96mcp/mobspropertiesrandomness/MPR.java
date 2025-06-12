@@ -10,6 +10,7 @@ import insane96mcp.mobspropertiesrandomness.data.json.condition.ConditionsRegist
 import insane96mcp.mobspropertiesrandomness.data.json.property.PropertiesRegistry;
 import insane96mcp.mobspropertiesrandomness.data.json.property.equipment.ItemFunctionsRegistry;
 import insane96mcp.mobspropertiesrandomness.data.json.property.events.EventsRegistry;
+import insane96mcp.mobspropertiesrandomness.data.json.property.events.MPRChangeTargetEvent;
 import insane96mcp.mobspropertiesrandomness.data.json.util.NBTType;
 import insane96mcp.mobspropertiesrandomness.data.json.util.PlayerMode;
 import insane96mcp.mobspropertiesrandomness.data.json.util.modifiable.ModifiersRegistry;
@@ -94,6 +95,7 @@ public class MPR
                 .registerTypeAdapter(LightLayer.class, new LightLayerSerializer())
                 .registerTypeAdapter(NBTType.class, new StrictEnumDeserializer<>(NBTType.class))
                 .registerTypeAdapter(PlayerMode.class, new StrictEnumDeserializer<>(PlayerMode.class))
+                .registerTypeAdapter(MPRChangeTargetEvent.ChangeType.class, new StrictEnumDeserializer<>(MPRChangeTargetEvent.ChangeType.class))
                 .create();
     }
 }

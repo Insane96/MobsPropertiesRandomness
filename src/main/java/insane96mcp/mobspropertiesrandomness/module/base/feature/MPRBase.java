@@ -12,19 +12,13 @@ import insane96mcp.mobspropertiesrandomness.data.json.MPRProperties;
 import insane96mcp.mobspropertiesrandomness.data.json.property.MPRBossBarProperty;
 import insane96mcp.mobspropertiesrandomness.data.json.property.MPREffectImmunityProperty;
 import insane96mcp.mobspropertiesrandomness.data.json.property.MPRScalePehkuiProperty;
-import insane96mcp.mobspropertiesrandomness.data.json.property.events.MPRDeathEvent;
-import insane96mcp.mobspropertiesrandomness.data.json.property.events.MPRKillEvent;
-import insane96mcp.mobspropertiesrandomness.data.json.property.events.MPROnHitEvent;
-import insane96mcp.mobspropertiesrandomness.data.json.property.events.MPRTickEvent;
+import insane96mcp.mobspropertiesrandomness.data.json.property.events.*;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraftforge.event.entity.EntityJoinLevelEvent;
 import net.minecraftforge.event.entity.EntityLeaveLevelEvent;
-import net.minecraftforge.event.entity.living.LivingDamageEvent;
-import net.minecraftforge.event.entity.living.LivingDeathEvent;
-import net.minecraftforge.event.entity.living.LivingEvent;
-import net.minecraftforge.event.entity.living.MobEffectEvent;
+import net.minecraftforge.event.entity.living.*;
 import net.minecraftforge.event.entity.player.PlayerEvent;
 import net.minecraftforge.eventbus.api.Event;
 import net.minecraftforge.eventbus.api.EventPriority;
@@ -97,6 +91,11 @@ public class MPRBase extends Feature {
 	public void onLivingDeath(LivingDeathEvent event) {
 		MPRDeathEvent.onDeath(event);
 		MPRKillEvent.onKill(event);
+	}
+
+	@SubscribeEvent
+	public void onTargetSwitch(LivingChangeTargetEvent event) {
+		MPRChangeTargetEvent.onTargetChange(event);
 	}
 
 	@SubscribeEvent

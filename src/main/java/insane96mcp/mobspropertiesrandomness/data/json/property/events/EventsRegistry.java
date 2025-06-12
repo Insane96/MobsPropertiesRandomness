@@ -34,5 +34,6 @@ public class EventsRegistry {
         register("attacked", MPRAttackedEvent.class);
         register("attack", MPRAttackEvent.class);
         register("kill", MPRKillEvent.class);
+        register("change_target", MPRChangeTargetEvent.class);
     }
 }
