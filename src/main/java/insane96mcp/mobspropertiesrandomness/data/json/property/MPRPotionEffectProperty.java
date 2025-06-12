@@ -20,22 +20,27 @@ public class MPRPotionEffectProperty extends MPRProperty {
     public MobEffect mobEffect;
     public MPRRange amplifier;
     public MPRRange duration;
+    public boolean stackDuration;
     public boolean ambient;
     public boolean hideParticles;
 
-    public MPRPotionEffectProperty(MobEffect mobEffect, MPRRange amplifier, MPRRange duration, boolean ambient, boolean hideParticles, List<MPRCondition> conditions) {
+    public MPRPotionEffectProperty(MobEffect mobEffect, MPRRange amplifier, MPRRange duration, boolean stackDuration, boolean ambient, boolean hideParticles, List<MPRCondition> conditions) {
         super(conditions);
         this.mobEffect = mobEffect;
         this.amplifier = amplifier;
         this.duration = duration;
+        this.stackDuration = stackDuration;
         this.ambient = ambient;
         this.hideParticles = hideParticles;
     }
 
     @Override
     public boolean apply(LivingEntity living) {
-        int duration = this.duration.getIntBetween(living);
-        MobEffectInstance effectInstance = new MobEffectInstance(mobEffect, duration == -1 ? -1 : duration * 20, this.amplifier.getIntBetween(living), this.ambient, !this.hideParticles, false);
+        double duration = this.duration.getDoubleBetween(living);
+        if (living.getEffect(this.mobEffect) != null && this.stackDuration && duration != -1)
+            //noinspection DataFlowIssue
+            duration += living.getEffect(this.mobEffect).getDuration() / 20d;
+        MobEffectInstance effectInstance = new MobEffectInstance(mobEffect, (int) (duration * 20d), this.amplifier.getIntBetween(living), this.ambient, !this.hideParticles, false);
         living.addEffect(effectInstance);
         return true;
     }
@@ -53,11 +58,7 @@ public class MPRPotionEffectProperty extends MPRProperty {
             else
                 amplifier = MPRRange.ZERO;
 
-            MPRRange duration;
-            if (jObject.has("duration"))
-                duration = context.deserialize(jObject.get("duration"), MPRRange.class);
-            else
-                duration = new MPRRange(-1d);
+            MPRRange duration = GsonHelper.getAsObject(jObject, "duration", new MPRRange(-1d), context, MPRRange.class);
 
             boolean ambient = GsonHelper.getAsBoolean(jObject, "ambient", false);
             boolean hideParticles = GsonHelper.getAsBoolean(jObject, "hide_particles", false);
@@ -65,7 +66,7 @@ public class MPRPotionEffectProperty extends MPRProperty {
             if (ambient && hideParticles)
                 Logger.warn("Particles are hidden, but ambient is enabled for %s. Ambient doesn't work if particles are hidden.".formatted(mobEffect));
 
-            return new MPRPotionEffectProperty(mobEffect, amplifier, duration, ambient, hideParticles, MPRCondition.deserializeConditions(jObject, context));
+            return new MPRPotionEffectProperty(mobEffect, amplifier, duration, GsonHelper.getAsBoolean(jObject, "stack_duration", false), ambient, hideParticles, MPRCondition.deserializeConditions(jObject, context));
         }
 
         @Override
@@ -74,6 +75,8 @@ public class MPRPotionEffectProperty extends MPRProperty {
             jObject.add("effect", SerializerUtils.serializeRegistryObject(src.mobEffect, Registries.MOB_EFFECT));
             jObject.add("amplifier", context.serialize(src.amplifier));
             jObject.add("duration", context.serialize(src.duration));
+            if (src.stackDuration)
+                jObject.addProperty("stack_duration", true);
             jObject.addProperty("ambient", src.ambient);
             jObject.addProperty("hide_particles", src.hideParticles);
             return src.endSerialization(jObject, context);
