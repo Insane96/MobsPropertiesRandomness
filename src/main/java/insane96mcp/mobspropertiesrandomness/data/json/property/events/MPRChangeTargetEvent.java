@@ -32,6 +32,10 @@ public class MPRChangeTargetEvent extends MPREvent {
 				if (oldTarget == null && newTarget != null)
 					this.tryExecute(entity, newTarget);
 			}
+			case SWITCH_TARGET -> {
+				if (oldTarget != null && newTarget != null && oldTarget != newTarget)
+					this.tryExecute(entity, newTarget);
+			}
 			case LOST_TARGET -> {
 				if (oldTarget != null && newTarget == null)
 					this.tryExecute(entity, null);
@@ -70,6 +74,8 @@ public class MPRChangeTargetEvent extends MPREvent {
 	public enum ChangeType {
 		@SerializedName("new_target")
 		NEW_TARGET,
+		@SerializedName("switch_target")
+		SWITCH_TARGET,
 		@SerializedName("lost_target")
 		LOST_TARGET
 	}
