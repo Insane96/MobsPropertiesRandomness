@@ -10,6 +10,7 @@ import insane96mcp.mobspropertiesrandomness.data.json.condition.MPRCondition;
 import insane96mcp.mobspropertiesrandomness.data.json.util.modifiable.MPRRange;
 import insane96mcp.mobspropertiesrandomness.util.SerializerUtils;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.util.GsonHelper;
 import net.minecraft.world.entity.LivingEntity;
 import org.apache.logging.log4j.util.TriConsumer;
 import virtuoel.pehkui.api.ScaleData;
@@ -66,7 +67,7 @@ public class MPRScalePehkuiProperty extends MPRProperty {
             return new MPRScalePehkuiProperty(
                     context.deserialize(jObject.get("scale"), MPRRange.class),
                     SerializerUtils.deserializeLocationList(jObject, "scale_types", context),
-                    context.deserialize(jObject.get("operation"), Operation.class),
+                    GsonHelper.getAsObject(jObject, "operation", context, Operation.class),
                     MPRCondition.deserializeConditions(jObject, context)
             );
         }

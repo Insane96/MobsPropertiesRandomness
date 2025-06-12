@@ -2,7 +2,7 @@ package insane96mcp.mobspropertiesrandomness.data.json.property.equipment;
 
 import com.google.gson.*;
 import com.google.gson.annotations.JsonAdapter;
-import insane96mcp.mobspropertiesrandomness.data.json.MPRNBT;
+import insane96mcp.mobspropertiesrandomness.data.json.MPRNbt;
 import insane96mcp.mobspropertiesrandomness.data.json.condition.MPRCondition;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.util.GsonHelper;
@@ -33,7 +33,7 @@ public class MPRRawNBTItemFunction extends MPRItemFunction {
         public MPRRawNBTItemFunction deserialize(JsonElement json, Type typeOfT, JsonDeserializationContext context) throws JsonParseException {
             JsonObject jObject = json.getAsJsonObject();
             return new MPRRawNBTItemFunction(
-                    MPRNBT.deserialize(GsonHelper.getAsString(jObject, "nbt", null)),
+                    MPRNbt.deserialize(GsonHelper.getAsString(jObject, "nbt", null)),
                     MPRCondition.deserializeConditions(jObject, context)
             );
         }

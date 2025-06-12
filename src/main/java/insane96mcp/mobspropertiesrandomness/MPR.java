@@ -7,6 +7,7 @@ import insane96mcp.mobspropertiesrandomness.command.MPRCommand;
 import insane96mcp.mobspropertiesrandomness.data.MPRMobReloadListener;
 import insane96mcp.mobspropertiesrandomness.data.MPRPresetReloadListener;
 import insane96mcp.mobspropertiesrandomness.data.json.condition.ConditionsRegistry;
+import insane96mcp.mobspropertiesrandomness.data.json.property.MPRScalePehkuiProperty;
 import insane96mcp.mobspropertiesrandomness.data.json.property.PropertiesRegistry;
 import insane96mcp.mobspropertiesrandomness.data.json.property.equipment.ItemFunctionsRegistry;
 import insane96mcp.mobspropertiesrandomness.data.json.property.events.EventsRegistry;
@@ -96,6 +97,7 @@ public class MPR
                 .registerTypeAdapter(NBTType.class, new StrictEnumDeserializer<>(NBTType.class))
                 .registerTypeAdapter(PlayerMode.class, new StrictEnumDeserializer<>(PlayerMode.class))
                 .registerTypeAdapter(MPRChangeTargetEvent.ChangeType.class, new StrictEnumDeserializer<>(MPRChangeTargetEvent.ChangeType.class))
+                .registerTypeAdapter(MPRScalePehkuiProperty.Operation.class, new StrictEnumDeserializer<>(MPRScalePehkuiProperty.Operation.class))
                 .create();
     }
 }

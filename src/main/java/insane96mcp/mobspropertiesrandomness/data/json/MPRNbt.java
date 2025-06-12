@@ -11,13 +11,13 @@ import net.minecraft.util.GsonHelper;
 import javax.annotation.Nullable;
 import java.lang.reflect.Type;
 
-@JsonAdapter(MPRNBT.Serializer.class)
-public class MPRNBT {
+@JsonAdapter(MPRNbt.Serializer.class)
+public class MPRNbt {
     public String path;
     public NBTType type;
     public MPRRange value;
 
-    public MPRNBT(String path, NBTType type, MPRRange value) {
+    public MPRNbt(String path, NBTType type, MPRRange value) {
         this.path = path;
         this.type = type;
         this.value = value;
@@ -36,11 +36,11 @@ public class MPRNBT {
         return nbt;
     }
 
-    public static class Serializer implements JsonDeserializer<MPRNBT>, JsonSerializer<MPRNBT> {
+    public static class Serializer implements JsonDeserializer<MPRNbt>, JsonSerializer<MPRNbt> {
         @Override
-        public MPRNBT deserialize(JsonElement json, Type typeOfT, JsonDeserializationContext context) throws JsonParseException {
+        public MPRNbt deserialize(JsonElement json, Type typeOfT, JsonDeserializationContext context) throws JsonParseException {
             JsonObject jObject = json.getAsJsonObject();
-            return new MPRNBT(
+            return new MPRNbt(
                     GsonHelper.getAsString(jObject, "path"),
                     GsonHelper.getAsObject(jObject, "type", context, NBTType.class),
                     GsonHelper.getAsObject(jObject, "value", context, MPRRange.class)
@@ -48,7 +48,7 @@ public class MPRNBT {
         }
 
         @Override
-        public JsonElement serialize(MPRNBT src, Type typeOfSrc, JsonSerializationContext context) {
+        public JsonElement serialize(MPRNbt src, Type typeOfSrc, JsonSerializationContext context) {
             JsonObject jObject = new JsonObject();
             jObject.add("path", context.serialize(src.path));
             jObject.add("type", context.serialize(src.type));

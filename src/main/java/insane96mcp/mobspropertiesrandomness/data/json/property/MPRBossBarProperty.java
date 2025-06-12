@@ -128,11 +128,7 @@ public class MPRBossBarProperty extends MPRProperty {
         public MPRBossBarProperty deserialize(JsonElement json, Type typeOfT, JsonDeserializationContext context) throws JsonParseException {
             JsonObject jObject = json.getAsJsonObject();
             BossEvent.BossBarColor color = GsonHelper.getAsObject(jObject, "color", context, BossEvent.BossBarColor.class);
-            if (color == null)
-                throw new JsonParseException("Failed to parse color");
             BossEvent.BossBarOverlay type = GsonHelper.getAsObject(jObject, "type", context, BossEvent.BossBarOverlay.class);
-            if (type == null)
-                throw new JsonParseException("Failed to parse type");
             boolean darkenScreen = GsonHelper.getAsBoolean(jObject, "darken_screen", false);
             int range = GsonHelper.getAsInt(jObject, "range", 48);
             return new MPRBossBarProperty(color, type, darkenScreen, range, MPRCondition.deserializeConditions(jObject, context));
