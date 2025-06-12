@@ -3,6 +3,7 @@ package insane96mcp.mobspropertiesrandomness.data.json.condition;
 import com.google.gson.*;
 import com.google.gson.annotations.JsonAdapter;
 import insane96mcp.mobspropertiesrandomness.data.json.util.modifiable.MPRRange;
+import net.minecraft.util.GsonHelper;
 import net.minecraft.world.entity.LivingEntity;
 
 import java.lang.reflect.Type;
@@ -25,7 +26,7 @@ public class MPRDayTimeCondition extends MPRCondition {
         @Override
         public MPRDayTimeCondition deserialize(JsonElement json, Type typeOfT, JsonDeserializationContext context) throws JsonParseException {
             JsonObject jObject = json.getAsJsonObject();
-            return new MPRDayTimeCondition(context.deserialize(jObject.get("day_time"), MPRRange.class), MPRCondition.deserializeInverted(jObject));
+            return new MPRDayTimeCondition(GsonHelper.getAsObject(jObject, "day_time", context, MPRRange.class), MPRCondition.deserializeInverted(jObject));
         }
 
         @Override
