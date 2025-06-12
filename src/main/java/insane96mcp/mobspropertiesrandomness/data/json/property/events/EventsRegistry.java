@@ -33,5 +33,6 @@ public class EventsRegistry {
         register("death", MPRDeathEvent.class);
         register("attacked", MPRAttackedEvent.class);
         register("attack", MPRAttackEvent.class);
+        register("kill", MPRKillEvent.class);
     }
 }
