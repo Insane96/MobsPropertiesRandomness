@@ -31,7 +31,7 @@ public class MPRMoonPhaseCondition extends MPRCondition {
         @Override
         public MPRMoonPhaseCondition deserialize(JsonElement json, Type typeOfT, JsonDeserializationContext context) throws JsonParseException {
             JsonObject jObject = json.getAsJsonObject();
-            List<MoonPhase> values = SerializerUtils.deserializeList(jObject, "moon_phases", context, MoonPhase.class);
+            List<MoonPhase> values = SerializerUtils.deserializeList(jObject, "phases", context, MoonPhase.class);
             if (values.isEmpty())
                 throw new JsonParseException("No moon_phases specified for Moon Phase Condition");
             return new MPRMoonPhaseCondition(values, MPRCondition.deserializeInverted(jObject));
@@ -40,7 +40,7 @@ public class MPRMoonPhaseCondition extends MPRCondition {
         @Override
         public JsonElement serialize(MPRMoonPhaseCondition src, Type typeOfSrc, JsonSerializationContext context) {
             JsonObject jObject = new JsonObject();
-            jObject.add("moon_phases", context.serialize(src.moonPhases));
+            jObject.add("phases", context.serialize(src.moonPhases));
             return src.endSerialization(jObject);
         }
     }
