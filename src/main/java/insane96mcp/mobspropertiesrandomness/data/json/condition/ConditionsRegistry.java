@@ -28,8 +28,9 @@ public class ConditionsRegistry {
     }
 
     public static void init() {
-        register("is_baby", MPRBabyCondition.class);
+        register("or", MPROrCondition.class);
         register("chance", MPRChanceCondition.class);
+        register("is_baby", MPRBabyCondition.class);
         register("spawn_type", MPRSpawnTypeCondition.class);
         register("moon_phase", MPRMoonPhaseCondition.class);
         register("day_time", MPRDayTimeCondition.class);
@@ -44,7 +45,7 @@ public class ConditionsRegistry {
         register("temperature", MPRTemperatureCondition.class);
         register("has_target", MPRHasTargetCondition.class);
         register("light_level", MPRLightLevelCondition.class);
-        register("or", MPROrCondition.class);
+        register("weather", MPRWeatherCondition.class);
         if (ModList.get().isLoaded("gamestages"))
             register("game_stage", MPRGameStageCondition.class);
         register("nbt", MPRNBTCondition.class);
