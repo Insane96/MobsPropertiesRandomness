@@ -24,6 +24,7 @@ import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.BossEvent;
 import net.minecraft.world.Difficulty;
 import net.minecraft.world.entity.EquipmentSlot;
+import net.minecraft.world.entity.MobSpawnType;
 import net.minecraft.world.entity.ai.attributes.AttributeModifier;
 import net.minecraft.world.level.LightLayer;
 import net.minecraftforge.common.MinecraftForge;
@@ -94,6 +95,7 @@ public class MPR
                 .registerTypeAdapter(BossEvent.BossBarOverlay.class, new BossBarOverlaySerializer())
                 .registerTypeAdapter(Difficulty.class, new DifficultySerializer())
                 .registerTypeAdapter(LightLayer.class, new LightLayerSerializer())
+                .registerTypeAdapter(MobSpawnType.class, new MobSpawnTypeSerializer())
                 .registerTypeAdapter(NBTType.class, new StrictEnumDeserializer<>(NBTType.class))
                 .registerTypeAdapter(PlayerMode.class, new StrictEnumDeserializer<>(PlayerMode.class))
                 .registerTypeAdapter(MPRChangeTargetEvent.ChangeType.class, new StrictEnumDeserializer<>(MPRChangeTargetEvent.ChangeType.class))

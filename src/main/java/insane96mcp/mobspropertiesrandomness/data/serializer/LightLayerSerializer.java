@@ -10,14 +10,11 @@ public class LightLayerSerializer implements JsonSerializer<LightLayer>, JsonDes
     public LightLayer deserialize(JsonElement json, Type typeOfT, JsonDeserializationContext context) throws JsonParseException {
         if (!json.isJsonPrimitive())
             throw new JsonParseException("Expected %s to be a string".formatted(json));
-        switch (json.getAsString()) {
-            case "sky" -> {
-                return LightLayer.SKY;
-            }
-            case "block" -> {
-                return LightLayer.BLOCK;
-            }
-            default -> throw new JsonParseException("Invalid Light Type name: " + json.getAsString());
+        String name = json.getAsString().toLowerCase();
+        try {
+            return LightLayer.valueOf(name.toUpperCase());
+        } catch (IllegalArgumentException e) {
+            throw new JsonParseException("Invalid Light Type name: " + json.getAsString());
         }
     }
 
