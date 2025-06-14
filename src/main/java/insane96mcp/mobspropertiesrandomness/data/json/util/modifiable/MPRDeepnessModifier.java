@@ -6,17 +6,19 @@ import insane96mcp.mobspropertiesrandomness.data.json.condition.MPRCondition;
 import net.minecraft.util.GsonHelper;
 import net.minecraft.world.entity.LivingEntity;
 
+import javax.annotation.Nullable;
 import java.lang.reflect.Type;
 import java.util.List;
 
 @JsonAdapter(MPRDeepnessModifier.Serializer.class)
 public class MPRDeepnessModifier extends MPRModifier {
+    @Nullable
     public MPRModifiableValue startingAmount;
     public MPRModifiableValue amountPerStep;
     public MPRModifiableValue step;
     public MPRModifiableValue startingY;
 
-    public MPRDeepnessModifier(MPRModifiableValue startingAmount, MPRModifiableValue amountPerStep, MPRModifiableValue step, MPRModifiableValue startingY, Operation operation, List<MPRCondition> conditions) {
+    public MPRDeepnessModifier(@Nullable MPRModifiableValue startingAmount, MPRModifiableValue amountPerStep, MPRModifiableValue step, MPRModifiableValue startingY, Operation operation, List<MPRCondition> conditions) {
         super(operation, conditions);
         this.startingAmount = startingAmount;
         this.amountPerStep = amountPerStep;
@@ -26,10 +28,12 @@ public class MPRDeepnessModifier extends MPRModifier {
 
     @Override
     protected double getModifier(LivingEntity living) {
-        return (Math.max(this.startingY.getValue(living) - living.blockPosition().getY(), 0)
+        double modifier = (Math.max(this.startingY.getValue(living) - living.blockPosition().getY(), 0)
                 / this.step.getValue(living))
-                * this.amountPerStep.getValue(living)
-                + this.startingAmount.getValue(living);
+                * this.amountPerStep.getValue(living);
+        if (this.startingAmount != null)
+            modifier += this.startingAmount.getValue(living);
+        return modifier;
     }
 
     public static class Serializer implements JsonDeserializer<MPRDeepnessModifier>, JsonSerializer<MPRDeepnessModifier> {
@@ -37,7 +41,7 @@ public class MPRDeepnessModifier extends MPRModifier {
         public MPRDeepnessModifier deserialize(JsonElement json, Type typeOfT, JsonDeserializationContext context) throws JsonParseException {
             JsonObject jObject = json.getAsJsonObject();
             return new MPRDeepnessModifier(
-                    GsonHelper.getAsObject(jObject, "starting_amount", context, MPRModifiableValue.class),
+                    GsonHelper.getAsObject(jObject, "starting_amount", null, context, MPRModifiableValue.class),
                     GsonHelper.getAsObject(jObject, "amount_per_step", context, MPRModifiableValue.class),
                     GsonHelper.getAsObject(jObject, "step", context, MPRModifiableValue.class),
                     GsonHelper.getAsObject(jObject, "starting_y", context, MPRModifiableValue.class),

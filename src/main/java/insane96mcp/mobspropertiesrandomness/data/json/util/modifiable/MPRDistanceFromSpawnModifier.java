@@ -7,6 +7,7 @@ import net.minecraft.util.GsonHelper;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.phys.Vec3;
 
+import javax.annotation.Nullable;
 import java.lang.reflect.Type;
 import java.util.List;
 
@@ -15,30 +16,32 @@ public class MPRDistanceFromSpawnModifier extends MPRModifier {
     /*
      Each 'blocks' from spawn will increase the value to modify by 'amount_per_blocks'.
      If operation is "multiply" the result is treated as a percentage increase, the formula is 'value * (1 + ((distance + shift) / blocks) * amount_per_blocks)'.
-     Else if the operation is "add" the result is added to the value, the formula is 'value + (((MIN(distance_cap, distance) + shift) / blocks) * amount_per_blocks)'
-     E.g. A mob with 50% chance (0.5) to spawn with a potion effect, with this modifier set as blocks = 100, amount_per_blocks = 0.02 and operation = "multiply" when it spawns 150 blocks from world spawn it will have the value modified as 'chance * (1 + ((MIN(distance_cap, distance) + shift) / blocks) * amount_per_blocks)' = '0.5 * (1 + ((150 + 0) / 100))' = '0.5 * 1.5' (an increase of 50%) = '0.75 (75% chance)'
+     Else if the operation is "add" the result is added to the value, the formula is 'value + (((distance + shift) / blocks) * amount_per_blocks)'
+     E.g. A mob with 50% chance (0.5) to spawn with a potion effect, with this modifier set as blocks = 100, amount_per_blocks = 0.02 and operation = "multiply" when it spawns 150 blocks from world spawn it will have the value modified as 'chance * (1 + ((distance + shift) / blocks) * amount_per_blocks)' = '0.5 * (1 + ((150 + 0) / 100))' = '0.5 * 1.5' (an increase of 50%) = '0.75 (75% chance)'
      */
     public MPRModifiableValue amountPerBlocks;
     public MPRModifiableValue blocks;
     public MPRModifiableValue shift;
-    public MPRModifiableValue distanceCap;
+    @Nullable
+    public MPRModifiableValue cap;
 
-    public MPRDistanceFromSpawnModifier(MPRModifiableValue amountPerBlocks, MPRModifiableValue blocks, MPRModifiableValue shift, MPRModifiableValue distanceCap, Operation operation, List<MPRCondition> conditions) {
+    public MPRDistanceFromSpawnModifier(MPRModifiableValue amountPerBlocks, MPRModifiableValue blocks, MPRModifiableValue shift, @Nullable MPRModifiableValue cap, Operation operation, List<MPRCondition> conditions) {
         super(operation, conditions);
         this.amountPerBlocks = amountPerBlocks;
         this.blocks = blocks;
         this.shift = shift;
-        this.distanceCap = distanceCap;
+        this.cap = cap;
     }
 
     @Override
     protected double getModifier(LivingEntity living) {
         Vec3 spawnPos = new Vec3(living.level().getLevelData().getXSpawn(), living.level().getLevelData().getYSpawn(), living.level().getLevelData().getZSpawn());
         double distance = (float) spawnPos.distanceTo(living.position());
-        if (this.distanceCap != null)
-            distance = Math.min(distance, this.distanceCap.getValue(living));
         distance += this.shift.getValue(living);
-        return this.getNoModifier() + (distance / this.blocks.getValue(living)) * this.amountPerBlocks.getValue(living);
+        double modifier = (this.blocks.getValue(living) / distance) * this.amountPerBlocks.getValue(living);
+        if (this.cap != null)
+            modifier = Math.min(modifier, this.cap.getValue(living));
+        return modifier;
     }
 
     public static class Serializer implements JsonDeserializer<MPRDistanceFromSpawnModifier>, JsonSerializer<MPRDistanceFromSpawnModifier> {
@@ -48,8 +51,8 @@ public class MPRDistanceFromSpawnModifier extends MPRModifier {
             return new MPRDistanceFromSpawnModifier(
                     GsonHelper.getAsObject(jObject, "amount_per_blocks", context, MPRModifiableValue.class),
                     GsonHelper.getAsObject(jObject, "blocks", context, MPRModifiableValue.class),
-                    GsonHelper.getAsObject(jObject, "shift", new MPRModifiableValue(0d), context, MPRModifiableValue.class),
-                    GsonHelper.getAsObject(jObject, "distance_cap", new MPRModifiableValue(Double.MAX_VALUE), context, MPRModifiableValue.class),
+                    GsonHelper.getAsObject(jObject, "shift", MPRModifiableValue.ZERO, context, MPRModifiableValue.class),
+                    GsonHelper.getAsObject(jObject, "cap", context, MPRModifiableValue.class),
                     deserializeOperation(jObject, context),
                     MPRCondition.deserializeConditions(jObject, context)
             );
@@ -61,7 +64,7 @@ public class MPRDistanceFromSpawnModifier extends MPRModifier {
             jObject.add("amount_per_blocks", context.serialize(src.amountPerBlocks));
             jObject.add("blocks", context.serialize(src.blocks));
             jObject.add("shift", context.serialize(src.shift));
-            jObject.add("distance_cap", context.serialize(src.distanceCap));
+            jObject.add("cap", context.serialize(src.cap));
             return src.endSerialization(jObject, context);
         }
     }

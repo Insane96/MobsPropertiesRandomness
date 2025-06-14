@@ -34,6 +34,8 @@ public class MPRKillEvent extends MPREvent {
 	public static void onKill(LivingDeathEvent event) {
 		LivingEntity living = event.getEntity();
 		LivingEntity killer = (LivingEntity) event.getSource().getEntity();
+		if (killer == null)
+			return;
 		List<MPRKillEvent> events = getEvents(killer, MPRKillEvent.class);
 		for (MPRKillEvent killEvent : events) {
 			killEvent.kill(killer, living, event.getSource(), event.getSource().getDirectEntity() == event.getSource().getEntity());

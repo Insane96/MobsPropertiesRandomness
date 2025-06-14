@@ -28,9 +28,9 @@ public class ModifiersRegistry {
 
     public static void init() {
         register("difficulty", MPRDifficultyModifier.class);
-        register("condition", MPRConditionModifier.class);
         register("deepness", MPRDeepnessModifier.class);
         register("time_played", MPRTimePlayedModifier.class);
         register("distance_from_spawn", MPRDistanceFromSpawnModifier.class);
+        register("condition", MPRConditionModifier.class);
     }
 }

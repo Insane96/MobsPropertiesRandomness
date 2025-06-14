@@ -40,7 +40,7 @@ public class MPRPotionEffectProperty extends MPRProperty {
         if (living.getEffect(this.mobEffect) != null && this.stackDuration && duration != -1)
             //noinspection DataFlowIssue
             duration += living.getEffect(this.mobEffect).getDuration() / 20d;
-        MobEffectInstance effectInstance = new MobEffectInstance(mobEffect, (int) (duration * 20d), this.amplifier.getIntBetween(living), this.ambient, !this.hideParticles, false);
+        MobEffectInstance effectInstance = new MobEffectInstance(mobEffect, (int) (duration == -1 ? -1 :duration * 20d), this.amplifier.getIntBetween(living), this.ambient, !this.hideParticles, false);
         living.addEffect(effectInstance);
         return true;
     }
