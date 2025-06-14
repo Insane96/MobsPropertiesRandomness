@@ -38,7 +38,7 @@ public class MPRDistanceFromSpawnModifier extends MPRModifier {
         Vec3 spawnPos = new Vec3(living.level().getLevelData().getXSpawn(), living.level().getLevelData().getYSpawn(), living.level().getLevelData().getZSpawn());
         double distance = (float) spawnPos.distanceTo(living.position());
         distance += this.shift.getValue(living);
-        double modifier = (this.blocks.getValue(living) / distance) * this.amountPerBlocks.getValue(living);
+        double modifier = (distance / this.blocks.getValue(living)) * this.amountPerBlocks.getValue(living);
         if (this.cap != null)
             modifier = Math.min(modifier, this.cap.getValue(living));
         return modifier;
@@ -52,7 +52,7 @@ public class MPRDistanceFromSpawnModifier extends MPRModifier {
                     GsonHelper.getAsObject(jObject, "amount_per_blocks", context, MPRModifiableValue.class),
                     GsonHelper.getAsObject(jObject, "blocks", context, MPRModifiableValue.class),
                     GsonHelper.getAsObject(jObject, "shift", MPRModifiableValue.ZERO, context, MPRModifiableValue.class),
-                    GsonHelper.getAsObject(jObject, "cap", context, MPRModifiableValue.class),
+                    GsonHelper.getAsObject(jObject, "cap", null, context, MPRModifiableValue.class),
                     deserializeOperation(jObject, context),
                     MPRCondition.deserializeConditions(jObject, context)
             );

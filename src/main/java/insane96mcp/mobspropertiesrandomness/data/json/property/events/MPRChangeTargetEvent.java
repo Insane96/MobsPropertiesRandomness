@@ -25,7 +25,6 @@ public class MPRChangeTargetEvent extends MPREvent {
 		this.changeType = changeType;
 	}
 
-	/// returns true if the death should be cancelled
 	public void switchTarget(LivingEntity entity, @Nullable LivingEntity newTarget, @Nullable LivingEntity oldTarget) {
 		switch (this.changeType) {
 			case NEW_TARGET -> {

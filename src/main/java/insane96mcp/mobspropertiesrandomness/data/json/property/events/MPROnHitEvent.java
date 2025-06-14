@@ -53,7 +53,7 @@ public abstract class MPROnHitEvent extends MPREvent {
 		}
 
 		if (this.healthLeft != null) {
-			float healthLeft = living.getHealth();
+			float healthLeft = living.getHealth() - event.getAmount();
 			if (flatHealthLeft)
 				healthLeft /= living.getMaxHealth();
 			if (this.healthLeft.isBetween(living, healthLeft))
