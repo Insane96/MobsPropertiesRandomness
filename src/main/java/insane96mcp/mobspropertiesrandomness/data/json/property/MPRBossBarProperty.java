@@ -43,7 +43,8 @@ public class MPRBossBarProperty extends MPRProperty {
 
     @Override
     public boolean apply(LivingEntity living) {
-        if (living.getServer() == null)
+        if (living.getServer() == null
+                || ModNBTData.contains(living, BOSS_BAR_ID))
             return false;
         MinecraftServer server = living.getServer();
         ResourceLocation bossBarId = MPR.location(living.getId() + "_" + living.getRandom().nextInt(Integer.MAX_VALUE));
