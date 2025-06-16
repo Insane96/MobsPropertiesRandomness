@@ -11,6 +11,7 @@ import java.util.List;
 
 @JsonAdapter(MPRConditionModifier.Serializer.class)
 public class MPRConditionModifier extends MPRModifier {
+    //TODO MPRRange
     public MPRModifiableValue value;
 
     public MPRConditionModifier(MPRModifiableValue value, Operation operation, List<MPRCondition> conditions) {
