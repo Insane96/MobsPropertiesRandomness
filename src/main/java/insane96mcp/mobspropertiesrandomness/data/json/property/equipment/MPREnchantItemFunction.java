@@ -189,7 +189,7 @@ public abstract class MPREnchantItemFunction extends MPRItemFunction {
                 if (!enchantment.isDiscoverable()
                         || (enchantment.isCurse() && !allowCurses)
                         || (enchantment.isTreasureOnly() && !allowTreasure)
-                        ||  (!this.enchantments.isEmpty() && !this.enchantments.contains(enchantment)))
+                        || (!this.enchantments.isEmpty() && !this.enchantments.contains(enchantment)))
                     return false;
 
                 if (!this.allowIncompatible) {
