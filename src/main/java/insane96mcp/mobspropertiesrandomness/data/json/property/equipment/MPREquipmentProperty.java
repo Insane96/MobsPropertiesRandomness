@@ -46,29 +46,45 @@ public class MPREquipmentProperty extends MPRProperty {
             return false;
         MPRItem randomItem = this.getRandomItem(living);
         ItemStack stack;
-        if (randomItem == null) {
-            WeightedResourceLocation randomLootTable = this.getRandomLootTable(living);
-            if (randomLootTable == null)
+        if (randomItem != null)
+            stack = randomItem.getStack(living, this.slot);
+        else
+            stack = getRandomItemFromLootTable(living);
+        if (stack == null || stack.isEmpty()) {
+            stack = living.getItemBySlot(this.slot);
+            if (stack.isEmpty())
                 return false;
-            MinecraftServer server = living.getServer();
-            if (server == null)
-                return false;
-            LootParams.Builder lootparams$builder = new LootParams.Builder((ServerLevel) living.level())
-                    .withParameter(LootContextParams.DAMAGE_SOURCE, living.damageSources().magic())
-                    .withParameter(LootContextParams.THIS_ENTITY, living)
-                    .withParameter(LootContextParams.ORIGIN, living.position());
-            LootTable lootTable = server.getLootData().getLootTable(randomLootTable.getLocation());
-            ObjectArrayList<ItemStack> randomItems = lootTable.getRandomItems(lootparams$builder.create(LootContextParamSets.ENTITY));
-            if (randomItems.isEmpty())
-                return false;
-            stack = randomItems.stream().findFirst().get();
+            applyItem(living, stack, false);
         }
         else
-            stack = randomItem.getStack(living, this.slot);
+            applyItem(living, stack, true);
+        return true;
+    }
+
+    private void applyItem(LivingEntity living, ItemStack stack, boolean setItemToSlot) {
         for (MPRItemFunction function : this.functions)
             function.tryApply(living, stack, slot);
-        living.setItemSlot(this.slot, stack);
-        return true;
+        if (setItemToSlot)
+            living.setItemSlot(this.slot, stack);
+    }
+
+    @Nullable
+    private ItemStack getRandomItemFromLootTable(LivingEntity living) {
+        WeightedResourceLocation randomLootTable = this.getRandomLootTable(living);
+        if (randomLootTable == null)
+            return null;
+        MinecraftServer server = living.getServer();
+        if (server == null)
+            return null;
+        LootParams.Builder lootparams$builder = new LootParams.Builder((ServerLevel) living.level())
+                .withParameter(LootContextParams.DAMAGE_SOURCE, living.damageSources().magic())
+                .withParameter(LootContextParams.THIS_ENTITY, living)
+                .withParameter(LootContextParams.ORIGIN, living.position());
+        LootTable lootTable = server.getLootData().getLootTable(randomLootTable.getLocation());
+        ObjectArrayList<ItemStack> randomItems = lootTable.getRandomItems(lootparams$builder.create(LootContextParamSets.ENTITY));
+        if (randomItems.isEmpty())
+            return null;
+        return randomItems.stream().findFirst().get();
     }
 
     private List<MPRItem> getItems(LivingEntity entity){

@@ -1,5 +1,8 @@
 # Changelog
 
+## Upcoming
+* Item functions are now applied to the item already in the slot if no `items` or `loot_tables` are specified
+
 ## Alpha 5.0.0
 The mod has been rewritten and reworked from scratch.  
 Older data packs will no longer work, you'll have to migrate them as the json format has changed.
