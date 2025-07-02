@@ -2,6 +2,7 @@
 
 ## Upcoming
 * Item functions are now applied to the item already in the slot if no `items` or `loot_tables` are specified
+* Fixed `attack` event applying properties to wrong target
 
 ## Alpha 5.0.0
 The mod has been rewritten and reworked from scratch.  
