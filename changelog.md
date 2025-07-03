@@ -1,5 +1,8 @@
 # Changelog
 
+## Alpha 5.0.2
+* Crash fix
+
 ## Alpha 5.0.1
 * Item functions are now applied to the item already in the slot if no `items` or `loot_tables` are specified
 * Fixed `attack` event applying properties to wrong target

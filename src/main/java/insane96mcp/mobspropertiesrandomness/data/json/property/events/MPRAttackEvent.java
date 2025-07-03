@@ -25,6 +25,8 @@ public class MPRAttackEvent extends MPROnHitEvent {
     public static void onAttack(LivingDamageEvent event) {
         LivingEntity attacked = (LivingEntity) event.getSource().getEntity();
         LivingEntity attacker = event.getEntity();
+        if (attacked == null)
+            return;
 
         //Get on hit events of the attacked entity
         List<MPRAttackEvent> events = getEvents(attacked, MPRAttackEvent.class);
