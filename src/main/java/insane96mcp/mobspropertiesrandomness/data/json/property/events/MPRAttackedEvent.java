@@ -23,13 +23,13 @@ public class MPRAttackedEvent extends MPROnHitEvent {
     }
 
     public static void onAttacked(LivingDamageEvent event) {
-        LivingEntity attacked = event.getEntity();
-        LivingEntity attacker = (LivingEntity) event.getSource().getEntity();
+        LivingEntity mob = event.getEntity();
+        LivingEntity other = (LivingEntity) event.getSource().getEntity();
 
         //Get on hit events of the attacked entity
-        List<MPRAttackedEvent> events = getEvents(attacked, MPRAttackedEvent.class);
+        List<MPRAttackedEvent> events = getEvents(mob, MPRAttackedEvent.class);
         for (MPRAttackedEvent attackEvent : events)
-            attackEvent.hit(event, attacked, attacker, event.getSource(), event.getAmount(), event.getSource().getDirectEntity() == event.getSource().getEntity());
+            attackEvent.hit(event, mob, other, event.getSource(), event.getAmount(), event.getSource().getDirectEntity() == event.getSource().getEntity());
     }
 
     public static class Serializer implements JsonDeserializer<MPROnHitEvent>, JsonSerializer<MPROnHitEvent> {

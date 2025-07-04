@@ -1,5 +1,8 @@
 # Changelog
 
+## Alpha 5.0.3
+* Fixed attack event target being switched
+
 ## Alpha 5.0.2
 * Crash fix
 
