@@ -15,12 +15,12 @@ import java.util.List;
 
 @JsonAdapter(MPRTimePlayedModifier.Serializer.class)
 public class MPRTimePlayedModifier extends MPRModifier {
-    public MPRModifiableValue amountPerMinutes;
+    public MPRRange amountPerMinutes;
     public MPRModifiableValue minutes;
     public MPRModifiableValue cap;
     public Mode mode;
 
-    public MPRTimePlayedModifier(MPRModifiableValue amountPerMinutes, MPRModifiableValue minutes, MPRModifiableValue cap, Mode mode, Operation operation, List<MPRCondition> conditions) {
+    public MPRTimePlayedModifier(MPRRange amountPerMinutes, MPRModifiableValue minutes, MPRModifiableValue cap, Mode mode, Operation operation, List<MPRCondition> conditions) {
         super(operation, conditions);
         this.amountPerMinutes = amountPerMinutes;
         this.minutes = minutes;
@@ -63,7 +63,7 @@ public class MPRTimePlayedModifier extends MPRModifier {
         public MPRTimePlayedModifier deserialize(JsonElement json, Type typeOfT, JsonDeserializationContext context) throws JsonParseException {
             JsonObject jObject = json.getAsJsonObject();
             return new MPRTimePlayedModifier(
-                    GsonHelper.getAsObject(jObject, "amount_per_minutes", context, MPRModifiableValue.class),
+                    GsonHelper.getAsObject(jObject, "amount_per_minutes", context, MPRRange.class),
                     GsonHelper.getAsObject(jObject, "minutes", context, MPRModifiableValue.class),
                     GsonHelper.getAsObject(jObject, "cap", new MPRModifiableValue(Double.MAX_VALUE), context, MPRModifiableValue.class),
                     GsonHelper.getAsObject(jObject, "mode", context, Mode.class),

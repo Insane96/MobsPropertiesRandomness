@@ -3,6 +3,13 @@
 ## Upcoming
 * Added `mod_loaded` condition
   * Requires a `mod_id` to be specified and will return `true` if the mod is present
+* Migrated some Modifiable Values objects to Range objects. This doesn't require any changes to the properties files
+  * `value` in Condition Modifier
+  * `damage_modifier` in Attack and Attacked events
+  * `amount_per_step` in Deepness Modifier
+  * `easy`, `normal`, `hard` in Difficulty Modifier
+  * `amount_per_blocks` in Distance From Spawn Modifier
+  * `amount_per_minutes` in Time Played Modifier
 
 ## Alpha 5.0.3
 * Fixed attack event target being switched

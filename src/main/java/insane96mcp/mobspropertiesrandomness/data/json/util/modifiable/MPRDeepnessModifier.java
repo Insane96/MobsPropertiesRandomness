@@ -14,11 +14,11 @@ import java.util.List;
 public class MPRDeepnessModifier extends MPRModifier {
     @Nullable
     public MPRModifiableValue startingAmount;
-    public MPRModifiableValue amountPerStep;
+    public MPRRange amountPerStep;
     public MPRModifiableValue step;
     public MPRModifiableValue startingY;
 
-    public MPRDeepnessModifier(@Nullable MPRModifiableValue startingAmount, MPRModifiableValue amountPerStep, MPRModifiableValue step, MPRModifiableValue startingY, Operation operation, List<MPRCondition> conditions) {
+    public MPRDeepnessModifier(@Nullable MPRModifiableValue startingAmount, MPRRange amountPerStep, MPRModifiableValue step, MPRModifiableValue startingY, Operation operation, List<MPRCondition> conditions) {
         super(operation, conditions);
         this.startingAmount = startingAmount;
         this.amountPerStep = amountPerStep;
@@ -42,7 +42,7 @@ public class MPRDeepnessModifier extends MPRModifier {
             JsonObject jObject = json.getAsJsonObject();
             return new MPRDeepnessModifier(
                     GsonHelper.getAsObject(jObject, "starting_amount", null, context, MPRModifiableValue.class),
-                    GsonHelper.getAsObject(jObject, "amount_per_step", context, MPRModifiableValue.class),
+                    GsonHelper.getAsObject(jObject, "amount_per_step", context, MPRRange.class),
                     GsonHelper.getAsObject(jObject, "step", context, MPRModifiableValue.class),
                     GsonHelper.getAsObject(jObject, "starting_y", context, MPRModifiableValue.class),
                     deserializeOperation(jObject, context),

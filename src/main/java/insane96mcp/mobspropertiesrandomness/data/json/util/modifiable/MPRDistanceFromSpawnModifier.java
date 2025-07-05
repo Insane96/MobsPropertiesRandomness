@@ -19,13 +19,13 @@ public class MPRDistanceFromSpawnModifier extends MPRModifier {
      Else if the operation is "add" the result is added to the value, the formula is 'value + (((distance + shift) / blocks) * amount_per_blocks)'
      E.g. A mob with 50% chance (0.5) to spawn with a potion effect, with this modifier set as blocks = 100, amount_per_blocks = 0.02 and operation = "multiply" when it spawns 150 blocks from world spawn it will have the value modified as 'chance * (1 + ((distance + shift) / blocks) * amount_per_blocks)' = '0.5 * (1 + ((150 + 0) / 100))' = '0.5 * 1.5' (an increase of 50%) = '0.75 (75% chance)'
      */
-    public MPRModifiableValue amountPerBlocks;
+    public MPRRange amountPerBlocks;
     public MPRModifiableValue blocks;
     public MPRModifiableValue shift;
     @Nullable
     public MPRModifiableValue cap;
 
-    public MPRDistanceFromSpawnModifier(MPRModifiableValue amountPerBlocks, MPRModifiableValue blocks, MPRModifiableValue shift, @Nullable MPRModifiableValue cap, Operation operation, List<MPRCondition> conditions) {
+    public MPRDistanceFromSpawnModifier(MPRRange amountPerBlocks, MPRModifiableValue blocks, MPRModifiableValue shift, @Nullable MPRModifiableValue cap, Operation operation, List<MPRCondition> conditions) {
         super(operation, conditions);
         this.amountPerBlocks = amountPerBlocks;
         this.blocks = blocks;
@@ -49,7 +49,7 @@ public class MPRDistanceFromSpawnModifier extends MPRModifier {
         public MPRDistanceFromSpawnModifier deserialize(JsonElement json, Type typeOfT, JsonDeserializationContext context) throws JsonParseException {
             JsonObject jObject = json.getAsJsonObject();
             return new MPRDistanceFromSpawnModifier(
-                    GsonHelper.getAsObject(jObject, "amount_per_blocks", context, MPRModifiableValue.class),
+                    GsonHelper.getAsObject(jObject, "amount_per_blocks", context, MPRRange.class),
                     GsonHelper.getAsObject(jObject, "blocks", context, MPRModifiableValue.class),
                     GsonHelper.getAsObject(jObject, "shift", MPRModifiableValue.ZERO, context, MPRModifiableValue.class),
                     GsonHelper.getAsObject(jObject, "cap", null, context, MPRModifiableValue.class),

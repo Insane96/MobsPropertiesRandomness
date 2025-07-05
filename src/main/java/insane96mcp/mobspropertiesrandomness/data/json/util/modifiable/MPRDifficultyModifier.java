@@ -14,13 +14,13 @@ import java.util.List;
 @JsonAdapter(MPRDifficultyModifier.Serializer.class)
 public class MPRDifficultyModifier extends MPRModifier {
     @Nullable
-    public MPRModifiableValue easy;
+    public MPRRange easy;
     @Nullable
-    public MPRModifiableValue normal;
+    public MPRRange normal;
     @Nullable
-    public MPRModifiableValue hard;
+    public MPRRange hard;
 
-    public MPRDifficultyModifier(@Nullable MPRModifiableValue easy, @Nullable MPRModifiableValue normal, @Nullable MPRModifiableValue hard, Operation operation, List<MPRCondition> conditions) {
+    public MPRDifficultyModifier(@Nullable MPRRange easy, @Nullable MPRRange normal, @Nullable MPRRange hard, Operation operation, List<MPRCondition> conditions) {
         super(operation, conditions);
         this.easy = easy;
         this.normal = normal;
@@ -45,9 +45,9 @@ public class MPRDifficultyModifier extends MPRModifier {
         public MPRDifficultyModifier deserialize(JsonElement json, Type typeOfT, JsonDeserializationContext context) throws JsonParseException {
             JsonObject jObject = json.getAsJsonObject();
             return new MPRDifficultyModifier(
-                    GsonHelper.getAsObject(jObject, "easy", null, context, MPRModifiableValue.class),
-                    GsonHelper.getAsObject(jObject, "normal", null, context, MPRModifiableValue.class),
-                    GsonHelper.getAsObject(jObject, "hard", null, context, MPRModifiableValue.class),
+                    GsonHelper.getAsObject(jObject, "easy", null, context, MPRRange.class),
+                    GsonHelper.getAsObject(jObject, "normal", null, context, MPRRange.class),
+                    GsonHelper.getAsObject(jObject, "hard", null, context, MPRRange.class),
                     deserializeOperation(jObject, context),
                     MPRCondition.deserializeConditions(jObject, context)
             );

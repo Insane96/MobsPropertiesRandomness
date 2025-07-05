@@ -2,7 +2,6 @@ package insane96mcp.mobspropertiesrandomness.data.json.property.events;
 
 import insane96mcp.mobspropertiesrandomness.data.json.condition.MPRCondition;
 import insane96mcp.mobspropertiesrandomness.data.json.property.MPRProperty;
-import insane96mcp.mobspropertiesrandomness.data.json.util.modifiable.MPRModifiableValue;
 import insane96mcp.mobspropertiesrandomness.data.json.util.modifiable.MPRModifier;
 import insane96mcp.mobspropertiesrandomness.data.json.util.modifiable.MPRRange;
 import net.minecraft.commands.CommandFunction;
@@ -18,7 +17,7 @@ public abstract class MPROnHitEvent extends MPREvent {
 	@Nullable
 	public MPRRange damageAmount;
 	@Nullable
-	public MPRModifiableValue damageModifier;
+	public MPRRange damageModifier;
 	@Nullable
 	public MPRModifier.Operation damageModifierOperation;
 	@Nullable
@@ -26,7 +25,7 @@ public abstract class MPROnHitEvent extends MPREvent {
 	public boolean flatHealthLeft;
 	public MPRHurtData hurtData;
 
-	public MPROnHitEvent(@Nullable MPRModifier.Operation damageModifierOperation, @Nullable MPRRange damageAmount, @Nullable MPRModifiableValue damageModifier, @Nullable MPRRange healthLeft, boolean flatHealthLeft, MPRHurtData hurtData, ResourceLocation id, Target target, @Nullable CommandFunction.CacheableFunction function, @Nullable List<MPRProperty> applyProperties, List<MPRCondition> conditions) {
+	public MPROnHitEvent(@Nullable MPRModifier.Operation damageModifierOperation, @Nullable MPRRange damageAmount, @Nullable MPRRange damageModifier, @Nullable MPRRange healthLeft, boolean flatHealthLeft, MPRHurtData hurtData, ResourceLocation id, Target target, @Nullable CommandFunction.CacheableFunction function, @Nullable List<MPRProperty> applyProperties, List<MPRCondition> conditions) {
 		super(id, target, function, applyProperties, conditions);
 		this.hurtData = hurtData;
 		this.damageAmount = damageAmount;

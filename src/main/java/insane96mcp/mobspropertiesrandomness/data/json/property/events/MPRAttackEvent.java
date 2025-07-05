@@ -4,7 +4,6 @@ import com.google.gson.*;
 import com.google.gson.annotations.JsonAdapter;
 import insane96mcp.mobspropertiesrandomness.data.json.condition.MPRCondition;
 import insane96mcp.mobspropertiesrandomness.data.json.property.MPRProperty;
-import insane96mcp.mobspropertiesrandomness.data.json.util.modifiable.MPRModifiableValue;
 import insane96mcp.mobspropertiesrandomness.data.json.util.modifiable.MPRModifier;
 import insane96mcp.mobspropertiesrandomness.data.json.util.modifiable.MPRRange;
 import net.minecraft.commands.CommandFunction;
@@ -18,7 +17,7 @@ import java.util.List;
 
 @JsonAdapter(MPRAttackEvent.Serializer.class)
 public class MPRAttackEvent extends MPROnHitEvent {
-    public MPRAttackEvent(MPRModifier.@Nullable Operation damageModifierOperation, @Nullable MPRRange damageAmount, @Nullable MPRModifiableValue damageModifier, @Nullable MPRRange healthLeft, boolean flatHealthLeft, MPRHurtData hurtData, ResourceLocation id, Target target, CommandFunction.@Nullable CacheableFunction function, @Nullable List<MPRProperty> applyProperties, List<MPRCondition> conditions) {
+    public MPRAttackEvent(MPRModifier.@Nullable Operation damageModifierOperation, @Nullable MPRRange damageAmount, @Nullable MPRRange damageModifier, @Nullable MPRRange healthLeft, boolean flatHealthLeft, MPRHurtData hurtData, ResourceLocation id, Target target, CommandFunction.@Nullable CacheableFunction function, @Nullable List<MPRProperty> applyProperties, List<MPRCondition> conditions) {
         super(damageModifierOperation, damageAmount, damageModifier, healthLeft, flatHealthLeft, hurtData, id, target, function, applyProperties, conditions);
     }
 
@@ -38,7 +37,7 @@ public class MPRAttackEvent extends MPROnHitEvent {
         public MPROnHitEvent deserialize(JsonElement json, java.lang.reflect.Type typeOfT, JsonDeserializationContext context) throws JsonParseException {
             JsonObject jObject = json.getAsJsonObject();
             MPRRange damageAmount = GsonHelper.getAsObject(jObject, "damage_amount", null, context, MPRRange.class);
-            MPRModifiableValue damageModifier = GsonHelper.getAsObject(jObject, "damage_modifier", null, context, MPRModifiableValue.class);
+            MPRRange damageModifier = GsonHelper.getAsObject(jObject, "damage_modifier", null, context, MPRRange.class);
             MPRModifier.Operation damageModifierOperation = GsonHelper.getAsObject(jObject, "damage_modifier_operation", null, context, MPRModifier.Operation.class);
             if (damageModifier != null && damageModifierOperation == null)
                 throw new JsonParseException("damage_modifier_operation is required when damage_modifier is set");

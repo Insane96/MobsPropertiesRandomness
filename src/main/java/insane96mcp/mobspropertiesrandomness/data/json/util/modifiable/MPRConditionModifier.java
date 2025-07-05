@@ -11,10 +11,9 @@ import java.util.List;
 
 @JsonAdapter(MPRConditionModifier.Serializer.class)
 public class MPRConditionModifier extends MPRModifier {
-    //TODO MPRRange
-    public MPRModifiableValue value;
+    public MPRRange value;
 
-    public MPRConditionModifier(MPRModifiableValue value, Operation operation, List<MPRCondition> conditions) {
+    public MPRConditionModifier(MPRRange value, Operation operation, List<MPRCondition> conditions) {
         super(operation, conditions);
         this.value = value;
     }
@@ -29,7 +28,7 @@ public class MPRConditionModifier extends MPRModifier {
         public MPRConditionModifier deserialize(JsonElement json, Type typeOfT, JsonDeserializationContext context) throws JsonParseException {
             JsonObject jObject = json.getAsJsonObject();
             return new MPRConditionModifier(
-                    GsonHelper.getAsObject(jObject, "value", context, MPRModifiableValue.class),
+                    GsonHelper.getAsObject(jObject, "value", context, MPRRange.class),
                     deserializeOperation(jObject, context),
                     MPRCondition.deserializeConditions(jObject, context)
             );
