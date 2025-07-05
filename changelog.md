@@ -1,5 +1,9 @@
 # Changelog
 
+## Upcoming
+* Added `mod_loaded` condition
+  * Requires a `mod_id` to be specified and will return `true` if the mod is present
+
 ## Alpha 5.0.3
 * Fixed attack event target being switched
 

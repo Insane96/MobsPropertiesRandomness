@@ -3,6 +3,7 @@ package insane96mcp.mobspropertiesrandomness.data.json.condition;
 import com.google.gson.*;
 import com.google.gson.annotations.JsonAdapter;
 import insane96mcp.mobspropertiesrandomness.data.json.util.modifiable.MPRModifiableValue;
+import net.minecraft.util.GsonHelper;
 import net.minecraft.world.entity.LivingEntity;
 
 import java.lang.reflect.Type;
@@ -25,7 +26,7 @@ public class MPRChanceCondition extends MPRCondition {
         @Override
         public MPRChanceCondition deserialize(JsonElement json, Type typeOfT, JsonDeserializationContext context) throws JsonParseException {
             JsonObject jObject = json.getAsJsonObject();
-            MPRModifiableValue chance = context.deserialize(jObject.get("chance"), MPRModifiableValue.class);
+            MPRModifiableValue chance = GsonHelper.getAsObject(jObject, "chance", context, MPRModifiableValue.class);
             return new MPRChanceCondition(chance, MPRCondition.deserializeInverted(jObject));
         }
 
