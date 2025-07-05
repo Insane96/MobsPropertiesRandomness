@@ -1,6 +1,6 @@
 # Changelog
 
-## Upcoming
+## Alpha 5.0.4
 * Added `mod_loaded` condition
   * Requires a `mod_id` to be specified and will return `true` if the mod is present
 * Migrated some Modifiable Values objects to Range objects. This doesn't require any changes to the properties files
