@@ -1,5 +1,8 @@
 # Changelog
 
+## Alpha 5.0.5
+* Fixed crash #163
+
 ## Alpha 5.0.4
 * Added `mod_loaded` condition
   * Requires a `mod_id` to be specified and will match if the mod is present
