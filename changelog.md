@@ -1,5 +1,8 @@
 # Changelog
 
+## Alpha 5.0.6
+* Fixed another possible crash with the death event
+
 ## Alpha 5.0.5
 * Fixed crash #163
 
