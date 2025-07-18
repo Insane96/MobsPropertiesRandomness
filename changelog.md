@@ -1,6 +1,6 @@
 # Changelog
 
-## Upcoming
+## Beta 5.0.8
 * Added `bias` to Range Object
   * Can be "min" and "max". 
   * "min" will bias the number generated towards the min value
