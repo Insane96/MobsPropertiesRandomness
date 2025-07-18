@@ -16,7 +16,6 @@ import java.util.Objects;
 @JsonAdapter(MPRRange.Serializer.class)
 public class MPRRange extends MPRModifiableValue {
 	private final Double max;
-	@Nullable
 	private final Bias bias;
 	private ModifiersBehaviour modifiersBehaviour;
 
@@ -24,10 +23,10 @@ public class MPRRange extends MPRModifiableValue {
 	public static final MPRRange ONE = new MPRRange(1d);
 
 	public MPRRange(Double value) {
-		this(value, null, null, null, List.of(), null);
+		this(value, null, null, Bias.NONE, List.of(), null);
 	}
 
-	public MPRRange(Double min, @Nullable Double max, @Nullable ModifiersBehaviour modifiersBehaviour, @Nullable Bias bias, List<MPRModifier> conditionsModifier, @Nullable Integer round) {
+	public MPRRange(Double min, @Nullable Double max, @Nullable ModifiersBehaviour modifiersBehaviour, Bias bias, List<MPRModifier> conditionsModifier, @Nullable Integer round) {
 		super(min, conditionsModifier, round);
         this.max = max != null ? max : min;
 		this.modifiersBehaviour = modifiersBehaviour;
@@ -60,11 +59,14 @@ public class MPRRange extends MPRModifiableValue {
 		RandomSource random = entity.level().random;
 		double min = this.applyModifiers(this.value, entity);
 		double max = this.applyModifiers(this.max, entity);
-		if (this.bias == null)
-			return Mth.nextDouble(random, min, max);
+        if (this.bias == Bias.NONE)
+            return Mth.nextDouble(random, min, max);
 		else {
-			double v = min + this.bias.next(random) * (max - min);
-			return v;
+			double t = random.nextDouble();
+			double biased = random.nextDouble() * t;
+			return this.bias == Bias.MIN
+					? min + biased * (max - min)
+					: max - biased * (max - min);
 		}
 	}
 
@@ -94,13 +96,16 @@ public class MPRRange extends MPRModifiableValue {
 			else {
 				min = GsonHelper.getAsDouble(jObject, "min");
 			}
+			double max = GsonHelper.getAsDouble(jObject, "max", min);
+			if (min > max)
+				throw new JsonParseException("Min cannot be greater than max");
 
-			Bias bias = null;
-			if (jObject.has("bias"))
-				bias = new Bias(GsonHelper.getAsFloat(jObject, "bias"), 0.5f);
+			Bias bias = jObject.has("bias")
+					? GsonHelper.getAsObject(jObject, "bias", context, Bias.class)
+					: Bias.NONE;
 			return new MPRRange(
 					min,
-					GsonHelper.getAsDouble(jObject, "max", min),
+					max,
 					GsonHelper.getAsObject(jObject, "modifiers_behaviour", null, context, ModifiersBehaviour.class),
 					bias,
 					deserializeList(jObject, context),
@@ -130,26 +135,12 @@ public class MPRRange extends MPRModifiableValue {
 		MAX_ONLY
 	}
 
-	public static class Bias {
-		private final double mean, deviation;
-
-		public Bias(Float mean, Float deviation) {
-			if (mean <= 0.1f)
-				this.mean = 0.1f;
-			else if (mean >= 0.9f)
-				this.mean = 0.9f;
-			else
-				this.mean = mean;
-			this.deviation = deviation;
-		}
-
-		public double next(RandomSource random) {
-			double value;
-			do {
-				value = random.nextGaussian() * this.deviation + this.mean;
-			} while (value < 0 || value > 1);
-			return value;
-		}
-
+	public enum Bias {
+		@SerializedName("none")
+		NONE,
+		@SerializedName("min")
+		MIN,
+		@SerializedName("max")
+		MAX
 	}
 }

@@ -15,6 +15,7 @@ import insane96mcp.mobspropertiesrandomness.data.json.property.events.EventsRegi
 import insane96mcp.mobspropertiesrandomness.data.json.property.events.MPRChangeTargetEvent;
 import insane96mcp.mobspropertiesrandomness.data.json.util.NBTType;
 import insane96mcp.mobspropertiesrandomness.data.json.util.PlayerMode;
+import insane96mcp.mobspropertiesrandomness.data.json.util.modifiable.MPRRange;
 import insane96mcp.mobspropertiesrandomness.data.json.util.modifiable.ModifiersRegistry;
 import insane96mcp.mobspropertiesrandomness.data.serializer.*;
 import insane96mcp.mobspropertiesrandomness.setup.Config;
@@ -102,6 +103,7 @@ public class MPR
                 .registerTypeAdapter(MPRChangeTargetEvent.ChangeType.class, new StrictEnumDeserializer<>(MPRChangeTargetEvent.ChangeType.class))
                 .registerTypeAdapter(MPRScalePehkuiProperty.Operation.class, new StrictEnumDeserializer<>(MPRScalePehkuiProperty.Operation.class))
                 .registerTypeAdapter(MPRWeatherCondition.Weather.class, new StrictEnumDeserializer<>(MPRWeatherCondition.Weather.class))
+                .registerTypeAdapter(MPRRange.Bias.class, new StrictEnumDeserializer<>(MPRRange.Bias.class))
                 .create();
     }
 }

@@ -1,5 +1,12 @@
 # Changelog
 
+## Upcoming
+* Added `bias` to Range Object
+  * Can be "min" and "max". 
+  * "min" will bias the number generated towards the min value
+  * "max" will bias the number generated towards the max value
+  * If omitted, the number generated will be uniform between min and max
+
 ## Alpha 5.0.7
 * Fixed another possible crash with the kill event
 
