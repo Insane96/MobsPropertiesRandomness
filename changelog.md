@@ -1,6 +1,6 @@
 # Changelog
 
-## Upcoming
+## Beta 5.0.9
 * Added "middle" as `bias` option
   * Number will be biased towards the middle of the range
 
