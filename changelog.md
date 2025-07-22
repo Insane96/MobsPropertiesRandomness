@@ -1,5 +1,9 @@
 # Changelog
 
+## Upcoming
+* Added "middle" as `bias` option
+  * Number will be biased towards the middle of the range
+
 ## Beta 5.0.8
 * Added `bias` to Range Object
   * Can be "min" and "max". 

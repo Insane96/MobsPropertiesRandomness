@@ -61,12 +61,15 @@ public class MPRRange extends MPRModifiableValue {
 		double max = this.applyModifiers(this.max, entity);
         if (this.bias == Bias.NONE)
             return Mth.nextDouble(random, min, max);
-		else {
+		else if (this.bias != Bias.MIDDLE) {
 			double t = random.nextDouble();
 			double biased = random.nextDouble() * t;
 			return this.bias == Bias.MIN
 					? min + biased * (max - min)
 					: max - biased * (max - min);
+		}
+		else {
+			return random.triangle((min + max) / 2.0, (max - min) / 2.0);
 		}
 	}
 
@@ -141,6 +144,8 @@ public class MPRRange extends MPRModifiableValue {
 		@SerializedName("min")
 		MIN,
 		@SerializedName("max")
-		MAX
+		MAX,
+		@SerializedName("middle")
+		MIDDLE
 	}
 }
