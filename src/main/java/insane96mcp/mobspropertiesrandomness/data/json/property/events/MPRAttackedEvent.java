@@ -27,7 +27,7 @@ public class MPRAttackedEvent extends MPROnHitEvent {
             return;
 
         //Get on hit events of the attacked entity
-        List<MPRAttackedEvent> events = getEvents(mob, MPRAttackedEvent.class);
+         List<MPRAttackedEvent> events = getEvents(mob, MPRAttackedEvent.class);
         for (MPRAttackedEvent attackEvent : events)
             attackEvent.hit(event, mob, other, event.getSource(), event.getAmount(), event.getSource().getDirectEntity() == event.getSource().getEntity());
     }

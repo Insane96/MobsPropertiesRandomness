@@ -1,5 +1,8 @@
 # Changelog
 
+## Beta 5.0.10
+* Fixed events not working in presets
+
 ## Beta 5.0.9
 * Added "middle" as `bias` option
   * Number will be biased towards the middle of the range

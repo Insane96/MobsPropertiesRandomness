@@ -5,6 +5,7 @@ import com.google.gson.JsonElement;
 import com.google.gson.JsonSyntaxException;
 import insane96mcp.mobspropertiesrandomness.MPR;
 import insane96mcp.mobspropertiesrandomness.data.json.MPRProperties;
+import insane96mcp.mobspropertiesrandomness.data.json.property.events.MPREvent;
 import insane96mcp.mobspropertiesrandomness.util.Logger;
 import net.minecraft.resources.FileToIdConverter;
 import net.minecraft.resources.ResourceLocation;
@@ -44,6 +45,7 @@ public class MPRPresetReloadListener extends SimplePreparableReloadListener<Map<
 
 	public static void scanDirectory(ResourceManager resourceManager, String directory, Gson gson, Map<ResourceLocation, JsonElement> map) {
 		FileToIdConverter filetoidconverter = FileToIdConverter.json(directory);
+		MPREvent.LOADED_EVENTS.clear();
 
 		for (Map.Entry<ResourceLocation, Resource> entry : filetoidconverter.listMatchingResources(resourceManager).entrySet()) {
 			ResourceLocation key = entry.getKey();

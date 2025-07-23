@@ -5,7 +5,6 @@ import com.google.gson.JsonElement;
 import com.google.gson.JsonParseException;
 import insane96mcp.mobspropertiesrandomness.MPR;
 import insane96mcp.mobspropertiesrandomness.data.json.MPRMob;
-import insane96mcp.mobspropertiesrandomness.data.json.property.events.MPREvent;
 import insane96mcp.mobspropertiesrandomness.util.Logger;
 import net.minecraft.resources.FileToIdConverter;
 import net.minecraft.resources.ResourceLocation;
@@ -65,7 +64,6 @@ public class MPRMobReloadListener extends SimplePreparableReloadListener<Map<Res
 	@Override
 	protected void apply(@NotNull Map<ResourceLocation, JsonElement> map, @NotNull ResourceManager resourceManager, @NotNull ProfilerFiller profilerFiller) {
 		MPR_MOBS.clear();
-		MPREvent.LOADED_EVENTS.clear();
 		for (var entry : map.entrySet()) {
 			try {
 				ResourceLocation name = entry.getKey();
