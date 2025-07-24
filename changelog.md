@@ -1,5 +1,8 @@
 # Changelog
 
+## Beta 5.0.11
+* Fixed conditions for Equipment property being checked twice
+
 ## Beta 5.0.10
 * Fixed events not working in presets
 

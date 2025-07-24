@@ -42,8 +42,6 @@ public class MPREquipmentProperty extends MPRProperty {
 
     @Override
     public boolean apply(LivingEntity living) {
-        if (!MPRCondition.conditionsApply(this.conditions, living))
-            return false;
         MPRItem randomItem = this.getRandomItem(living);
         ItemStack stack;
         if (randomItem != null)
