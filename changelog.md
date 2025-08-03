@@ -1,5 +1,8 @@
 # Changelog
 
+## Upcoming
+* Renamed `attacked` event to `damaged`
+
 ## Beta 5.0.11
 * Fixed conditions for Equipment property being checked twice
 

@@ -63,7 +63,7 @@ public abstract class MPROnHitEvent extends MPREvent {
 	}
 
 	public static void onHit(LivingDamageEvent event) {
-		MPRAttackedEvent.onAttacked(event);
+		MPRDamagedEvent.onDamaged(event);
 		MPRAttackEvent.onAttack(event);
 	}
 }

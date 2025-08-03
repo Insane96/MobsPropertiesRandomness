@@ -31,7 +31,7 @@ public class EventsRegistry {
     public static void init() {
         register("tick", MPRTickEvent.class);
         register("death", MPRDeathEvent.class);
-        register("attacked", MPRAttackedEvent.class);
+        register("damaged", MPRDamagedEvent.class);
         register("attack", MPRAttackEvent.class);
         register("kill", MPRKillEvent.class);
         register("change_target", MPRChangeTargetEvent.class);

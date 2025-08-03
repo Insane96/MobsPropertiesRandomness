@@ -15,21 +15,21 @@ import org.jetbrains.annotations.Nullable;
 
 import java.util.List;
 
-@JsonAdapter(MPRAttackedEvent.Serializer.class)
-public class MPRAttackedEvent extends MPROnHitEvent {
-    public MPRAttackedEvent(MPRModifier.@Nullable Operation damageModifierOperation, @Nullable MPRRange damageAmount, @Nullable MPRRange damageModifier, @Nullable MPRRange healthLeft, boolean flatHealthLeft, MPRHurtData hurtData, ResourceLocation id, Target target, CommandFunction.@Nullable CacheableFunction function, @Nullable List<MPRProperty> applyProperties, List<MPRCondition> conditions) {
+@JsonAdapter(MPRDamagedEvent.Serializer.class)
+public class MPRDamagedEvent extends MPROnHitEvent {
+    public MPRDamagedEvent(MPRModifier.@Nullable Operation damageModifierOperation, @Nullable MPRRange damageAmount, @Nullable MPRRange damageModifier, @Nullable MPRRange healthLeft, boolean flatHealthLeft, MPRHurtData hurtData, ResourceLocation id, Target target, CommandFunction.@Nullable CacheableFunction function, @Nullable List<MPRProperty> applyProperties, List<MPRCondition> conditions) {
         super(damageModifierOperation, damageAmount, damageModifier, healthLeft, flatHealthLeft, hurtData, id, target, function, applyProperties, conditions);
     }
 
-    public static void onAttacked(LivingDamageEvent event) {
+    public static void onDamaged(LivingDamageEvent event) {
         LivingEntity mob = event.getEntity();
         if (!(event.getSource().getEntity() instanceof LivingEntity other))
             return;
 
-        //Get on hit events of the attacked entity
-         List<MPRAttackedEvent> events = getEvents(mob, MPRAttackedEvent.class);
-        for (MPRAttackedEvent attackEvent : events)
-            attackEvent.hit(event, mob, other, event.getSource(), event.getAmount(), event.getSource().getDirectEntity() == event.getSource().getEntity());
+        //Get on hit events of the damaged entity
+         List<MPRDamagedEvent> events = getEvents(mob, MPRDamagedEvent.class);
+        for (MPRDamagedEvent damagedEvent : events)
+            damagedEvent.hit(event, mob, other, event.getSource(), event.getAmount(), event.getSource().getDirectEntity() == event.getSource().getEntity());
     }
 
     public static class Serializer implements JsonDeserializer<MPROnHitEvent>, JsonSerializer<MPROnHitEvent> {
@@ -48,7 +48,7 @@ public class MPRAttackedEvent extends MPROnHitEvent {
             List<MPRCondition> conditions = MPRCondition.deserializeConditions(jObject, context);
             List<MPRProperty> properties = MPRProperty.deserializeList(jObject, "apply_properties", context);
 
-            return new MPRAttackedEvent(damageModifierOperation, damageAmount, damageModifier, healthLeft, GsonHelper.getAsBoolean(jObject, "flat_health_left", false), MPRHurtData.deserialize(jObject, context), ResourceLocation.parse(id), target, function, properties, conditions);
+            return new MPRDamagedEvent(damageModifierOperation, damageAmount, damageModifier, healthLeft, GsonHelper.getAsBoolean(jObject, "flat_health_left", false), MPRHurtData.deserialize(jObject, context), ResourceLocation.parse(id), target, function, properties, conditions);
         }
 
         @Override
