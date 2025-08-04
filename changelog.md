@@ -1,6 +1,8 @@
 # Changelog
 
 ## Upcoming
+* Added `equipment` condition
+  * Checks for `items` in the defined `slot`
 * Renamed `attacked` event to `damaged`
 
 ## Beta 5.0.11

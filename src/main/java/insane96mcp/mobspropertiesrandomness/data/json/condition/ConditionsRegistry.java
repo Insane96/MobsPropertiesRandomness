@@ -29,6 +29,7 @@ public class ConditionsRegistry {
 
     public static void init() {
         register("or", MPROrCondition.class);
+        register("equipment", MPREquipmentCondition.class);
         register("chance", MPRChanceCondition.class);
         register("is_baby", MPRBabyCondition.class);
         register("spawn_type", MPRSpawnTypeCondition.class);
