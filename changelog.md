@@ -1,5 +1,8 @@
 # Changelog
 
+## 5.0.13
+* Fixed `damaged` event not getting triggered with no attackers (e.g. fall damage)
+
 ## 5.0.12
 * Added `equipment` condition
   * Checks for `items` in the defined `slot`
