@@ -43,6 +43,7 @@ public class ConditionsRegistry {
         register("distance_from_spawn", MPRDistanceFromSpawnCondition.class);
         register("advancement", MPRAdvancementCondition.class);
         register("difficulty", MPRDifficultyCondition.class);
+        register("hardcore", MPRHardcoreCondition.class);
         register("temperature", MPRTemperatureCondition.class);
         register("has_target", MPRHasTargetCondition.class);
         register("light_level", MPRLightLevelCondition.class);

@@ -1,5 +1,9 @@
 # Changelog
 
+## Upcoming
+* Added `hardcore` condition
+  * Condition is fulfilled if the world is in hardcore mode
+
 ## 5.0.13
 * Fixed `damaged` event not getting triggered with no attackers (e.g. fall damage)
 
