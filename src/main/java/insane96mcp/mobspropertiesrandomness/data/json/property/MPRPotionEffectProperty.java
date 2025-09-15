@@ -50,7 +50,7 @@ public class MPRPotionEffectProperty extends MPRProperty {
         public MPRPotionEffectProperty deserialize(JsonElement json, Type typeOfT, JsonDeserializationContext context) throws JsonParseException {
             JsonObject jObject = json.getAsJsonObject();
 
-            MobEffect mobEffect = SerializerUtils.deserializeRegistryObject(jObject.get("effect"), Registries.MOB_EFFECT);
+            MobEffect mobEffect = SerializerUtils.deserializeRegistryObject(jObject, "effect", Registries.MOB_EFFECT);
 
             MPRRange amplifier;
             if (jObject.has("amplifier"))

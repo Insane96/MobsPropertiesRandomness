@@ -90,9 +90,16 @@ public class SerializerUtils {
         return reg.get(objectId);
     }
 
+    @Nullable
+    public static <T> T deserializeRegistryObject(JsonObject jObject, String memberName, ResourceKey<Registry<T>> registry) throws JsonParseException {
+        if (!jObject.has(memberName))
+            throw new JsonParseException("Missing \"%s\" from %s".formatted(memberName, jObject));
+        return deserializeRegistryObject(jObject.get(memberName), registry);
+    }
+
     public static <T> List<T> deserializeRegistryObjectList(JsonObject jObject, String memberName, JsonDeserializationContext context, ResourceKey<Registry<T>> registry) throws JsonParseException {
         if (!jObject.has(memberName))
-            return new ArrayList<>();
+            throw new JsonParseException("Missing %s array".formatted(memberName));
         JsonArray jsonArray = jObject.getAsJsonArray(memberName);
         if (jsonArray == null)
             return new ArrayList<>();

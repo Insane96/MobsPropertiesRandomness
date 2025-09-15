@@ -151,7 +151,7 @@ public abstract class MPREnchantItemFunction extends MPRItemFunction {
             public SingleEnchantment deserialize(JsonElement json, Type typeOfT, JsonDeserializationContext context) throws JsonParseException {
                 JsonObject jObject = json.getAsJsonObject();
                 return new SingleEnchantment(
-                        SerializerUtils.deserializeRegistryObject(jObject.get("enchantment"), Registries.ENCHANTMENT),
+                        SerializerUtils.deserializeRegistryObject(jObject, "enchantment", Registries.ENCHANTMENT),
                         deserializeLvl(jObject, context), deserializeAllowIncompatible(jObject),
                         MPRConditionable.deserializeList(jObject, context)
                 );

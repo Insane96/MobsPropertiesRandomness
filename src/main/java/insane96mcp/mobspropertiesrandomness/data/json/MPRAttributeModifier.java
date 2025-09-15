@@ -46,7 +46,7 @@ public class MPRAttributeModifier {
         @Override
         public MPRAttributeModifier deserialize(JsonElement json, Type typeOfT, JsonDeserializationContext context) throws JsonParseException {
             JsonObject jObject = json.getAsJsonObject();
-            Attribute attribute = SerializerUtils.deserializeRegistryObject(jObject.get("attribute"), Registries.ATTRIBUTE);
+            Attribute attribute = SerializerUtils.deserializeRegistryObject(jObject, "attribute", Registries.ATTRIBUTE);
 
             UUID uuid = jObject.has("uuid") ? UUID.fromString(GsonHelper.getAsString(jObject, "uuid")) : UUID.randomUUID();
             String modifierName = GsonHelper.getAsString(jObject, "modifier_name");
