@@ -1,6 +1,6 @@
 # Changelog
 
-## Upcoming
+## 5.0.14
 * Added `hardcore` condition
   * Condition is fulfilled if the world is in hardcore mode
 * Enhanced errors when deserializing registry objects
