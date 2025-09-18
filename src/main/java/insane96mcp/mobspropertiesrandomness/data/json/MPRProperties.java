@@ -45,6 +45,10 @@ public class MPRProperties extends MPRConditionable {
             property.apply(living);
     }
 
+    public List<MPRProperty> getProperties() {
+        return this.properties;
+    }
+
     public static List<MPRProperty> deserializeProperties(JsonObject jObject, JsonDeserializationContext context) { return MPRProperty.deserializeList(jObject, "properties", context); }
 
     public JsonObject endSerialization(JsonObject jObject, JsonSerializationContext context) {

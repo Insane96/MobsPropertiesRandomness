@@ -1,5 +1,9 @@
 # Changelog
 
+## 5.0.16
+* Presets-in-presets are now supported
+  * Presets are loaded and then validates so you can now use presets in presets without getting errors due to loading order
+
 ## 5.0.15
 * Fixed enchant function's random not working if omitting the enchantments list
 

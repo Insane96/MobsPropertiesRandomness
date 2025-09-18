@@ -19,16 +19,17 @@ import java.util.List;
 
 @JsonAdapter(MPRWeightedPreset.Serializer.class)
 public class MPRWeightedPreset extends MPRConditionable implements IWeightedRandom {
+    private final ResourceLocation presetId;
     @Nullable
-    public MPRProperties properties;
+    public MPRProperties properties = null;
     private final MPRModifiableValue modifiableWeight;
     private int _weight;
 
     private boolean valid = true;
 
-    public MPRWeightedPreset(@Nullable MPRProperties properties, MPRModifiableValue modifiableWeight, List<MPRCondition> conditions) {
+    public MPRWeightedPreset(ResourceLocation presetId, MPRModifiableValue modifiableWeight, List<MPRCondition> conditions) {
         super(conditions);
-        this.properties = properties;
+        this.presetId = presetId;
         this.modifiableWeight = modifiableWeight;
     }
 
@@ -53,30 +54,32 @@ public class MPRWeightedPreset extends MPRConditionable implements IWeightedRand
         return this.valid;
     }
 
+    public void resolve() {
+        this.properties = MPRPresetReloadListener.PRESETS.get(this.presetId);
+        if (this.properties == null) {
+            Logger.warn("Preset %s does not exist. Ignoring", this.presetId);
+            this.valid = false;
+        }
+    }
+
     public static class Serializer implements JsonSerializer<MPRWeightedPreset>, JsonDeserializer<MPRWeightedPreset> {
         @Override
         public MPRWeightedPreset deserialize(JsonElement json, Type typeOfT, JsonDeserializationContext context) throws JsonParseException {
             JsonObject jObject = json.getAsJsonObject();
             String sPreset = GsonHelper.getAsString(jObject, "preset");
-            ResourceLocation presetLocation = ResourceLocation.parse(sPreset);
-            MPRProperties preset = MPRPresetReloadListener.PRESETS.get(presetLocation);
-            MPRWeightedPreset weightedPreset = new MPRWeightedPreset(
-                    preset,
+            ResourceLocation presetId = ResourceLocation.parse(sPreset);
+            MPRProperties preset = MPRPresetReloadListener.PRESETS.get(presetId);
+            return new MPRWeightedPreset(
+                    presetId,
                     GsonHelper.getAsObject(jObject, "weight", MPRModifiableValue.ONE, context, MPRModifiableValue.class),
                     MPRCondition.deserializeConditions(jObject, context)
             );
-            if (preset == null) {
-                Logger.warn("Preset " + sPreset + " does not exist");
-                weightedPreset.valid = false;
-            }
-            return weightedPreset;
         }
 
         @Override
         public JsonElement serialize(MPRWeightedPreset src, Type typeOfSrc, JsonSerializationContext context) {
             JsonObject jObject = new JsonObject();
-            if (src.properties != null)
-                jObject.addProperty("preset", MPRPresetReloadListener.getKey(src.properties).toString());
+            jObject.addProperty("preset", src.presetId.toString());
             jObject.add("weight", context.serialize(src.modifiableWeight));
             return src.endSerialization(jObject, context);
         }

@@ -6,6 +6,8 @@ import com.google.gson.JsonSyntaxException;
 import insane96mcp.mobspropertiesrandomness.MPR;
 import insane96mcp.mobspropertiesrandomness.data.json.MPRProperties;
 import insane96mcp.mobspropertiesrandomness.data.json.property.events.MPREvent;
+import insane96mcp.mobspropertiesrandomness.data.json.property.preset.MPRPresetsProperty;
+import insane96mcp.mobspropertiesrandomness.data.json.property.preset.MPRWeightedPreset;
 import insane96mcp.mobspropertiesrandomness.util.Logger;
 import net.minecraft.resources.FileToIdConverter;
 import net.minecraft.resources.ResourceLocation;
@@ -86,6 +88,13 @@ public class MPRPresetReloadListener extends SimplePreparableReloadListener<Map<
 				Logger.error("Failed loading Preset %s: %s", entry.getKey(), e.getMessage());
 			}
 		}
+        PRESETS.forEach((id, preset) -> preset.getProperties()
+                .forEach(property -> {
+                    if (property instanceof MPRPresetsProperty mprPresetsProperty) {
+                        Logger.info("Resolving presets-in-presets for %s", id);
+                        mprPresetsProperty.weightedPresets.forEach(MPRWeightedPreset::resolve);
+                    }
+                }));
 
 		Logger.info("Loaded %s Presets", PRESETS.size());
 	}
