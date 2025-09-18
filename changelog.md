@@ -1,5 +1,8 @@
 # Changelog
 
+## 5.0.15
+* Fixed enchant function's random not working if omitting the enchantments list
+
 ## 5.0.14
 * Added `hardcore` condition
   * Condition is fulfilled if the world is in hardcore mode
