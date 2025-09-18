@@ -217,7 +217,7 @@ public abstract class MPREnchantItemFunction extends MPRItemFunction {
                 return new RandomEnchantment(
                         GsonHelper.getAsBoolean(jObject, "allow_curses", true),
                         GsonHelper.getAsBoolean(jObject, "allow_treasure", true),
-                        SerializerUtils.deserializeRegistryObjectList(jObject, "enchantments", context, Registries.ENCHANTMENT),
+                        SerializerUtils.deserializeRegistryObjectList(jObject, "enchantments", context, Registries.ENCHANTMENT, false),
                         deserializeLvl(jObject, context),
                         deserializeAllowIncompatible(jObject),
                         MPRConditionable.deserializeList(jObject, context)
