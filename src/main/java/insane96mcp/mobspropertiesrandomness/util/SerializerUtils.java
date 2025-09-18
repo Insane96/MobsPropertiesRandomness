@@ -98,8 +98,6 @@ public class SerializerUtils {
     }
 
     public static <T> List<T> deserializeRegistryObjectList(JsonObject jObject, String memberName, JsonDeserializationContext context, ResourceKey<Registry<T>> registry) throws JsonParseException {
-        if (!jObject.has(memberName))
-            throw new JsonParseException("Missing %s array".formatted(memberName));
         JsonArray jsonArray = jObject.getAsJsonArray(memberName);
         if (jsonArray == null)
             return new ArrayList<>();
@@ -109,6 +107,16 @@ public class SerializerUtils {
             objects.add(deserializeRegistryObject(el, registry));
         }
         return objects;
+    }
+
+    public static <T> List<T> deserializeRegistryObjectList(JsonObject jObject, String memberName, JsonDeserializationContext context, ResourceKey<Registry<T>> registry, boolean required) throws JsonParseException {
+        if (!jObject.has(memberName)) {
+            if (required)
+                throw new JsonParseException("Missing %s array".formatted(memberName));
+            else
+                return new ArrayList<>();
+        }
+        return deserializeRegistryObjectList(jObject, memberName, context, registry);
     }
 
     public static <T> JsonElement serializeRegistryObject(T object, ResourceKey<Registry<T>> registry) throws JsonParseException {
