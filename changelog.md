@@ -1,5 +1,8 @@
 # Changelog
 
+## 5.0.17
+* Fixed presets trying to apply even if not valid
+
 ## 5.0.16
 * Presets-in-presets are now supported
   * Presets are loaded and then validates so you can now use presets in presets without getting errors due to loading order

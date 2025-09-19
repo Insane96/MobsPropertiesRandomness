@@ -38,14 +38,14 @@ public class MPRPresetsProperty extends MPRProperty {
             return false;
         if (this.applyAll) {
             List<MPRWeightedPreset> items = this.getPresets(living);
-            items.forEach(weightedPreset -> weightedPreset.properties.tryApply(living));
+            items.forEach(weightedPreset -> weightedPreset.tryApply(living));
             return true;
         }
         else {
             MPRWeightedPreset weightedPreset = this.getRandomPreset(living);
             if (weightedPreset == null)
                 return false;
-            weightedPreset.properties.tryApply(living);
+            weightedPreset.tryApply(living);
         }
         return true;
     }
