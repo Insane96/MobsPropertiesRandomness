@@ -30,6 +30,10 @@ public class MPRMob extends MPRProperties {
         super.tryApply(living);
     }
 
+    public List<MPRProperty> getProperties() {
+        return this.properties;
+    }
+
     public static class Serializer implements JsonDeserializer<MPRMob>, JsonSerializer<MPRMob> {
         @Override
         public MPRMob deserialize(JsonElement json, Type typeOfT, JsonDeserializationContext context) throws JsonParseException {

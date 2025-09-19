@@ -1,5 +1,8 @@
 # Changelog
 
+## 5.0.18
+* Fixed presets no longer working in mobs
+
 ## 5.0.17
 * Fixed presets trying to apply even if not valid
 
