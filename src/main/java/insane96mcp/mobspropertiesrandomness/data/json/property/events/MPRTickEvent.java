@@ -21,19 +21,21 @@ public class MPRTickEvent extends MPREvent {
 	private static final ResourceLocation TAG_UPDATE_INTERVAL = MPR.location("events/next_tick");
 
 	public MPRRange updateInterval;
+    private ResourceLocation nextTickTag;
 
 	public MPRTickEvent(MPRRange updateInterval, ResourceLocation id, Target target, @Nullable CommandFunction.CacheableFunction function, @Nullable List<MPRProperty> applyProperties, List<MPRCondition> conditions) {
 		super(id, target, function, applyProperties, conditions);
 		this.updateInterval = updateInterval;
-	}
+        this.nextTickTag = TAG_UPDATE_INTERVAL.withSuffix("/" + id.toString().replace(':', '/'));
+    }
 
 	public void tick(LivingEntity living) {
-        if (living.level().getGameTime() < ModNBTData.get(living, TAG_UPDATE_INTERVAL, Long.class))
+        if (living.level().getGameTime() < ModNBTData.get(living, this.nextTickTag, Long.class))
 			return;
 
 		if (living.tickCount > 1)
 			this.tryExecute(living, living);
-		ModNBTData.put(living, TAG_UPDATE_INTERVAL, (int) (this.updateInterval.getDoubleBetween(living) * 20) + living.level().getGameTime());
+		ModNBTData.put(living, this.nextTickTag, (int) (this.updateInterval.getDoubleBetween(living) * 20) + living.level().getGameTime());
 	}
 
 	public static void tickEvents(LivingEntity entity) {

@@ -1,5 +1,8 @@
 # Changelog
 
+## 5.0.19
+* Fixed multiple tick events not working
+
 ## 5.0.18
 * Fixed presets no longer working in mobs
 
