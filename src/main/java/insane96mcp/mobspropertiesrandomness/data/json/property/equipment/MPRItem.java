@@ -63,15 +63,15 @@ public class MPRItem extends MPRConditionable implements IWeightedRandom {
         @Override
         public MPRItem deserialize(JsonElement json, Type typeOfT, JsonDeserializationContext context) throws JsonParseException {
             JsonObject jObject = json.getAsJsonObject();
-            String sItem = GsonHelper.getAsString(jObject, "item");
-            Item item = ForgeRegistries.ITEMS.getValue(ResourceLocation.parse(sItem));
+            ResourceLocation itemLocation = ResourceLocation.parse(GsonHelper.getAsString(jObject, "item"));
+            Item item = ForgeRegistries.ITEMS.getValue(itemLocation);
             MPRItem mprItem = new MPRItem(
                     item,
                     GsonHelper.getAsObject(jObject, "weight", new MPRModifiableValue(1d), context, MPRModifiableValue.class),
                     MPRItemFunction.deserializeList(jObject, "functions", context),
                     MPRCondition.deserializeConditions(jObject, context)
             );
-            if (item == Items.AIR && !sItem.equals("minecraft:air"))
+            if (item == Items.AIR && !itemLocation.getPath().equals("air"))
                 mprItem.valid = false;
             return mprItem;
         }
