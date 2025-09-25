@@ -6,6 +6,7 @@ import insane96mcp.insanelib.util.weightedrandom.IWeightedRandom;
 import insane96mcp.mobspropertiesrandomness.data.json.condition.MPRCondition;
 import insane96mcp.mobspropertiesrandomness.data.json.condition.MPRConditionable;
 import insane96mcp.mobspropertiesrandomness.data.json.util.modifiable.MPRModifiableValue;
+import insane96mcp.mobspropertiesrandomness.util.Logger;
 import insane96mcp.mobspropertiesrandomness.util.SerializerUtils;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.resources.ResourceLocation;
@@ -29,6 +30,7 @@ public class MPRItem extends MPRConditionable implements IWeightedRandom {
     public List<MPRItemFunction> functions;
 
     private boolean valid = true;
+    private boolean setEmpty = true;
 
     public MPRItem(Item item, MPRModifiableValue modifiableWeight, List<MPRItemFunction> functions, List<MPRCondition> conditions) {
         super(conditions);
@@ -59,11 +61,15 @@ public class MPRItem extends MPRConditionable implements IWeightedRandom {
         return this._weight;
     }
 
+    public boolean shouldSetEmpty() {
+        return this.setEmpty;
+    }
+
     public static class Serializer implements JsonSerializer<MPRItem>, JsonDeserializer<MPRItem> {
         @Override
         public MPRItem deserialize(JsonElement json, Type typeOfT, JsonDeserializationContext context) throws JsonParseException {
             JsonObject jObject = json.getAsJsonObject();
-            ResourceLocation itemLocation = ResourceLocation.parse(GsonHelper.getAsString(jObject, "item"));
+            ResourceLocation itemLocation = ResourceLocation.parse(GsonHelper.getAsString(jObject, "item", ""));
             Item item = ForgeRegistries.ITEMS.getValue(itemLocation);
             MPRItem mprItem = new MPRItem(
                     item,
@@ -71,8 +77,14 @@ public class MPRItem extends MPRConditionable implements IWeightedRandom {
                     MPRItemFunction.deserializeList(jObject, "functions", context),
                     MPRCondition.deserializeConditions(jObject, context)
             );
-            if (item == Items.AIR && !itemLocation.getPath().equals("air"))
+            //If air has been manually set, remove any item in the slot
+            if (itemLocation.toString().equals("minecraft:air"))
+                mprItem.setEmpty = true;
+            //Else if, the item was not set to air, and it is air, the item is invalid
+            else if (item == Items.AIR) {
+                Logger.warn("Invalid item: %s. Ignored.", itemLocation);
                 mprItem.valid = false;
+            }
             return mprItem;
         }
 

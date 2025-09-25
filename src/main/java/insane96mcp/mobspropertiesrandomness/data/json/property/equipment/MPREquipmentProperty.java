@@ -48,7 +48,7 @@ public class MPREquipmentProperty extends MPRProperty {
             stack = randomItem.getStack(living, this.slot);
         else
             stack = getRandomItemFromLootTable(living);
-        if (stack == null || stack.isEmpty()) {
+        if (stack.isEmpty() && (randomItem == null || !randomItem.shouldSetEmpty())) {
             stack = living.getItemBySlot(this.slot);
             if (stack.isEmpty())
                 return false;
@@ -66,14 +66,13 @@ public class MPREquipmentProperty extends MPRProperty {
             living.setItemSlot(this.slot, stack);
     }
 
-    @Nullable
     private ItemStack getRandomItemFromLootTable(LivingEntity living) {
         WeightedResourceLocation randomLootTable = this.getRandomLootTable(living);
         if (randomLootTable == null)
-            return null;
+            return ItemStack.EMPTY;
         MinecraftServer server = living.getServer();
         if (server == null)
-            return null;
+            return ItemStack.EMPTY;
         LootParams.Builder lootparams$builder = new LootParams.Builder((ServerLevel) living.level())
                 .withParameter(LootContextParams.DAMAGE_SOURCE, living.damageSources().magic())
                 .withParameter(LootContextParams.THIS_ENTITY, living)
@@ -81,7 +80,7 @@ public class MPREquipmentProperty extends MPRProperty {
         LootTable lootTable = server.getLootData().getLootTable(randomLootTable.getLocation());
         ObjectArrayList<ItemStack> randomItems = lootTable.getRandomItems(lootparams$builder.create(LootContextParamSets.ENTITY));
         if (randomItems.isEmpty())
-            return null;
+            return ItemStack.EMPTY;
         return randomItems.stream().findFirst().get();
     }
 

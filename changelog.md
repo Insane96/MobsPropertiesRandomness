@@ -1,5 +1,10 @@
 # Changelog
 
+## 5.0.20
+* Invalid items are now logged
+  * E.g. `[WARN] Invalid item: minecaft:stone_pickaxe. Ignored.`
+* Fixed not being able to clear an item from slots with `minecraft:air`
+
 ## 5.0.19
 * Fixed multiple tick events not working
 
