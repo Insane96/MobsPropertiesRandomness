@@ -1,7 +1,7 @@
 # Changelog
 
 ## Upcoming
-* Fixed invalid Potion Effects preventing targets from spawning (errored)
+* Fixed invalid Potion Effects and attributes preventing targets from spawning (errored)
 
 ## 5.0.20
 * Invalid items are now logged

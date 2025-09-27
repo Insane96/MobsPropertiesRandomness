@@ -3,6 +3,7 @@ package insane96mcp.mobspropertiesrandomness.data.json;
 import com.google.gson.*;
 import com.google.gson.annotations.JsonAdapter;
 import insane96mcp.mobspropertiesrandomness.data.json.util.modifiable.MPRRange;
+import insane96mcp.mobspropertiesrandomness.util.Logger;
 import insane96mcp.mobspropertiesrandomness.util.SerializerUtils;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.util.GsonHelper;
@@ -47,6 +48,8 @@ public class MPRAttributeModifier {
         public MPRAttributeModifier deserialize(JsonElement json, Type typeOfT, JsonDeserializationContext context) throws JsonParseException {
             JsonObject jObject = json.getAsJsonObject();
             Attribute attribute = SerializerUtils.deserializeRegistryObject(jObject, "attribute", Registries.ATTRIBUTE);
+            if (attribute == null)
+                Logger.warn("Invalid attribute: %s. Will be ignored.", jObject.get("attribute").getAsString());
 
             UUID uuid = jObject.has("uuid") ? UUID.fromString(GsonHelper.getAsString(jObject, "uuid")) : UUID.randomUUID();
             String modifierName = GsonHelper.getAsString(jObject, "modifier_name");

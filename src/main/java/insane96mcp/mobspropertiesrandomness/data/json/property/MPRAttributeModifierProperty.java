@@ -24,6 +24,8 @@ public class MPRAttributeModifierProperty extends MPRProperty {
 
     @Override
     public boolean apply(LivingEntity living) {
+        if (this.attributeModifier.attribute == null)
+            return false;
         Attribute attribute = this.attributeModifier.attribute;
         AttributeInstance attributeInstance = living.getAttribute(attribute);
         if (attributeInstance == null) {

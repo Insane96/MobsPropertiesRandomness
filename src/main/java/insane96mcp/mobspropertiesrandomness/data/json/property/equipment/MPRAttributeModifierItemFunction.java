@@ -27,6 +27,8 @@ public class MPRAttributeModifierItemFunction extends MPRItemFunction {
 
     @Override
     public boolean apply(LivingEntity entity, ItemStack itemStack, EquipmentSlot equipmentSlotType) {
+        if (this.attributeModifier.attribute == null)
+            return false;
         AttributeModifier modifier = this.attributeModifier.getModifier(entity);
         if (this.equipmentSlots.isEmpty())
             MCUtils.addAttributeModifierToItemStack(itemStack, this.attributeModifier.attribute, modifier, equipmentSlotType);
