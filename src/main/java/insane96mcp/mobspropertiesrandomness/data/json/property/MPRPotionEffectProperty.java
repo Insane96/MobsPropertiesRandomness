@@ -36,6 +36,8 @@ public class MPRPotionEffectProperty extends MPRProperty {
 
     @Override
     public boolean apply(LivingEntity living) {
+        if (this.mobEffect == null)
+            return false;
         double duration = this.duration.getDoubleBetween(living);
         if (living.getEffect(this.mobEffect) != null && this.stackDuration && duration != -1)
             //noinspection DataFlowIssue
@@ -51,6 +53,8 @@ public class MPRPotionEffectProperty extends MPRProperty {
             JsonObject jObject = json.getAsJsonObject();
 
             MobEffect mobEffect = SerializerUtils.deserializeRegistryObject(jObject, "effect", Registries.MOB_EFFECT);
+            if (mobEffect == null)
+                Logger.warn("Invalid effect: %s. Will be ignored.", jObject.get("effect").getAsString());
 
             MPRRange amplifier;
             if (jObject.has("amplifier"))

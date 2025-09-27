@@ -1,5 +1,8 @@
 # Changelog
 
+## Upcoming
+* Fixed invalid Potion Effects preventing targets from spawning (errored)
+
 ## 5.0.20
 * Invalid items are now logged
   * E.g. `[WARN] Invalid item: minecaft:stone_pickaxe. Ignored.`
