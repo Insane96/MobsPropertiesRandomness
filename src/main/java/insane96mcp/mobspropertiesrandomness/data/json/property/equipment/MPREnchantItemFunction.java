@@ -6,6 +6,7 @@ import insane96mcp.mobspropertiesrandomness.MPR;
 import insane96mcp.mobspropertiesrandomness.data.json.condition.MPRCondition;
 import insane96mcp.mobspropertiesrandomness.data.json.condition.MPRConditionable;
 import insane96mcp.mobspropertiesrandomness.data.json.util.modifiable.MPRRange;
+import insane96mcp.mobspropertiesrandomness.util.Logger;
 import insane96mcp.mobspropertiesrandomness.util.SerializerUtils;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.nbt.CompoundTag;
@@ -135,6 +136,8 @@ public abstract class MPREnchantItemFunction extends MPRItemFunction {
 
         @Override
         protected boolean apply(LivingEntity living, ItemStack stack, EquipmentSlot slot) {
+            if (this.enchantment == null)
+                return false;
             Map<Enchantment, Integer> enchantmentsOnStack = EnchantmentHelper.getEnchantments(stack);
             //noinspection ConstantConditions can't be null as it's checked to exist when the data is reloaded
             boolean canApply = this.allowIncompatible || EnchantmentHelper.isEnchantmentCompatible(enchantmentsOnStack.keySet(), this.enchantment);
@@ -150,8 +153,11 @@ public abstract class MPREnchantItemFunction extends MPRItemFunction {
             @Override
             public SingleEnchantment deserialize(JsonElement json, Type typeOfT, JsonDeserializationContext context) throws JsonParseException {
                 JsonObject jObject = json.getAsJsonObject();
+                Enchantment enchantment = SerializerUtils.deserializeRegistryObject(jObject, "enchantment", Registries.ENCHANTMENT);
+                if (enchantment == null)
+                    Logger.warn("Invalid enchantment: %s. Will be ignored.", jObject.get("enchantment").getAsString());
                 return new SingleEnchantment(
-                        SerializerUtils.deserializeRegistryObject(jObject, "enchantment", Registries.ENCHANTMENT),
+                        enchantment,
                         deserializeLvl(jObject, context), deserializeAllowIncompatible(jObject),
                         MPRConditionable.deserializeList(jObject, context)
                 );

@@ -104,7 +104,12 @@ public class SerializerUtils {
 
         List<T> objects = new ArrayList<>();
         for (JsonElement el : jsonArray) {
-            objects.add(deserializeRegistryObject(el, registry));
+            T obj = deserializeRegistryObject(el, registry);
+            if (obj == null) {
+                Logger.warn("Invalid registry object: %s. Will be ignored.", el);
+                continue;
+            }
+            objects.add(obj);
         }
         return objects;
     }
