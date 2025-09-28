@@ -1,5 +1,8 @@
 # Changelog
 
+## Upcoming
+* Added distance object to `has_target` condition
+
 ## 5.0.21
 * Fixed invalid Potion Effects and attributes preventing targets from spawning (errored)
 * Invalid registry objects (notably enchantments) that aren't valid are now logged and not added to deserialized lists
