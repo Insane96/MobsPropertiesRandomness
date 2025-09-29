@@ -100,7 +100,8 @@ public class MPRBase extends Feature {
 
 	@SubscribeEvent
 	public void onEntityLeaveLevel(EntityLeaveLevelEvent event) {
-		MPRBossBarProperty.removeBar(event.getEntity());
+        if (event.getEntity().getRemovalReason() != null)
+		    MPRBossBarProperty.removeBar(event.getEntity());
 	}
 
 	@SubscribeEvent

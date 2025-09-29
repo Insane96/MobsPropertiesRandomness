@@ -2,6 +2,7 @@
 
 ## Upcoming
 * Added distance object to `has_target` condition
+* Fixed boss bar being removed when closing the world
 
 ## 5.0.21
 * Fixed invalid Potion Effects and attributes preventing targets from spawning (errored)
