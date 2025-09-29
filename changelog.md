@@ -1,6 +1,6 @@
 # Changelog
 
-## Upcoming
+## 5.0.22
 * Added distance object to `has_target` condition
 * Fixed boss bar being removed when closing the world
 
