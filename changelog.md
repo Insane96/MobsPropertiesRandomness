@@ -1,5 +1,35 @@
 # Changelog
 
+## 5.0.23
+* Equipment condition now supports item tags
+  * You could only use a list of items, now you can use a single item
+    ```json
+    {
+        "condition": "equipment",
+        "slot": "mainhand",
+        "items": "minecraft:crossbow"
+    }
+    ```
+    item tag
+    ```json
+    {
+        "condition": "equipment",
+        "slot": "mainhand",
+        "items": "#minecraft:axes"
+    }
+    ```
+    or item list
+    ```json
+    {
+        "condition": "equipment",
+        "slot": "mainhand",
+        "items": [
+            "minecraft:crossbow",
+            "minecraft:bow"
+        ]
+    }
+    ```
+
 ## 5.0.22
 * Added distance object to `has_target` condition
 * Fixed boss bar being removed when closing the world

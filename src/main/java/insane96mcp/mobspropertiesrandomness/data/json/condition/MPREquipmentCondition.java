@@ -4,30 +4,43 @@ import com.google.gson.*;
 import com.google.gson.annotations.JsonAdapter;
 import insane96mcp.mobspropertiesrandomness.util.SerializerUtils;
 import net.minecraft.core.registries.Registries;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.tags.TagKey;
 import net.minecraft.util.GsonHelper;
 import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.item.Item;
+import net.minecraft.world.item.ItemStack;
 
+import javax.annotation.Nullable;
 import java.lang.reflect.Type;
 import java.util.List;
 
 @JsonAdapter(MPREquipmentCondition.Serializer.class)
 public class MPREquipmentCondition extends MPRCondition {
 	public EquipmentSlot slot;
+	@Nullable
 	public List<Item> items;
+	@Nullable
+	public TagKey<Item> itemTag;
 
-	public MPREquipmentCondition(EquipmentSlot slot, List<Item> items, boolean inverted) {
+	public MPREquipmentCondition(EquipmentSlot slot, @Nullable List<Item> items, @Nullable TagKey<Item> itemTag, boolean inverted) {
 		super(inverted);
 		this.slot = slot;
 		this.items = items;
+		this.itemTag = itemTag;
 	}
 
 	@Override
 	protected boolean conditionCheck(LivingEntity living) {
-		for (Item item : this.items) {
-			if (living.getItemBySlot(this.slot).is(item))
-				return true;
+		ItemStack itemBySlot = living.getItemBySlot(this.slot);
+		if (this.itemTag != null)
+			return itemBySlot.is(this.itemTag);
+		if (this.items != null) {
+			for (Item item : this.items) {
+				if (itemBySlot.is(item))
+					return true;
+			}
 		}
 		return false;
 	}
@@ -36,8 +49,32 @@ public class MPREquipmentCondition extends MPRCondition {
 		@Override
 		public MPREquipmentCondition deserialize(JsonElement json, Type typeOfT, JsonDeserializationContext context) throws JsonParseException {
 			JsonObject jObject = json.getAsJsonObject();
-			return new MPREquipmentCondition(
-					GsonHelper.getAsObject(jObject, "slot", context, EquipmentSlot.class), SerializerUtils.deserializeRegistryObjectList(jObject, "items", context, Registries.ITEM), MPRCondition.deserializeInverted(jObject));
+			if (!jObject.has("items"))
+				throw new JsonParseException("missing 'items'");
+
+			EquipmentSlot slot = GsonHelper.getAsObject(jObject, "slot", context, EquipmentSlot.class);
+			boolean inverted = MPRCondition.deserializeInverted(jObject);
+			JsonElement itemsElement = jObject.get("items");
+
+			if (itemsElement.isJsonPrimitive()) {
+				String itemsString = itemsElement.getAsString();
+				if (itemsString.startsWith("#")) {
+					TagKey<Item> itemTag = TagKey.create(Registries.ITEM, ResourceLocation.parse(itemsString.substring(1)));
+					return new MPREquipmentCondition(slot, null, itemTag, inverted);
+				}
+				else {
+					//noinspection DataFlowIssue
+					List<Item> items = List.of(SerializerUtils.deserializeRegistryObject(jObject, "items", Registries.ITEM));
+					return new MPREquipmentCondition(slot, items, null, inverted);
+				}
+			}
+			else if (itemsElement.isJsonArray()) {
+				List<Item> items = SerializerUtils.deserializeRegistryObjectList(jObject, "items", context, Registries.ITEM);
+				return new MPREquipmentCondition(slot, items, null, inverted);
+			}
+			else {
+				throw new JsonParseException("'items' must be a string or an array");
+			}
 		}
 
 		@Override
