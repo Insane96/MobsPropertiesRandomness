@@ -1,5 +1,20 @@
 # Changelog
 
+## Upcoming
+* Added `effect` condition
+  * Checks if the entity has the effect and the amplifier (optional)
+    This example condition will be fulfilled if the entity has slowness with amplifier at least III
+    ```json
+    {
+        "condition": "effect",
+        "effect": "slowness",
+        "amplifier": {
+            "min": 2, 
+            "max": 255
+        }
+    }
+    ```
+
 ## 5.0.23
 * Equipment condition now supports item tags
   * You could only use a list of items, now you can use a single item

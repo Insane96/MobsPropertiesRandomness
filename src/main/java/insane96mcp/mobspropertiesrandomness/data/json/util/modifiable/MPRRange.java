@@ -26,6 +26,10 @@ public class MPRRange extends MPRModifiableValue {
 		this(value, null, null, Bias.NONE, List.of(), null);
 	}
 
+	public MPRRange(Double min, Double max) {
+		this(min, max, null, Bias.NONE, List.of(), null);
+	}
+
 	public MPRRange(Double min, @Nullable Double max, @Nullable ModifiersBehaviour modifiersBehaviour, Bias bias, List<MPRModifier> conditionsModifier, @Nullable Integer round) {
 		super(min, conditionsModifier, round);
         this.max = max != null ? max : min;

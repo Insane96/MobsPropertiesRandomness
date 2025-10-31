@@ -41,6 +41,7 @@ public class ConditionsRegistry {
         register("structure", MPRStructureCondition.class);
         register("deepness", MPRDeepnessCondition.class);
         register("distance_from_spawn", MPRDistanceFromSpawnCondition.class);
+		register("effect", MPREffectCondition.class);
         register("advancement", MPRAdvancementCondition.class);
         register("difficulty", MPRDifficultyCondition.class);
         register("hardcore", MPRHardcoreCondition.class);
