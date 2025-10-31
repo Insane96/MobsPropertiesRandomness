@@ -1,6 +1,6 @@
 # Changelog
 
-## Upcoming
+## 5.0.24
 * Added `effect` condition
   * Checks if the entity has the effect and the amplifier (optional)
     This example condition will be fulfilled if the entity has slowness with amplifier at least III
