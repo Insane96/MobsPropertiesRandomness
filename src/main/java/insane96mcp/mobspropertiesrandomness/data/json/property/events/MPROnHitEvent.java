@@ -46,9 +46,9 @@ public abstract class MPROnHitEvent extends MPREvent {
 
 		if (this.damageModifier != null) {
 			if (this.damageModifierOperation == MPRModifier.Operation.ADD)
-				event.setAmount((float) (event.getAmount() + this.damageModifier.getValue(living)));
+				event.setAmount((float) (event.getAmount() + this.damageModifier.getDoubleBetween(living)));
 			else
-				event.setAmount((float) (event.getAmount() * this.damageModifier.getValue(living)));
+				event.setAmount((float) (event.getAmount() * this.damageModifier.getDoubleBetween(living)));
 		}
 
 		if (this.healthLeft != null) {

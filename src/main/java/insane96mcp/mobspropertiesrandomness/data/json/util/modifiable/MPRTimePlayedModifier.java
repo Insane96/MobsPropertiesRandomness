@@ -46,7 +46,7 @@ public class MPRTimePlayedModifier extends MPRModifier {
         for (ServerPlayer player : players) {
             int ticksPlayed = player.getStats().getValue(Stats.CUSTOM.get(Stats.PLAY_TIME));
             double minutesPlayed = ticksPlayed / 20d / 60d;
-            modifier += (minutesPlayed / this.minutes.getValue(living)) * this.amountPerMinutes.getValue(living);
+            modifier += (minutesPlayed / this.minutes.getValue(living)) * this.amountPerMinutes.getDoubleBetween(living);
         }
 
         if (this.mode == Mode.AVERAGE)

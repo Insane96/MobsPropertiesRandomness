@@ -32,11 +32,11 @@ public class MPRDifficultyModifier extends MPRModifier {
         Difficulty worldDifficulty = living.level().getDifficulty();
         double modifier = this.getNoModifier();
         if (worldDifficulty == Difficulty.EASY && this.easy != null)
-            modifier = this.easy.getValue(living);
+            modifier = this.easy.getDoubleBetween(living);
         else if (worldDifficulty == Difficulty.NORMAL && this.normal != null)
-            modifier = this.normal.getValue(living);
+            modifier = this.normal.getDoubleBetween(living);
         else if (worldDifficulty == Difficulty.HARD && this.hard != null)
-            modifier = this.hard.getValue(living);
+            modifier = this.hard.getDoubleBetween(living);
         return modifier;
     }
 

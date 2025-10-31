@@ -1,5 +1,48 @@
 # Changelog
 
+## Upcoming
+* Reworked Range object
+  * `min` and `max` are now Modifiable Values objects, so you can apply modifiers to either of them
+  * The range object still has `modifiers` that will apply to both `min` and `max`
+  * Removed `modifiers_behaviour`
+    * Example migration for max_only
+      ```json
+      {
+        "value": {
+          "min": 1,
+          "max": 2,
+          "modifiers": [
+              {
+                  "modifier": "distance_from_spawn",
+                  "operation": "add",
+                  "amount_per_blocks": 0.01,
+                  "blocks": 100
+              }
+          ],
+          "modifiers_behaviour": "max_only"
+        }
+      }
+      ```  
+      Becomes
+      ```json
+      {
+        "value": {
+          "min": 1,
+          "max": {
+              "value": 2,
+              "modifiers": [
+                  {
+                      "modifier": "distance_from_spawn",
+                      "operation": "add",
+                      "amount_per_blocks": 0.01,
+                      "blocks": 100
+                  }
+              ]
+          }
+        }
+      }
+      ```
+
 ## 5.0.24
 * Added `effect` condition
   * Checks if the entity has the effect and the amplifier (optional)

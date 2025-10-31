@@ -20,7 +20,7 @@ public class MPRConditionModifier extends MPRModifier {
 
     @Override
     protected double getModifier(LivingEntity living) {
-        return this.value.getValue(living);
+        return this.value.getDoubleBetween(living);
     }
 
     public static class Serializer implements JsonDeserializer<MPRConditionModifier>, JsonSerializer<MPRConditionModifier> {

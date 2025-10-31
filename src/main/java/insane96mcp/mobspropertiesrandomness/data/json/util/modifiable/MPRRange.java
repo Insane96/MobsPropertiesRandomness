@@ -14,46 +14,35 @@ import java.util.List;
 import java.util.Objects;
 
 @JsonAdapter(MPRRange.Serializer.class)
-public class MPRRange extends MPRModifiableValue {
-	private final Double max;
+public class MPRRange extends MPRModifiable {
+	private final MPRModifiableValue min;
+	private final MPRModifiableValue max;
 	private final Bias bias;
-	private ModifiersBehaviour modifiersBehaviour;
 
-	public static final MPRRange ZERO = new MPRRange(0d);
-	public static final MPRRange ONE = new MPRRange(1d);
+	public static final MPRRange ZERO = new MPRRange(MPRModifiableValue.ZERO);
+	public static final MPRRange ONE = new MPRRange(MPRModifiableValue.ONE);
 
-	public MPRRange(Double value) {
-		this(value, null, null, Bias.NONE, List.of(), null);
+	public MPRRange(MPRModifiableValue value) {
+		this(value, null, Bias.NONE, List.of(), null);
 	}
 
-	public MPRRange(Double min, Double max) {
-		this(min, max, null, Bias.NONE, List.of(), null);
+	public MPRRange(MPRModifiableValue min, MPRModifiableValue max) {
+		this(min, max, Bias.NONE, List.of(), null);
 	}
 
-	public MPRRange(Double min, @Nullable Double max, @Nullable ModifiersBehaviour modifiersBehaviour, Bias bias, List<MPRModifier> conditionsModifier, @Nullable Integer round) {
-		super(min, conditionsModifier, round);
+	public MPRRange(MPRModifiableValue min, @Nullable MPRModifiableValue max, Bias bias, List<MPRModifier> modifiers, @Nullable Integer round) {
+		super(modifiers, round);
+		this.min = min;
         this.max = max != null ? max : min;
-		this.modifiersBehaviour = modifiersBehaviour;
-		if (this.modifiersBehaviour == null)
-			this.modifiersBehaviour = ModifiersBehaviour.BOTH;
 		this.bias = bias;
 	}
 
 	public double getMin(LivingEntity living) {
-		if (this.modifiersBehaviour != ModifiersBehaviour.MAX_ONLY)
-			return this.applyModifiersAndRound(this.value, living);
-		return this.value;
+		return this.applyModifiers(this.min.getValue(living), living);
 	}
 
 	public double getMax(LivingEntity living) {
-		if (this.modifiersBehaviour != ModifiersBehaviour.MIN_ONLY)
-			return this.applyModifiersAndRound(this.max, living);
-		return this.max;
-	}
-
-	@Override
-	public double getValue(LivingEntity living) {
-		return this.getDoubleBetween(living);
+		return this.applyModifiers(this.max.getValue(living), living);
 	}
 
 	/**
@@ -61,20 +50,20 @@ public class MPRRange extends MPRModifiableValue {
 	 */
 	public double getDoubleBetween(LivingEntity entity) {
 		RandomSource random = entity.level().random;
-		double min = this.applyModifiers(this.value, entity);
-		double max = this.applyModifiers(this.max, entity);
+		double min = this.getMin(entity);
+		double max = this.getMax(entity);
+		if (min > max)
+			return min;
         if (this.bias == Bias.NONE)
             return Mth.nextDouble(random, min, max);
-		else if (this.bias != Bias.MIDDLE) {
-			double t = random.nextDouble();
-			double biased = random.nextDouble() * t;
-			return this.bias == Bias.MIN
-					? min + biased * (max - min)
-					: max - biased * (max - min);
-		}
-		else {
+		if (this.bias == Bias.MIDDLE)
 			return random.triangle((min + max) / 2.0, (max - min) / 2.0);
-		}
+		//If MIN or MAX
+		double t = random.nextDouble();
+		double biased = random.nextDouble() * t;
+		return this.bias == Bias.MIN
+				? min + biased * (max - min)
+				: max - biased * (max - min);
 	}
 
 	/**
@@ -92,20 +81,18 @@ public class MPRRange extends MPRModifiableValue {
 		@Override
 		public MPRRange deserialize(JsonElement json, Type typeOfT, JsonDeserializationContext context) throws JsonParseException {
 			if (json.isJsonPrimitive())
-				return new MPRRange(json.getAsDouble());
+				return new MPRRange(new MPRModifiableValue(json.getAsDouble()));
 			JsonObject jObject = json.getAsJsonObject();
-			double min;
+			MPRModifiableValue min;
 			if (!jObject.has("min")) {
 				if (!jObject.has("value"))
 					throw new JsonParseException("Missing min or value");
-				else min = GsonHelper.getAsDouble(jObject, "value");
+				else
+					min = GsonHelper.getAsObject(jObject, "value", context, MPRModifiableValue.class);
 			}
-			else {
-				min = GsonHelper.getAsDouble(jObject, "min");
-			}
-			double max = GsonHelper.getAsDouble(jObject, "max", min);
-			if (min > max)
-				throw new JsonParseException("Min cannot be greater than max");
+			else
+				min = GsonHelper.getAsObject(jObject, "min", context, MPRModifiableValue.class);
+			MPRModifiableValue max = GsonHelper.getAsObject(jObject, "max", min, context, MPRModifiableValue.class);
 
 			Bias bias = jObject.has("bias")
 					? GsonHelper.getAsObject(jObject, "bias", context, Bias.class)
@@ -113,7 +100,6 @@ public class MPRRange extends MPRModifiableValue {
 			return new MPRRange(
 					min,
 					max,
-					GsonHelper.getAsObject(jObject, "modifiers_behaviour", null, context, ModifiersBehaviour.class),
 					bias,
 					deserializeList(jObject, context),
 					GsonHelper.getAsObject(jObject, "round", null, context, Integer.class)
@@ -122,13 +108,12 @@ public class MPRRange extends MPRModifiableValue {
 
 		@Override
 		public JsonElement serialize(MPRRange src, Type typeOfSrc, JsonSerializationContext context) {
-			if (Objects.equals(src.value, src.max) && src.modifiersBehaviour == ModifiersBehaviour.BOTH && src.modifiers.isEmpty() && src.round == null)
-				return new JsonPrimitive(src.value);
+			if (Objects.equals(src.min, src.max) && src.modifiers.isEmpty() && src.round == null)
+				return new JsonPrimitive(src.min.value);
 			JsonObject jObject = new JsonObject();
-			jObject.addProperty("min", src.value);
-			jObject.addProperty("max", src.max);
-			if (src.modifiersBehaviour != ModifiersBehaviour.BOTH)
-				jObject.add("modifiers_behaviour", context.serialize(src.modifiersBehaviour));
+			jObject.add("min", context.serialize(src.min));
+			if (!Objects.equals(src.min, src.max))
+				jObject.add("max", context.serialize(src.max));
 			return src.endSerialization(jObject, context);
 		}
 	}

@@ -38,7 +38,7 @@ public class MPRDistanceFromSpawnModifier extends MPRModifier {
         Vec3 spawnPos = new Vec3(living.level().getLevelData().getXSpawn(), living.level().getLevelData().getYSpawn(), living.level().getLevelData().getZSpawn());
         double distance = (float) spawnPos.distanceTo(living.position());
         distance += this.shift.getValue(living);
-        double modifier = (distance / this.blocks.getValue(living)) * this.amountPerBlocks.getValue(living);
+        double modifier = (distance / this.blocks.getValue(living)) * this.amountPerBlocks.getDoubleBetween(living);
         if (this.cap != null)
             modifier = Math.min(modifier, this.cap.getValue(living));
         return modifier;

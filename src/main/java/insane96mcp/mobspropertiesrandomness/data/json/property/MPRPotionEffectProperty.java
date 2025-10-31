@@ -3,6 +3,7 @@ package insane96mcp.mobspropertiesrandomness.data.json.property;
 import com.google.gson.*;
 import com.google.gson.annotations.JsonAdapter;
 import insane96mcp.mobspropertiesrandomness.data.json.condition.MPRCondition;
+import insane96mcp.mobspropertiesrandomness.data.json.util.modifiable.MPRModifiableValue;
 import insane96mcp.mobspropertiesrandomness.data.json.util.modifiable.MPRRange;
 import insane96mcp.mobspropertiesrandomness.util.Logger;
 import insane96mcp.mobspropertiesrandomness.util.SerializerUtils;
@@ -62,7 +63,7 @@ public class MPRPotionEffectProperty extends MPRProperty {
             else
                 amplifier = MPRRange.ZERO;
 
-            MPRRange duration = GsonHelper.getAsObject(jObject, "duration", new MPRRange(-1d), context, MPRRange.class);
+            MPRRange duration = GsonHelper.getAsObject(jObject, "duration", new MPRRange(new MPRModifiableValue(-1d)), context, MPRRange.class);
 
             boolean ambient = GsonHelper.getAsBoolean(jObject, "ambient", false);
             boolean hideParticles = GsonHelper.getAsBoolean(jObject, "hide_particles", false);
