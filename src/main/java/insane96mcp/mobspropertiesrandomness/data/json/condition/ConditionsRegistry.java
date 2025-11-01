@@ -39,6 +39,7 @@ public class ConditionsRegistry {
         register("dimension", MPRDimensionCondition.class);
         register("biome", MPRBiomeCondition.class);
         register("block_on", MPRBlockOnCondition.class);
+        register("block_in", MPRBlockInCondition.class);
         register("structure", MPRStructureCondition.class);
         register("deepness", MPRDeepnessCondition.class);
         register("distance_from_spawn", MPRDistanceFromSpawnCondition.class);
