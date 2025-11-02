@@ -8,6 +8,7 @@ import org.jetbrains.annotations.Nullable;
 
 import java.lang.reflect.Type;
 import java.util.List;
+import java.util.Objects;
 
 @JsonAdapter(MPRModifiableValue.Serializer.class)
 public class MPRModifiableValue extends MPRModifiable {
@@ -29,7 +30,12 @@ public class MPRModifiableValue extends MPRModifiable {
 		return this.applyModifiersAndRound(this.value, living);
 	}
 
-	public static class Serializer implements JsonSerializer<MPRModifiableValue>, JsonDeserializer<MPRModifiableValue> {
+    @Override
+    public boolean equals(Object obj) {
+        return obj instanceof MPRModifiableValue modifiableValue && this.value.equals(modifiableValue.value) && this.modifiers.equals(modifiableValue.modifiers) && Objects.equals(this.round, modifiableValue.round);
+    }
+
+    public static class Serializer implements JsonSerializer<MPRModifiableValue>, JsonDeserializer<MPRModifiableValue> {
 		@Override
 		public MPRModifiableValue deserialize(JsonElement json, Type typeOfT, JsonDeserializationContext context) throws JsonParseException {
 			if (json.isJsonPrimitive())

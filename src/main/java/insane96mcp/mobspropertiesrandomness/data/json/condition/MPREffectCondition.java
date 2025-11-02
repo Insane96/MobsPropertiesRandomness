@@ -2,7 +2,6 @@ package insane96mcp.mobspropertiesrandomness.data.json.condition;
 
 import com.google.gson.*;
 import com.google.gson.annotations.JsonAdapter;
-import insane96mcp.mobspropertiesrandomness.data.json.util.modifiable.MPRModifiableValue;
 import insane96mcp.mobspropertiesrandomness.data.json.util.modifiable.MPRRange;
 import insane96mcp.mobspropertiesrandomness.util.SerializerUtils;
 import net.minecraft.core.registries.Registries;
@@ -14,7 +13,7 @@ import java.lang.reflect.Type;
 
 @JsonAdapter(MPREffectCondition.Serializer.class)
 public class MPREffectCondition extends MPRCondition {
-	public static final MPRRange DEFAULT_AMPLIFIER_RANGE = new MPRRange(MPRModifiableValue.ZERO, new MPRModifiableValue(255d));
+	public static final MPRRange DEFAULT_AMPLIFIER_RANGE = new MPRRange(0, 255);
 
     protected MobEffect effect;
 	protected MPRRange amplifier;

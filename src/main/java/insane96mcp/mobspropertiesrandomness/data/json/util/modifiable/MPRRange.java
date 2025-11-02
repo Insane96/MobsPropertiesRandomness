@@ -15,20 +15,32 @@ import java.util.Objects;
 
 @JsonAdapter(MPRRange.Serializer.class)
 public class MPRRange extends MPRModifiable {
-	private final MPRModifiableValue min;
-	private final MPRModifiableValue max;
+	public final MPRModifiableValue min;
+	public final MPRModifiableValue max;
 	private final Bias bias;
 
 	public static final MPRRange ZERO = new MPRRange(MPRModifiableValue.ZERO);
 	public static final MPRRange ONE = new MPRRange(MPRModifiableValue.ONE);
+    /**
+     * Range with min set to -Double.MAX_VALUE and max set to Double.MAX_VALUE
+     */
+	public static final MPRRange UNLIMITED = new MPRRange(-Double.MAX_VALUE, Double.MAX_VALUE);
 
-	public MPRRange(MPRModifiableValue value) {
-		this(value, null, Bias.NONE, List.of(), null);
-	}
+    public MPRRange(MPRModifiableValue value) {
+        this(value, null, Bias.NONE, List.of(), null);
+    }
 
-	public MPRRange(MPRModifiableValue min, MPRModifiableValue max) {
-		this(min, max, Bias.NONE, List.of(), null);
-	}
+    public MPRRange(double value) {
+        this(new MPRModifiableValue(value));
+    }
+
+    public MPRRange(MPRModifiableValue min, MPRModifiableValue max) {
+        this(min, max, Bias.NONE, List.of(), null);
+    }
+
+    public MPRRange(double min, double max) {
+        this(new MPRModifiableValue(min), new MPRModifiableValue(max), Bias.NONE, List.of(), null);
+    }
 
 	public MPRRange(MPRModifiableValue min, @Nullable MPRModifiableValue max, Bias bias, List<MPRModifier> modifiers, @Nullable Integer round) {
 		super(modifiers, round);
@@ -77,11 +89,16 @@ public class MPRRange extends MPRModifiable {
 		return value >= this.getMin(entity) && value <= this.getMax(entity);
 	}
 
-	public static class Serializer implements JsonSerializer<MPRRange>, JsonDeserializer<MPRRange> {
+    @Override
+    public boolean equals(Object obj) {
+        return obj instanceof MPRRange range && this.min.equals(range.min) && this.max.equals(range.max) && this.bias == range.bias && this.modifiers.equals(range.modifiers) && Objects.equals(this.round, range.round);
+    }
+
+    public static class Serializer implements JsonSerializer<MPRRange>, JsonDeserializer<MPRRange> {
 		@Override
 		public MPRRange deserialize(JsonElement json, Type typeOfT, JsonDeserializationContext context) throws JsonParseException {
 			if (json.isJsonPrimitive())
-				return new MPRRange(new MPRModifiableValue(json.getAsDouble()));
+				return new MPRRange(json.getAsDouble());
 			JsonObject jObject = json.getAsJsonObject();
 			MPRModifiableValue min;
 			if (!jObject.has("min")) {

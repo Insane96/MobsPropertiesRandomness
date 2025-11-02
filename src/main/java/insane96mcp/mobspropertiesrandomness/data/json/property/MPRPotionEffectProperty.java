@@ -43,7 +43,7 @@ public class MPRPotionEffectProperty extends MPRProperty {
         if (living.getEffect(this.mobEffect) != null && this.stackDuration && duration != -1)
             //noinspection DataFlowIssue
             duration += living.getEffect(this.mobEffect).getDuration() / 20d;
-        MobEffectInstance effectInstance = new MobEffectInstance(mobEffect, (int) (duration == -1 ? -1 :duration * 20d), this.amplifier.getIntBetween(living), this.ambient, !this.hideParticles, false);
+        MobEffectInstance effectInstance = new MobEffectInstance(mobEffect, (int) (duration == -1 ? -1 : duration * 20d), this.amplifier.getIntBetween(living), this.ambient, !this.hideParticles, false);
         living.addEffect(effectInstance);
         return true;
     }
@@ -85,6 +85,51 @@ public class MPRPotionEffectProperty extends MPRProperty {
             jObject.addProperty("ambient", src.ambient);
             jObject.addProperty("hide_particles", src.hideParticles);
             return src.endSerialization(jObject, context);
+        }
+    }
+
+    @JsonAdapter(Stackable.Serializer.class)
+    public static class Stackable {
+        public MPRRange value;
+        public boolean stack;
+        public MPRRange cap;
+
+        public Stackable(MPRRange value) {
+            this(value, false, MPRRange.UNLIMITED);
+        }
+
+        public Stackable(MPRRange value, boolean stack, MPRRange cap) {
+            this.value = value;
+            this.stack = stack;
+            this.cap = cap;
+        }
+
+        public static class Serializer implements JsonDeserializer<Stackable>, JsonSerializer<Stackable> {
+            @Override
+            public Stackable deserialize(JsonElement json, Type typeOfT, JsonDeserializationContext context) throws JsonParseException {
+                JsonObject jObject = json.getAsJsonObject();
+                if (jObject.isJsonPrimitive())
+                    return new Stackable(new MPRRange(jObject.getAsDouble()));
+
+                MPRRange value = GsonHelper.getAsObject(jObject, "value", context, MPRRange.class);
+                boolean stack = GsonHelper.getAsBoolean(jObject, "stack", false);
+                MPRRange cap = GsonHelper.getAsObject(jObject, "value", MPRRange.UNLIMITED, context, MPRRange.class);
+
+                return new Stackable(value, stack, cap);
+            }
+
+            @Override
+            public JsonElement serialize(Stackable src, Type typeOfSrc, JsonSerializationContext context) {
+                if (!src.stack && src.cap == MPRRange.UNLIMITED && src.value.min == src.value.max)
+                    return new JsonPrimitive(src.value.min.value);
+                JsonObject jObject = new JsonObject();
+                jObject.add("value", context.serialize(src.value));
+                if (src.stack)
+                    jObject.addProperty("stack", true);
+                if (src.cap != MPRRange.UNLIMITED)
+                    jObject.add("cap", context.serialize(src.cap));
+                return jObject;
+            }
         }
     }
 }
