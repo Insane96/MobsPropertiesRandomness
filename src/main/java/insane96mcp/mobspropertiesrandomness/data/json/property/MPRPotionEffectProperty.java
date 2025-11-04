@@ -9,6 +9,7 @@ import insane96mcp.mobspropertiesrandomness.util.Logger;
 import insane96mcp.mobspropertiesrandomness.util.SerializerUtils;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.util.GsonHelper;
+import net.minecraft.util.Mth;
 import net.minecraft.world.effect.MobEffect;
 import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.entity.LivingEntity;
@@ -19,18 +20,16 @@ import java.util.List;
 @JsonAdapter(MPRPotionEffectProperty.Serializer.class)
 public class MPRPotionEffectProperty extends MPRProperty {
     public MobEffect mobEffect;
-    public MPRRange amplifier;
-    public MPRRange duration;
-    public boolean stackDuration;
+    public Stackable amplifier;
+    public Stackable duration;
     public boolean ambient;
     public boolean hideParticles;
 
-    public MPRPotionEffectProperty(MobEffect mobEffect, MPRRange amplifier, MPRRange duration, boolean stackDuration, boolean ambient, boolean hideParticles, List<MPRCondition> conditions) {
+    public MPRPotionEffectProperty(MobEffect mobEffect, Stackable amplifier, Stackable duration, boolean ambient, boolean hideParticles, List<MPRCondition> conditions) {
         super(conditions);
         this.mobEffect = mobEffect;
         this.amplifier = amplifier;
         this.duration = duration;
-        this.stackDuration = stackDuration;
         this.ambient = ambient;
         this.hideParticles = hideParticles;
     }
@@ -39,11 +38,13 @@ public class MPRPotionEffectProperty extends MPRProperty {
     public boolean apply(LivingEntity living) {
         if (this.mobEffect == null)
             return false;
-        double duration = this.duration.getDoubleBetween(living);
-        if (living.getEffect(this.mobEffect) != null && this.stackDuration && duration != -1)
-            //noinspection DataFlowIssue
-            duration += living.getEffect(this.mobEffect).getDuration() / 20d;
-        MobEffectInstance effectInstance = new MobEffectInstance(mobEffect, (int) (duration == -1 ? -1 : duration * 20d), this.amplifier.getIntBetween(living), this.ambient, !this.hideParticles, false);
+        int currentDuration = 0, currentLevel = -1;
+        if (living.getEffect(this.mobEffect) != null) {
+            currentDuration = living.getEffect(this.mobEffect).getDuration();
+            currentLevel = living.getEffect(this.mobEffect).getAmplifier();
+        }
+        double duration = this.duration.getStackedValue(living, currentDuration) / 20d;
+        MobEffectInstance effectInstance = new MobEffectInstance(mobEffect, (int) (duration == -1 ? -1 : duration * 20d), this.amplifier.getStackedIntValue(living, currentLevel), this.ambient, !this.hideParticles, false);
         living.addEffect(effectInstance);
         return true;
     }
@@ -57,13 +58,15 @@ public class MPRPotionEffectProperty extends MPRProperty {
             if (mobEffect == null)
                 Logger.warn("Invalid effect: %s. Will be ignored.", jObject.get("effect").getAsString());
 
-            MPRRange amplifier;
+            Stackable amplifier;
             if (jObject.has("amplifier"))
-                amplifier = context.deserialize(jObject.get("amplifier"), MPRRange.class);
+                amplifier = context.deserialize(jObject.get("amplifier"), Stackable.class);
             else
-                amplifier = MPRRange.ZERO;
+                amplifier = Stackable.ONE;
+            //if (amplifier.value.min.value <= 0 && amplifier.value.max.value <= 0)
+            //    Logger.warn("amplifier should be > 0");
 
-            MPRRange duration = GsonHelper.getAsObject(jObject, "duration", new MPRRange(new MPRModifiableValue(-1d)), context, MPRRange.class);
+            Stackable duration = GsonHelper.getAsObject(jObject, "duration", new Stackable(new MPRRange(new MPRModifiableValue(-1d))), context, Stackable.class);
 
             boolean ambient = GsonHelper.getAsBoolean(jObject, "ambient", false);
             boolean hideParticles = GsonHelper.getAsBoolean(jObject, "hide_particles", false);
@@ -71,7 +74,7 @@ public class MPRPotionEffectProperty extends MPRProperty {
             if (ambient && hideParticles)
                 Logger.warn("Particles are hidden, but ambient is enabled for %s. Ambient doesn't work if particles are hidden.".formatted(mobEffect));
 
-            return new MPRPotionEffectProperty(mobEffect, amplifier, duration, GsonHelper.getAsBoolean(jObject, "stack_duration", false), ambient, hideParticles, MPRCondition.deserializeConditions(jObject, context));
+            return new MPRPotionEffectProperty(mobEffect, amplifier, duration, ambient, hideParticles, MPRCondition.deserializeConditions(jObject, context));
         }
 
         @Override
@@ -80,8 +83,6 @@ public class MPRPotionEffectProperty extends MPRProperty {
             jObject.add("effect", SerializerUtils.serializeRegistryObject(src.mobEffect, Registries.MOB_EFFECT));
             jObject.add("amplifier", context.serialize(src.amplifier));
             jObject.add("duration", context.serialize(src.duration));
-            if (src.stackDuration)
-                jObject.addProperty("stack_duration", true);
             jObject.addProperty("ambient", src.ambient);
             jObject.addProperty("hide_particles", src.hideParticles);
             return src.endSerialization(jObject, context);
@@ -90,6 +91,9 @@ public class MPRPotionEffectProperty extends MPRProperty {
 
     @JsonAdapter(Stackable.Serializer.class)
     public static class Stackable {
+        public static final Stackable ZERO = new Stackable(MPRRange.ZERO);
+        public static final Stackable ONE = new Stackable(MPRRange.ONE);
+
         public MPRRange value;
         public boolean stack;
         public MPRRange cap;
@@ -102,6 +106,24 @@ public class MPRPotionEffectProperty extends MPRProperty {
             this.value = value;
             this.stack = stack;
             this.cap = cap;
+        }
+
+        public double getStackedValue(LivingEntity living, double originalValue) {
+            double value = this.value.getDoubleBetween(living);
+            if (!this.stack)
+                return value;
+            if (this.cap != MPRRange.UNLIMITED)
+                return Mth.clamp(value, this.cap.getMin(living), this.cap.getMax(living));
+            return value + originalValue;
+        }
+
+        public int getStackedIntValue(LivingEntity living, int originalValue) {
+            int value = this.value.getIntBetween(living);
+            if (!this.stack)
+                return value;
+            if (this.cap != MPRRange.UNLIMITED)
+                return Mth.clamp(value, (int) this.cap.getMin(living), (int) this.cap.getMax(living));
+            return value + originalValue;
         }
 
         public static class Serializer implements JsonDeserializer<Stackable>, JsonSerializer<Stackable> {
