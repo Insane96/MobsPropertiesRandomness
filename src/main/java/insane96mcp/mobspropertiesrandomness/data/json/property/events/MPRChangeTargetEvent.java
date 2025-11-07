@@ -5,7 +5,6 @@ import com.google.gson.annotations.JsonAdapter;
 import com.google.gson.annotations.SerializedName;
 import insane96mcp.mobspropertiesrandomness.data.json.condition.MPRCondition;
 import insane96mcp.mobspropertiesrandomness.data.json.property.MPRProperty;
-import net.minecraft.commands.CommandFunction;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.GsonHelper;
 import net.minecraft.world.entity.LivingEntity;
@@ -20,8 +19,8 @@ import java.util.List;
 public class MPRChangeTargetEvent extends MPREvent {
 	public final ChangeType changeType;
 
-	public MPRChangeTargetEvent(ChangeType changeType, ResourceLocation id, Target target, @Nullable CommandFunction.CacheableFunction function, @Nullable List<MPRProperty> applyProperties, List<MPRCondition> conditions) {
-		super(id, target, function, applyProperties, conditions);
+	public MPRChangeTargetEvent(ChangeType changeType, ResourceLocation id, Target target, @Nullable List<MPRProperty> applyProperties, List<MPRCondition> conditions) {
+		super(id, target, applyProperties, conditions);
 		this.changeType = changeType;
 	}
 
@@ -55,11 +54,10 @@ public class MPRChangeTargetEvent extends MPREvent {
 			JsonObject jObject = json.getAsJsonObject();
 			String id = GsonHelper.getAsString(jObject, "id");
 			Target target = GsonHelper.getAsObject(jObject, "target", context, Target.class);
-			CommandFunction.CacheableFunction function = deserializeFunction(jObject);
 			List<MPRCondition> conditions = MPRCondition.deserializeConditions(jObject, context);
 			List<MPRProperty> properties = MPRProperty.deserializeList(jObject, "apply_properties", context);
 
-			return new MPRChangeTargetEvent(GsonHelper.getAsObject(jObject, "type", context, ChangeType.class), ResourceLocation.parse(id), target, function, properties, conditions);
+			return new MPRChangeTargetEvent(GsonHelper.getAsObject(jObject, "type", context, ChangeType.class), ResourceLocation.parse(id), target, properties, conditions);
 		}
 
 		@Override

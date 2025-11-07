@@ -43,7 +43,7 @@ public class MPRPotionEffectProperty extends MPRProperty {
             currentDuration = living.getEffect(this.mobEffect).getDuration();
             currentLevel = living.getEffect(this.mobEffect).getAmplifier() + 1;
         }
-        double duration = this.duration.getStackedValue(living, currentDuration) / 20d;
+        double duration = this.duration.getStackedValue(living, currentDuration);
         MobEffectInstance effectInstance = new MobEffectInstance(mobEffect, (int) (duration == -1 ? -1 : duration * 20d), this.amplifier.getStackedIntValue(living, currentLevel) - 1, this.ambient, !this.hideParticles, false);
         living.addEffect(effectInstance);
         return true;
@@ -135,7 +135,7 @@ public class MPRPotionEffectProperty extends MPRProperty {
 
                 MPRRange value = GsonHelper.getAsObject(jObject, "value", context, MPRRange.class);
                 boolean stack = GsonHelper.getAsBoolean(jObject, "stack", false);
-                MPRRange cap = GsonHelper.getAsObject(jObject, "value", MPRRange.UNLIMITED, context, MPRRange.class);
+                MPRRange cap = GsonHelper.getAsObject(jObject, "cap", MPRRange.UNLIMITED, context, MPRRange.class);
 
                 return new Stackable(value, stack, cap);
             }

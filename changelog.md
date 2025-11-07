@@ -5,6 +5,8 @@
   * Condition is fulfilled if the target is on one of the `blocks` (list of blocks or block tags) specified
 * Added `block_in` condition
   * Condition is fulfilled if the target's bounding box is inside one of the `blocks` (list of blocks or block tags) specified
+* Added `function` property
+  * Removed function from events, use this new property
 * Reworked Range object
   * `min` and `max` are now Modifiable Values objects, so you can apply modifiers to either of them
   * The range object still has `modifiers` that will apply to both `min` and `max`

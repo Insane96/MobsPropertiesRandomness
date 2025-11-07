@@ -4,7 +4,6 @@ import com.google.gson.*;
 import com.google.gson.annotations.JsonAdapter;
 import insane96mcp.mobspropertiesrandomness.data.json.condition.MPRCondition;
 import insane96mcp.mobspropertiesrandomness.data.json.property.MPRProperty;
-import net.minecraft.commands.CommandFunction;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.tags.DamageTypeTags;
 import net.minecraft.util.GsonHelper;
@@ -21,8 +20,8 @@ public class MPRDeathEvent extends MPREvent {
 	public MPRHurtData hurtData;
 	public boolean cancelDeath;
 
-	public MPRDeathEvent(MPRHurtData hurtData, boolean cancelDeath, ResourceLocation id, Target target, @Nullable CommandFunction.CacheableFunction function, @Nullable List<MPRProperty> applyProperties, List<MPRCondition> conditions) {
-		super(id, target, function, applyProperties, conditions);
+	public MPRDeathEvent(MPRHurtData hurtData, boolean cancelDeath, ResourceLocation id, Target target, @Nullable List<MPRProperty> applyProperties, List<MPRCondition> conditions) {
+		super(id, target, applyProperties, conditions);
 		this.hurtData = hurtData;
 		this.cancelDeath = cancelDeath;
 	}
@@ -56,11 +55,10 @@ public class MPRDeathEvent extends MPREvent {
 			JsonObject jObject = json.getAsJsonObject();
 			String id = GsonHelper.getAsString(jObject, "id");
 			Target target = GsonHelper.getAsObject(jObject, "target", context, Target.class);
-			CommandFunction.CacheableFunction function = deserializeFunction(jObject);
 			List<MPRCondition> conditions = MPRCondition.deserializeConditions(jObject, context);
 			List<MPRProperty> properties = MPRProperty.deserializeList(jObject, "apply_properties", context);
 
-			return new MPRDeathEvent(MPRHurtData.deserialize(jObject, context), GsonHelper.getAsBoolean(jObject, "cancel_death", false), ResourceLocation.parse(id), target, function, properties, conditions);
+			return new MPRDeathEvent(MPRHurtData.deserialize(jObject, context), GsonHelper.getAsBoolean(jObject, "cancel_death", false), ResourceLocation.parse(id), target, properties, conditions);
 		}
 
 		@Override

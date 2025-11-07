@@ -8,16 +8,12 @@ import insane96mcp.mobspropertiesrandomness.data.json.condition.MPRConditionable
 import insane96mcp.mobspropertiesrandomness.data.json.property.MPRProperty;
 import insane96mcp.mobspropertiesrandomness.data.json.property.MPRScalePehkuiProperty;
 import insane96mcp.mobspropertiesrandomness.util.Logger;
-import net.minecraft.commands.CommandFunction;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.ListTag;
 import net.minecraft.nbt.StringTag;
 import net.minecraft.resources.ResourceLocation;
-import net.minecraft.server.MinecraftServer;
-import net.minecraft.server.level.ServerLevel;
 import net.minecraft.util.GsonHelper;
 import net.minecraft.world.entity.LivingEntity;
-import net.minecraft.world.phys.Vec3;
 
 import javax.annotation.Nullable;
 import java.lang.reflect.Type;
@@ -30,15 +26,12 @@ public abstract class MPREvent extends MPRConditionable {
 
     public ResourceLocation id;
     public Target target;
-    @Nullable
-    public CommandFunction.CacheableFunction function;
     public List<MPRProperty> applyProperties;
 
-    public MPREvent(ResourceLocation id, Target target, @Nullable CommandFunction.CacheableFunction function, List<MPRProperty> applyProperties, List<MPRCondition> conditions) {
+    public MPREvent(ResourceLocation id, Target target, List<MPRProperty> applyProperties, List<MPRCondition> conditions) {
         super(conditions);
         this.id = id;
         this.target = target;
-        this.function = function;
         this.applyProperties = applyProperties;
         if (!LOADED_EVENTS.containsKey(id))
             LOADED_EVENTS.put(id, this);
@@ -65,18 +58,7 @@ public abstract class MPREvent extends MPRConditionable {
     }
 
     protected void executeFor(LivingEntity living) {
-        tryExecuteFunction(living);
         tryApplyProperty(living);
-    }
-
-    protected void tryExecuteFunction(LivingEntity entity) {
-        if (this.function == null)
-            return;
-        MinecraftServer server = entity.level().getServer();
-        if (server == null)
-            return;
-        this.function.get(server.getFunctions()).ifPresent((commandFunction) ->
-                server.getFunctions().execute(commandFunction, server.getFunctions().getGameLoopSender().withPosition(new Vec3(entity.getX(), entity.getY(), entity.getZ())).withLevel((ServerLevel) entity.level()).withEntity(entity)));
     }
 
     public void tryApplyProperty(LivingEntity entity) {
@@ -110,14 +92,6 @@ public abstract class MPREvent extends MPRConditionable {
     }
 
     @Nullable
-    public static CommandFunction.CacheableFunction deserializeFunction(JsonObject jObject) {
-        if (!jObject.has("function"))
-            return null;
-        String functionId = GsonHelper.getAsString(jObject, "function");
-        return new CommandFunction.CacheableFunction(ResourceLocation.parse(functionId));
-    }
-
-    @Nullable
     public static MPRProperty deserializeProperty(JsonObject jObject, JsonDeserializationContext context) {
         if (!jObject.has("apply_property"))
             return null;
@@ -128,8 +102,6 @@ public abstract class MPREvent extends MPRConditionable {
         jObject.addProperty("id", id.toString());
         if (includeTarget)
             jObject.add("target", context.serialize(this.target));
-        if (this.function != null)
-            jObject.addProperty("function", this.function.getId().toString());
         if (!this.applyProperties.isEmpty())
             jObject.add("apply_properties", context.serialize(this.applyProperties));
         return super.endSerialization(jObject, context);

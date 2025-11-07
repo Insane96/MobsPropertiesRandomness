@@ -7,7 +7,6 @@ import insane96mcp.mobspropertiesrandomness.MPR;
 import insane96mcp.mobspropertiesrandomness.data.json.condition.MPRCondition;
 import insane96mcp.mobspropertiesrandomness.data.json.property.MPRProperty;
 import insane96mcp.mobspropertiesrandomness.data.json.util.modifiable.MPRRange;
-import net.minecraft.commands.CommandFunction;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.GsonHelper;
 import net.minecraft.world.entity.LivingEntity;
@@ -21,10 +20,10 @@ public class MPRTickEvent extends MPREvent {
 	private static final ResourceLocation TAG_UPDATE_INTERVAL = MPR.location("events/next_tick");
 
 	public MPRRange updateInterval;
-    private ResourceLocation nextTickTag;
+    private final ResourceLocation nextTickTag;
 
-	public MPRTickEvent(MPRRange updateInterval, ResourceLocation id, Target target, @Nullable CommandFunction.CacheableFunction function, @Nullable List<MPRProperty> applyProperties, List<MPRCondition> conditions) {
-		super(id, target, function, applyProperties, conditions);
+	public MPRTickEvent(MPRRange updateInterval, ResourceLocation id, Target target, @Nullable List<MPRProperty> applyProperties, List<MPRCondition> conditions) {
+		super(id, target, applyProperties, conditions);
 		this.updateInterval = updateInterval;
         this.nextTickTag = TAG_UPDATE_INTERVAL.withSuffix("/" + id.toString().replace(':', '/'));
     }
@@ -52,7 +51,6 @@ public class MPRTickEvent extends MPREvent {
 					GsonHelper.getAsObject(jObject, "update_interval", context, MPRRange.class),
 					ResourceLocation.parse(GsonHelper.getAsString(jObject, "id")),
 					Target.THIS,
-					deserializeFunction(jObject),
 					MPRProperty.deserializeList(jObject, "apply_properties", context),
 					MPRCondition.deserializeConditions(jObject, context)
 			);

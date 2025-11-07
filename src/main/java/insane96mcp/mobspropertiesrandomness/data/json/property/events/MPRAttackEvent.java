@@ -6,7 +6,6 @@ import insane96mcp.mobspropertiesrandomness.data.json.condition.MPRCondition;
 import insane96mcp.mobspropertiesrandomness.data.json.property.MPRProperty;
 import insane96mcp.mobspropertiesrandomness.data.json.util.modifiable.MPRModifier;
 import insane96mcp.mobspropertiesrandomness.data.json.util.modifiable.MPRRange;
-import net.minecraft.commands.CommandFunction;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.GsonHelper;
 import net.minecraft.world.entity.LivingEntity;
@@ -17,8 +16,8 @@ import java.util.List;
 
 @JsonAdapter(MPRAttackEvent.Serializer.class)
 public class MPRAttackEvent extends MPROnHitEvent {
-    public MPRAttackEvent(MPRModifier.@Nullable Operation damageModifierOperation, @Nullable MPRRange damageAmount, @Nullable MPRRange damageModifier, @Nullable MPRRange healthLeft, boolean flatHealthLeft, MPRHurtData hurtData, ResourceLocation id, Target target, CommandFunction.@Nullable CacheableFunction function, @Nullable List<MPRProperty> applyProperties, List<MPRCondition> conditions) {
-        super(damageModifierOperation, damageAmount, damageModifier, healthLeft, flatHealthLeft, hurtData, id, target, function, applyProperties, conditions);
+    public MPRAttackEvent(MPRModifier.@Nullable Operation damageModifierOperation, @Nullable MPRRange damageAmount, @Nullable MPRRange damageModifier, @Nullable MPRRange healthLeft, boolean flatHealthLeft, MPRHurtData hurtData, ResourceLocation id, Target target, @Nullable List<MPRProperty> applyProperties, List<MPRCondition> conditions) {
+        super(damageModifierOperation, damageAmount, damageModifier, healthLeft, flatHealthLeft, hurtData, id, target, applyProperties, conditions);
     }
 
     public static void onAttack(LivingDamageEvent event) {
@@ -44,11 +43,10 @@ public class MPRAttackEvent extends MPROnHitEvent {
             MPRRange healthLeft = GsonHelper.getAsObject(jObject, "health_left", null, context, MPRRange.class);
             String id = GsonHelper.getAsString(jObject, "id");
             Target target = GsonHelper.getAsObject(jObject, "target", context, Target.class);
-            CommandFunction.CacheableFunction function = deserializeFunction(jObject);
             List<MPRCondition> conditions = MPRCondition.deserializeConditions(jObject, context);
             List<MPRProperty> properties = MPRProperty.deserializeList(jObject, "apply_properties", context);
 
-            return new MPRAttackEvent(damageModifierOperation, damageAmount, damageModifier, healthLeft, GsonHelper.getAsBoolean(jObject, "flat_health_left", false), MPRHurtData.deserialize(jObject, context), ResourceLocation.parse(id), target, function, properties, conditions);
+            return new MPRAttackEvent(damageModifierOperation, damageAmount, damageModifier, healthLeft, GsonHelper.getAsBoolean(jObject, "flat_health_left", false), MPRHurtData.deserialize(jObject, context), ResourceLocation.parse(id), target, properties, conditions);
         }
 
         @Override
