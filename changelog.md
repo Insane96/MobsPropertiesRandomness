@@ -7,9 +7,11 @@
   * Condition is fulfilled if the target's bounding box is inside one of the `blocks` (list of blocks or block tags) specified
 * Added `damage` property
     * Damages the target. Can specify `damage_type`
+* Added `despawn` property
+  * Despawns the target
 * Added `function` property
-    * Executes an mcfunction (`function`)
-    * Removed function from events, use this new property
+  * Executes an mcfunction (`function`)
+  * Removed function from events, use this new property
 * Reworked Range object
   * `min` and `max` are now Modifiable Values objects, so you can apply modifiers to either of them
   * The range object still has `modifiers` that will apply to both `min` and `max`

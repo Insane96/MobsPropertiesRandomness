@@ -47,6 +47,7 @@ public class PropertiesRegistry {
         register("freeze", MPRFreezeProperty.class);
         register("heal", MPRHealProperty.class);
         register("damage", MPRDamageProperty.class);
+        register("despawn", MPRDespawnProperty.class);
         register("function", MPRFunctionProperty.class);
         register("event", MPREventProperty.class);
         register("presets", MPRPresetsProperty.class);
