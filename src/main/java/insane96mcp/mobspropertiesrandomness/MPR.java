@@ -34,9 +34,11 @@ import net.minecraftforge.event.AddReloadListenerEvent;
 import net.minecraftforge.event.RegisterCommandsEvent;
 import net.minecraftforge.eventbus.api.EventPriority;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
+import net.minecraftforge.fml.ModList;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.event.lifecycle.FMLCommonSetupEvent;
 import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
+import sereneseasons.api.season.Season;
 
 import javax.annotation.Nullable;
 
@@ -90,7 +92,7 @@ public class MPR
     }
 
     public static Gson createGson() {
-        return new GsonBuilder()
+        GsonBuilder gsonBuilder = new GsonBuilder()
                 .registerTypeAdapter(EquipmentSlot.class, new EquipmentSlotSerializer())
                 .registerTypeAdapter(AttributeModifier.Operation.class, new AttributeModifierOperationSerializer())
                 .registerTypeAdapter(BossEvent.BossBarColor.class, new BossBarColorSerializer())
@@ -103,7 +105,9 @@ public class MPR
                 .registerTypeAdapter(MPRChangeTargetEvent.ChangeType.class, new StrictEnumDeserializer<>(MPRChangeTargetEvent.ChangeType.class))
                 .registerTypeAdapter(MPRScalePehkuiProperty.Operation.class, new StrictEnumDeserializer<>(MPRScalePehkuiProperty.Operation.class))
                 .registerTypeAdapter(MPRWeatherCondition.Weather.class, new StrictEnumDeserializer<>(MPRWeatherCondition.Weather.class))
-                .registerTypeAdapter(MPRRange.Bias.class, new StrictEnumDeserializer<>(MPRRange.Bias.class))
-                .create();
+                .registerTypeAdapter(MPRRange.Bias.class, new StrictEnumDeserializer<>(MPRRange.Bias.class));
+        if (ModList.get().isLoaded("sereneseasons"))
+            gsonBuilder.registerTypeAdapter(Season.SubSeason.class, new SubSeasonSerializer());
+        return gsonBuilder.create();
     }
 }

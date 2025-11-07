@@ -77,13 +77,15 @@ repositories {
 
 dependencies {
     minecraft "net.minecraftforge:forge:${minecraft_version}-${forge_version}"
+    annotationProcessor "org.spongepowered:mixin:${mixin_version}:processor"
 
     implementation fg.deobf("blank:insanelib:${lib_version}")
 
-    annotationProcessor "org.spongepowered:mixin:${mixin_version}:processor"
-
     implementation fg.deobf("net.darkhax.bookshelf:Bookshelf-Forge-${minecraft_version}:${bookshelf_version}")
     implementation fg.deobf("net.darkhax.gamestages:GameStages-Forge-${minecraft_version}:${gamestages_version}")
+
+    implementation fg.deobf("com.github.glitchfiend:GlitchCore-forge:${minecraft_version}-${glitchcore_version}")
+    implementation fg.deobf("com.github.glitchfiend:SereneSeasons-forge:${minecraft_version}-${sereneseasons_version}")
 
     implementation fg.deobf("com.github.Virtuoel:Pehkui:${pehkui_version}-${minecraft_version}-forge")
 

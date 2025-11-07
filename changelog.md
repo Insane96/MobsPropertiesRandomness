@@ -5,6 +5,9 @@
   * Condition is fulfilled if the target is on one of the `blocks` (list of blocks or block tags) specified
 * Added `block_in` condition
   * Condition is fulfilled if the target's bounding box is inside one of the `blocks` (list of blocks or block tags) specified
+* Added `season` condition
+  * Requires Serene Seasons
+  * Condition is fulfilled if the season matches one of the `seasons` (list of seasons) specified
 * Added `damage` property
     * Damages the target. Can specify `damage_type`
 * Added `despawn` property

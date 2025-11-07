@@ -55,5 +55,7 @@ public class ConditionsRegistry {
         register("mod_loaded", MPRModLoadedCondition.class);
         if (ModList.get().isLoaded("gamestages"))
             register("game_stage", MPRGameStageCondition.class);
+        if (ModList.get().isLoaded("sereneseasons"))
+            register("season", MPRSeasonCondition.class);
     }
 }
