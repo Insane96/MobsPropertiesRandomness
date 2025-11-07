@@ -57,7 +57,7 @@
       }
       ```
 * Enhanced potion effect property
-  * `duration` and `amplifier` can now use a new Stackable Object. `amplifier` is no longer between 0 and 255 but between 1 and 256
+  * `duration` and `amplifier` can now use a new Stackable Object. `amplifier` is no longer between 0 and 255 but between 1 and 256. `stack_duration` has been removed.
     * `value`: Range Object
     * `stack`: false by default, if true, the duration or amplifier will stack each time the property is applied
     * `cap`: Range Object defining the min and max value can reach with stacking  
