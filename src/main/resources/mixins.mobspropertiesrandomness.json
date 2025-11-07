@@ -9,6 +9,7 @@
     "mixins": [
         "BiomeAccessor",
         "CreeperEntityMixin",
+        "DamageSourcesAccessor",
         "LivingEntityMixin",
         "MobMixin"
     ],
