@@ -38,13 +38,13 @@ public class MPRPotionEffectProperty extends MPRProperty {
     public boolean apply(LivingEntity living) {
         if (this.mobEffect == null)
             return false;
-        int currentDuration = 0, currentLevel = -1;
+        int currentDuration = 0, currentLevel = 0;
         if (living.getEffect(this.mobEffect) != null) {
             currentDuration = living.getEffect(this.mobEffect).getDuration();
-            currentLevel = living.getEffect(this.mobEffect).getAmplifier();
+            currentLevel = living.getEffect(this.mobEffect).getAmplifier() + 1;
         }
         double duration = this.duration.getStackedValue(living, currentDuration) / 20d;
-        MobEffectInstance effectInstance = new MobEffectInstance(mobEffect, (int) (duration == -1 ? -1 : duration * 20d), this.amplifier.getStackedIntValue(living, currentLevel), this.ambient, !this.hideParticles, false);
+        MobEffectInstance effectInstance = new MobEffectInstance(mobEffect, (int) (duration == -1 ? -1 : duration * 20d), this.amplifier.getStackedIntValue(living, currentLevel) - 1, this.ambient, !this.hideParticles, false);
         living.addEffect(effectInstance);
         return true;
     }

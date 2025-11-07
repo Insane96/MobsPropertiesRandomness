@@ -46,6 +46,26 @@
         }
       }
       ```
+* Enhanced potion effect property
+  * `duration` and `amplifier` can now use a new Stackable Object. `amplifier` is no longer between 0 and 255 but between 1 and 256
+    * `value`: Range Object
+    * `stack`: false by default, if true, the duration or amplifier will stack each time the property is applied
+    * `cap`: Range Object defining the min and max value can reach with stacking  
+  * This example applies between 1 and 2 levels of swiftness for 10 seconds and each time it's applied, the amplifier will increase by 1/2 levels
+    ```json
+    {
+        "property": "potion_effect",
+        "effect": "minecraft:swiftness",
+        "duration": 10,
+        "amplifier": {
+            "value": {
+                "min": 1,
+                "max": 2
+            },
+            "stack": true
+        }
+    }
+    ```
 
 ## 5.0.24
 * Added `effect` condition
