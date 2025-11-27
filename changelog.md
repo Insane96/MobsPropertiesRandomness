@@ -1,5 +1,8 @@
 # Changelog
 
+## Upcoming
+* Presets without `properties` will now error
+
 ## Beta 5.1.0.0
 * Added `block_on` condition
   * Condition is fulfilled if the target is on one of the `blocks` (list of blocks or block tags) specified

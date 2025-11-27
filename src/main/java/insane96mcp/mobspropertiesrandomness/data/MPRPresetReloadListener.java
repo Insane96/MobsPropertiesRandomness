@@ -57,7 +57,7 @@ public class MPRPresetReloadListener extends SimplePreparableReloadListener<Map<
 				JsonElement jsonElement = GsonHelper.fromJson(gson, reader, JsonElement.class);
 				JsonElement duplicated = map.put(id, jsonElement);
 				if (duplicated != null)
-					throw new IllegalStateException("Duplicate data file ignored with ID " + id);
+					throw new IllegalStateException("Duplicate data file with ID " + id);
 			}
 			catch (Exception exception) {
 				Logger.error("Error loading Preset %s: %s", key, exception.getMessage());
@@ -78,8 +78,9 @@ public class MPRPresetReloadListener extends SimplePreparableReloadListener<Map<
 					continue;
 
 				MPRProperties preset = GSON.fromJson(entry.getValue(), MPRProperties.class);
+                if (preset.getProperties().isEmpty())
+                    throw new IllegalStateException("Preset has no properties");
 				PRESETS.put(name, preset);
-				//Logger.info("Loaded Preset %s", entry.getKey());
 			}
 			catch (JsonSyntaxException e) {
 				Logger.error("Parsing error loading Preset %s: %s", entry.getKey(), e.getMessage());
