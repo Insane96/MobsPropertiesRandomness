@@ -2,6 +2,7 @@
 
 ## Upcoming
 * Presets without `properties` will now error
+* Fixed amplifiers and durations not working if used with simple numbers (e.g. `"amplifier": 0`)
 
 ## Beta 5.1.0.0
 * Added `block_on` condition

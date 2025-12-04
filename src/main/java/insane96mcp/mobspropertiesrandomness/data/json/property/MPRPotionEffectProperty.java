@@ -129,9 +129,9 @@ public class MPRPotionEffectProperty extends MPRProperty {
         public static class Serializer implements JsonDeserializer<Stackable>, JsonSerializer<Stackable> {
             @Override
             public Stackable deserialize(JsonElement json, Type typeOfT, JsonDeserializationContext context) throws JsonParseException {
+                if (json.isJsonPrimitive())
+                    return new Stackable(new MPRRange(json.getAsDouble()));
                 JsonObject jObject = json.getAsJsonObject();
-                if (jObject.isJsonPrimitive())
-                    return new Stackable(new MPRRange(jObject.getAsDouble()));
 
                 MPRRange value = GsonHelper.getAsObject(jObject, "value", context, MPRRange.class);
                 boolean stack = GsonHelper.getAsBoolean(jObject, "stack", false);
