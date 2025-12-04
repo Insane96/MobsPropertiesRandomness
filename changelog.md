@@ -1,6 +1,6 @@
 # Changelog
 
-## Upcoming
+## Beta 5.1.0.1
 * Presets without `properties` will now error
 * Fixed amplifiers and durations not working if used with simple numbers (e.g. `"amplifier": 0`)
 
