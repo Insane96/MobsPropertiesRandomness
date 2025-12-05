@@ -1,5 +1,8 @@
 # Changelog
 
+## Beta 5.1.0.2
+* Fixed potion effects backward compatibility with v5.0
+
 ## Beta 5.1.0.1
 * Presets without `properties` will now error
 * Fixed amplifiers and durations not working if used with simple numbers (e.g. `"amplifier": 0`)

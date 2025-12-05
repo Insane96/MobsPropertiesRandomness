@@ -131,9 +131,13 @@ public class MPRPotionEffectProperty extends MPRProperty {
             public Stackable deserialize(JsonElement json, Type typeOfT, JsonDeserializationContext context) throws JsonParseException {
                 if (json.isJsonPrimitive())
                     return new Stackable(new MPRRange(json.getAsDouble()));
-                JsonObject jObject = json.getAsJsonObject();
+				JsonObject jObject = json.getAsJsonObject();
+                MPRRange value;
+				if (jObject.has("value"))
+					value = GsonHelper.getAsObject(jObject, "value", context, MPRRange.class);
+				else
+					value = GsonHelper.convertToObject(json, json.toString(), context, MPRRange.class);
 
-                MPRRange value = GsonHelper.getAsObject(jObject, "value", context, MPRRange.class);
                 boolean stack = GsonHelper.getAsBoolean(jObject, "stack", false);
                 MPRRange cap = GsonHelper.getAsObject(jObject, "cap", MPRRange.UNLIMITED, context, MPRRange.class);
 
