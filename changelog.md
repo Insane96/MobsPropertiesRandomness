@@ -1,5 +1,9 @@
 # Changelog
 
+## 5.1.1.0
+* Added `health` condition
+  * Condition is fulfilled if the target percentage health is between `min` and `max`
+
 ## Beta 5.1.0.1
 * Presets without `properties` will now error
 * Fixed amplifiers and durations not working if used with simple numbers (e.g. `"amplifier": 0`)

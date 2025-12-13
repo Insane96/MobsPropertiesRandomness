@@ -28,31 +28,32 @@ public class ConditionsRegistry {
     }
 
     public static void init() {
-        register("or", MPROrCondition.class);
-        register("equipment", MPREquipmentCondition.class);
-        register("chance", MPRChanceCondition.class);
-        register("is_baby", MPRBabyCondition.class);
-        register("spawn_type", MPRSpawnTypeCondition.class);
-        register("moon_phase", MPRMoonPhaseCondition.class);
-        register("day_time", MPRDayTimeCondition.class);
-        register("time_played", MPRTimePlayedCondition.class);
-        register("dimension", MPRDimensionCondition.class);
-        register("biome", MPRBiomeCondition.class);
-        register("block_on", MPRBlockOnCondition.class);
-        register("block_in", MPRBlockInCondition.class);
-        register("structure", MPRStructureCondition.class);
-        register("deepness", MPRDeepnessCondition.class);
-        register("distance_from_spawn", MPRDistanceFromSpawnCondition.class);
-		register("effect", MPREffectCondition.class);
         register("advancement", MPRAdvancementCondition.class);
+        register("biome", MPRBiomeCondition.class);
+        register("block_in", MPRBlockInCondition.class);
+        register("block_on", MPRBlockOnCondition.class);
+        register("chance", MPRChanceCondition.class);
+        register("day_time", MPRDayTimeCondition.class);
+        register("deepness", MPRDeepnessCondition.class);
         register("difficulty", MPRDifficultyCondition.class);
+        register("dimension", MPRDimensionCondition.class);
+        register("distance_from_spawn", MPRDistanceFromSpawnCondition.class);
+        register("effect", MPREffectCondition.class);
+        register("equipment", MPREquipmentCondition.class);
         register("hardcore", MPRHardcoreCondition.class);
-        register("temperature", MPRTemperatureCondition.class);
         register("has_target", MPRHasTargetCondition.class);
+        register("health", MPRHealthCondition.class);
+        register("is_baby", MPRBabyCondition.class);
         register("light_level", MPRLightLevelCondition.class);
-        register("weather", MPRWeatherCondition.class);
-        register("nbt", MPRNBTCondition.class);
         register("mod_loaded", MPRModLoadedCondition.class);
+        register("moon_phase", MPRMoonPhaseCondition.class);
+        register("nbt", MPRNBTCondition.class);
+        register("or", MPROrCondition.class);
+        register("spawn_type", MPRSpawnTypeCondition.class);
+        register("structure", MPRStructureCondition.class);
+        register("temperature", MPRTemperatureCondition.class);
+        register("time_played", MPRTimePlayedCondition.class);
+        register("weather", MPRWeatherCondition.class);
         if (ModList.get().isLoaded("gamestages"))
             register("game_stage", MPRGameStageCondition.class);
         if (ModList.get().isLoaded("sereneseasons"))
