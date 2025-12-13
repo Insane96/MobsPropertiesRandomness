@@ -4,6 +4,9 @@
 * Added `health` condition
   * Condition is fulfilled if the target percentage health is between `min` and `max`
 
+## Beta 5.1.0.2
+* Fixed potion effects backward compatibility with v5.0
+
 ## Beta 5.1.0.1
 * Presets without `properties` will now error
 * Fixed amplifiers and durations not working if used with simple numbers (e.g. `"amplifier": 0`)
