@@ -51,6 +51,7 @@ public class ConditionsRegistry {
         register("or", MPROrCondition.class);
         register("spawn_type", MPRSpawnTypeCondition.class);
         register("structure", MPRStructureCondition.class);
+        register("tag", MPRTagCondition.class);
         register("temperature", MPRTemperatureCondition.class);
         register("time_played", MPRTimePlayedCondition.class);
         register("weather", MPRWeatherCondition.class);

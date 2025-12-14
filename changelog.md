@@ -1,5 +1,9 @@
 # Changelog
 
+## Upcoming
+* Added `tag` condition
+  * Condition is fulfilled if the target has all the tags specified (from the `/tag` command)
+
 ## 5.1.1.0
 * Added `health` condition
   * Condition is fulfilled if the target percentage health is between `min` and `max`
