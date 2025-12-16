@@ -3,6 +3,7 @@ package insane96mcp.mobspropertiesrandomness.data.json.condition;
 import com.google.gson.*;
 import com.google.gson.annotations.JsonAdapter;
 import insane96mcp.insanelib.data.IdTagMatcher;
+import net.minecraft.core.BlockPos;
 import net.minecraft.world.entity.LivingEntity;
 
 import java.lang.reflect.Type;
@@ -20,8 +21,10 @@ public class MPRBlockInCondition extends MPRCondition {
     @Override
     protected boolean conditionCheck(LivingEntity living) {
         for (IdTagMatcher block : this.blocks) {
-            if (block.matchesBlock(living.getBlockStateOn()))
-                return true;
+            for (BlockPos pos : BlockPos.betweenClosedStream(living.getBoundingBox()).toList()) {
+                if (block.matchesBlock(living.level().getBlockState(pos)))
+                    return true;
+            }
         }
         return false;
     }

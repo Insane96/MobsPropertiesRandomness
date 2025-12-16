@@ -1,5 +1,8 @@
 # Changelog
 
+## 5.1.2.1
+* Fixed `block_on` and `block_in` conditions begin swapped
+
 ## 5.1.2.0
 * Added `tag` condition
   * Condition is fulfilled if the target has all the tags specified (from the `/tag` command)
