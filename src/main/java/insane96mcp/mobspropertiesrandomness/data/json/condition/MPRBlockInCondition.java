@@ -4,7 +4,9 @@ import com.google.gson.*;
 import com.google.gson.annotations.JsonAdapter;
 import insane96mcp.insanelib.data.IdTagMatcher;
 import net.minecraft.core.BlockPos;
+import net.minecraft.util.Mth;
 import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.phys.AABB;
 
 import java.lang.reflect.Type;
 import java.util.List;
@@ -21,7 +23,8 @@ public class MPRBlockInCondition extends MPRCondition {
     @Override
     protected boolean conditionCheck(LivingEntity living) {
         for (IdTagMatcher block : this.blocks) {
-            for (BlockPos pos : BlockPos.betweenClosedStream(living.getBoundingBox()).toList()) {
+            AABB bb = living.getBoundingBox();
+            for (BlockPos pos : BlockPos.betweenClosed(Mth.floor(bb.minX), Mth.floor(bb.minY), Mth.floor(bb.minZ), Mth.floor(bb.maxX), Mth.floor(bb.maxY), Mth.floor(bb.maxZ))) {
                 if (block.matchesBlock(living.level().getBlockState(pos)))
                     return true;
             }

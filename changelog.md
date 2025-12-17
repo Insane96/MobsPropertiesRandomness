@@ -1,7 +1,10 @@
 # Changelog
 
+## 5.1.2.2
+* Fixed `block_in` not working properly with mob heights
+
 ## 5.1.2.1
-* Fixed `block_on` and `block_in` conditions begin swapped
+* Fixed `block_on` and `block_in` conditions being swapped
 
 ## 5.1.2.0
 * Added `tag` condition
