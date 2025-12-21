@@ -4,7 +4,10 @@ import com.google.gson.*;
 import com.google.gson.annotations.JsonAdapter;
 import insane96mcp.mobspropertiesrandomness.data.json.util.NBTType;
 import insane96mcp.mobspropertiesrandomness.data.json.util.modifiable.MPRRange;
-import net.minecraft.nbt.*;
+import net.minecraft.nbt.ByteTag;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.nbt.NumericTag;
+import net.minecraft.nbt.Tag;
 import net.minecraft.util.GsonHelper;
 import net.minecraft.world.entity.LivingEntity;
 
@@ -41,13 +44,13 @@ public class MPRNBTCondition extends MPRCondition {
             else {
                 switch (this.type) {
                     case DOUBLE -> {
-                        if (tag instanceof DoubleTag doubleTag)
-                            return this.value.isBetween(living, doubleTag.getAsFloat());
+                        if (tag instanceof NumericTag numericTag)
+                            return this.value.isBetween(living, numericTag.getAsDouble());
                         return false;
                     }
                     case INTEGER -> {
-                        if (tag instanceof IntTag intTag)
-                            return this.value.isBetween(living, intTag.getAsInt());
+                        if (tag instanceof NumericTag numericTag)
+                            return this.value.isBetween(living, numericTag.getAsInt());
                         return false;
                     }
                     case BOOLEAN -> {

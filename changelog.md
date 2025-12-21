@@ -1,5 +1,8 @@
 # Changelog
 
+## 5.1.2.3
+* Fixed `nbt` condition not working with non-integer values
+
 ## 5.1.2.2
 * Fixed `block_in` not working properly with mob heights
 
