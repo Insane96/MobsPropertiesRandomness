@@ -39,7 +39,7 @@ public class SerializerUtils {
             return list;
         }
         else
-            throw new JsonParseException("Expected %s to be a JsonObject or JsonArray".formatted(memberName));
+            throw new JsonParseException("Expected %s to be a JsonObject or JsonArray or JsonPrimitive".formatted(memberName));
     }
 
     public static <T> List<T> deserializeList(JsonArray jArray, JsonDeserializationContext context, Class<T> clazz) throws JsonParseException {

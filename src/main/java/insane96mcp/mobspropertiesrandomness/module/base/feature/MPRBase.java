@@ -10,6 +10,7 @@ import insane96mcp.mobspropertiesrandomness.data.json.MPRAttributeModifier;
 import insane96mcp.mobspropertiesrandomness.data.json.MPRMob;
 import insane96mcp.mobspropertiesrandomness.data.json.MPRProperties;
 import insane96mcp.mobspropertiesrandomness.data.json.property.MPRBossBarProperty;
+import insane96mcp.mobspropertiesrandomness.data.json.property.MPRDamageImmunityProperty;
 import insane96mcp.mobspropertiesrandomness.data.json.property.MPREffectImmunityProperty;
 import insane96mcp.mobspropertiesrandomness.data.json.property.MPRScalePehkuiProperty;
 import insane96mcp.mobspropertiesrandomness.data.json.property.events.*;
@@ -85,6 +86,12 @@ public class MPRBase extends Feature {
 	@SubscribeEvent
 	public void onLivingDamage(LivingDamageEvent event) {
 		MPROnHitEvent.onHit(event);
+	}
+
+	@SubscribeEvent
+	public void onLivingAttack(LivingAttackEvent event) {
+		if (MPRDamageImmunityProperty.preventDamage(event.getEntity(), event.getSource()))
+			event.setCanceled(true);
 	}
 
 	@SubscribeEvent

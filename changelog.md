@@ -1,5 +1,12 @@
 # Changelog
 
+## Upcoming
+* Added `damage_immunity` property
+  * Specify `damage_types` or a `damage_type_tag` that the mob will be immune to
+  * Use `remove` to remove the immunity
+* Added `remove` to `effect_immunity` property
+  * So you can remove the immunity in events
+
 ## 5.1.2.3
 * Fixed `nbt` condition not working with non-integer values
 

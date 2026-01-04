@@ -10,6 +10,7 @@ import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.ListTag;
 import net.minecraft.nbt.StringTag;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.util.GsonHelper;
 import net.minecraft.world.effect.MobEffect;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraftforge.registries.ForgeRegistries;
@@ -22,19 +23,26 @@ public class MPREffectImmunityProperty extends MPRProperty {
     private static final ResourceLocation EFFECT_IMMUNITY = MPR.location("effect_immunity");
 
     public List<ResourceLocation> mobEffects;
+    public boolean remove;
 
-    public MPREffectImmunityProperty(List<ResourceLocation> mobEffects, List<MPRCondition> conditions) {
+    public MPREffectImmunityProperty(List<ResourceLocation> mobEffects, boolean remove, List<MPRCondition> conditions) {
         super(conditions);
         this.mobEffects = mobEffects;
+        this.remove = remove;
     }
 
     @Override
     public boolean apply(LivingEntity living) {
-        ListTag listTag = new ListTag();
-        for (ResourceLocation mobEffect : this.mobEffects) {
-            listTag.add(StringTag.valueOf(mobEffect.toString()));
+        if (!this.remove) {
+            ListTag listTag = new ListTag();
+            for (ResourceLocation mobEffect : this.mobEffects) {
+                listTag.add(StringTag.valueOf(mobEffect.toString()));
+            }
+            ModNBTData.put(living, EFFECT_IMMUNITY, listTag);
         }
-        ModNBTData.put(living, EFFECT_IMMUNITY, listTag);
+        else {
+            ModNBTData.remove(living, EFFECT_IMMUNITY);
+        }
         return true;
     }
 
@@ -57,13 +65,15 @@ public class MPREffectImmunityProperty extends MPRProperty {
         @Override
         public MPREffectImmunityProperty deserialize(JsonElement json, Type typeOfT, JsonDeserializationContext context) throws JsonParseException {
             JsonObject jObject = json.getAsJsonObject();
-            return new MPREffectImmunityProperty(SerializerUtils.deserializeLocationList(jObject, "effects", context), MPRCondition.deserializeConditions(jObject, context));
+            return new MPREffectImmunityProperty(SerializerUtils.deserializeLocationList(jObject, "effects", context), GsonHelper.getAsBoolean(jObject, "remove", false), MPRCondition.deserializeConditions(jObject, context));
         }
 
         @Override
         public JsonElement serialize(MPREffectImmunityProperty src, Type typeOfSrc, JsonSerializationContext context) {
             JsonObject jObject = new JsonObject();
             SerializerUtils.serializeLocationList(jObject, "effects", context, src.mobEffects);
+            if (src.remove)
+                jObject.addProperty("remove", true);
             return src.endSerialization(jObject, context);
         }
     }

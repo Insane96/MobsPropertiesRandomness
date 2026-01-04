@@ -30,27 +30,28 @@ public class PropertiesRegistry {
     }
 
     public static void init() {
-        register("potion_effect", MPRPotionEffectProperty.class);
         register("attribute_modifier", MPRAttributeModifierProperty.class);
-        register("custom_name", MPRCustomNameProperty.class);
-        register("silent", MPRSilentProperty.class);
-        register("experience_multiplier", MPRExperienceMultiplierProperty.class);
-        register("loot_table", MPRLootTableProperty.class);
-        register("effect_immunity", MPREffectImmunityProperty.class);
-        register("team", MPRTeamProperty.class);
-        register("set_nbt", MPRNBTProperty.class);
-        register("set_raw_nbt", MPRRawNBTProperty.class);
-        register("equipment", MPREquipmentProperty.class);
         register("boss_bar", MPRBossBarProperty.class);
-        register("play_sound", MPRPlaySoundProperty.class);
+        register("custom_name", MPRCustomNameProperty.class);
+        register("despawn", MPRDespawnProperty.class);
+        register("damage", MPRDamageProperty.class);
+        register("damage_immunity", MPRDamageImmunityProperty.class);
+        register("effect_immunity", MPREffectImmunityProperty.class);
+        register("equipment", MPREquipmentProperty.class);
+        register("experience_multiplier", MPRExperienceMultiplierProperty.class);
+        register("event", MPREventProperty.class);
         register("fire", MPRFireProperty.class);
         register("freeze", MPRFreezeProperty.class);
-        register("heal", MPRHealProperty.class);
-        register("damage", MPRDamageProperty.class);
-        register("despawn", MPRDespawnProperty.class);
         register("function", MPRFunctionProperty.class);
-        register("event", MPREventProperty.class);
+        register("heal", MPRHealProperty.class);
+        register("loot_table", MPRLootTableProperty.class);
+        register("potion_effect", MPRPotionEffectProperty.class);
+        register("play_sound", MPRPlaySoundProperty.class);
         register("presets", MPRPresetsProperty.class);
+        register("raw_nbt", MPRRawNBTProperty.class);
+        register("set_nbt", MPRNBTProperty.class);
+        register("silent", MPRSilentProperty.class);
+        register("team", MPRTeamProperty.class);
         if (ModList.get().isLoaded("pehkui"))
             register("scale", MPRScalePehkuiProperty.class);
     }
