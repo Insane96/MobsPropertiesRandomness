@@ -1,6 +1,6 @@
 # Changelog
 
-## Upcoming
+## 5.1.3.0
 * Added `damage_immunity` property
   * Specify `damage_types` or a `damage_type_tag` that the mob will be immune to
   * Use `remove` to remove the immunity
