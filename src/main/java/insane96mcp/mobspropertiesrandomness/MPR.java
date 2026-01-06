@@ -105,7 +105,8 @@ public class MPR
                 .registerTypeAdapter(MPRChangeTargetEvent.ChangeType.class, new StrictEnumDeserializer<>(MPRChangeTargetEvent.ChangeType.class))
                 .registerTypeAdapter(MPRScalePehkuiProperty.Operation.class, new StrictEnumDeserializer<>(MPRScalePehkuiProperty.Operation.class))
                 .registerTypeAdapter(MPRWeatherCondition.Weather.class, new StrictEnumDeserializer<>(MPRWeatherCondition.Weather.class))
-                .registerTypeAdapter(MPRRange.Bias.class, new StrictEnumDeserializer<>(MPRRange.Bias.class));
+                .registerTypeAdapter(MPRRange.Bias.class, new StrictEnumDeserializer<>(MPRRange.Bias.class))
+                .registerTypeAdapter(EventPriority.class, new StrictEnumDeserializer<>(EventPriority.class));
         if (ModList.get().isLoaded("sereneseasons"))
             gsonBuilder.registerTypeAdapter(Season.SubSeason.class, new SubSeasonSerializer());
         return gsonBuilder.create();

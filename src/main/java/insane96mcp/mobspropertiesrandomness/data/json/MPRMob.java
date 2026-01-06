@@ -7,20 +7,23 @@ import insane96mcp.mobspropertiesrandomness.data.json.condition.MPRCondition;
 import insane96mcp.mobspropertiesrandomness.data.json.property.MPRProperty;
 import net.minecraft.util.GsonHelper;
 import net.minecraft.world.entity.LivingEntity;
+import net.minecraftforge.eventbus.api.EventPriority;
 
 import java.lang.reflect.Type;
 import java.util.List;
 
 @JsonAdapter(MPRMob.Serializer.class)
 public class MPRMob extends MPRProperties {
-    public IdTagMatcher target;
+    public final IdTagMatcher target;
 
-    public int priority;
+    public final int priority;
+    public final EventPriority eventPriority;
 
-    public MPRMob(IdTagMatcher target, int priority, List<MPRProperty> properties, List<MPRCondition> conditions) {
+    public MPRMob(IdTagMatcher target, int priority, List<MPRProperty> properties, EventPriority eventPriority, List<MPRCondition> conditions) {
         super(properties, conditions);
         this.target = target;
         this.priority = priority;
+        this.eventPriority = eventPriority;
     }
 
     @Override
@@ -42,6 +45,7 @@ public class MPRMob extends MPRProperties {
                     context.deserialize(jObject.get("target"), IdTagMatcher.class),
                     GsonHelper.getAsInt(jObject, "priority", 0),
                     deserializeProperties(jObject, context),
+                    GsonHelper.getAsObject(jObject, "event_priority", EventPriority.LOW, context, EventPriority.class),
                     MPRCondition.deserializeConditions(jObject, context)
             );
         }
@@ -51,6 +55,8 @@ public class MPRMob extends MPRProperties {
             JsonObject jObject = new JsonObject();
             jObject.add("target", context.serialize(src.target));
             jObject.addProperty("priority", src.priority);
+            if (src.eventPriority != EventPriority.LOW)
+                jObject.add("event_priority", context.serialize(src.eventPriority));
             return src.endSerialization(jObject, context);
         }
     }

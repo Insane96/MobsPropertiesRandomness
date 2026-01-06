@@ -2,7 +2,6 @@ package insane96mcp.mobspropertiesrandomness.module.base.feature;
 
 import insane96mcp.insanelib.base.Feature;
 import insane96mcp.insanelib.base.LoadFeature;
-import insane96mcp.insanelib.base.Module;
 import insane96mcp.insanelib.base.config.Config;
 import insane96mcp.insanelib.util.ModNBTData;
 import insane96mcp.mobspropertiesrandomness.MPR;
@@ -15,7 +14,6 @@ import insane96mcp.mobspropertiesrandomness.data.json.property.MPREffectImmunity
 import insane96mcp.mobspropertiesrandomness.data.json.property.MPRScalePehkuiProperty;
 import insane96mcp.mobspropertiesrandomness.data.json.property.events.*;
 import net.minecraft.resources.ResourceLocation;
-import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraftforge.event.entity.EntityJoinLevelEvent;
 import net.minecraftforge.event.entity.EntityLeaveLevelEvent;
@@ -37,16 +35,32 @@ public class MPRBase extends Feature {
 	@Config
 	public static Boolean verboseLog = false;
 
-	public MPRBase(Module module, boolean enabledByDefault, boolean canBeDisabled) {
-		super(module, enabledByDefault, canBeDisabled);
-	}
-
-	public static void postActualHurt(LivingEntity living, DamageSource source, float amount) {
-
+	@SubscribeEvent(priority = EventPriority.LOWEST)
+	public void onEntityJoinLevelLowest(EntityJoinLevelEvent event) {
+		onEntityJoinLevel(event, EventPriority.LOWEST);
 	}
 
 	@SubscribeEvent(priority = EventPriority.LOW)
-	public void onEntityJoinWorld(EntityJoinLevelEvent event) {
+	public void onEntityJoinLevelLow(EntityJoinLevelEvent event) {
+		onEntityJoinLevel(event, EventPriority.LOW);
+	}
+
+	@SubscribeEvent(priority = EventPriority.NORMAL)
+	public void onEntityJoinLevelNormal(EntityJoinLevelEvent event) {
+		onEntityJoinLevel(event, EventPriority.NORMAL);
+	}
+
+	@SubscribeEvent(priority = EventPriority.HIGH)
+	public void onEntityJoinLevelHigh(EntityJoinLevelEvent event) {
+		onEntityJoinLevel(event, EventPriority.LOWEST);
+	}
+
+	@SubscribeEvent(priority = EventPriority.HIGHEST)
+	public void onEntityJoinLevelHighest(EntityJoinLevelEvent event) {
+		onEntityJoinLevel(event, EventPriority.HIGHEST);
+	}
+
+	private static void onEntityJoinLevel(EntityJoinLevelEvent event, EventPriority eventPriority) {
 		if (event.getLevel().isClientSide)
 			return;
 
@@ -61,8 +75,10 @@ public class MPRBase extends Feature {
 		if (MPR_MOBS.isEmpty())
 			return;
 
-		for (MPRMob mprMob : MPR_MOBS)
-			mprMob.tryApply(livingEntity);
+		for (MPRMob mprMob : MPR_MOBS) {
+			if (mprMob.eventPriority == eventPriority)
+				mprMob.tryApply(livingEntity);
+		}
 
 		ModNBTData.put(livingEntity, PROCESSED, true);
 		MPRAttributeModifier.fixHealth(livingEntity);

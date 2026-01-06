@@ -1,5 +1,12 @@
 # Changelog
 
+## 5.1.4.0
+* Tentative new field for mobs: `event_priority`
+  * Changes the priority of the forge event, valid values are: 'LOWEST', 'LOW', 'NORMAL', 'HIGH', 'HIGHEST'. Defaults to 'LOW'  
+    If you're trying to use conditions with stuff from other mods  
+    (like World of miracles changing skeletons equipment, and you want to change their properties when they have no bow)  
+    and it's not working, try lowering the `event_priority` so their changes may be applied before MPR
+
 ## 5.1.3.0
 * Added `damage_immunity` property
   * Specify `damage_types` or a `damage_type_tag` that the mob will be immune to
