@@ -76,7 +76,7 @@ public class MPRMobReloadListener extends SimplePreparableReloadListener<Map<Res
 
 				MPRMob mob = GSON.fromJson(entry.getValue(), MPRMob.class);
 				MPR_MOBS.add(mob);
-				Logger.info("Loaded Mob %s", entry.getKey());
+				//Logger.info("Loaded Mob %s", entry.getKey());
 			}
 			catch (Exception e) {
 				StringBuilder sb = new StringBuilder("Failed loading Mob " + entry.getKey() + ": " + e.getMessage());

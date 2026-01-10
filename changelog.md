@@ -1,5 +1,8 @@
 # Changelog
 
+## 5.1.4.1
+* Removed "Loaded Mob/Preset" log. This way the log is cleaner
+
 ## 5.1.4.0
 * Tentative new field for mobs: `event_priority`
   * Changes the priority of the forge event, valid values are: 'LOWEST', 'LOW', 'NORMAL', 'HIGH', 'HIGHEST'. Defaults to 'LOW'  

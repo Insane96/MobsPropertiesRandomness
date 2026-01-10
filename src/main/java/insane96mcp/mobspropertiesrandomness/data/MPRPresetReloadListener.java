@@ -97,7 +97,7 @@ public class MPRPresetReloadListener extends SimplePreparableReloadListener<Map<
                     }
                 }));
 
-		Logger.info("Loaded %s Presets", PRESETS.size());
+		//Logger.info("Loaded %s Presets", PRESETS.size());
 	}
 
 	@Nullable
