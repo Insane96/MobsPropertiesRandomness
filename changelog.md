@@ -1,5 +1,8 @@
 # Changelog
 
+## 5.1.4.3
+* Messed up big time. Properties should apply once again
+
 ## 5.1.4.2
 * Fixed properties no longer applying
 

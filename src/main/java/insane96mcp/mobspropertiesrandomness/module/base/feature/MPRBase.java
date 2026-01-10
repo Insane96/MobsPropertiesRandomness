@@ -52,7 +52,7 @@ public class MPRBase extends Feature {
 
 	@SubscribeEvent(priority = EventPriority.HIGH)
 	public void onEntityJoinLevelHigh(EntityJoinLevelEvent event) {
-		onEntityJoinLevel(event, EventPriority.LOWEST);
+		onEntityJoinLevel(event, EventPriority.HIGH);
 	}
 
 	@SubscribeEvent(priority = EventPriority.HIGHEST)
