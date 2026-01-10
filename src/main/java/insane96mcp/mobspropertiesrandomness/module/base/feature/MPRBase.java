@@ -80,7 +80,8 @@ public class MPRBase extends Feature {
 				mprMob.tryApply(livingEntity);
 		}
 
-		ModNBTData.put(livingEntity, PROCESSED, true);
+		if (eventPriority == EventPriority.LOWEST)
+			ModNBTData.put(livingEntity, PROCESSED, true);
 		MPRAttributeModifier.fixHealth(livingEntity);
 	}
 

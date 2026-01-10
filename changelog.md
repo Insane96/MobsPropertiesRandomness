@@ -1,5 +1,8 @@
 # Changelog
 
+## 5.1.4.2
+* Fixed properties no longer applying
+
 ## 5.1.4.1
 * Removed "Loaded Mob/Preset" log. This way the log is cleaner
 
