@@ -1,5 +1,9 @@
 # Changelog
 
+## 5.1.5.0
+* Added `score` condition
+  * Checks against scoreboard values
+
 ## 5.1.4.3
 * Messed up big time. Properties should apply once again
 

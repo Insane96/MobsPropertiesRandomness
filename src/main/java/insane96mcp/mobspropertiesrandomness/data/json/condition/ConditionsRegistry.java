@@ -49,6 +49,7 @@ public class ConditionsRegistry {
         register("moon_phase", MPRMoonPhaseCondition.class);
         register("nbt", MPRNBTCondition.class);
         register("or", MPROrCondition.class);
+        register("score", MPRScoreCondition.class);
         register("spawn_type", MPRSpawnTypeCondition.class);
         register("structure", MPRStructureCondition.class);
         register("tag", MPRTagCondition.class);
