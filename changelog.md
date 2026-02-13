@@ -1,5 +1,8 @@
 # Changelog
 
+## 5.1.6.0
+* Renamed `set_nbt` condition to `nbt`
+
 ## 5.1.5.0
 * Added `score` condition
   * Checks against scoreboard values
