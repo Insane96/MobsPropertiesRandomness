@@ -3,7 +3,8 @@ package insane96mcp.mobspropertiesrandomness.data.json.condition;
 import com.google.gson.*;
 import com.google.gson.annotations.JsonAdapter;
 import insane96mcp.mobspropertiesrandomness.data.json.MPRNbt;
-import net.minecraft.nbt.*;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.nbt.Tag;
 import net.minecraft.world.entity.LivingEntity;
 
 import java.lang.reflect.Type;
@@ -21,44 +22,13 @@ public class MPRNBTCondition extends MPRCondition {
     protected boolean conditionCheck(LivingEntity living) {
         CompoundTag mobTag = new CompoundTag();
         living.saveWithoutId(mobTag);
-        String[] splitPath = this.nbt.path.split("\\.");
-        for (int i = 0; i < splitPath.length; i++) {
-            Tag tag = mobTag.get(splitPath[i]);
-            if (tag == null)
-                return false;
-            if (i < splitPath.length - 1) {
-                if (tag instanceof CompoundTag compoundTag)
-                    mobTag = compoundTag;
-                else
-                    return false;
-            }
-            else {
-                switch (this.nbt.type) {
-                    case DOUBLE -> {
-                        if (tag instanceof NumericTag numericTag)
-                            return this.nbt.value.isBetween(living, numericTag.getAsDouble());
-                        return false;
-                    }
-                    case INTEGER -> {
-                        if (tag instanceof NumericTag numericTag)
-                            return this.nbt.value.isBetween(living, numericTag.getAsInt());
-                        return false;
-                    }
-                    case BOOLEAN -> {
-                        if (tag instanceof ByteTag byteTag)
-                            return this.nbt.value.isBetween(living, byteTag.getAsByte());
-                        return false;
-                    }
-                    case STRING -> {
-                        if (tag instanceof StringTag stringTag)
-                            return this.nbt.stringValue.equals(stringTag.getAsString());
-                        return false;
-                    }
-                }
-            }
-
-        }
-        return false;
+        MPRNbt.ResolvedPath resolved = this.nbt.resolvePath(mobTag);
+        if (resolved == null)
+            return false;
+        Tag tag = resolved.parent().get(resolved.key());
+        if (tag == null)
+            return false;
+        return this.nbt.checkValue(tag, living);
     }
 
     public static class Serializer implements JsonDeserializer<MPRNBTCondition>, JsonSerializer<MPRNBTCondition> {

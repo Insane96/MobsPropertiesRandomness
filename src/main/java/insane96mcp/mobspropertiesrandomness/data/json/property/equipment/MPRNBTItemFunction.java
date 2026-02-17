@@ -5,7 +5,6 @@ import com.google.gson.annotations.JsonAdapter;
 import insane96mcp.mobspropertiesrandomness.data.json.MPRNbt;
 import insane96mcp.mobspropertiesrandomness.data.json.condition.MPRCondition;
 import net.minecraft.nbt.CompoundTag;
-import net.minecraft.nbt.Tag;
 import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.item.ItemStack;
@@ -25,28 +24,8 @@ public class MPRNBTItemFunction extends MPRItemFunction {
     @Override
     protected boolean apply(LivingEntity living, ItemStack stack, EquipmentSlot slot) {
         CompoundTag stackTag = stack.getOrCreateTag();
-        String[] splitPath = this.nbt.path.split("\\.");
-        CompoundTag innerCompoundTag = stackTag;
-        for (int i = 0; i < splitPath.length; i++) {
-            if (i < splitPath.length - 1) {
-                Tag tag = innerCompoundTag.get(splitPath[i]);
-                if (tag instanceof CompoundTag compoundTag)
-                    innerCompoundTag = compoundTag;
-                else {
-                    CompoundTag newCompoundTag = new CompoundTag();
-                    innerCompoundTag.put(splitPath[i], newCompoundTag);
-                    innerCompoundTag = newCompoundTag;
-                }
-            }
-            else {
-                switch (this.nbt.type) {
-                    case DOUBLE -> innerCompoundTag.putDouble(splitPath[i], this.nbt.value.getDoubleBetween(living));
-                    case INTEGER -> innerCompoundTag.putInt(splitPath[i], this.nbt.value.getIntBetween(living));
-                    case BOOLEAN -> innerCompoundTag.putBoolean(splitPath[i], living.getRandom().nextFloat() < this.nbt.value.getDoubleBetween(living));
-                    case STRING -> innerCompoundTag.putString(splitPath[i], this.nbt.stringValue);
-                }
-            }
-        }
+        MPRNbt.ResolvedPath resolved = this.nbt.resolveOrCreatePath(stackTag);
+        this.nbt.writeValue(resolved.parent(), resolved.key(), living);
         return true;
     }
 

@@ -5,7 +5,6 @@ import com.google.gson.annotations.JsonAdapter;
 import insane96mcp.mobspropertiesrandomness.data.json.MPRNbt;
 import insane96mcp.mobspropertiesrandomness.data.json.condition.MPRCondition;
 import net.minecraft.nbt.CompoundTag;
-import net.minecraft.nbt.Tag;
 import net.minecraft.world.entity.LivingEntity;
 
 import java.lang.reflect.Type;
@@ -24,46 +23,10 @@ public class MPRNBTProperty extends MPRProperty {
     public boolean apply(LivingEntity living) {
         CompoundTag mobTag = new CompoundTag();
         living.saveWithoutId(mobTag);
-        String[] splitPath = this.nbt.path.split("\\.");
-        CompoundTag innerCompoundTag = mobTag;
-        for (int i = 0; i < splitPath.length; i++) {
-            if (i < splitPath.length - 1) {
-                Tag tag = innerCompoundTag.get(splitPath[i]);
-                if (tag instanceof CompoundTag compoundTag)
-                    innerCompoundTag = compoundTag;
-                else {
-                    CompoundTag newCompoundTag = new CompoundTag();
-                    innerCompoundTag.put(splitPath[i], newCompoundTag);
-                    innerCompoundTag = newCompoundTag;
-                }
-            }
-            else {
-                switch (this.nbt.type) {
-                    case DOUBLE -> {
-                        innerCompoundTag.putDouble(splitPath[i], this.nbt.value.getDoubleBetween(living));
-                        living.load(mobTag);
-                        return true;
-                    }
-                    case INTEGER -> {
-                        innerCompoundTag.putInt(splitPath[i], this.nbt.value.getIntBetween(living));
-                        living.load(mobTag);
-                        return true;
-                    }
-                    case BOOLEAN -> {
-                        innerCompoundTag.putBoolean(splitPath[i], living.getRandom().nextFloat() < this.nbt.value.getDoubleBetween(living));
-                        living.load(mobTag);
-                        return true;
-                    }
-                    case STRING -> {
-                        innerCompoundTag.putString(splitPath[i], this.nbt.stringValue);
-                        living.load(mobTag);
-                        return true;
-                    }
-                }
-            }
-
-        }
-        return false;
+        MPRNbt.ResolvedPath resolved = this.nbt.resolveOrCreatePath(mobTag);
+        this.nbt.writeValue(resolved.parent(), resolved.key(), living);
+        living.load(mobTag);
+        return true;
     }
 
     public static class Serializer implements JsonDeserializer<MPRNBTProperty>, JsonSerializer<MPRNBTProperty> {
