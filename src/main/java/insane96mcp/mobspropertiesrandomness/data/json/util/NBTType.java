@@ -8,5 +8,7 @@ public enum NBTType {
     @SerializedName("integer")
     INTEGER,
     @SerializedName("boolean")
-    BOOLEAN
+    BOOLEAN,
+    @SerializedName("string")
+    STRING
 }

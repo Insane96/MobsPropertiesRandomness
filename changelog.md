@@ -1,5 +1,9 @@
 # Changelog
 
+## Upcoming
+* `nbt` properties and conditions now accept "string" as a type
+  * To obviously set a string into an NBT tag
+
 ## 5.1.6.0
 * Renamed `set_nbt` condition to `nbt`
 

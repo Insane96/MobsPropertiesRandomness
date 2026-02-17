@@ -16,11 +16,13 @@ public class MPRNbt {
     public String path;
     public NBTType type;
     public MPRRange value;
+    public String stringValue;
 
-    public MPRNbt(String path, NBTType type, MPRRange value) {
+    public MPRNbt(String path, NBTType type, MPRRange value, String stringValue) {
         this.path = path;
         this.type = type;
         this.value = value;
+        this.stringValue = stringValue;
     }
 
     @Nullable
@@ -40,10 +42,18 @@ public class MPRNbt {
         @Override
         public MPRNbt deserialize(JsonElement json, Type typeOfT, JsonDeserializationContext context) throws JsonParseException {
             JsonObject jObject = json.getAsJsonObject();
+            NBTType type = GsonHelper.getAsObject(jObject, "type", context, NBTType.class);
+            MPRRange value = GsonHelper.getAsObject(jObject, "value", null, context, MPRRange.class);
+            String stringValue = GsonHelper.getAsString(jObject, "string_value", null);
+            if (type == NBTType.STRING && stringValue == null)
+                throw new JsonParseException("String NBT requires a `string_value`");
+            else if (type != NBTType.STRING && value == null)
+                throw new JsonParseException("Numeric NBT requires a `value`");
             return new MPRNbt(
                     GsonHelper.getAsString(jObject, "path"),
-                    GsonHelper.getAsObject(jObject, "type", context, NBTType.class),
-                    GsonHelper.getAsObject(jObject, "value", context, MPRRange.class)
+                    type,
+                    value,
+                    stringValue
             );
         }
 
@@ -53,6 +63,7 @@ public class MPRNbt {
             jObject.add("path", context.serialize(src.path));
             jObject.add("type", context.serialize(src.type));
             jObject.add("value", context.serialize(src.value));
+            jObject.addProperty("string_value", src.stringValue);
             return jObject;
         }
     }

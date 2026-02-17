@@ -54,6 +54,11 @@ public class MPRNBTProperty extends MPRProperty {
                         living.load(mobTag);
                         return true;
                     }
+                    case STRING -> {
+                        innerCompoundTag.putString(splitPath[i], this.nbt.stringValue);
+                        living.load(mobTag);
+                        return true;
+                    }
                 }
             }
 
