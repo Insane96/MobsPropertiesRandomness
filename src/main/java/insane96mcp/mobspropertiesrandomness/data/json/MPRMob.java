@@ -33,16 +33,12 @@ public class MPRMob extends MPRProperties {
         super.tryApply(living);
     }
 
-    public List<MPRProperty> getProperties() {
-        return this.properties;
-    }
-
     public static class Serializer implements JsonDeserializer<MPRMob>, JsonSerializer<MPRMob> {
         @Override
         public MPRMob deserialize(JsonElement json, Type typeOfT, JsonDeserializationContext context) throws JsonParseException {
             JsonObject jObject = json.getAsJsonObject();
             return new MPRMob(
-                    context.deserialize(jObject.get("target"), IdTagMatcher.class),
+                    GsonHelper.getAsObject(jObject, "target", context, IdTagMatcher.class),
                     GsonHelper.getAsInt(jObject, "priority", 0),
                     deserializeProperties(jObject, context),
                     GsonHelper.getAsObject(jObject, "event_priority", EventPriority.LOW, context, EventPriority.class),

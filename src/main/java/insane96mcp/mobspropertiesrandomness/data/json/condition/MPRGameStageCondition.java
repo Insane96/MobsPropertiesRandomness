@@ -6,6 +6,7 @@ import insane96mcp.mobspropertiesrandomness.data.json.util.PlayerMode;
 import insane96mcp.mobspropertiesrandomness.util.SerializerUtils;
 import net.darkhax.gamestages.GameStageHelper;
 import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.util.GsonHelper;
 import net.minecraft.world.entity.LivingEntity;
 
 import java.lang.reflect.Type;
@@ -52,9 +53,7 @@ public class MPRGameStageCondition extends MPRCondition {
 			List<String> values = SerializerUtils.deserializeList(jObject, "game_stages", context, String.class);
 			if (values.isEmpty())
 				throw new JsonParseException("No game_stages specified for Game Stage Condition");
-			PlayerMode playerMode = PlayerMode.NEAREST;
-			if (jObject.has("player"))
-				playerMode = context.deserialize(jObject.get("player"), PlayerMode.class);
+			PlayerMode playerMode = GsonHelper.getAsObject(jObject, "player", PlayerMode.NEAREST, context, PlayerMode.class);
 			return new MPRGameStageCondition(values, playerMode, MPRCondition.deserializeInverted(jObject));
 		}
 

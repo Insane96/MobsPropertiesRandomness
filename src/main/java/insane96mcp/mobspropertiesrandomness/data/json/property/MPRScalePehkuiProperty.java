@@ -65,7 +65,7 @@ public class MPRScalePehkuiProperty extends MPRProperty {
         public MPRScalePehkuiProperty deserialize(JsonElement json, Type typeOfT, JsonDeserializationContext context) throws JsonParseException {
             JsonObject jObject = json.getAsJsonObject();
             return new MPRScalePehkuiProperty(
-                    context.deserialize(jObject.get("scale"), MPRRange.class),
+                    GsonHelper.getAsObject(jObject, "scale", context, MPRRange.class),
                     SerializerUtils.deserializeLocationList(jObject, "scale_types", context),
                     GsonHelper.getAsObject(jObject, "operation", context, Operation.class),
                     MPRCondition.deserializeConditions(jObject, context)

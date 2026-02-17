@@ -46,7 +46,7 @@ public class MPRScoreCondition extends MPRCondition {
             JsonObject jObject = json.getAsJsonObject();
             return new MPRScoreCondition(
                     GsonHelper.getAsString(jObject, "objective"),
-                    context.deserialize(jObject.get("value"), MPRRange.class),
+                    GsonHelper.getAsObject(jObject, "value", context, MPRRange.class),
                     GsonHelper.getAsString(jObject, "player", null),
                     MPRCondition.deserializeInverted(jObject)
             );

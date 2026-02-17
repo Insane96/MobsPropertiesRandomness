@@ -3,6 +3,7 @@ package insane96mcp.mobspropertiesrandomness.data.json.condition;
 import com.google.gson.*;
 import com.google.gson.annotations.JsonAdapter;
 import insane96mcp.mobspropertiesrandomness.data.json.util.modifiable.MPRRange;
+import net.minecraft.util.GsonHelper;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.phys.Vec3;
 
@@ -28,7 +29,7 @@ public class MPRDistanceFromSpawnCondition extends MPRCondition {
         public MPRDistanceFromSpawnCondition deserialize(JsonElement json, Type typeOfT, JsonDeserializationContext context) throws JsonParseException {
             JsonObject jObject = json.getAsJsonObject();
             return new MPRDistanceFromSpawnCondition(
-                    context.deserialize(jObject.get("distance"), MPRRange.class),
+                    GsonHelper.getAsObject(jObject, "distance", context, MPRRange.class),
                     MPRCondition.deserializeInverted(jObject)
             );
         }

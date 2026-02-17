@@ -58,11 +58,7 @@ public class MPRPotionEffectProperty extends MPRProperty {
             if (mobEffect == null)
                 Logger.warn("Invalid effect: %s. Will be ignored.", jObject.get("effect").getAsString());
 
-            Stackable amplifier;
-            if (jObject.has("amplifier"))
-                amplifier = context.deserialize(jObject.get("amplifier"), Stackable.class);
-            else
-                amplifier = Stackable.ONE;
+            Stackable amplifier = GsonHelper.getAsObject(jObject, "amplifier", Stackable.ONE, context, Stackable.class);
             //if (amplifier.value.min.value <= 0 && amplifier.value.max.value <= 0)
             //    Logger.warn("amplifier should be > 0");
 

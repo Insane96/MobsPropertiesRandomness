@@ -4,6 +4,7 @@ import com.google.gson.*;
 import com.google.gson.annotations.JsonAdapter;
 import insane96mcp.mobspropertiesrandomness.data.json.condition.MPRCondition;
 import insane96mcp.mobspropertiesrandomness.data.json.util.modifiable.MPRRange;
+import net.minecraft.util.GsonHelper;
 import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.item.ItemStack;
@@ -30,7 +31,7 @@ public class MPRSetCountItemFunction extends MPRItemFunction {
         @Override
         public MPRSetCountItemFunction deserialize(JsonElement json, Type typeOfT, JsonDeserializationContext context) throws JsonParseException {
             JsonObject jObject = json.getAsJsonObject();
-            return new MPRSetCountItemFunction(context.deserialize(jObject.get("count"), MPRRange.class), MPRCondition.deserializeConditions(jObject, context));
+            return new MPRSetCountItemFunction(GsonHelper.getAsObject(jObject, "count", context, MPRRange.class), MPRCondition.deserializeConditions(jObject, context));
         }
 
         @Override

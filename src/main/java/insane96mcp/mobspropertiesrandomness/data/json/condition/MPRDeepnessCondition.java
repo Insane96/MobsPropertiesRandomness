@@ -32,7 +32,7 @@ public class MPRDeepnessCondition extends MPRCondition {
         public MPRDeepnessCondition deserialize(JsonElement json, Type typeOfT, JsonDeserializationContext context) throws JsonParseException {
             JsonObject jObject = json.getAsJsonObject();
             return new MPRDeepnessCondition(
-                    context.deserialize(jObject.get("y"), MPRRange.class),
+                    GsonHelper.getAsObject(jObject, "y", context, MPRRange.class),
                     GsonHelper.getAsBoolean(jObject, "sea_level_relative", false),
                     MPRCondition.deserializeInverted(jObject)
             );
