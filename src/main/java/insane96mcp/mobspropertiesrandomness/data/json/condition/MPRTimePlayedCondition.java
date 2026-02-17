@@ -48,9 +48,7 @@ public class MPRTimePlayedCondition extends MPRCondition {
         @Override
         public MPRTimePlayedCondition deserialize(JsonElement json, Type typeOfT, JsonDeserializationContext context) throws JsonParseException {
             JsonObject jObject = json.getAsJsonObject();
-            PlayerMode playerMode = PlayerMode.NEAREST;
-            if (jObject.has("player"))
-                playerMode = context.deserialize(jObject.get("player"), PlayerMode.class);
+            PlayerMode playerMode = GsonHelper.getAsObject(jObject, "player", PlayerMode.NEAREST, context, PlayerMode.class);
             return new MPRTimePlayedCondition(
                     GsonHelper.getAsObject(jObject, "minutes_played", context, MPRRange.class),
                     playerMode,
