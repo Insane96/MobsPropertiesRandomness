@@ -4,7 +4,6 @@ import insane96mcp.mobspropertiesrandomness.MPR;
 import insane96mcp.mobspropertiesrandomness.data.json.property.equipment.MPREquipmentProperty;
 import insane96mcp.mobspropertiesrandomness.data.json.property.preset.MPRPresetsProperty;
 import net.minecraft.resources.ResourceLocation;
-import net.neoforged.fml.ModList;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -52,7 +51,5 @@ public class PropertiesRegistry {
         register("raw_nbt", MPRRawNBTProperty.class);
         register("silent", MPRSilentProperty.class);
         register("team", MPRTeamProperty.class);
-        if (ModList.get().isLoaded("pehkui"))
-            register("scale", MPRScalePehkuiProperty.class);
     }
 }

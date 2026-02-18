@@ -11,7 +11,6 @@ import insane96mcp.mobspropertiesrandomness.data.json.MPRProperties;
 import insane96mcp.mobspropertiesrandomness.data.json.property.MPRBossBarProperty;
 import insane96mcp.mobspropertiesrandomness.data.json.property.MPRDamageImmunityProperty;
 import insane96mcp.mobspropertiesrandomness.data.json.property.MPREffectImmunityProperty;
-import insane96mcp.mobspropertiesrandomness.data.json.property.MPRScalePehkuiProperty;
 import insane96mcp.mobspropertiesrandomness.data.json.property.events.*;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.LivingEntity;
@@ -140,15 +139,9 @@ public class MPRBase extends Feature {
 		if (event.getEntity().level().isClientSide
 				|| !(event.getEntity() instanceof LivingEntity livingEntity))
 			return;
-		tryApplyPehkui(livingEntity);
 		MPRBossBarProperty.showBar(event.getEntity(), true);
 		MPRBossBarProperty.updateBar(event.getEntity());
 		MPRTickEvent.tickEvents(livingEntity);
-	}
-
-	public void tryApplyPehkui(LivingEntity entity) {
-		if (entity.tickCount == 1)
-			MPRScalePehkuiProperty.applyScheduled(entity);
 	}
 
 	@SubscribeEvent

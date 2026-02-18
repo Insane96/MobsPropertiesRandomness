@@ -9,7 +9,6 @@ import insane96mcp.mobspropertiesrandomness.data.MPRMobReloadListener;
 import insane96mcp.mobspropertiesrandomness.data.MPRPresetReloadListener;
 import insane96mcp.mobspropertiesrandomness.data.json.condition.ConditionsRegistry;
 import insane96mcp.mobspropertiesrandomness.data.json.condition.MPRWeatherCondition;
-import insane96mcp.mobspropertiesrandomness.data.json.property.MPRScalePehkuiProperty;
 import insane96mcp.mobspropertiesrandomness.data.json.property.PropertiesRegistry;
 import insane96mcp.mobspropertiesrandomness.data.json.property.equipment.ItemFunctionsRegistry;
 import insane96mcp.mobspropertiesrandomness.data.json.property.events.EventsRegistry;
@@ -108,7 +107,6 @@ public class MPR
                 .registerTypeAdapter(EquipmentSlotGroup.class, new StrictEnumDeserializer<>(EquipmentSlotGroup.class))
                 .registerTypeAdapter(PlayerMode.class, new StrictEnumDeserializer<>(PlayerMode.class))
                 .registerTypeAdapter(MPRChangeTargetEvent.ChangeType.class, new StrictEnumDeserializer<>(MPRChangeTargetEvent.ChangeType.class))
-                .registerTypeAdapter(MPRScalePehkuiProperty.Operation.class, new StrictEnumDeserializer<>(MPRScalePehkuiProperty.Operation.class))
                 .registerTypeAdapter(MPRWeatherCondition.Weather.class, new StrictEnumDeserializer<>(MPRWeatherCondition.Weather.class))
                 .registerTypeAdapter(MPRRange.Bias.class, new StrictEnumDeserializer<>(MPRRange.Bias.class))
                 .registerTypeAdapter(EventPriority.class, new StrictEnumDeserializer<>(EventPriority.class));

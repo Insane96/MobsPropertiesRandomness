@@ -1,12 +1,11 @@
 package insane96mcp.mobspropertiesrandomness.data.json.property.events;
 
 import com.google.gson.*;
-import insane96mcp.insanelib.util.ModNBTData;
+import insane96mcp.insanelib.core.ModNBTData;
 import insane96mcp.mobspropertiesrandomness.MPR;
 import insane96mcp.mobspropertiesrandomness.data.json.condition.MPRCondition;
 import insane96mcp.mobspropertiesrandomness.data.json.condition.MPRConditionable;
 import insane96mcp.mobspropertiesrandomness.data.json.property.MPRProperty;
-import insane96mcp.mobspropertiesrandomness.data.json.property.MPRScalePehkuiProperty;
 import insane96mcp.mobspropertiesrandomness.util.Logger;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.ListTag;
@@ -64,7 +63,6 @@ public abstract class MPREvent extends MPRConditionable {
     public void tryApplyProperty(LivingEntity entity) {
         for (MPRProperty applyProperty : this.applyProperties)
             applyProperty.tryApply(entity);
-        MPRScalePehkuiProperty.applyScheduled(entity);
     }
 
     public static <T extends MPREvent> List<T> getEvents(LivingEntity living, Class<T> typeId) {
