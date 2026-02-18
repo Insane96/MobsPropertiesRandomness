@@ -2,7 +2,7 @@ package insane96mcp.mobspropertiesrandomness.data.json.property;
 
 import com.google.gson.*;
 import com.google.gson.annotations.JsonAdapter;
-import insane96mcp.insanelib.util.LogHelper;
+import insane96mcp.mobspropertiesrandomness.MPR;
 import insane96mcp.mobspropertiesrandomness.data.json.condition.MPRCondition;
 import net.minecraft.server.ServerScoreboard;
 import net.minecraft.util.GsonHelper;
@@ -28,7 +28,7 @@ public class MPRTeamProperty extends MPRProperty {
         ServerScoreboard scoreboard = living.level().getServer().getScoreboard();
         PlayerTeam playerTeam = scoreboard.getPlayerTeam(this.team);
         if (playerTeam == null)
-            LogHelper.warn("Failed to find team %s. Ignored", this.team);
+            MPR.LOGGER.warn("Failed to find team {}. Ignored", this.team);
         else
             scoreboard.addPlayerToTeam(living.getScoreboardName(), playerTeam);
         return true;

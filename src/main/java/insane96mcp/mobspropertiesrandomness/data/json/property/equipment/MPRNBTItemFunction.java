@@ -1,20 +1,8 @@
 package insane96mcp.mobspropertiesrandomness.data.json.property.equipment;
 
-import com.google.gson.*;
-import com.google.gson.annotations.JsonAdapter;
-import insane96mcp.mobspropertiesrandomness.data.json.MPRNbt;
-import insane96mcp.mobspropertiesrandomness.data.json.condition.MPRCondition;
-import net.minecraft.nbt.CompoundTag;
-import net.minecraft.world.entity.EquipmentSlot;
-import net.minecraft.world.entity.LivingEntity;
-import net.minecraft.world.item.ItemStack;
-
-import java.lang.reflect.Type;
-import java.util.List;
-
-@JsonAdapter(MPRNBTItemFunction.Serializer.class)
-public class MPRNBTItemFunction extends MPRItemFunction {
-    public MPRNbt nbt;
+//@JsonAdapter(MPRNBTItemFunction.Serializer.class)
+public class MPRNBTItemFunction /*extends MPRItemFunction*/ {
+    /*public MPRNbt nbt;
 
     public MPRNBTItemFunction(MPRNbt nbt, List<MPRCondition> conditions) {
         super(conditions);
@@ -44,5 +32,5 @@ public class MPRNBTItemFunction extends MPRItemFunction {
             JsonObject jObject = context.serialize(src.nbt).getAsJsonObject();
             return src.endSerialization(jObject, context);
         }
-    }
+    }*/
 }

@@ -3,6 +3,7 @@ package insane96mcp.mobspropertiesrandomness;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.mojang.brigadier.CommandDispatcher;
+import com.mojang.logging.LogUtils;
 import insane96mcp.mobspropertiesrandomness.command.MPRCommand;
 import insane96mcp.mobspropertiesrandomness.data.MPRMobReloadListener;
 import insane96mcp.mobspropertiesrandomness.data.MPRPresetReloadListener;
@@ -48,6 +49,7 @@ public class MPR
 {
     public static final String MOD_ID = "mobspropertiesrandomness";
     public static final String RESOURCE_PREFIX = MOD_ID + ":";
+    public static final org.slf4j.Logger LOGGER = LogUtils.getLogger();
 
     public MPR(IEventBus modEventBus, ModContainer modContainer) {
         MPRConfig.init(modEventBus);
