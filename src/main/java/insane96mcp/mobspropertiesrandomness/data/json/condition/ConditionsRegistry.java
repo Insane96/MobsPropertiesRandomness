@@ -2,7 +2,7 @@ package insane96mcp.mobspropertiesrandomness.data.json.condition;
 
 import insane96mcp.mobspropertiesrandomness.MPR;
 import net.minecraft.resources.ResourceLocation;
-import net.minecraftforge.fml.ModList;
+import net.neoforged.fml.ModList;
 
 import java.util.HashMap;
 import java.util.Map;

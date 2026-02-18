@@ -1,9 +1,9 @@
 package insane96mcp.mobspropertiesrandomness.module.base.feature;
 
-import insane96mcp.insanelib.base.Feature;
-import insane96mcp.insanelib.base.LoadFeature;
-import insane96mcp.insanelib.base.config.Config;
-import insane96mcp.insanelib.util.ModNBTData;
+import insane96mcp.insanelib.core.ModNBTData;
+import insane96mcp.insanelib.core.feature.Feature;
+import insane96mcp.insanelib.core.feature.LoadFeature;
+import insane96mcp.insanelib.core.feature.config.Config;
 import insane96mcp.mobspropertiesrandomness.MPR;
 import insane96mcp.mobspropertiesrandomness.data.json.MPRAttributeModifier;
 import insane96mcp.mobspropertiesrandomness.data.json.MPRMob;
@@ -15,13 +15,14 @@ import insane96mcp.mobspropertiesrandomness.data.json.property.MPRScalePehkuiPro
 import insane96mcp.mobspropertiesrandomness.data.json.property.events.*;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.LivingEntity;
-import net.minecraftforge.event.entity.EntityJoinLevelEvent;
-import net.minecraftforge.event.entity.EntityLeaveLevelEvent;
-import net.minecraftforge.event.entity.living.*;
-import net.minecraftforge.event.entity.player.PlayerEvent;
-import net.minecraftforge.eventbus.api.Event;
-import net.minecraftforge.eventbus.api.EventPriority;
-import net.minecraftforge.eventbus.api.SubscribeEvent;
+import net.neoforged.bus.api.EventPriority;
+import net.neoforged.bus.api.SubscribeEvent;
+import net.neoforged.neoforge.event.ItemAttributeModifierEvent;
+import net.neoforged.neoforge.event.entity.EntityJoinLevelEvent;
+import net.neoforged.neoforge.event.entity.EntityLeaveLevelEvent;
+import net.neoforged.neoforge.event.entity.living.*;
+import net.neoforged.neoforge.event.entity.player.PlayerEvent;
+import net.neoforged.neoforge.event.tick.EntityTickEvent;
 
 import static insane96mcp.mobspropertiesrandomness.data.MPRMobReloadListener.MPR_MOBS;
 import static insane96mcp.mobspropertiesrandomness.data.MPRPresetReloadListener.PRESETS;
@@ -101,12 +102,12 @@ public class MPRBase extends Feature {
     }
 
 	@SubscribeEvent
-	public void onLivingDamage(LivingDamageEvent event) {
+	public void onLivingDamage(LivingDamageEvent.Pre event) {
 		MPROnHitEvent.onHit(event);
 	}
 
 	@SubscribeEvent
-	public void onLivingAttack(LivingAttackEvent event) {
+	public void onLivingAttack(LivingIncomingDamageEvent event) {
 		if (MPRDamageImmunityProperty.preventDamage(event.getEntity(), event.getSource()))
 			event.setCanceled(true);
 	}
@@ -131,17 +132,18 @@ public class MPRBase extends Feature {
 	@SubscribeEvent
 	public void onApplyEffect(MobEffectEvent.Applicable event) {
 		if (MPREffectImmunityProperty.shouldPreventEffect(event.getEntity(), event.getEffectInstance().getEffect()))
-			event.setResult(Event.Result.DENY);
+			event.setResult(MobEffectEvent.Applicable.Result.DO_NOT_APPLY);
 	}
 
 	@SubscribeEvent
-	public void onLivingTick(LivingEvent.LivingTickEvent event) {
-		if (event.getEntity().level().isClientSide)
+	public void onLivingTick(EntityTickEvent.Pre event) {
+		if (event.getEntity().level().isClientSide
+				|| !(event.getEntity() instanceof LivingEntity livingEntity))
 			return;
-		tryApplyPehkui(event.getEntity());
+		tryApplyPehkui(livingEntity);
 		MPRBossBarProperty.showBar(event.getEntity(), true);
 		MPRBossBarProperty.updateBar(event.getEntity());
-		MPRTickEvent.tickEvents(event.getEntity());
+		MPRTickEvent.tickEvents(livingEntity);
 	}
 
 	public void tryApplyPehkui(LivingEntity entity) {
@@ -152,6 +154,11 @@ public class MPRBase extends Feature {
 	@SubscribeEvent
 	public void onStopTracking(PlayerEvent.StopTracking event) {
 		MPRBossBarProperty.removePlayer(event.getTarget(), event.getEntity());
+	}
+
+	@SubscribeEvent
+	public void onItemAttributeModifierEvent(ItemAttributeModifierEvent event) {
+
 	}
 
 	public static boolean isBetterCreeperLingeringEnabled() {

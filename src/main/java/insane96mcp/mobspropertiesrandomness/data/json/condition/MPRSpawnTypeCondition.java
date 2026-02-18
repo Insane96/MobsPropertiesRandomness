@@ -2,9 +2,9 @@ package insane96mcp.mobspropertiesrandomness.data.json.condition;
 
 import com.google.gson.*;
 import com.google.gson.annotations.JsonAdapter;
-import insane96mcp.insanelib.module.base.TagsFeature;
 import insane96mcp.mobspropertiesrandomness.util.SerializerUtils;
 import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.entity.Mob;
 import net.minecraft.world.entity.MobSpawnType;
 
 import java.lang.reflect.Type;
@@ -21,8 +21,10 @@ public class MPRSpawnTypeCondition extends MPRCondition {
 
     @Override
     protected boolean conditionCheck(LivingEntity living) {
+        if (!(living instanceof Mob mob))
+            return false;
         for (MobSpawnType spawnType : this.spawnTypes) {
-            if (TagsFeature.isSpawnType(spawnType, living))
+            if (mob.getSpawnType() == spawnType)
                 return true;
         }
         return false;

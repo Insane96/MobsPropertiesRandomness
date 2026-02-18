@@ -20,7 +20,7 @@ public class MPRDistanceFromSpawnCondition extends MPRCondition {
 
     @Override
     protected boolean conditionCheck(LivingEntity living) {
-        Vec3 worldSpawn = new Vec3(living.level().getLevelData().getXSpawn(), living.level().getLevelData().getYSpawn(), living.level().getLevelData().getZSpawn());
+        Vec3 worldSpawn = new Vec3(living.level().getLevelData().getSpawnPos().getX(), living.level().getLevelData().getSpawnPos().getY(), living.level().getLevelData().getSpawnPos().getZ());
         return this.distance.isBetween(living, (float) Math.sqrt(living.distanceToSqr(worldSpawn)));
     }
 

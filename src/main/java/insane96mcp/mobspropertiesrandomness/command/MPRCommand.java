@@ -4,7 +4,7 @@ import com.mojang.brigadier.CommandDispatcher;
 import com.mojang.brigadier.exceptions.CommandSyntaxException;
 import com.mojang.brigadier.exceptions.SimpleCommandExceptionType;
 import com.mojang.brigadier.suggestion.SuggestionProvider;
-import insane96mcp.insanelib.util.ModNBTData;
+import insane96mcp.insanelib.core.ModNBTData;
 import insane96mcp.mobspropertiesrandomness.MPR;
 import insane96mcp.mobspropertiesrandomness.data.MPRPresetReloadListener;
 import insane96mcp.mobspropertiesrandomness.module.base.feature.MPRBase;
@@ -57,14 +57,14 @@ public class MPRCommand {
                         -> spawnEntity(ctx.getSource(), ResourceLocationArgument.getId(ctx, "preset"), ResourceArgument.getSummonableEntityType(ctx, "entity"), Vec3Argument.getVec3(ctx, "pos"), CompoundTagArgument.getCompoundTag(ctx, "nbt"), false))))))));
     }
 
-    public static Entity createEntity(CommandSourceStack pSource, ResourceLocation preset, Holder.Reference<EntityType<?>> pType, Vec3 pPos, CompoundTag pTag, boolean pRandomizeProperties) throws CommandSyntaxException {
+    public static Entity createEntity(CommandSourceStack source, ResourceLocation preset, Holder.Reference<EntityType<?>> pType, Vec3 pPos, CompoundTag pTag, boolean pRandomizeProperties) throws CommandSyntaxException {
         BlockPos blockpos = BlockPos.containing(pPos);
         if (!Level.isInSpawnableBounds(blockpos)) {
             throw INVALID_POSITION.create();
         } else {
             CompoundTag compoundtag = pTag.copy();
             compoundtag.putString("id", pType.key().location().toString());
-            ServerLevel serverlevel = pSource.getLevel();
+            ServerLevel serverlevel = source.getLevel();
             Entity entity = EntityType.loadEntityRecursive(compoundtag, serverlevel, (p_138828_) -> {
                 p_138828_.moveTo(pPos.x, pPos.y, pPos.z, p_138828_.getYRot(), p_138828_.getXRot());
                 return p_138828_;
@@ -72,8 +72,9 @@ public class MPRCommand {
             if (entity == null) {
                 throw ERROR_FAILED.create();
             } else {
-                if (pRandomizeProperties && entity instanceof Mob) {
-                    ((Mob)entity).finalizeSpawn(pSource.getLevel(), pSource.getLevel().getCurrentDifficultyAt(entity.blockPosition()), MobSpawnType.COMMAND, null, null);
+                if (pRandomizeProperties && entity instanceof Mob mob) {
+                    //noinspection deprecation,OverrideOnly
+                    mob.finalizeSpawn(source.getLevel(), source.getLevel().getCurrentDifficultyAt(BlockPos.containing(source.getPosition())), MobSpawnType.COMMAND, null);
                 }
 
                 ModNBTData.put(entity, MPRBase.PRESET, preset.toString());
@@ -88,9 +89,7 @@ public class MPRCommand {
 
     private static int spawnEntity(CommandSourceStack pSource, ResourceLocation preset, Holder.Reference<EntityType<?>> pType, Vec3 pPos, CompoundTag pTag, boolean pRandomizeProperties) throws CommandSyntaxException {
         Entity entity = createEntity(pSource, preset, pType, pPos, pTag, pRandomizeProperties);
-        pSource.sendSuccess(() -> {
-            return Component.translatable("commands.summon.success", entity.getDisplayName());
-        }, true);
+        pSource.sendSuccess(() -> Component.translatable("commands.summon.success", entity.getDisplayName()), true);
         return 1;
     }
 }

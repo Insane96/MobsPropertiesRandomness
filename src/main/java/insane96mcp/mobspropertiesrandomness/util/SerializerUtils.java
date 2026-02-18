@@ -1,6 +1,7 @@
 package insane96mcp.mobspropertiesrandomness.util;
 
 import com.google.gson.*;
+import net.minecraft.core.Holder;
 import net.minecraft.core.Registry;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.resources.ResourceKey;
@@ -78,6 +79,9 @@ public class SerializerUtils {
         jObject.add(memberName, jsonArray);
     }
 
+    /**
+     * Deserializes a registry object as raw T (not Holder)
+     */
     @Nullable
     public static <T> T deserializeRegistryObject(JsonElement jElement, ResourceKey<Registry<T>> registry) throws JsonParseException {
         if (!jElement.isJsonPrimitive())
@@ -90,6 +94,9 @@ public class SerializerUtils {
         return reg.get(objectId);
     }
 
+    /**
+     * Deserializes a registry object as raw T (not Holder)
+     */
     @Nullable
     public static <T> T deserializeRegistryObject(JsonObject jObject, String memberName, ResourceKey<Registry<T>> registry) throws JsonParseException {
         if (!jObject.has(memberName))
@@ -97,6 +104,9 @@ public class SerializerUtils {
         return deserializeRegistryObject(jObject.get(memberName), registry);
     }
 
+    /**
+     * Deserializes a list of registry objects as raw T (not Holder)
+     */
     public static <T> List<T> deserializeRegistryObjectList(JsonObject jObject, String memberName, JsonDeserializationContext context, ResourceKey<Registry<T>> registry) throws JsonParseException {
         JsonArray jsonArray = jObject.getAsJsonArray(memberName);
         if (jsonArray == null)
@@ -114,6 +124,9 @@ public class SerializerUtils {
         return objects;
     }
 
+    /**
+     * Deserializes a list of registry objects as raw T (not Holder)
+     */
     public static <T> List<T> deserializeRegistryObjectList(JsonObject jObject, String memberName, JsonDeserializationContext context, ResourceKey<Registry<T>> registry, boolean required) throws JsonParseException {
         if (!jObject.has(memberName)) {
             if (required)
@@ -124,6 +137,9 @@ public class SerializerUtils {
         return deserializeRegistryObjectList(jObject, memberName, context, registry);
     }
 
+    /**
+     * Serializes a registry object (raw T)
+     */
     public static <T> JsonElement serializeRegistryObject(T object, ResourceKey<Registry<T>> registry) throws JsonParseException {
         //noinspection unchecked
         Registry<T> reg = (Registry<T>) BuiltInRegistries.REGISTRY.get(registry.location());
@@ -135,10 +151,91 @@ public class SerializerUtils {
         return new JsonPrimitive(objectId.toString());
     }
 
+    /**
+     * Serializes a list of registry objects (raw T)
+     */
     public static <T> JsonArray serializeRegistryObjectList(JsonObject jObject, List<T> objectsList, JsonSerializationContext context, ResourceKey<Registry<T>> registry) throws JsonParseException {
         JsonArray jsonArray = new JsonArray();
         for (T object : objectsList) {
             jsonArray.add(serializeRegistryObject(object, registry));
+        }
+        return jsonArray;
+    }
+
+    /**
+     * Deserializes a Holder<T> from JsonElement
+     */
+    @Nullable
+    public static <T> Holder<T> deserializeRegistryObjectAsHolder(JsonElement jElement, ResourceKey<Registry<T>> registry) throws JsonParseException {
+        if (!jElement.isJsonPrimitive())
+            throw new JsonParseException("Expected %s to be a string".formatted(jElement));
+
+        //noinspection unchecked
+        Registry<T> reg = (Registry<T>) BuiltInRegistries.REGISTRY.get(registry.location());
+        if (reg == null)
+            throw new JsonParseException("Unknown registry %s".formatted(registry.location()));
+
+        ResourceLocation objectId = ResourceLocation.parse(jElement.getAsString());
+        return reg.getHolder(objectId).orElse(null);
+    }
+
+    /**
+     * Deserializes a Holder<T> from JsonObject member
+     */
+    @Nullable
+    public static <T> Holder<T> deserializeRegistryObjectAsHolder(JsonObject jObject, String memberName, ResourceKey<Registry<T>> registry) throws JsonParseException {
+        if (!jObject.has(memberName))
+            throw new JsonParseException("Missing \"%s\" from %s".formatted(memberName, jObject));
+        return deserializeRegistryObjectAsHolder(jObject.get(memberName), registry);
+    }
+
+    /**
+     * Deserializes a list of Holder<T> from JsonObject member
+     */
+    public static <T> List<Holder<T>> deserializeRegistryObjectListAsHolders(JsonObject jObject, String memberName, JsonDeserializationContext context, ResourceKey<Registry<T>> registry) throws JsonParseException {
+        JsonArray jsonArray = jObject.getAsJsonArray(memberName);
+        if (jsonArray == null)
+            return new ArrayList<>();
+
+        List<Holder<T>> holders = new ArrayList<>();
+        for (JsonElement el : jsonArray) {
+            Holder<T> holder = deserializeRegistryObjectAsHolder(el, registry);
+            if (holder == null) {
+                Logger.warn("Invalid registry object: %s. Will be ignored.", el);
+                continue;
+            }
+            holders.add(holder);
+        }
+        return holders;
+    }
+
+    /**
+     * Deserializes a list of Holder<T> from JsonObject member with required flag
+     */
+    public static <T> List<Holder<T>> deserializeRegistryObjectListAsHolders(JsonObject jObject, String memberName, JsonDeserializationContext context, ResourceKey<Registry<T>> registry, boolean required) throws JsonParseException {
+        if (!jObject.has(memberName)) {
+            if (required)
+                throw new JsonParseException("Missing %s array".formatted(memberName));
+            else
+                return new ArrayList<>();
+        }
+        return deserializeRegistryObjectListAsHolders(jObject, memberName, context, registry);
+    }
+
+    /**
+     * Serializes a Holder<T> (automatically unwraps with .value())
+     */
+    public static <T> JsonElement serializeRegistryObject(Holder<T> holder, ResourceKey<Registry<T>> registry) throws JsonParseException {
+        return serializeRegistryObject(holder.value(), registry);
+    }
+
+    /**
+     * Serializes a list of Holder<T> (automatically unwraps with .value())
+     */
+    public static <T> JsonArray serializeRegistryObjectListFromHolders(List<Holder<T>> holdersList, JsonSerializationContext context, ResourceKey<Registry<T>> registry) throws JsonParseException {
+        JsonArray jsonArray = new JsonArray();
+        for (Holder<T> holder : holdersList) {
+            jsonArray.add(serializeRegistryObject(holder.value(), registry));
         }
         return jsonArray;
     }

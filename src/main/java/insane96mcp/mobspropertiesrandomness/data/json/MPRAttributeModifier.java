@@ -5,7 +5,9 @@ import com.google.gson.annotations.JsonAdapter;
 import insane96mcp.mobspropertiesrandomness.data.json.util.modifiable.MPRRange;
 import insane96mcp.mobspropertiesrandomness.util.Logger;
 import insane96mcp.mobspropertiesrandomness.util.SerializerUtils;
+import net.minecraft.core.Holder;
 import net.minecraft.core.registries.Registries;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.GsonHelper;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.ai.attributes.Attribute;
@@ -13,27 +15,29 @@ import net.minecraft.world.entity.ai.attributes.AttributeInstance;
 import net.minecraft.world.entity.ai.attributes.AttributeModifier;
 import net.minecraft.world.entity.ai.attributes.Attributes;
 
+import javax.annotation.Nullable;
 import java.lang.reflect.Type;
-import java.util.UUID;
 
 @JsonAdapter(MPRAttributeModifier.Serializer.class)
 public class MPRAttributeModifier {
-    public UUID uuid;
-    public Attribute attribute;
-    public String modifierName;
+    /**
+     * null if the attribute is invalid
+     */
+    @Nullable
+    public Holder<Attribute> attribute;
+    public ResourceLocation id;
     public MPRRange amount;
     public AttributeModifier.Operation operation;
 
-    public MPRAttributeModifier(Attribute attribute, UUID uuid, String modifierName, MPRRange amount, AttributeModifier.Operation operation) {
-        this.uuid = uuid;
+    public MPRAttributeModifier(@Nullable Holder<Attribute> attribute, ResourceLocation id, MPRRange amount, AttributeModifier.Operation operation) {
         this.attribute = attribute;
-        this.modifierName = modifierName;
+        this.id = id;
         this.amount = amount;
         this.operation = operation;
     }
 
     public AttributeModifier getModifier(LivingEntity living) {
-        return new AttributeModifier(UUID.randomUUID(), this.modifierName, this.amount.getDoubleBetween(living), this.operation);
+        return new AttributeModifier(this.id, this.amount.getDoubleBetween(living), this.operation);
     }
 
     public static void fixHealth(LivingEntity entity) {
@@ -47,24 +51,27 @@ public class MPRAttributeModifier {
         @Override
         public MPRAttributeModifier deserialize(JsonElement json, Type typeOfT, JsonDeserializationContext context) throws JsonParseException {
             JsonObject jObject = json.getAsJsonObject();
-            Attribute attribute = SerializerUtils.deserializeRegistryObject(jObject, "attribute", Registries.ATTRIBUTE);
+            Holder<Attribute> attribute = SerializerUtils.deserializeRegistryObjectAsHolder(jObject, "attribute", Registries.ATTRIBUTE);
             if (attribute == null)
                 Logger.warn("Invalid attribute: %s. Will be ignored.", jObject.get("attribute").getAsString());
 
-            UUID uuid = jObject.has("uuid") ? UUID.fromString(GsonHelper.getAsString(jObject, "uuid")) : UUID.randomUUID();
-            String modifierName = GsonHelper.getAsString(jObject, "modifier_name");
+            String sId = GsonHelper.getAsString(jObject, "id");
+            ResourceLocation id = ResourceLocation.tryParse(sId);
+            if (id == null)
+                throw new JsonParseException("Invalid id: %s".formatted(sId));
             MPRRange amount = GsonHelper.getAsObject(jObject, "amount", context, MPRRange.class);
             AttributeModifier.Operation operation = GsonHelper.getAsObject(jObject, "operation", context, AttributeModifier.Operation.class);
 
-            return new MPRAttributeModifier(attribute, uuid, modifierName, amount, operation);
+            return new MPRAttributeModifier(attribute, id, amount, operation);
         }
 
         @Override
         public JsonElement serialize(MPRAttributeModifier src, Type typeOfSrc, JsonSerializationContext context) {
             JsonObject jObject = new JsonObject();
+            if (src.attribute == null)
+                throw new JsonParseException("Attribute is null");
             jObject.add("attribute", SerializerUtils.serializeRegistryObject(src.attribute, Registries.ATTRIBUTE));
-            jObject.addProperty("uuid", src.uuid.toString());
-            jObject.addProperty("modifier_name", src.modifierName);
+            jObject.addProperty("id", src.id.toString());
             jObject.add("amount", context.serialize(src.amount));
             jObject.add("operation", context.serialize(src.operation));
             return jObject;

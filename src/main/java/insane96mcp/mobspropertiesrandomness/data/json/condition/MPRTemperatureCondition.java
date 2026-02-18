@@ -21,7 +21,7 @@ public class MPRTemperatureCondition extends MPRCondition {
 
     @Override
     protected boolean conditionCheck(LivingEntity living) {
-        return this.temperature.isBetween(living, ((BiomeAccessor) (Object) living.level().getBiome(living.blockPosition()).get()).invokeGetTemperature(living.blockPosition()));
+        return this.temperature.isBetween(living, ((BiomeAccessor) (Object) living.level().getBiome(living.blockPosition()).value()).invokeGetTemperature(living.blockPosition()));
     }
 
     public static class Serializer implements JsonDeserializer<MPRTemperatureCondition>, JsonSerializer<MPRTemperatureCondition> {

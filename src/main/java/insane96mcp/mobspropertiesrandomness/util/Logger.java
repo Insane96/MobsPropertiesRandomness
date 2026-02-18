@@ -8,15 +8,12 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 
 public class Logger {
-	private static File logFile;
-	private static Writer writer;
-	private static PrintWriter printWriter;
+    private static Writer writer;
 
 	public static void init(String filePath) {
-		logFile = new File(filePath);
+        File logFile = new File(filePath);
 		try {
 			writer = new OutputStreamWriter(new FileOutputStream(logFile), StandardCharsets.UTF_8);
-			printWriter = new PrintWriter(writer);
 		} catch (FileNotFoundException ex) {
 			throw new RuntimeException("Could not create / open log file " + logFile, ex);
 		}

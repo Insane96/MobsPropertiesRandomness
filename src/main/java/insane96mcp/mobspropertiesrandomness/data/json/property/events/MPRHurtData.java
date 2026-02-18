@@ -29,8 +29,8 @@ public class MPRHurtData {
 
     public boolean shouldApply(DamageSource source, boolean isDirectDamage) {
         if (this.directIndirect != null
-            && ((isDirectDamage && this.directIndirect == MPRHurtData.DirectIndirect.INDIRECT)
-            || (!isDirectDamage && this.directIndirect == MPRHurtData.DirectIndirect.DIRECT)))
+            && ((isDirectDamage && this.directIndirect == DirectIndirect.INDIRECT)
+            || (!isDirectDamage && this.directIndirect == DirectIndirect.DIRECT)))
             return false;
 
         if ((this.damageType != null && !source.is(this.damageType))
