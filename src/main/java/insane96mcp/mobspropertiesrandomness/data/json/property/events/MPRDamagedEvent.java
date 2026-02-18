@@ -10,7 +10,7 @@ import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.GsonHelper;
 import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.entity.LivingEntity;
-import net.minecraftforge.event.entity.living.LivingDamageEvent;
+import net.neoforged.neoforge.event.entity.living.LivingDamageEvent;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.List;
@@ -21,7 +21,7 @@ public class MPRDamagedEvent extends MPROnHitEvent {
         super(damageModifierOperation, damageAmount, damageModifier, healthLeft, flatHealthLeft, hurtData, id, target, applyProperties, conditions);
     }
 
-    public static void onDamaged(LivingDamageEvent event) {
+    public static void onDamaged(LivingDamageEvent.Pre event) {
         LivingEntity mob = event.getEntity();
 		DamageSource source = event.getSource();
 
@@ -31,7 +31,7 @@ public class MPRDamagedEvent extends MPROnHitEvent {
 
 		LivingEntity other = source.getEntity() instanceof LivingEntity le ? le : null;
 		boolean directHit = source.getDirectEntity() == source.getEntity();
-		float amount = event.getAmount();
+		float amount = event.getNewDamage();
 
         //Get on hit events of the damaged entity
          List<MPRDamagedEvent> events = getEvents(mob, MPRDamagedEvent.class);

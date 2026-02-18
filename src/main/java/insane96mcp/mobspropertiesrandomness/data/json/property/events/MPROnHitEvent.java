@@ -7,7 +7,7 @@ import insane96mcp.mobspropertiesrandomness.data.json.util.modifiable.MPRRange;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.entity.LivingEntity;
-import net.minecraftforge.event.entity.living.LivingDamageEvent;
+import net.neoforged.neoforge.event.entity.living.LivingDamageEvent;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.List;
@@ -34,7 +34,7 @@ public abstract class MPROnHitEvent extends MPREvent {
 		this.flatHealthLeft = flatHealthLeft;
 	}
 
-	public void hit(LivingDamageEvent event, LivingEntity living, @Nullable LivingEntity other, DamageSource source, float amount, boolean isDirectDamage) {
+	public void hit(LivingDamageEvent.Pre event, LivingEntity living, @Nullable LivingEntity other, DamageSource source, float amount, boolean isDirectDamage) {
 		if (!this.hurtData.shouldApply(source, isDirectDamage)
 				|| living.isDeadOrDying())
 			return;
@@ -45,13 +45,13 @@ public abstract class MPROnHitEvent extends MPREvent {
 
 		if (this.damageModifier != null) {
 			if (this.damageModifierOperation == MPRModifier.Operation.ADD)
-				event.setAmount((float) (event.getAmount() + this.damageModifier.getDoubleBetween(living)));
+				event.setNewDamage((float) (event.getNewDamage() + this.damageModifier.getDoubleBetween(living)));
 			else
-				event.setAmount((float) (event.getAmount() * this.damageModifier.getDoubleBetween(living)));
+				event.setNewDamage((float) (event.getNewDamage() * this.damageModifier.getDoubleBetween(living)));
 		}
 
 		if (this.healthLeft != null) {
-			float healthLeft = living.getHealth() - event.getAmount();
+			float healthLeft = living.getHealth() - event.getNewDamage();
 			if (flatHealthLeft)
 				healthLeft /= living.getMaxHealth();
 			if (this.healthLeft.isBetween(living, healthLeft))
@@ -61,7 +61,7 @@ public abstract class MPROnHitEvent extends MPREvent {
 		this.tryExecute(living, other);
 	}
 
-	public static void onHit(LivingDamageEvent event) {
+	public static void onHit(LivingDamageEvent.Pre event) {
 		MPRDamagedEvent.onDamaged(event);
 		MPRAttackEvent.onAttack(event);
 	}

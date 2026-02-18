@@ -3,7 +3,7 @@ package insane96mcp.mobspropertiesrandomness.data.json.property;
 import com.google.gson.*;
 import com.google.gson.annotations.JsonAdapter;
 import com.google.gson.annotations.SerializedName;
-import insane96mcp.insanelib.util.ModNBTData;
+import insane96mcp.insanelib.core.ModNBTData;
 import insane96mcp.mobspropertiesrandomness.MPR;
 import insane96mcp.mobspropertiesrandomness.data.json.condition.MPRCondition;
 import net.minecraft.resources.ResourceLocation;

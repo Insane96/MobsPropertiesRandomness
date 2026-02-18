@@ -3,7 +3,7 @@ package insane96mcp.mobspropertiesrandomness.data.json.property;
 import com.google.gson.*;
 import com.google.gson.annotations.JsonAdapter;
 import insane96mcp.mobspropertiesrandomness.data.json.condition.MPRCondition;
-import net.minecraft.commands.CommandFunction;
+import net.minecraft.commands.CacheableFunction;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.level.ServerLevel;
@@ -18,9 +18,9 @@ import java.util.List;
 @JsonAdapter(MPRFunctionProperty.Serializer.class)
 public class MPRFunctionProperty extends MPRProperty {
     @Nullable
-    public CommandFunction.CacheableFunction function;
+    public CacheableFunction function;
 
-    public MPRFunctionProperty(@Nullable CommandFunction.CacheableFunction function, List<MPRCondition> conditions) {
+    public MPRFunctionProperty(@Nullable CacheableFunction function, List<MPRCondition> conditions) {
         super(conditions);
         this.function = function;
     }
@@ -42,7 +42,7 @@ public class MPRFunctionProperty extends MPRProperty {
         public MPRFunctionProperty deserialize(JsonElement json, Type typeOfT, JsonDeserializationContext context) throws JsonParseException {
             JsonObject jObject = json.getAsJsonObject();
             String functionId = GsonHelper.getAsString(jObject, "function");
-            return new MPRFunctionProperty(new CommandFunction.CacheableFunction(ResourceLocation.parse(functionId)), MPRCondition.deserializeConditions(jObject, context));
+            return new MPRFunctionProperty(new CacheableFunction(ResourceLocation.parse(functionId)), MPRCondition.deserializeConditions(jObject, context));
         }
 
         @Override

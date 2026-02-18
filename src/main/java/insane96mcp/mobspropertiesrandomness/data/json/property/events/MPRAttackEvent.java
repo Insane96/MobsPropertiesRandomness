@@ -9,7 +9,7 @@ import insane96mcp.mobspropertiesrandomness.data.json.util.modifiable.MPRRange;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.GsonHelper;
 import net.minecraft.world.entity.LivingEntity;
-import net.minecraftforge.event.entity.living.LivingDamageEvent;
+import net.neoforged.neoforge.event.entity.living.LivingDamageEvent;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.List;
@@ -20,7 +20,7 @@ public class MPRAttackEvent extends MPROnHitEvent {
         super(damageModifierOperation, damageAmount, damageModifier, healthLeft, flatHealthLeft, hurtData, id, target, applyProperties, conditions);
     }
 
-    public static void onAttack(LivingDamageEvent event) {
+    public static void onAttack(LivingDamageEvent.Pre event) {
         if (!(event.getSource().getEntity() instanceof LivingEntity mob))
             return;
         LivingEntity other = event.getEntity();
@@ -28,7 +28,7 @@ public class MPRAttackEvent extends MPROnHitEvent {
         //Get on hit events of the attacker
         List<MPRAttackEvent> events = getEvents(mob, MPRAttackEvent.class);
         for (MPRAttackEvent attackEvent : events)
-            attackEvent.hit(event, mob, other, event.getSource(), event.getAmount(), event.getSource().getDirectEntity() == event.getSource().getEntity());
+            attackEvent.hit(event, mob, other, event.getSource(), event.getNewDamage(), event.getSource().getDirectEntity() == event.getSource().getEntity());
     }
 
     public static class Serializer implements JsonDeserializer<MPROnHitEvent>, JsonSerializer<MPROnHitEvent> {

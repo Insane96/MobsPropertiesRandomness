@@ -2,10 +2,11 @@ package insane96mcp.mobspropertiesrandomness.data.json.property;
 
 import com.google.gson.*;
 import com.google.gson.annotations.JsonAdapter;
-import insane96mcp.insanelib.util.ModNBTData;
+import insane96mcp.insanelib.core.ModNBTData;
 import insane96mcp.mobspropertiesrandomness.MPR;
 import insane96mcp.mobspropertiesrandomness.data.json.condition.MPRCondition;
 import insane96mcp.mobspropertiesrandomness.util.SerializerUtils;
+import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.ListTag;
 import net.minecraft.nbt.StringTag;
@@ -13,7 +14,6 @@ import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.GsonHelper;
 import net.minecraft.world.effect.MobEffect;
 import net.minecraft.world.entity.LivingEntity;
-import net.minecraftforge.registries.ForgeRegistries;
 
 import java.lang.reflect.Type;
 import java.util.List;
@@ -22,6 +22,7 @@ import java.util.List;
 public class MPREffectImmunityProperty extends MPRProperty {
     private static final ResourceLocation EFFECT_IMMUNITY = MPR.location("effect_immunity");
 
+    //TODO Why isn't this a list of MobEffects?
     public List<ResourceLocation> mobEffects;
     public boolean remove;
 
@@ -54,7 +55,7 @@ public class MPREffectImmunityProperty extends MPRProperty {
         ListTag listTag = ModNBTData.getList(living, EFFECT_IMMUNITY, CompoundTag.TAG_STRING);
         for (int i = 0; i < listTag.size(); ++i) {
             String s = listTag.getString(i);
-            if (ForgeRegistries.MOB_EFFECTS.getKey(effect).toString().equals(s)) {
+            if (BuiltInRegistries.MOB_EFFECT.getKey(effect).toString().equals(s)) {
                 return true;
             }
         }
