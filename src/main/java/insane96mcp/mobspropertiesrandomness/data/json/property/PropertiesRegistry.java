@@ -4,7 +4,7 @@ import insane96mcp.mobspropertiesrandomness.MPR;
 import insane96mcp.mobspropertiesrandomness.data.json.property.equipment.MPREquipmentProperty;
 import insane96mcp.mobspropertiesrandomness.data.json.property.preset.MPRPresetsProperty;
 import net.minecraft.resources.ResourceLocation;
-import net.minecraftforge.fml.ModList;
+import net.neoforged.fml.ModList;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -12,7 +12,7 @@ import java.util.Map;
 public class PropertiesRegistry {
     public static final Map<ResourceLocation, Class<? extends MPRProperty>> PROPERTIES = new HashMap<>();
 
-    /// Use you own namespace
+    /// Use your own namespace
     private static void register(String id, Class<? extends MPRProperty> clazz) {
         PROPERTIES.put(MPR.location(id), clazz);
     }
