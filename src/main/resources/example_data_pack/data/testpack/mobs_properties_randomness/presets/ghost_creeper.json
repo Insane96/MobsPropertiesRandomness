@@ -18,12 +18,12 @@
         {
             "property": "attribute_modifier",
             "attribute": "generic.max_health",
-            "modifier_name": "Bonus health",
+            "id": "testpack:bonus_health",
             "amount": 20,
-            "operation": "addition"
+            "operation": "add_value"
         },
         {
-            "property": "set_nbt",
+            "property": "nbt",
             "path": "Glowing",
             "type": "boolean",
             "value": 1

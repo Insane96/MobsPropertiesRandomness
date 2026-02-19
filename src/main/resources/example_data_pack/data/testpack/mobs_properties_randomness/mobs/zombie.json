@@ -8,7 +8,7 @@
         {
             "property": "attribute_modifier",
             "attribute": "generic.max_health",
-            "modifier_name": "Bonus health",
+            "id": "testpack:bonus_health",
             "conditions": [
                 {
                     "condition": "deepness",
@@ -30,14 +30,14 @@
                     }
                 ]
             },
-            "operation": "multiply_base"
+            "operation": "add_multiplied_base"
         },
         {
             "property": "attribute_modifier",
-            "attribute": "forge:step_height_addition",
-            "modifier_name": "Step height",
+            "attribute": "minecraft:step_height",
+            "id": "testpack:step_height",
             "amount": 0.5,
-            "operation": "addition"
+            "operation": "add_value"
         },
         {
             "property": "custom_name",
@@ -96,7 +96,7 @@
             "effects": [ "minecraft:slowness" ]
         },
         {
-            "property": "set_nbt",
+            "property": "nbt",
             "path": "powered",
             "type": "boolean",
             "value": 1
@@ -166,9 +166,9 @@
                         {
                             "function": "add_attribute_modifier",
                             "attribute": "generic.movement_speed",
-                            "modifier_name": "Attribute modifier test",
+                            "id": "testpack:attribute_modifier_test",
                             "amount": 0.1,
-                            "operation": "multiply_base"
+                            "operation": "add_multiplied_base"
                         }
                     ]
                 },
@@ -250,7 +250,7 @@
         },
         {
             "property": "event",
-            "event": "attacked",
+            "event": "damaged",
             "id": "test:speed_on_shot",
             "target": "this",
             "direct_indirect": "indirect",

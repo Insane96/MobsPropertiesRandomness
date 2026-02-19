@@ -6,7 +6,7 @@
             "amplifier": 3
         },
         {
-            "property": "set_nbt",
+            "property": "nbt",
             "path": "ExplosionRadius",
             "type": "integer",
             "value": 8
