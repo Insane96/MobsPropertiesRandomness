@@ -6,6 +6,7 @@ import insane96mcp.insanelib.core.ModNBTData;
 import insane96mcp.mobspropertiesrandomness.MPR;
 import insane96mcp.mobspropertiesrandomness.data.json.condition.MPRCondition;
 import insane96mcp.mobspropertiesrandomness.util.SerializerUtils;
+import net.minecraft.core.Holder;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.ListTag;
@@ -47,7 +48,7 @@ public class MPREffectImmunityProperty extends MPRProperty {
         return true;
     }
 
-    public static boolean shouldPreventEffect(LivingEntity living, MobEffect effect) {
+    public static boolean shouldPreventEffect(LivingEntity living, Holder<MobEffect> effect) {
         if (living.level().isClientSide
                 || !ModNBTData.contains(living, EFFECT_IMMUNITY))
             return false;
@@ -55,9 +56,8 @@ public class MPREffectImmunityProperty extends MPRProperty {
         ListTag listTag = ModNBTData.getList(living, EFFECT_IMMUNITY, CompoundTag.TAG_STRING);
         for (int i = 0; i < listTag.size(); ++i) {
             String s = listTag.getString(i);
-            if (BuiltInRegistries.MOB_EFFECT.getKey(effect).toString().equals(s)) {
+            if (BuiltInRegistries.MOB_EFFECT.getKey(effect.value()).toString().equals(s))
                 return true;
-            }
         }
         return false;
     }

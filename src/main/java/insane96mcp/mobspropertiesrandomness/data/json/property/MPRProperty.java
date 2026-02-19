@@ -5,7 +5,7 @@ import com.google.gson.annotations.JsonAdapter;
 import insane96mcp.mobspropertiesrandomness.MPR;
 import insane96mcp.mobspropertiesrandomness.data.json.condition.MPRCondition;
 import insane96mcp.mobspropertiesrandomness.data.json.condition.MPRConditionable;
-import insane96mcp.mobspropertiesrandomness.util.Logger;
+import insane96mcp.mobspropertiesrandomness.util.MPRLogger;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.GsonHelper;
 import net.minecraft.world.entity.LivingEntity;
@@ -39,7 +39,7 @@ public class MPRProperty extends MPRConditionable {
         ResourceLocation propertyId = MPR.locationFrom(GsonHelper.getAsString(jObjectProperty, "property"));
         Type propertyType = PropertiesRegistry.get(propertyId);
         if (propertyType == null) {
-            Logger.warn("property %s does not exist. Skipping".formatted(propertyId));
+            MPRLogger.warn("property %s does not exist. Skipping".formatted(propertyId));
             return null;
         }
         return context.deserialize(jObjectProperty, propertyType);

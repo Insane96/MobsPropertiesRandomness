@@ -8,7 +8,7 @@ import insane96mcp.mobspropertiesrandomness.data.json.MPRProperties;
 import insane96mcp.mobspropertiesrandomness.data.json.condition.MPRCondition;
 import insane96mcp.mobspropertiesrandomness.data.json.condition.MPRConditionable;
 import insane96mcp.mobspropertiesrandomness.data.json.util.modifiable.MPRModifiableValue;
-import insane96mcp.mobspropertiesrandomness.util.Logger;
+import insane96mcp.mobspropertiesrandomness.util.MPRLogger;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.GsonHelper;
 import net.minecraft.world.entity.LivingEntity;
@@ -61,7 +61,7 @@ public class MPRWeightedPreset extends MPRConditionable implements IWeightedRand
     public void resolve() {
         this.properties = MPRPresetReloadListener.PRESETS.get(this.presetId);
         if (this.properties == null)
-            Logger.warn("Preset %s does not exist. Ignoring", this.presetId);
+            MPRLogger.warn("Preset %s does not exist. Ignoring", this.presetId);
     }
 
     public static class Serializer implements JsonSerializer<MPRWeightedPreset>, JsonDeserializer<MPRWeightedPreset> {

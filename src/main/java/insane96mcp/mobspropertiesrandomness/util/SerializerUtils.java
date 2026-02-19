@@ -116,7 +116,7 @@ public class SerializerUtils {
         for (JsonElement el : jsonArray) {
             T obj = deserializeRegistryObject(el, registry);
             if (obj == null) {
-                Logger.warn("Invalid registry object: %s. Will be ignored.", el);
+                MPRLogger.warn("Invalid registry object: %s. Will be ignored.", el);
                 continue;
             }
             objects.add(obj);
@@ -163,6 +163,17 @@ public class SerializerUtils {
     }
 
     /**
+     * Serializes a list of registry objects (raw T)
+     */
+    public static <T> JsonArray serializeRegistryHolderList(JsonObject jObject, List<Holder<T>> objectsList, JsonSerializationContext context, ResourceKey<Registry<T>> registry) throws JsonParseException {
+        JsonArray jsonArray = new JsonArray();
+        for (Holder<T> object : objectsList) {
+            jsonArray.add(serializeRegistryObject(object, registry));
+        }
+        return jsonArray;
+    }
+
+    /**
      * Deserializes a Holder<T> from JsonElement
      */
     @Nullable
@@ -201,7 +212,7 @@ public class SerializerUtils {
         for (JsonElement el : jsonArray) {
             Holder<T> holder = deserializeRegistryObjectAsHolder(el, registry);
             if (holder == null) {
-                Logger.warn("Invalid registry object: %s. Will be ignored.", el);
+                MPRLogger.warn("Invalid registry object: %s. Will be ignored.", el);
                 continue;
             }
             holders.add(holder);

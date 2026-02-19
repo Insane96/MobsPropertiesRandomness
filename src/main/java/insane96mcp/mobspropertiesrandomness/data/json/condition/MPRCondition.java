@@ -5,7 +5,7 @@ import com.google.gson.JsonDeserializationContext;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import insane96mcp.mobspropertiesrandomness.MPR;
-import insane96mcp.mobspropertiesrandomness.util.Logger;
+import insane96mcp.mobspropertiesrandomness.util.MPRLogger;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.GsonHelper;
 import net.minecraft.world.entity.LivingEntity;
@@ -60,7 +60,7 @@ public abstract class MPRCondition {
             ResourceLocation conditionId = MPR.locationFrom(GsonHelper.getAsString(jObjectCondition, "condition"));
             Type conditionType = ConditionsRegistry.get(conditionId);
             if (conditionType == null) {
-                Logger.warn("condition %s does not exist. Skipping".formatted(conditionId));
+                MPRLogger.warn("condition %s does not exist. Skipping".formatted(conditionId));
                 continue;
             }
             conditions.add(context.deserialize(jObjectCondition, conditionType));

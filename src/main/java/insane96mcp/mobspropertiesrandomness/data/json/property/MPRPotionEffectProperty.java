@@ -5,8 +5,9 @@ import com.google.gson.annotations.JsonAdapter;
 import insane96mcp.mobspropertiesrandomness.data.json.condition.MPRCondition;
 import insane96mcp.mobspropertiesrandomness.data.json.util.modifiable.MPRModifiableValue;
 import insane96mcp.mobspropertiesrandomness.data.json.util.modifiable.MPRRange;
-import insane96mcp.mobspropertiesrandomness.util.Logger;
+import insane96mcp.mobspropertiesrandomness.util.MPRLogger;
 import insane96mcp.mobspropertiesrandomness.util.SerializerUtils;
+import net.minecraft.core.Holder;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.util.GsonHelper;
 import net.minecraft.util.Mth;
@@ -19,13 +20,13 @@ import java.util.List;
 
 @JsonAdapter(MPRPotionEffectProperty.Serializer.class)
 public class MPRPotionEffectProperty extends MPRProperty {
-    public MobEffect mobEffect;
+    public Holder<MobEffect> mobEffect;
     public Stackable amplifier;
     public Stackable duration;
     public boolean ambient;
     public boolean hideParticles;
 
-    public MPRPotionEffectProperty(MobEffect mobEffect, Stackable amplifier, Stackable duration, boolean ambient, boolean hideParticles, List<MPRCondition> conditions) {
+    public MPRPotionEffectProperty(Holder<MobEffect> mobEffect, Stackable amplifier, Stackable duration, boolean ambient, boolean hideParticles, List<MPRCondition> conditions) {
         super(conditions);
         this.mobEffect = mobEffect;
         this.amplifier = amplifier;
@@ -40,11 +41,13 @@ public class MPRPotionEffectProperty extends MPRProperty {
             return false;
         int currentDuration = 0, currentLevel = 0;
         if (living.getEffect(this.mobEffect) != null) {
+            //noinspection DataFlowIssue
             currentDuration = living.getEffect(this.mobEffect).getDuration();
+            //noinspection DataFlowIssue
             currentLevel = living.getEffect(this.mobEffect).getAmplifier() + 1;
         }
         double duration = this.duration.getStackedValue(living, currentDuration);
-        MobEffectInstance effectInstance = new MobEffectInstance(mobEffect, (int) (duration == -1 ? -1 : duration * 20d), this.amplifier.getStackedIntValue(living, currentLevel) - 1, this.ambient, !this.hideParticles, false);
+        MobEffectInstance effectInstance = new MobEffectInstance(this.mobEffect, (int) (duration == -1 ? -1 : duration * 20d), this.amplifier.getStackedIntValue(living, currentLevel) - 1, this.ambient, !this.hideParticles, false);
         living.addEffect(effectInstance);
         return true;
     }
@@ -54,9 +57,9 @@ public class MPRPotionEffectProperty extends MPRProperty {
         public MPRPotionEffectProperty deserialize(JsonElement json, Type typeOfT, JsonDeserializationContext context) throws JsonParseException {
             JsonObject jObject = json.getAsJsonObject();
 
-            MobEffect mobEffect = SerializerUtils.deserializeRegistryObject(jObject, "effect", Registries.MOB_EFFECT);
+            Holder<MobEffect> mobEffect = SerializerUtils.deserializeRegistryObjectAsHolder(jObject, "effect", Registries.MOB_EFFECT);
             if (mobEffect == null)
-                Logger.warn("Invalid effect: %s. Will be ignored.", jObject.get("effect").getAsString());
+                MPRLogger.warn("Invalid effect: %s. Will be ignored.", jObject.get("effect").getAsString());
 
             Stackable amplifier = GsonHelper.getAsObject(jObject, "amplifier", Stackable.ONE, context, Stackable.class);
             //if (amplifier.value.min.value <= 0 && amplifier.value.max.value <= 0)
@@ -68,7 +71,7 @@ public class MPRPotionEffectProperty extends MPRProperty {
             boolean hideParticles = GsonHelper.getAsBoolean(jObject, "hide_particles", false);
 
             if (ambient && hideParticles)
-                Logger.warn("Particles are hidden, but ambient is enabled for %s. Ambient doesn't work if particles are hidden.".formatted(mobEffect));
+                MPRLogger.warn("Particles are hidden, but ambient is enabled for %s. Ambient doesn't work if particles are hidden.".formatted(mobEffect));
 
             return new MPRPotionEffectProperty(mobEffect, amplifier, duration, ambient, hideParticles, MPRCondition.deserializeConditions(jObject, context));
         }

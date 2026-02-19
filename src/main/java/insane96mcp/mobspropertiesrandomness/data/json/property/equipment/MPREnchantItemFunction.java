@@ -6,12 +6,15 @@ import insane96mcp.mobspropertiesrandomness.MPR;
 import insane96mcp.mobspropertiesrandomness.data.json.condition.MPRCondition;
 import insane96mcp.mobspropertiesrandomness.data.json.condition.MPRConditionable;
 import insane96mcp.mobspropertiesrandomness.data.json.util.modifiable.MPRRange;
-import insane96mcp.mobspropertiesrandomness.util.Logger;
+import insane96mcp.mobspropertiesrandomness.util.MPRLogger;
 import insane96mcp.mobspropertiesrandomness.util.SerializerUtils;
+import net.minecraft.core.Holder;
+import net.minecraft.core.Registry;
+import net.minecraft.core.component.DataComponentType;
+import net.minecraft.core.component.DataComponents;
 import net.minecraft.core.registries.Registries;
-import net.minecraft.nbt.CompoundTag;
-import net.minecraft.nbt.ListTag;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.tags.EnchantmentTags;
 import net.minecraft.util.GsonHelper;
 import net.minecraft.util.Mth;
 import net.minecraft.world.entity.EquipmentSlot;
@@ -22,12 +25,13 @@ import net.minecraft.world.item.Items;
 import net.minecraft.world.item.enchantment.Enchantment;
 import net.minecraft.world.item.enchantment.EnchantmentHelper;
 import net.minecraft.world.item.enchantment.EnchantmentInstance;
-import net.minecraftforge.registries.ForgeRegistries;
+import net.minecraft.world.item.enchantment.ItemEnchantments;
 
 import javax.annotation.Nullable;
 import java.lang.reflect.Type;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Stream;
 
 @JsonAdapter(MPREnchantItemFunction.Serializer.class)
 public abstract class MPREnchantItemFunction extends MPRItemFunction {
@@ -41,43 +45,38 @@ public abstract class MPREnchantItemFunction extends MPRItemFunction {
     public MPRRange level;
     public boolean allowIncompatible;
 
+    //TODO Extend to allow Enchantment Tags
+
     public MPREnchantItemFunction(@Nullable MPRRange level, boolean allowIncompatible, List<MPRCondition> conditions) {
         super(conditions);
         this.level = level;
         this.allowIncompatible = allowIncompatible;
     }
 
-    public int getLvl(LivingEntity entity, Enchantment enchantment) {
-        int minLevel = this.level != null ? (int) this.level.getMin(entity) : enchantment.getMinLevel();
-        int maxLevel = this.level != null ? (int) this.level.getMax(entity) : enchantment.getMaxLevel();
+    public int getLvl(LivingEntity entity, Holder<Enchantment> enchantment) {
+        int minLevel = this.level != null ? (int) this.level.getMin(entity) : enchantment.value().getMinLevel();
+        int maxLevel = this.level != null ? (int) this.level.getMax(entity) : enchantment.value().getMaxLevel();
         return Mth.nextInt(entity.level().random, minLevel, maxLevel);
     }
 
-    private static void addEnchantmentToItemStack(ItemStack itemStack, Enchantment enchantment, int lvl) {
-        if (itemStack.getItem() == Items.ENCHANTED_BOOK)
-            EnchantedBookItem.addEnchantment(itemStack, new EnchantmentInstance(enchantment, lvl));
-        else
-            itemStack.enchant(enchantment, lvl);
-    }
+    private static void removeEnchantmentFromItemStack(ItemStack stack, Holder<Enchantment> enchantment) {
+        DataComponentType<ItemEnchantments> componentType =
+                stack.getItem() instanceof EnchantedBookItem
+                        ? DataComponents.STORED_ENCHANTMENTS
+                        : DataComponents.ENCHANTMENTS;
 
-    private static void removeEnchantmentFromItemStack(ItemStack stack, Enchantment enchantment) {
-        if (stack.getTag() == null)
+        ItemEnchantments enchantments = stack.get(componentType);
+        if (enchantments == null || enchantments.isEmpty())
             return;
-        ListTag listTag = new ListTag();
-        if (stack.getTag().contains("Enchantments"))
-            listTag = stack.getTag().getList("Enchantments", 10);
-        else if (stack.getItem() == Items.ENCHANTED_BOOK)
-            listTag = EnchantedBookItem.getEnchantments(stack);
-        if (listTag.isEmpty())
-            return;
-        for (int i = 0; i < listTag.size(); ++i) {
-            CompoundTag compound = listTag.getCompound(i);
-            Enchantment foundEnchantment = ForgeRegistries.ENCHANTMENTS.getValue(EnchantmentHelper.getEnchantmentId(compound));
-            if (foundEnchantment == enchantment) {
-                listTag.remove(i);
-                return;
-            }
-        }
+
+        ItemEnchantments.Mutable mutable = new ItemEnchantments.Mutable(enchantments);
+        mutable.removeIf(holder -> holder.equals(enchantment));
+
+        ItemEnchantments updated = mutable.toImmutable();
+        if (updated.isEmpty())
+            stack.remove(componentType);
+        else
+            stack.set(componentType, updated);
     }
 
     @Nullable
@@ -127,9 +126,9 @@ public abstract class MPREnchantItemFunction extends MPRItemFunction {
 
     @JsonAdapter(SingleEnchantment.Serializer.class)
     public static class SingleEnchantment extends MPREnchantItemFunction {
-        public Enchantment enchantment;
+        public Holder<Enchantment> enchantment;
 
-        public SingleEnchantment(Enchantment enchantment, MPRRange level, boolean allowIncompatible, List<MPRCondition> conditions) {
+        public SingleEnchantment(Holder<Enchantment> enchantment, MPRRange level, boolean allowIncompatible, List<MPRCondition> conditions) {
             super(level, allowIncompatible, conditions);
             this.enchantment = enchantment;
         }
@@ -138,14 +137,14 @@ public abstract class MPREnchantItemFunction extends MPRItemFunction {
         protected boolean apply(LivingEntity living, ItemStack stack, EquipmentSlot slot) {
             if (this.enchantment == null)
                 return false;
-            Map<Enchantment, Integer> enchantmentsOnStack = EnchantmentHelper.getEnchantments(stack);
+            ItemEnchantments itemEnchantments = stack.getOrDefault(DataComponents.ENCHANTMENTS, ItemEnchantments.EMPTY);
             //noinspection ConstantConditions can't be null as it's checked to exist when the data is reloaded
-            boolean canApply = this.allowIncompatible || EnchantmentHelper.isEnchantmentCompatible(enchantmentsOnStack.keySet(), this.enchantment);
+            boolean canApply = this.allowIncompatible || EnchantmentHelper.isEnchantmentCompatible(itemEnchantments.keySet(), this.enchantment);
             if (!canApply)
                 return false;
             int lvl = getLvl(living, this.enchantment);
             if (this.enchantment != null)
-                addEnchantmentToItemStack(stack, this.enchantment, lvl);
+                stack.enchant(enchantment, lvl);
             return true;
         }
 
@@ -153,9 +152,9 @@ public abstract class MPREnchantItemFunction extends MPRItemFunction {
             @Override
             public SingleEnchantment deserialize(JsonElement json, Type typeOfT, JsonDeserializationContext context) throws JsonParseException {
                 JsonObject jObject = json.getAsJsonObject();
-                Enchantment enchantment = SerializerUtils.deserializeRegistryObject(jObject, "enchantment", Registries.ENCHANTMENT);
+                Holder<Enchantment> enchantment = SerializerUtils.deserializeRegistryObjectAsHolder(jObject, "enchantment", Registries.ENCHANTMENT);
                 if (enchantment == null)
-                    Logger.warn("Invalid enchantment: %s. Will be ignored.", jObject.get("enchantment").getAsString());
+                    MPRLogger.warn("Invalid enchantment: %s. Will be ignored.", jObject.get("enchantment").getAsString());
                 return new SingleEnchantment(
                         enchantment,
                         deserializeLvl(jObject, context), deserializeAllowIncompatible(jObject),
@@ -176,9 +175,9 @@ public abstract class MPREnchantItemFunction extends MPRItemFunction {
     public static class RandomEnchantment extends MPREnchantItemFunction {
         public boolean allowCurses;
         public boolean allowTreasure;
-        public List<Enchantment> enchantments;
+        public List<Holder<Enchantment>> enchantments;
 
-        public RandomEnchantment(boolean allowCurses, boolean allowTreasure, List<Enchantment> enchantments, MPRRange level, boolean allowIncompatible, List<MPRCondition> conditions) {
+        public RandomEnchantment(boolean allowCurses, boolean allowTreasure, List<Holder<Enchantment>> enchantments, MPRRange level, boolean allowIncompatible, List<MPRCondition> conditions) {
             super(level, allowIncompatible, conditions);
             this.allowCurses = allowCurses;
             this.allowTreasure = allowTreasure;
@@ -187,32 +186,41 @@ public abstract class MPREnchantItemFunction extends MPRItemFunction {
 
         @Override
         protected boolean apply(LivingEntity living, ItemStack stack, EquipmentSlot slot) {
-            Map<Enchantment, Integer> enchantmentsOnStack = EnchantmentHelper.getEnchantments(stack);
+            ItemEnchantments itemEnchantments = stack.getOrDefault(DataComponents.ENCHANTMENTS, ItemEnchantments.EMPTY);
 
             boolean isBook = stack.getItem() == Items.ENCHANTED_BOOK;
 
-            List<Enchantment> possibleEnchantments = ForgeRegistries.ENCHANTMENTS.getValues().stream().filter((enchantment) -> {
-                if (!enchantment.isDiscoverable()
-                        || (enchantment.isCurse() && !allowCurses)
-                        || (enchantment.isTreasureOnly() && !allowTreasure)
-                        || (!this.enchantments.isEmpty() && !this.enchantments.contains(enchantment)))
-                    return false;
+            Registry<Enchantment> registry = living.level().registryAccess()
+                    .registryOrThrow(Registries.ENCHANTMENT);
 
-                if (!this.allowIncompatible) {
-                    for (Enchantment enchantmentOnStack : enchantmentsOnStack.keySet()) {
-                        if (!enchantment.isCompatibleWith(enchantmentOnStack)) {
+            List<Holder.Reference<Enchantment>> possibleEnchantments = registry.holders()
+                    .filter(enchantmentHolder -> {
+                        Enchantment enchantment = enchantmentHolder.value();
+
+                        // Check discoverable, curse, treasure
+                        if ((enchantmentHolder.is(EnchantmentTags.CURSE) && !allowCurses)
+                                || (enchantmentHolder.is(EnchantmentTags.TREASURE) && !allowTreasure)
+                                || (!this.enchantments.isEmpty() && !this.enchantments.contains(enchantmentHolder)))
                             return false;
-                        }
-                    }
-                }
 
-                return isBook || enchantment.canEnchant(stack);
-            }).toList();
+                        // Check compatibility with existing enchantments
+                        if (!this.allowIncompatible) {
+                            for (Holder<Enchantment> enchantmentOnStack : itemEnchantments.keySet()) {
+                                if (!Enchantment.areCompatible(enchantmentHolder, enchantmentOnStack)) {
+                                    return false;
+                                }
+                            }
+                        }
+
+                        // Check if can enchant the item
+                        return isBook || enchantment.canEnchant(stack);
+                    })
+                    .toList();
             if (possibleEnchantments.isEmpty())
                 return false;
 
-            Enchantment enchantment = possibleEnchantments.get(living.getRandom().nextInt(possibleEnchantments.size()));
-            addEnchantmentToItemStack(stack, enchantment, getLvl(living, enchantment));
+            Holder<Enchantment> enchantment = possibleEnchantments.get(living.getRandom().nextInt(possibleEnchantments.size()));
+            stack.enchant(enchantment, getLvl(living, enchantment));
             return true;
         }
 
@@ -223,7 +231,7 @@ public abstract class MPREnchantItemFunction extends MPRItemFunction {
                 return new RandomEnchantment(
                         GsonHelper.getAsBoolean(jObject, "allow_curses", true),
                         GsonHelper.getAsBoolean(jObject, "allow_treasure", true),
-                        SerializerUtils.deserializeRegistryObjectList(jObject, "enchantments", context, Registries.ENCHANTMENT, false),
+                        SerializerUtils.deserializeRegistryObjectListAsHolders(jObject, "enchantments", context, Registries.ENCHANTMENT, false),
                         deserializeLvl(jObject, context),
                         deserializeAllowIncompatible(jObject),
                         MPRConditionable.deserializeList(jObject, context)
@@ -237,7 +245,7 @@ public abstract class MPREnchantItemFunction extends MPRItemFunction {
                     jObject.addProperty("allow_curses", false);
                 if (!src.allowTreasure)
                     jObject.addProperty("allow_treasure", false);
-                jObject.add("enchantments", SerializerUtils.serializeRegistryObjectList(jObject, src.enchantments, context, Registries.ENCHANTMENT));
+                jObject.add("enchantments", SerializerUtils.serializeRegistryHolderList(jObject, src.enchantments, context, Registries.ENCHANTMENT));
                 return src.endSerialization(jObject, context);
             }
         }
@@ -257,20 +265,22 @@ public abstract class MPREnchantItemFunction extends MPRItemFunction {
         @Override
         protected boolean apply(LivingEntity living, ItemStack stack, EquipmentSlot slot) {
             int lvl = Math.max(1, getLvl(living, null));
-            List<EnchantmentInstance> list = EnchantmentHelper.selectEnchantment(living.level().random, stack, lvl, true);
+            Registry<Enchantment> enchantmentRegistry = living.level().registryAccess().registryOrThrow(Registries.ENCHANTMENT);
+
+            Stream<Holder<Enchantment>> enchantmentStream = enchantmentRegistry.holders()
+                    .map(holder -> holder);
+
+            List<EnchantmentInstance> list = EnchantmentHelper.selectEnchantment(
+                    living.level().random,
+                    stack,
+                    lvl,
+                    enchantmentStream
+            );
             for (EnchantmentInstance instance : list) {
-                if ((instance.enchantment.isCurse() && !allowCurses)
-                        || (instance.enchantment.isTreasureOnly() && !allowTreasure))
+                if ((instance.enchantment.is(EnchantmentTags.CURSE) && !allowCurses)
+                        || (instance.enchantment.is(EnchantmentTags.TREASURE) && !allowTreasure))
                     continue;
-                int lvlOnStack = stack.getEnchantmentLevel(instance.enchantment);
-                if (lvlOnStack >= instance.level)
-                    continue;
-                else if (lvlOnStack == 0)
-                    addEnchantmentToItemStack(stack, instance.enchantment, instance.level);
-                else {
-                    removeEnchantmentFromItemStack(stack, instance.enchantment);
-                    addEnchantmentToItemStack(stack, instance.enchantment, instance.level);
-                }
+                stack.enchant(instance.enchantment, instance.level);
             }
             return true;
         }

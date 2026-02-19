@@ -4,6 +4,7 @@ import com.google.gson.*;
 import com.google.gson.annotations.JsonAdapter;
 import insane96mcp.mobspropertiesrandomness.data.json.util.modifiable.MPRRange;
 import insane96mcp.mobspropertiesrandomness.util.SerializerUtils;
+import net.minecraft.core.Holder;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.util.GsonHelper;
 import net.minecraft.world.effect.MobEffect;
@@ -15,10 +16,10 @@ import java.lang.reflect.Type;
 public class MPREffectCondition extends MPRCondition {
 	public static final MPRRange DEFAULT_AMPLIFIER_RANGE = new MPRRange(0, 255);
 
-    protected MobEffect effect;
+    protected Holder<MobEffect> effect;
 	protected MPRRange amplifier;
 
-    public MPREffectCondition(MobEffect effect, MPRRange amplifier, boolean inverted) {
+    public MPREffectCondition(Holder<MobEffect> effect, MPRRange amplifier, boolean inverted) {
         super(inverted);
         this.effect = effect;
 		this.amplifier = amplifier;
@@ -36,7 +37,7 @@ public class MPREffectCondition extends MPRCondition {
         @Override
         public MPREffectCondition deserialize(JsonElement json, Type typeOfT, JsonDeserializationContext context) throws JsonParseException {
             JsonObject jObject = json.getAsJsonObject();
-            return new MPREffectCondition(SerializerUtils.deserializeRegistryObject(jObject, "effect", Registries.MOB_EFFECT), GsonHelper.getAsObject(jObject, "amplifier", DEFAULT_AMPLIFIER_RANGE, context, MPRRange.class), MPRCondition.deserializeInverted(jObject));
+            return new MPREffectCondition(SerializerUtils.deserializeRegistryObjectAsHolder(jObject, "effect", Registries.MOB_EFFECT), GsonHelper.getAsObject(jObject, "amplifier", DEFAULT_AMPLIFIER_RANGE, context, MPRRange.class), MPRCondition.deserializeInverted(jObject));
         }
 
         @Override

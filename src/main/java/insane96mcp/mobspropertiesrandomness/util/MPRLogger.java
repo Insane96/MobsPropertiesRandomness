@@ -7,7 +7,7 @@ import java.nio.charset.StandardCharsets;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
-public class Logger {
+public class MPRLogger {
     private static Writer writer;
 
 	public static void init(String filePath) {

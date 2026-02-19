@@ -7,7 +7,7 @@ import com.google.gson.JsonObject;
 import insane96mcp.mobspropertiesrandomness.MPR;
 import insane96mcp.mobspropertiesrandomness.data.json.condition.MPRCondition;
 import insane96mcp.mobspropertiesrandomness.data.json.condition.MPRConditionable;
-import insane96mcp.mobspropertiesrandomness.util.Logger;
+import insane96mcp.mobspropertiesrandomness.util.MPRLogger;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.GsonHelper;
 import net.minecraft.world.entity.EquipmentSlot;
@@ -40,7 +40,7 @@ public abstract class MPRItemFunction extends MPRConditionable {
             ResourceLocation itemFunctionId = MPR.locationFrom(GsonHelper.getAsString(jObjectItemFunction, "function"));
             Type itemFunctionType = ItemFunctionsRegistry.get(itemFunctionId);
             if (itemFunctionType == null) {
-                Logger.warn("item function %s does not exist. Skipping".formatted(itemFunctionId));
+                MPRLogger.warn("item function %s does not exist. Skipping".formatted(itemFunctionId));
                 continue;
             }
             itemFunctions.add(context.deserialize(jObjectItemFunction, itemFunctionType));

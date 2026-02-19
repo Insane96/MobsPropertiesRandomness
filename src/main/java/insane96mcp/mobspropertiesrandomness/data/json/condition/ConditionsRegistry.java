@@ -2,7 +2,6 @@ package insane96mcp.mobspropertiesrandomness.data.json.condition;
 
 import insane96mcp.mobspropertiesrandomness.MPR;
 import net.minecraft.resources.ResourceLocation;
-import net.neoforged.fml.ModList;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -56,8 +55,8 @@ public class ConditionsRegistry {
         register("temperature", MPRTemperatureCondition.class);
         register("time_played", MPRTimePlayedCondition.class);
         register("weather", MPRWeatherCondition.class);
-        if (ModList.get().isLoaded("gamestages"))
-            register("game_stage", MPRGameStageCondition.class);
+        //if (ModList.get().isLoaded("gamestages"))
+        //    register("game_stage", MPRGameStageCondition.class);
         //if (ModList.get().isLoaded("sereneseasons"))
         //    register("season", MPRSeasonCondition.class);
     }

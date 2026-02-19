@@ -5,6 +5,7 @@ import com.google.gson.annotations.JsonAdapter;
 import insane96mcp.insanelib.util.weightedrandom.WeightedRandom;
 import insane96mcp.mobspropertiesrandomness.data.json.WeightedLootTable;
 import insane96mcp.mobspropertiesrandomness.data.json.condition.MPRCondition;
+import insane96mcp.mobspropertiesrandomness.mixin.accessor.MobAccessor;
 import insane96mcp.mobspropertiesrandomness.util.SerializerUtils;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.Mob;
@@ -34,7 +35,7 @@ public class MPRLootTableProperty extends MPRProperty {
         }
         if (weightedList.isEmpty())
             return false;
-        mob.lootTable = WeightedRandom.getRandomItem(living.getRandom(), weightedList).getLocation();
+        ((MobAccessor) mob).setLootTable(WeightedRandom.getRandomItem(living.getRandom(), weightedList).getKey());
         return true;
     }
 

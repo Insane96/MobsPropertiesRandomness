@@ -3,7 +3,7 @@ package insane96mcp.mobspropertiesrandomness.data.json.condition;
 import com.google.gson.*;
 import com.google.gson.annotations.JsonAdapter;
 import insane96mcp.mobspropertiesrandomness.data.json.util.modifiable.MPRRange;
-import insane96mcp.mobspropertiesrandomness.mixin.BiomeAccessor;
+import insane96mcp.mobspropertiesrandomness.mixin.accessor.BiomeAccessor;
 import net.minecraft.util.GsonHelper;
 import net.minecraft.world.entity.LivingEntity;
 

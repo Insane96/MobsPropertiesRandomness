@@ -5,7 +5,7 @@ import com.google.gson.annotations.SerializedName;
 import insane96mcp.mobspropertiesrandomness.MPR;
 import insane96mcp.mobspropertiesrandomness.data.json.condition.MPRCondition;
 import insane96mcp.mobspropertiesrandomness.data.json.condition.MPRConditionable;
-import insane96mcp.mobspropertiesrandomness.util.Logger;
+import insane96mcp.mobspropertiesrandomness.util.MPRLogger;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.GsonHelper;
 import net.minecraft.world.entity.LivingEntity;
@@ -54,7 +54,7 @@ public abstract class MPRModifier extends MPRConditionable {
             ResourceLocation modifierId = MPR.locationFrom(GsonHelper.getAsString(jObjectCondition, "modifier"));
             Type modifierType = ModifiersRegistry.get(modifierId);
             if (modifierType == null) {
-                Logger.warn("modifier %s does not exist. Skipping".formatted(modifierId));
+                MPRLogger.warn("modifier %s does not exist. Skipping".formatted(modifierId));
                 continue;
             }
             modifiers.add(context.deserialize(jObjectCondition, modifierType));

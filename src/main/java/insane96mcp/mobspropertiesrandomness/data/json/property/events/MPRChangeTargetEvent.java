@@ -9,7 +9,7 @@ import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.GsonHelper;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.Mob;
-import net.minecraftforge.event.entity.living.LivingChangeTargetEvent;
+import net.neoforged.neoforge.event.entity.living.LivingChangeTargetEvent;
 import org.jetbrains.annotations.Nullable;
 
 import java.lang.reflect.Type;
@@ -45,7 +45,7 @@ public class MPRChangeTargetEvent extends MPREvent {
 		Mob mob = (Mob) event.getEntity();
 		List<MPRChangeTargetEvent> events = getEvents(mob, MPRChangeTargetEvent.class);
 		for (MPRChangeTargetEvent switchTargetEvent : events)
-			switchTargetEvent.switchTarget(mob, event.getNewTarget(), mob.getTarget());
+			switchTargetEvent.switchTarget(mob, event.getNewAboutToBeSetTarget(), mob.getTarget());
 	}
 
 	public static class Serializer implements JsonDeserializer<MPRChangeTargetEvent>, JsonSerializer<MPRChangeTargetEvent> {

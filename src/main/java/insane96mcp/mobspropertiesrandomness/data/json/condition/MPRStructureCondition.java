@@ -2,7 +2,7 @@ package insane96mcp.mobspropertiesrandomness.data.json.condition;
 
 import com.google.gson.*;
 import com.google.gson.annotations.JsonAdapter;
-import insane96mcp.insanelib.util.LogHelper;
+import insane96mcp.mobspropertiesrandomness.MPR;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceKey;
@@ -31,7 +31,7 @@ public class MPRStructureCondition extends MPRCondition {
             StructureManager structureManager = ((ServerLevel) living.level()).structureManager();
             Structure s = structureManager.registryAccess().registryOrThrow(Registries.STRUCTURE).get(structure);
             if (s == null) {
-                LogHelper.warn("No structure found with id %s. Ignored", structure.location());
+                MPR.LOGGER.warn("No structure found with id {}. Ignored", structure.location());
                 if (living.getServer() != null)
                     living.getServer().sendSystemMessage(Component.literal("No structure found with id " + structure.location()));
                 continue;

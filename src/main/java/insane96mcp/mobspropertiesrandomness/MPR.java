@@ -19,7 +19,7 @@ import insane96mcp.mobspropertiesrandomness.data.json.util.modifiable.MPRRange;
 import insane96mcp.mobspropertiesrandomness.data.json.util.modifiable.ModifiersRegistry;
 import insane96mcp.mobspropertiesrandomness.data.serializer.*;
 import insane96mcp.mobspropertiesrandomness.setup.MPRConfig;
-import insane96mcp.mobspropertiesrandomness.util.Logger;
+import insane96mcp.mobspropertiesrandomness.util.MPRLogger;
 import net.minecraft.commands.CommandBuildContext;
 import net.minecraft.commands.CommandSourceStack;
 import net.minecraft.resources.ResourceLocation;
@@ -77,8 +77,8 @@ public class MPR
     }
 
     public void preInit(FMLCommonSetupEvent event) {
-        Logger.init("logs/MobsPropertiesRandomness.log");
-        Logger.debug("Initialized!");
+        MPRLogger.init("logs/MobsPropertiesRandomness.log");
+        MPRLogger.debug("Initialized!");
     }
 
     public static ResourceLocation location(String path) {

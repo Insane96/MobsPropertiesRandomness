@@ -7,7 +7,7 @@ import insane96mcp.mobspropertiesrandomness.MPR;
 import insane96mcp.mobspropertiesrandomness.data.json.MPRMob;
 import insane96mcp.mobspropertiesrandomness.data.json.property.preset.MPRPresetsProperty;
 import insane96mcp.mobspropertiesrandomness.data.json.property.preset.MPRWeightedPreset;
-import insane96mcp.mobspropertiesrandomness.util.Logger;
+import insane96mcp.mobspropertiesrandomness.util.MPRLogger;
 import net.minecraft.resources.FileToIdConverter;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.packs.resources.Resource;
@@ -57,7 +57,7 @@ public class MPRMobReloadListener extends SimplePreparableReloadListener<Map<Res
 					throw new IllegalStateException("Duplicate data file ignored with ID " + id);
 			}
 			catch (IllegalArgumentException | IOException | JsonParseException exception) {
-				Logger.error("Error loading Mob %s: %s", key, exception.getMessage());
+				MPRLogger.error("Error loading Mob %s: %s", key, exception.getMessage());
 			}
 		}
 
@@ -69,7 +69,7 @@ public class MPRMobReloadListener extends SimplePreparableReloadListener<Map<Res
 		for (var entry : map.entrySet()) {
 			try {
 				ResourceLocation name = entry.getKey();
-				Logger.info("Loading Mob %s", entry.getKey());
+				MPRLogger.info("Loading Mob %s", entry.getKey());
 				String[] split = name.getPath().split("/");
 				if (split[split.length - 1].startsWith("_"))
 					continue;
@@ -82,7 +82,7 @@ public class MPRMobReloadListener extends SimplePreparableReloadListener<Map<Res
 				StringBuilder sb = new StringBuilder("Failed loading Mob " + entry.getKey() + ": " + e.getMessage());
 				for (StackTraceElement s : e.getStackTrace())
 					sb.append("\n").append(s.toString());
-				Logger.error(sb.toString());
+				MPRLogger.error(sb.toString());
 			}
 		}
         MPR_MOBS.forEach(mob -> mob.getProperties()
@@ -94,6 +94,6 @@ public class MPRMobReloadListener extends SimplePreparableReloadListener<Map<Res
 
 		MPR_MOBS.sort(Comparator.comparing(mob -> mob.priority, Comparator.reverseOrder()));
 
-		Logger.info("Loaded %s Mob(s)", MPR_MOBS.size());
+		MPRLogger.info("Loaded %s Mob(s)", MPR_MOBS.size());
 	}
 }

@@ -8,7 +8,7 @@ import insane96mcp.mobspropertiesrandomness.data.json.MPRProperties;
 import insane96mcp.mobspropertiesrandomness.data.json.property.events.MPREvent;
 import insane96mcp.mobspropertiesrandomness.data.json.property.preset.MPRPresetsProperty;
 import insane96mcp.mobspropertiesrandomness.data.json.property.preset.MPRWeightedPreset;
-import insane96mcp.mobspropertiesrandomness.util.Logger;
+import insane96mcp.mobspropertiesrandomness.util.MPRLogger;
 import net.minecraft.resources.FileToIdConverter;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.packs.resources.Resource;
@@ -60,7 +60,7 @@ public class MPRPresetReloadListener extends SimplePreparableReloadListener<Map<
 					throw new IllegalStateException("Duplicate data file with ID " + id);
 			}
 			catch (Exception exception) {
-				Logger.error("Error loading Preset %s: %s", key, exception.getMessage());
+				MPRLogger.error("Error loading Preset %s: %s", key, exception.getMessage());
 			}
 		}
 
@@ -72,7 +72,7 @@ public class MPRPresetReloadListener extends SimplePreparableReloadListener<Map<
 		for (var entry : map.entrySet()) {
 			try {
 				ResourceLocation name = entry.getKey();
-				Logger.info("Loading Preset %s", entry.getKey());
+				MPRLogger.info("Loading Preset %s", entry.getKey());
 				String[] split = name.getPath().split("/");
 				if (split[split.length - 1].startsWith("_"))
 					continue;
@@ -83,16 +83,16 @@ public class MPRPresetReloadListener extends SimplePreparableReloadListener<Map<
 				PRESETS.put(name, preset);
 			}
 			catch (JsonSyntaxException e) {
-				Logger.error("Parsing error loading Preset %s: %s", entry.getKey(), e.getMessage());
+				MPRLogger.error("Parsing error loading Preset %s: %s", entry.getKey(), e.getMessage());
 			}
 			catch (Exception e) {
-				Logger.error("Failed loading Preset %s: %s", entry.getKey(), e.getMessage());
+				MPRLogger.error("Failed loading Preset %s: %s", entry.getKey(), e.getMessage());
 			}
 		}
         PRESETS.forEach((id, preset) -> preset.getProperties()
                 .forEach(property -> {
                     if (property instanceof MPRPresetsProperty mprPresetsProperty) {
-                        Logger.info("Resolving presets-in-presets for %s", id);
+                        MPRLogger.info("Resolving presets-in-presets for %s", id);
                         mprPresetsProperty.weightedPresets.forEach(MPRWeightedPreset::resolve);
                     }
                 }));

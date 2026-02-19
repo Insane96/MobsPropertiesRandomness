@@ -6,7 +6,7 @@ import insane96mcp.mobspropertiesrandomness.MPR;
 import insane96mcp.mobspropertiesrandomness.data.json.condition.MPRCondition;
 import insane96mcp.mobspropertiesrandomness.data.json.condition.MPRConditionable;
 import insane96mcp.mobspropertiesrandomness.data.json.property.MPRProperty;
-import insane96mcp.mobspropertiesrandomness.util.Logger;
+import insane96mcp.mobspropertiesrandomness.util.MPRLogger;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.ListTag;
 import net.minecraft.nbt.StringTag;
@@ -111,7 +111,7 @@ public abstract class MPREvent extends MPRConditionable {
         ResourceLocation eventId = MPR.locationFrom(GsonHelper.getAsString(jObjectProperty, "event"));
         Type eventType = EventsRegistry.get(eventId);
         if (eventType == null) {
-            Logger.warn("event %s does not exist. Skipping".formatted(eventId));
+            MPRLogger.warn("event %s does not exist. Skipping".formatted(eventId));
             return null;
         }
         return context.deserialize(jObjectProperty, eventType);

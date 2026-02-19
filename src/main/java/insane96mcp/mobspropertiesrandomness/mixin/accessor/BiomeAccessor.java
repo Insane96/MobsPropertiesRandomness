@@ -1,4 +1,4 @@
-package insane96mcp.mobspropertiesrandomness.mixin;
+package insane96mcp.mobspropertiesrandomness.mixin.accessor;
 
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.level.biome.Biome;

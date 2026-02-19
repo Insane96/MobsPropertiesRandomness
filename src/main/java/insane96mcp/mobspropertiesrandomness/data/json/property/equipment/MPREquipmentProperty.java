@@ -4,7 +4,6 @@ import com.google.gson.*;
 import com.google.gson.annotations.JsonAdapter;
 import insane96mcp.insanelib.util.weightedrandom.WeightedRandom;
 import insane96mcp.mobspropertiesrandomness.data.json.WeightedLootTable;
-import insane96mcp.mobspropertiesrandomness.data.json.WeightedResourceLocation;
 import insane96mcp.mobspropertiesrandomness.data.json.condition.MPRCondition;
 import insane96mcp.mobspropertiesrandomness.data.json.property.MPRProperty;
 import insane96mcp.mobspropertiesrandomness.util.SerializerUtils;
@@ -67,7 +66,7 @@ public class MPREquipmentProperty extends MPRProperty {
     }
 
     private ItemStack getRandomItemFromLootTable(LivingEntity living) {
-        WeightedResourceLocation randomLootTable = this.getRandomLootTable(living);
+        WeightedLootTable randomLootTable = this.getRandomLootTable(living);
         if (randomLootTable == null)
             return ItemStack.EMPTY;
         MinecraftServer server = living.getServer();
@@ -77,7 +76,7 @@ public class MPREquipmentProperty extends MPRProperty {
                 .withParameter(LootContextParams.DAMAGE_SOURCE, living.damageSources().magic())
                 .withParameter(LootContextParams.THIS_ENTITY, living)
                 .withParameter(LootContextParams.ORIGIN, living.position());
-        LootTable lootTable = server.getLootData().getLootTable(randomLootTable.getLocation());
+        LootTable lootTable = server.reloadableRegistries().getLootTable(randomLootTable.getKey());
         ObjectArrayList<ItemStack> randomItems = lootTable.getRandomItems(lootparams$builder.create(LootContextParamSets.ENTITY));
         if (randomItems.isEmpty())
             return ItemStack.EMPTY;
@@ -94,12 +93,12 @@ public class MPREquipmentProperty extends MPRProperty {
         return finalItems;
     }
 
-    private List<WeightedResourceLocation> getLootTables(LivingEntity entity){
-        ArrayList<WeightedResourceLocation> finalLootTables = new ArrayList<>();
-        for (WeightedResourceLocation lootTable : this.lootTables) {
-            WeightedResourceLocation weightedResourceLocation = lootTable.computeAndGet(entity);
-            if (weightedResourceLocation != null)
-                finalLootTables.add(weightedResourceLocation);
+    private List<WeightedLootTable> getLootTables(LivingEntity entity){
+        ArrayList<WeightedLootTable> finalLootTables = new ArrayList<>();
+        for (WeightedLootTable lootTable : this.lootTables) {
+            WeightedLootTable weightedResourceKey = lootTable.computeAndGet(entity);
+            if (weightedResourceKey != null)
+                finalLootTables.add(weightedResourceKey);
         }
         return finalLootTables;
     }
@@ -117,8 +116,8 @@ public class MPREquipmentProperty extends MPRProperty {
     }
 
     @Nullable
-    public WeightedResourceLocation getRandomLootTable(LivingEntity entity) {
-        List<WeightedResourceLocation> lootTables = getLootTables(entity);
+    public WeightedLootTable getRandomLootTable(LivingEntity entity) {
+        List<WeightedLootTable> lootTables = getLootTables(entity);
         if (lootTables.isEmpty())
             return null;
         return WeightedRandom.getRandomItem(entity.level().random, lootTables);

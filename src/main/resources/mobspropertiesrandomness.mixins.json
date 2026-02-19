@@ -1,12 +1,14 @@
 {
-  "required": true,
-  "package": "insane96mcp.mobspropertiesrandomness.mixin",
-  "compatibilityLevel": "JAVA_21",
-  "mixins": [],
-  "injectors": {
-    "defaultRequire": 1
-  },
-  "overwrites": {
-    "requireAnnotations": true
+    "required": true,
+    "package": "insane96mcp.mobspropertiesrandomness.mixin",
+    "compatibilityLevel": "JAVA_21",
+    "mixins": [
+        "accessor.MobAccessor"
+    ],
+    "injectors": {
+        "defaultRequire": 1
+    },
+    "overwrites": {
+        "requireAnnotations": true
   }
 }

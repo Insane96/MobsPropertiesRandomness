@@ -4,9 +4,9 @@ import com.google.gson.*;
 import com.google.gson.annotations.JsonAdapter;
 import insane96mcp.mobspropertiesrandomness.data.json.MPRAttributeModifier;
 import insane96mcp.mobspropertiesrandomness.data.json.condition.MPRCondition;
-import insane96mcp.mobspropertiesrandomness.util.Logger;
+import insane96mcp.mobspropertiesrandomness.util.MPRLogger;
+import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.world.entity.LivingEntity;
-import net.minecraft.world.entity.ai.attributes.Attribute;
 import net.minecraft.world.entity.ai.attributes.AttributeInstance;
 
 import java.lang.reflect.Type;
@@ -25,10 +25,9 @@ public class MPRAttributeModifierProperty extends MPRProperty {
     public boolean apply(LivingEntity living) {
         if (this.attributeModifier.attribute == null)
             return false;
-        Attribute attribute = this.attributeModifier.attribute;
-        AttributeInstance attributeInstance = living.getAttribute(attribute);
+        AttributeInstance attributeInstance = living.getAttribute(this.attributeModifier.attribute);
         if (attributeInstance == null) {
-            Logger.warn("Attribute %s not found for the entity, skipping the attribute", ForgeRegistries.ATTRIBUTES.getKey(attribute));
+            MPRLogger.warn("Attribute %s not found for the entity, skipping the attribute", BuiltInRegistries.ATTRIBUTE.getKey(this.attributeModifier.attribute.value()));
             return false;
         }
 
