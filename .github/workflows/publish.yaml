@@ -17,15 +17,28 @@ jobs:                                     #The place where you actually tell the
         run: env
 
       - name: Checkout Repository
-        uses: actions/checkout@v3
+        uses: actions/checkout@v6
+
+      - name: Checkout InsaneLib
+        uses: actions/checkout@v6
         with:
-          submodules: true
+          repository: Insane96/InsaneLib
+          ref: ${{ github.ref_name }}
+          path: InsaneLib
 
       - name: Setup Java
-        uses: actions/setup-java@v2
+        uses: actions/setup-java@v5
         with:
           distribution: "temurin"
-          java-version: 17
+          java-version: 21
+
+      - name: Make InsaneLib Gradle Wrapper Executable
+        if: ${{ runner.os != 'Windows' }}
+        run: chmod +x ./InsaneLib/gradlew
+
+      - name: Publish InsaneLib to MavenLocal
+        run: ./gradlew publishToMavenLocal
+        working-directory: InsaneLib
 
       - name: Make Gradle Wrapper Executable
         if: ${{ runner.os != 'Windows' }}
@@ -33,6 +46,15 @@ jobs:                                     #The place where you actually tell the
 
       - name: Build
         run: ./gradlew clean build
+
+      - name: Read Changelog
+        id: read_changelog
+        run: |
+          {
+            echo 'changelog<<EOF'
+            cat changelog.md
+            echo EOF
+          } >> "$GITHUB_OUTPUT"
 
       - name: Publish (CurseForge+Modrinth)
         uses: Kir-Antipov/mc-publish@v3.3
@@ -46,4 +68,4 @@ jobs:                                     #The place where you actually tell the
           files: |
             build/libs/!(*-@(slim)).jar
 
-          changelog: https://github.com/Insane96/MobsPropertiesRandomness/blob/1.20.1/changelog.md
+          changelog: ${{ steps.read_changelog.outputs.changelog }}
