@@ -3,6 +3,7 @@ package insane96mcp.mobspropertiesrandomness.util;
 import com.google.gson.*;
 import net.minecraft.core.Holder;
 import net.minecraft.core.Registry;
+import net.minecraft.core.RegistryAccess;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.resources.ResourceLocation;
@@ -13,6 +14,29 @@ import java.util.Collections;
 import java.util.List;
 
 public class SerializerUtils {
+    /**
+     * Set from AddReloadListenerEvent before any reload listener runs.
+     * Provides access to dynamic registries (e.g. minecraft:enchantment in 1.21+).
+     */
+    @Nullable
+    public static RegistryAccess REGISTRY_ACCESS = null;
+
+    /**
+     * Gets a registry by key, checking BuiltInRegistries first, then falling back to
+     * the RegistryAccess captured from AddReloadListenerEvent (needed for data-driven
+     * registries like enchantments in 1.21+).
+     */
+    @SuppressWarnings("unchecked")
+    @Nullable
+    private static <T> Registry<T> getRegistry(ResourceKey<Registry<T>> registryKey) {
+        Registry<T> reg = (Registry<T>) BuiltInRegistries.REGISTRY.get(registryKey.location());
+        if (reg != null)
+            return reg;
+        if (REGISTRY_ACCESS != null)
+            return REGISTRY_ACCESS.registry(registryKey).orElse(null);
+        return null;
+    }
+
     public static <T> List<T> deserializeList(JsonObject jObject, String memberName, JsonDeserializationContext context, Class<T> clazz) throws JsonParseException {
         return deserializeList(jObject, memberName, context, clazz, true);
     }
@@ -86,8 +110,7 @@ public class SerializerUtils {
     public static <T> T deserializeRegistryObject(JsonElement jElement, ResourceKey<Registry<T>> registry) throws JsonParseException {
         if (!jElement.isJsonPrimitive())
             throw new JsonParseException("Expected %s to be a string".formatted(jElement));
-        //noinspection unchecked
-        Registry<T> reg = (Registry<T>) BuiltInRegistries.REGISTRY.get(registry.location());
+        Registry<T> reg = getRegistry(registry);
         if (reg == null)
             throw new JsonParseException("Unknown registry %s".formatted(registry.location()));
         ResourceLocation objectId = ResourceLocation.parse(jElement.getAsString());
@@ -141,8 +164,7 @@ public class SerializerUtils {
      * Serializes a registry object (raw T)
      */
     public static <T> JsonElement serializeRegistryObject(T object, ResourceKey<Registry<T>> registry) throws JsonParseException {
-        //noinspection unchecked
-        Registry<T> reg = (Registry<T>) BuiltInRegistries.REGISTRY.get(registry.location());
+        Registry<T> reg = getRegistry(registry);
         if (reg == null)
             throw new JsonParseException("Unknown registry %s".formatted(registry.location()));
         ResourceLocation objectId = reg.getKey(object);
@@ -181,8 +203,7 @@ public class SerializerUtils {
         if (!jElement.isJsonPrimitive())
             throw new JsonParseException("Expected %s to be a string".formatted(jElement));
 
-        //noinspection unchecked
-        Registry<T> reg = (Registry<T>) BuiltInRegistries.REGISTRY.get(registry.location());
+        Registry<T> reg = getRegistry(registry);
         if (reg == null)
             throw new JsonParseException("Unknown registry %s".formatted(registry.location()));
 

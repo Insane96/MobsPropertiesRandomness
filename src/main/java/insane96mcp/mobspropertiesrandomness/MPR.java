@@ -20,6 +20,7 @@ import insane96mcp.mobspropertiesrandomness.data.json.util.modifiable.ModifiersR
 import insane96mcp.mobspropertiesrandomness.data.serializer.*;
 import insane96mcp.mobspropertiesrandomness.setup.MPRConfig;
 import insane96mcp.mobspropertiesrandomness.util.MPRLogger;
+import insane96mcp.mobspropertiesrandomness.util.SerializerUtils;
 import net.minecraft.commands.CommandBuildContext;
 import net.minecraft.commands.CommandSourceStack;
 import net.minecraft.resources.ResourceLocation;
@@ -65,6 +66,7 @@ public class MPR
 
     @SubscribeEvent(priority = EventPriority.LOW)
     public void onAddReloadListener(AddReloadListenerEvent event) {
+        SerializerUtils.REGISTRY_ACCESS = event.getRegistryAccess();
         event.addListener(MPRPresetReloadListener.INSTANCE);
         event.addListener(MPRMobReloadListener.INSTANCE);
     }
