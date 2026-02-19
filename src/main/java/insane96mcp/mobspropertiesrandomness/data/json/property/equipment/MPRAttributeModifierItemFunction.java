@@ -15,6 +15,7 @@ import net.minecraft.world.item.ItemStack;
 import javax.annotation.Nullable;
 import java.lang.reflect.Type;
 import java.util.List;
+import java.util.Objects;
 
 @JsonAdapter(MPRAttributeModifierItemFunction.Serializer.class)
 public class MPRAttributeModifierItemFunction extends MPRItemFunction {
@@ -33,10 +34,7 @@ public class MPRAttributeModifierItemFunction extends MPRItemFunction {
         if (this.attributeModifier.attribute == null)
             return false;
         AttributeModifier modifier = this.attributeModifier.getModifier(entity);
-        if (this.equipmentSlotGroup == null)
-            MCUtils.addAttributeModifierToItemStack(itemStack, this.attributeModifier.attribute, modifier, EquipmentSlotGroup.bySlot(equipmentSlot));
-        else
-            MCUtils.addAttributeModifierToItemStack(itemStack, this.attributeModifier.attribute, modifier, this.equipmentSlotGroup);
+        MCUtils.addAttributeModifierToItemStack(itemStack, this.attributeModifier.attribute, modifier, Objects.requireNonNullElseGet(this.equipmentSlotGroup, () -> EquipmentSlotGroup.bySlot(equipmentSlot)));
         return true;
     }
 
