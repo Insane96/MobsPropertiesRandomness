@@ -12,13 +12,6 @@ jobs:
           fetch-depth: 0
           fetch-tags: true
 
-      - name: Checkout InsaneLib
-        uses: actions/checkout@v6
-        with:
-          repository: Insane96/InsaneLib
-          ref: ${{ github.ref_name }}
-          path: InsaneLib
-
       - name: Setup JDK 21
         uses: actions/setup-java@v5
         with:

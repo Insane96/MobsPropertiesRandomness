@@ -19,26 +19,11 @@ jobs:                                     #The place where you actually tell the
       - name: Checkout Repository
         uses: actions/checkout@v6
 
-      - name: Checkout InsaneLib
-        uses: actions/checkout@v6
-        with:
-          repository: Insane96/InsaneLib
-          ref: ${{ github.ref_name }}
-          path: InsaneLib
-
       - name: Setup Java
         uses: actions/setup-java@v5
         with:
           distribution: "temurin"
           java-version: 21
-
-      - name: Make InsaneLib Gradle Wrapper Executable
-        if: ${{ runner.os != 'Windows' }}
-        run: chmod +x ./InsaneLib/gradlew
-
-      - name: Publish InsaneLib to MavenLocal
-        run: ./gradlew publishToMavenLocal
-        working-directory: InsaneLib
 
       - name: Make Gradle Wrapper Executable
         if: ${{ runner.os != 'Windows' }}
