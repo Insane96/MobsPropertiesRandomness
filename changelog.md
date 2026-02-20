@@ -9,6 +9,6 @@ The only difference between 1.20.1 and 1.21.1 are attribute modifier operations.
 
 ### Missing
 * Set (Raw) NBT for items
-* Scaling (pehkui is no longer needed (and supported))
+* Scaling (pehkui is no longer needed (and seems to no longer work?) as scaling is now an attribute)
 * Serene Seasons support
 * Game stages (hasn't updated past 1.20.3)
