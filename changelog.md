@@ -1,5 +1,46 @@
 # Changelog
 
+## 6.0.1.0-beta
+* Added `set_component` item function
+  * You can set whatever data component you want on an item. The following example from the example data pack will make the target equip an iron ingot that can be eaten and used as a pickaxe. Numeric values can be replaced with #range object to generate random values.
+  ```json
+  {
+    "property": "equipment",
+    "slot": "offhand",
+    "items": [
+      {
+        "item": "minecraft:iron_ingot",
+        "functions": [
+          {
+            "function": "set_component",
+            "components": {
+              "minecraft:food": {
+                "nutrition": {"#range": {"min": 2, "max": 6}},
+                "saturation": {"#range": 0.5}
+              },
+              "minecraft:tool": {
+                "rules": [
+                  {
+                    "blocks": "#mineable/pickaxe",
+                    "speed": 6,
+                    "correct_for_drops": true
+                  }
+                ]
+              },
+              "minecraft:max_damage": 453,
+              "minecraft:damage": 0
+            }
+          },
+          {
+            "function": "set_drop_chance",
+            "drop_chance": 2
+          }
+        ]
+      }
+    ]
+  }
+        ```
+
 ## 6.0.0.0-alpha
 Ported to 1.21.1
 
