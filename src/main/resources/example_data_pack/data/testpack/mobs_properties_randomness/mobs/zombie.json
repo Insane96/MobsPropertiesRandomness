@@ -217,6 +217,40 @@
             ]
         },
         {
+            "property": "equipment",
+            "slot": "offhand",
+            "items": [
+                {
+                    "item": "minecraft:iron_ingot",
+                    "functions": [
+                        {
+                            "function": "set_component",
+                            "components": {
+                                "minecraft:food": {
+                                    "nutrition": {"#range": {"min": 2, "max": 6}},
+                                    "saturation": {"#range": 0.5}
+                                },
+                                "minecraft:tool": {
+                                    "rules": [{
+                                        "blocks": "#mineable/pickaxe",
+                                        "speed": 6,
+                                        "correct_for_drops": true
+                                    }]
+                                },
+                                "minecraft:max_damage": 453,
+                                "minecraft:damage": 0
+                            }
+                        },
+
+                        {
+                            "function": "set_drop_chance",
+                            "drop_chance": 2
+                        }
+                    ]
+                }
+            ]
+        },
+        {
             "property": "freeze",
             "seconds_frozen": 10
         },
