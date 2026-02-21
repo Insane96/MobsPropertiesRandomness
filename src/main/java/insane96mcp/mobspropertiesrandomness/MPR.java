@@ -4,6 +4,7 @@ import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.mojang.brigadier.CommandDispatcher;
 import com.mojang.logging.LogUtils;
+import insane96mcp.insanelib.data.AttributeModifierOperationSerializer;
 import insane96mcp.mobspropertiesrandomness.command.MPRCommand;
 import insane96mcp.mobspropertiesrandomness.data.MPRMobReloadListener;
 import insane96mcp.mobspropertiesrandomness.data.MPRPresetReloadListener;

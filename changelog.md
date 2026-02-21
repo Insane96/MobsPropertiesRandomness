@@ -1,5 +1,8 @@
 # Changelog
 
+## 6.0.1.1-beta
+* Update to latest InsaneLib
+
 ## 6.0.1.0-beta
 * Added `set_component` item function
   * You can set whatever data component you want on an item. The following example from the example data pack will make the target equip an iron ingot that can be eaten and used as a pickaxe. Numeric values can be replaced with #range object to generate random values.
