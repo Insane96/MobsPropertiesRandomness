@@ -3,6 +3,7 @@ package insane96mcp.mobspropertiesrandomness.data.json.property.equipment;
 import com.google.gson.*;
 import com.google.gson.annotations.JsonAdapter;
 import com.mojang.serialization.JsonOps;
+import insane96mcp.mobspropertiesrandomness.MPR;
 import insane96mcp.mobspropertiesrandomness.data.json.condition.MPRCondition;
 import insane96mcp.mobspropertiesrandomness.data.json.condition.MPRConditionable;
 import insane96mcp.mobspropertiesrandomness.data.json.util.modifiable.MPRRange;
@@ -77,19 +78,19 @@ public class MPRSetComponentFunction extends MPRItemFunction {
     private static void applyComponent(ItemStack stack, RegistryOps<JsonElement> ops, ResourceLocation location, JsonElement value) {
         DataComponentType componentType = BuiltInRegistries.DATA_COMPONENT_TYPE.get(location);
         if (componentType == null) {
-            MPRLogger.warn("set_component: unknown component type '%s'. Skipping.".formatted(location));
+            MPR.LOGGER.warn("set_component: unknown component type '{}'. Skipping.", location);
             return;
         }
         var codec = componentType.codec();
         if (codec == null) {
-            MPRLogger.warn("set_component: component type '%s' has no codec (not persistent). Skipping.".formatted(location));
+            MPR.LOGGER.warn("set_component: component type '{}' has no codec (not persistent). Skipping.", location);
             return;
         }
         try {
             Object resolved = codec.parse(ops, value).getOrThrow();
             stack.set(componentType, resolved);
         } catch (Exception e) {
-            MPRLogger.warn("set_component: failed to apply component '%s': %s".formatted(location, e.getMessage()));
+            MPR.LOGGER.warn("set_component: failed to apply component '{}': {}", location, e.getMessage());
         }
     }
 
@@ -116,7 +117,8 @@ public class MPRSetComponentFunction extends MPRItemFunction {
                 }
                 return result;
             };
-        } else if (element.isJsonArray()) {
+        }
+        else if (element.isJsonArray()) {
             List<Function<LivingEntity, JsonElement>> elementResolvers = new ArrayList<>();
             for (JsonElement e : element.getAsJsonArray()) {
                 elementResolvers.add(buildResolver(e, context));
@@ -128,7 +130,8 @@ public class MPRSetComponentFunction extends MPRItemFunction {
                 }
                 return result;
             };
-        } else {
+        }
+        else {
             // Primitive or null: static value
             return living -> element;
         }
