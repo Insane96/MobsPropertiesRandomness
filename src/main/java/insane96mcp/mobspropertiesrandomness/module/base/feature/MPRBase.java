@@ -26,10 +26,11 @@ import net.neoforged.neoforge.event.tick.EntityTickEvent;
 import static insane96mcp.mobspropertiesrandomness.data.MPRMobReloadListener.MPR_MOBS;
 import static insane96mcp.mobspropertiesrandomness.data.MPRPresetReloadListener.PRESETS;
 
-@LoadFeature(module = MPR.RESOURCE_PREFIX + "base", canBeDisabled = false)
+@LoadFeature(canBeDisabled = false)
 public class MPRBase extends Feature {
 	public static final ResourceLocation PROCESSED = MPR.location("processed");
 	public static final ResourceLocation PRESET = MPR.location("preset");
+
 	@Config(description = "If true creeper lingering clouds size changes based off their explosion radius.")
 	public static Boolean betterCreeperLingering = true;
 	@Config

@@ -5,6 +5,7 @@ import com.google.gson.GsonBuilder;
 import com.mojang.brigadier.CommandDispatcher;
 import com.mojang.logging.LogUtils;
 import insane96mcp.insanelib.data.AttributeModifierOperationSerializer;
+import insane96mcp.insanelib.setup.ILModConfig;
 import insane96mcp.mobspropertiesrandomness.command.MPRCommand;
 import insane96mcp.mobspropertiesrandomness.data.MPRMobReloadListener;
 import insane96mcp.mobspropertiesrandomness.data.MPRPresetReloadListener;
@@ -19,7 +20,6 @@ import insane96mcp.mobspropertiesrandomness.data.json.util.PlayerMode;
 import insane96mcp.mobspropertiesrandomness.data.json.util.modifiable.MPRRange;
 import insane96mcp.mobspropertiesrandomness.data.json.util.modifiable.ModifiersRegistry;
 import insane96mcp.mobspropertiesrandomness.data.serializer.*;
-import insane96mcp.mobspropertiesrandomness.setup.MPRConfig;
 import insane96mcp.mobspropertiesrandomness.util.MPRLogger;
 import insane96mcp.mobspropertiesrandomness.util.SerializerUtils;
 import net.minecraft.commands.CommandBuildContext;
@@ -42,6 +42,7 @@ import net.neoforged.fml.event.lifecycle.FMLCommonSetupEvent;
 import net.neoforged.neoforge.common.NeoForge;
 import net.neoforged.neoforge.event.AddReloadListenerEvent;
 import net.neoforged.neoforge.event.RegisterCommandsEvent;
+import org.slf4j.Logger;
 
 import javax.annotation.Nullable;
 
@@ -49,12 +50,13 @@ import javax.annotation.Nullable;
 public class MPR
 {
     public static final String MOD_ID = "mobspropertiesrandomness";
-    public static final String RESOURCE_PREFIX = MOD_ID + ":";
-    public static final org.slf4j.Logger LOGGER = LogUtils.getLogger();
+    public static final Logger LOGGER = LogUtils.getLogger();
+
+    public static ILModConfig CONFIG;
 
     public MPR(IEventBus modEventBus, ModContainer modContainer) {
-        MPRConfig.init(modEventBus);
-        modContainer.registerConfig(ModConfig.Type.COMMON, MPRConfig.COMMON_SPEC);
+        CONFIG = new ILModConfig(location("main"), "Single Module", ModConfig.Type.COMMON, modEventBus, MPR.class.getClassLoader());
+        modContainer.registerConfig(ModConfig.Type.COMMON, CONFIG.spec);
         modEventBus.addListener(this::preInit);
         NeoForge.EVENT_BUS.register(this);
 

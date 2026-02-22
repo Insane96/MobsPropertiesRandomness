@@ -1,4 +1,5 @@
-# Changelog
+## 6.0.1.2-beta
+* Update to latest InsaneLib
 
 ## 6.0.1.1-beta
 * Update to latest InsaneLib
