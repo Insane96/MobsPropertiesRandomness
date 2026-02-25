@@ -7,7 +7,7 @@ import insane96mcp.insanelib.core.ModNBTData;
 import insane96mcp.insanelib.util.weightedrandom.WeightedRandom;
 import insane96mcp.mobspropertiesrandomness.data.json.condition.MPRCondition;
 import insane96mcp.mobspropertiesrandomness.data.json.property.MPRProperty;
-import insane96mcp.mobspropertiesrandomness.module.base.feature.MPRBase;
+import insane96mcp.mobspropertiesrandomness.feature.MPRBase;
 import insane96mcp.mobspropertiesrandomness.util.SerializerUtils;
 import net.minecraft.util.GsonHelper;
 import net.minecraft.world.entity.LivingEntity;

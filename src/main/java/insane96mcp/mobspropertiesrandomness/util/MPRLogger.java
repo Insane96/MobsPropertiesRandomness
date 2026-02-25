@@ -1,6 +1,6 @@
 package insane96mcp.mobspropertiesrandomness.util;
 
-import insane96mcp.mobspropertiesrandomness.module.base.feature.MPRBase;
+import insane96mcp.mobspropertiesrandomness.feature.MPRBase;
 
 import java.io.*;
 import java.nio.charset.StandardCharsets;

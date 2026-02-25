@@ -1,4 +1,4 @@
-package insane96mcp.mobspropertiesrandomness.module.base.feature;
+package insane96mcp.mobspropertiesrandomness.feature;
 
 import insane96mcp.insanelib.core.ModNBTData;
 import insane96mcp.insanelib.core.feature.Feature;

@@ -1,6 +1,6 @@
 package insane96mcp.mobspropertiesrandomness.mixin;
 
-import insane96mcp.mobspropertiesrandomness.module.base.feature.MPRBase;
+import insane96mcp.mobspropertiesrandomness.feature.MPRBase;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.entity.monster.Creeper;
