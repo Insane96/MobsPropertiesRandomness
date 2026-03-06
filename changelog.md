@@ -1,5 +1,8 @@
 # Changelog
 
+## 5.1.7.2
+* Fixed presets from command summoning being applied 5 times
+
 ## 5.1.7.1
 * Now mobs json will actually fail to load if "target" is missing instead of crashing the game
   * This also applies to many other fields that were required but didn't error

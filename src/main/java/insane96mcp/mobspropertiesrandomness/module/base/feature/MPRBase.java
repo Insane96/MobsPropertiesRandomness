@@ -67,7 +67,8 @@ public class MPRBase extends Feature {
 		if (!(event.getEntity() instanceof LivingEntity livingEntity))
 			return;
 
-		tryApplyPreset(livingEntity);
+		if (eventPriority == EventPriority.LOW)
+			tryApplyPresetFromNbt(livingEntity);
 
 		if (ModNBTData.get(livingEntity, PROCESSED, Boolean.class))
 			return;
@@ -85,7 +86,7 @@ public class MPRBase extends Feature {
 		MPRAttributeModifier.fixHealth(livingEntity);
 	}
 
-	public static void tryApplyPreset(LivingEntity living) {
+	public static void tryApplyPresetFromNbt(LivingEntity living) {
         if (!ModNBTData.contains(living, PRESET))
             return;
 
