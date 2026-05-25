@@ -1,3 +1,6 @@
+## 6.0.1.3
+* Fixed multiple boss bars flickering
+
 ## 6.0.1.2-beta
 * Update to latest InsaneLib
 

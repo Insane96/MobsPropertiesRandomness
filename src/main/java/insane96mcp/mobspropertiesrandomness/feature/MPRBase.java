@@ -140,7 +140,7 @@ public class MPRBase extends Feature {
 		if (event.getEntity().level().isClientSide
 				|| !(event.getEntity() instanceof LivingEntity livingEntity))
 			return;
-		MPRBossBarProperty.showBar(event.getEntity(), true);
+		MPRBossBarProperty.showBar(event.getEntity(), false);
 		MPRBossBarProperty.updateBar(event.getEntity());
 		MPRTickEvent.tickEvents(livingEntity);
 	}
