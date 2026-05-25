@@ -20,7 +20,10 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.lang.reflect.Type;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
+import java.util.stream.Collectors;
 
 @JsonAdapter(MPRBossBarProperty.Serializer.class)
 public class MPRBossBarProperty extends MPRProperty {
@@ -104,11 +107,17 @@ public class MPRBossBarProperty extends MPRProperty {
         if (bossBar == null)
             return;
         int range = ModNBTData.get(entity, BOSS_BAR_VISIBILITY_RANGE, Integer.class);
-        bossBar.removeAllPlayers();
-        entity.level().players()
+        Set<ServerPlayer> inRange = entity.level().players()
                 .stream()
                 .filter(p -> p.distanceToSqr(entity) < range * range)
-                .forEach(player -> bossBar.addPlayer((ServerPlayer) player));
+                .map(p -> (ServerPlayer) p)
+                .collect(Collectors.toSet());
+        new HashSet<>(bossBar.getPlayers()).stream()
+                .filter(p -> !inRange.contains(p))
+                .forEach(bossBar::removePlayer);
+        inRange.stream()
+                .filter(p -> !bossBar.getPlayers().contains(p))
+                .forEach(bossBar::addPlayer);
         bossBar.setName(living.getDisplayName());
     }
 
