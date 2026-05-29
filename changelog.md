@@ -1,3 +1,6 @@
+## Upcoming
+* Fixed summoning via `/mpr` command applying presets 5 times
+
 ## 6.0.1.3
 * Fixed multiple boss bars flickering
 
