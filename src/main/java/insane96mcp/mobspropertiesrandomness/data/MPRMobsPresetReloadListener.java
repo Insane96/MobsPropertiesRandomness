@@ -23,19 +23,19 @@ import java.io.Reader;
 import java.util.HashMap;
 import java.util.Map;
 
-public class MPRPresetReloadListener extends SimplePreparableReloadListener<Map<ResourceLocation, JsonElement>> {
+public class MPRMobsPresetReloadListener extends SimplePreparableReloadListener<Map<ResourceLocation, JsonElement>> {
 	public static final Map<ResourceLocation, MPRProperties> PRESETS = new HashMap<>();
-	public static final MPRPresetReloadListener INSTANCE;
+	public static final MPRMobsPresetReloadListener INSTANCE;
 	private static final Gson GSON;
 	private final String directory;
 
-	public MPRPresetReloadListener() {
-		this.directory = "mobs_properties_randomness/presets";
+	public MPRMobsPresetReloadListener() {
+		this.directory = "mobs_properties_randomness/presets/mobs";
 	}
 
 	static {
 		GSON = MPR.createGson();
-		INSTANCE = new MPRPresetReloadListener();
+		INSTANCE = new MPRMobsPresetReloadListener();
 	}
 
 	@Override

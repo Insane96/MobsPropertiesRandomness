@@ -29,13 +29,11 @@
             "value": 1
         },
         {
-            "property": "scale",
-            "scale": 1.5,
-            "scale_types": [
-                "pehkui:width",
-                "pehkui:height"
-            ],
-            "operation": "set"
+            "property": "attribute_modifier",
+            "attribute": "generic.scale",
+            "id": "testpack:ghost_scale",
+            "amount": 0.5,
+            "operation": "add_multiplied_base"
         },
         {
             "property": "custom_name",

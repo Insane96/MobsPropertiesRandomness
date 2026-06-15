@@ -43,6 +43,7 @@ All extensible types use static registry maps populated in `MPR` constructor:
 | `PropertiesRegistry` | `"property"` | `MPRProperty` |
 | `ItemFunctionsRegistry` | `"function"` | `MPRItemFunction` |
 | `EventsRegistry` | `"event"` | `MPREvent` |
+| `ModifiersRegistry` | `"modifier"` | `MPRModifier` |
 
 To add a new type: create the class, add a `Serializer` inner class implementing both `JsonDeserializer` and `JsonSerializer`, and `register()` it in the registry's `init()` method.
 
@@ -89,3 +90,9 @@ Numeric values in JSON can be either a plain number or `{"min": x, "max": y}` (r
 - `data/json/util/modifiable/MPRRange.java` — randomizable numeric value
 - `module/base/feature/MPRBase.java` — main event listener (mob application trigger)
 - `src/main/resources/example_data_pack/` — reference data pack showing JSON format
+
+## Data Pack Structure
+
+Files belong under `data/<namespace>/mobs_properties_randomness/`:
+- `mobs/**/*.json` — mob definitions (`MPRMob`)
+- `presets/**/*.json` — reusable preset property groups (`MPRProperties`)

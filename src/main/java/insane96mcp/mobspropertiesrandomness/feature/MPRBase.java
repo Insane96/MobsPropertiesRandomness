@@ -24,7 +24,7 @@ import net.neoforged.neoforge.event.entity.player.PlayerEvent;
 import net.neoforged.neoforge.event.tick.EntityTickEvent;
 
 import static insane96mcp.mobspropertiesrandomness.data.MPRMobReloadListener.MPR_MOBS;
-import static insane96mcp.mobspropertiesrandomness.data.MPRPresetReloadListener.PRESETS;
+import static insane96mcp.mobspropertiesrandomness.data.MPRMobsPresetReloadListener.PRESETS;
 
 @LoadFeature(canBeDisabled = false)
 public class MPRBase extends Feature {

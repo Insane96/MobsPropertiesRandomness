@@ -13,8 +13,8 @@
                 {
                     "condition": "deepness",
                     "y": {
-                        "min": -64,
-                        "max": 64
+                        "min": -128,
+                        "max": 0
                     },
                     "sea_level_relative": true
                 }
@@ -27,7 +27,8 @@
                         "operation": "add",
                         "amount_per_blocks": 0.01,
                         "blocks": 100
-                    }
+                    },
+                    { "preset": "testpack:difficulty_scaling" }
                 ]
             },
             "operation": "add_multiplied_base"
@@ -102,10 +103,11 @@
             "value": 1
         },
         {
-            "property": "scale",
-            "scale": 1.5,
-            "scale_types": "pehkui:base",
-            "operation": "set"
+            "property": "attribute_modifier",
+            "attribute": "generic.scale",
+            "id": "testpack:zombie_scale",
+            "amount": 0.5,
+            "operation": "add_multiplied_base"
         },
         {
             "property": "equipment",
@@ -176,12 +178,9 @@
                     "item": "minecraft:netherite_boots",
                     "functions": [
                         {
-                            "function": "set_nbt",
-                            "path": "test.inner_test.sub_inner_test",
-                            "type": "integer",
-                            "value": {
-                                "min": 1,
-                                "max": 100
+                            "function": "set_component",
+                            "components": {
+                                "minecraft:custom_name": "\"Zombie Boots\""
                             }
                         }
                     ]

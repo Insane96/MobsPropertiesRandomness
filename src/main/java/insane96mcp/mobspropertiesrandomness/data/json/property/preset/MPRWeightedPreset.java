@@ -3,7 +3,7 @@ package insane96mcp.mobspropertiesrandomness.data.json.property.preset;
 import com.google.gson.*;
 import com.google.gson.annotations.JsonAdapter;
 import insane96mcp.insanelib.util.weightedrandom.IWeightedRandom;
-import insane96mcp.mobspropertiesrandomness.data.MPRPresetReloadListener;
+import insane96mcp.mobspropertiesrandomness.data.MPRMobsPresetReloadListener;
 import insane96mcp.mobspropertiesrandomness.data.json.MPRProperties;
 import insane96mcp.mobspropertiesrandomness.data.json.condition.MPRCondition;
 import insane96mcp.mobspropertiesrandomness.data.json.condition.MPRConditionable;
@@ -59,7 +59,7 @@ public class MPRWeightedPreset extends MPRConditionable implements IWeightedRand
     }
 
     public void resolve() {
-        this.properties = MPRPresetReloadListener.PRESETS.get(this.presetId);
+        this.properties = MPRMobsPresetReloadListener.PRESETS.get(this.presetId);
         if (this.properties == null)
             MPRLogger.warn("Preset %s does not exist. Ignoring", this.presetId);
     }

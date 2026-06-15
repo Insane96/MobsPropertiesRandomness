@@ -6,7 +6,7 @@ import com.mojang.brigadier.exceptions.SimpleCommandExceptionType;
 import com.mojang.brigadier.suggestion.SuggestionProvider;
 import insane96mcp.insanelib.core.ModNBTData;
 import insane96mcp.mobspropertiesrandomness.MPR;
-import insane96mcp.mobspropertiesrandomness.data.MPRPresetReloadListener;
+import insane96mcp.mobspropertiesrandomness.data.MPRMobsPresetReloadListener;
 import insane96mcp.mobspropertiesrandomness.feature.MPRBase;
 import net.minecraft.commands.CommandBuildContext;
 import net.minecraft.commands.CommandSourceStack;
@@ -39,7 +39,7 @@ public class MPRCommand {
     public static final SuggestionProvider<CommandSourceStack> PRESETS = SuggestionProviders.register(
             MPR.location("summonable_presets"),
             (context, builder)
-                    -> SharedSuggestionProvider.suggestResource(MPRPresetReloadListener.PRESETS.keySet().stream(), builder)
+                    -> SharedSuggestionProvider.suggestResource(MPRMobsPresetReloadListener.PRESETS.keySet().stream(), builder)
     );
 
     public static void register(CommandDispatcher<CommandSourceStack> pDispatcher, CommandBuildContext pContext) {

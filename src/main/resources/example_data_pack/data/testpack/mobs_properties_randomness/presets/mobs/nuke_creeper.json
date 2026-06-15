@@ -15,19 +15,17 @@
             "property": "silent"
         },
         {
-            "property": "set_nbt",
+            "property": "nbt",
             "path": "Fuse",
             "type": "integer",
             "value": 1
         },
         {
-            "property": "scale",
-            "scale": 0.5,
-            "scale_types": [
-                "pehkui:width",
-                "pehkui:height"
-            ],
-            "operation": "set"
+            "property": "attribute_modifier",
+            "attribute": "generic.scale",
+            "id": "testpack:nuke_scale",
+            "amount": -0.5,
+            "operation": "add_multiplied_base"
         },
         {
             "property": "custom_name",
