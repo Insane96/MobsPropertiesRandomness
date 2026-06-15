@@ -78,7 +78,7 @@ BREAKING CHANGES Please read carefully
     }
     ]
     ```
-    Another example is:  
+    This is a quite easy example, but another real example is:  
     [This is something that will heavily benefit from using presets](https://github.com/Insane96/EnhancedAI/blob/febf0ebe3db34dce1a0d1e9892afb6a2bd8243e4/src/main/resources/integrated_packs/mpr_integration/data/enhancedai/mobs_properties_randomness/mobs/overworld_zombies_equipment.json).
 * Fixed summoning via `/mpr` command applying presets 5 times
 
