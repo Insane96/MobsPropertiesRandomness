@@ -1,3 +1,6 @@
+## Upcoming
+* Fixed attribute modifiers erroring (failing to spawn the mob) if a modifier with the same id is already applied
+
 ## 6.1.0.0-alpha
 BREAKING CHANGES Please read carefully
 * More presets!

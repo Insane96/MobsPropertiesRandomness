@@ -30,6 +30,10 @@ public class MPRAttributeModifierProperty extends MPRProperty {
             MPRLogger.warn("Attribute %s not found for the entity, skipping the attribute", BuiltInRegistries.ATTRIBUTE.getKey(this.attributeModifier.attribute.value()));
             return false;
         }
+        else if (attributeInstance.hasModifier(this.attributeModifier.id)) {
+            MPRLogger.warn("Attribute %s already has modifier %s, skipping the modifier", BuiltInRegistries.ATTRIBUTE.getKey(this.attributeModifier.attribute.value()), this.attributeModifier.id);
+            return false;
+        }
 
         attributeInstance.addPermanentModifier(this.attributeModifier.getModifier(living));
         return true;
