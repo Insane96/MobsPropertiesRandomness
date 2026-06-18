@@ -24,15 +24,17 @@ public class MPRPotionEffectProperty extends MPRProperty {
     public Stackable amplifier;
     public Stackable duration;
     public boolean ambient;
-    public boolean hideParticles;
+    public boolean showParticles;
+    public boolean showIcon;
 
-    public MPRPotionEffectProperty(Holder<MobEffect> mobEffect, Stackable amplifier, Stackable duration, boolean ambient, boolean hideParticles, List<MPRCondition> conditions) {
+    public MPRPotionEffectProperty(Holder<MobEffect> mobEffect, Stackable amplifier, Stackable duration, boolean ambient, boolean showParticles, boolean showIcon, List<MPRCondition> conditions) {
         super(conditions);
         this.mobEffect = mobEffect;
         this.amplifier = amplifier;
         this.duration = duration;
         this.ambient = ambient;
-        this.hideParticles = hideParticles;
+        this.showParticles = showParticles;
+        this.showIcon = showIcon;
     }
 
     @Override
@@ -47,7 +49,7 @@ public class MPRPotionEffectProperty extends MPRProperty {
             currentLevel = living.getEffect(this.mobEffect).getAmplifier() + 1;
         }
         double duration = this.duration.getStackedValue(living, currentDuration);
-        MobEffectInstance effectInstance = new MobEffectInstance(this.mobEffect, (int) (duration == -1 ? -1 : duration * 20d), this.amplifier.getStackedIntValue(living, currentLevel) - 1, this.ambient, !this.hideParticles, false);
+        MobEffectInstance effectInstance = new MobEffectInstance(this.mobEffect, (int) (duration == -1 ? -1 : duration * 20d), this.amplifier.getStackedIntValue(living, currentLevel) - 1, this.ambient, this.showParticles, this.showIcon);
         living.addEffect(effectInstance);
         return true;
     }
@@ -68,12 +70,13 @@ public class MPRPotionEffectProperty extends MPRProperty {
             Stackable duration = GsonHelper.getAsObject(jObject, "duration", new Stackable(new MPRRange(new MPRModifiableValue(-1d))), context, Stackable.class);
 
             boolean ambient = GsonHelper.getAsBoolean(jObject, "ambient", false);
-            boolean hideParticles = GsonHelper.getAsBoolean(jObject, "hide_particles", false);
+            boolean showParticles = GsonHelper.getAsBoolean(jObject, "show_particles", true);
+            boolean showIcon = GsonHelper.getAsBoolean(jObject, "show_icon", true);
 
-            if (ambient && hideParticles)
+            if (ambient && showParticles)
                 MPRLogger.warn("Particles are hidden, but ambient is enabled for %s. Ambient doesn't work if particles are hidden.".formatted(mobEffect));
 
-            return new MPRPotionEffectProperty(mobEffect, amplifier, duration, ambient, hideParticles, MPRCondition.deserializeConditions(jObject, context));
+            return new MPRPotionEffectProperty(mobEffect, amplifier, duration, ambient, showParticles, showIcon, MPRCondition.deserializeConditions(jObject, context));
         }
 
         @Override
@@ -83,7 +86,8 @@ public class MPRPotionEffectProperty extends MPRProperty {
             jObject.add("amplifier", context.serialize(src.amplifier));
             jObject.add("duration", context.serialize(src.duration));
             jObject.addProperty("ambient", src.ambient);
-            jObject.addProperty("hide_particles", src.hideParticles);
+            jObject.addProperty("show_particles", src.showParticles);
+            jObject.addProperty("show_icon", src.showIcon);
             return src.endSerialization(jObject, context);
         }
     }
