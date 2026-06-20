@@ -7,7 +7,7 @@
 ## 6.1.0.0-alpha
 BREAKING CHANGES Please read carefully
 * More presets!
-  * PLEASE NOTE that mobs presets now live in `data/mobs_properties_randomness/presets/mobs/` instead of `data/mobs_properties_randomness/presets/`.
+  * PLEASE NOTE that mobs presets now live in `data/<namespace>/mobs_properties_randomness/presets/mobs/` instead of `data/<namespace>/mobs_properties_randomness/presets/`.
   * This version introduces modifiers, conditions and functions presets.  
     These are used if you have multiple conditions, modifiers and functions that repeat, and instead you can write once and reference.
   * Example, you want to apply a global difficulty scaling modifier to many attribute values, but this is repetitive
