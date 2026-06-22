@@ -22,7 +22,7 @@ public class MPRBiomeCondition extends MPRCondition {
     @Override
     protected boolean conditionCheck(LivingEntity living) {
         for (ObjTag<Biome> biome : this.biomes) {
-            if (biome.matches(living.level().getBiome(living.blockPosition()).value()))
+            if (biome.matches(living.level().getBiome(living.blockPosition())))
                 return true;
         }
         return false;

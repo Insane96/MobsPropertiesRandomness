@@ -1,3 +1,6 @@
+## 6.1.1.1
+* Fixed biome condition not working
+
 ## 6.1.1.0-beta
 * Changed some fields for Potion effects
   * `hide_particles` -> `show_particles`: defaults to true now
