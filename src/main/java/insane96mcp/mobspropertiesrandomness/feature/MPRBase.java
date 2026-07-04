@@ -28,8 +28,8 @@ import static insane96mcp.mobspropertiesrandomness.data.MPRMobsPresetReloadListe
 
 @LoadFeature(canBeDisabled = false)
 public class MPRBase extends Feature {
-	public static final ResourceLocation PROCESSED = MPR.location("processed");
-	public static final ResourceLocation PRESET = MPR.location("preset");
+	public static final ResourceLocation PROCESSED = MPR.id("processed");
+	public static final ResourceLocation PRESET = MPR.id("preset");
 
 	@Config(description = "If true creeper lingering clouds size changes based off their explosion radius.")
 	public static Boolean betterCreeperLingering = true;

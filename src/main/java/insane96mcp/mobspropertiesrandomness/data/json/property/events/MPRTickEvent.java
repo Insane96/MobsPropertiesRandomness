@@ -17,7 +17,7 @@ import java.util.List;
 
 @JsonAdapter(MPRTickEvent.Serializer.class)
 public class MPRTickEvent extends MPREvent {
-	private static final ResourceLocation TAG_UPDATE_INTERVAL = MPR.location("events/next_tick");
+	private static final ResourceLocation TAG_UPDATE_INTERVAL = MPR.id("events/next_tick");
 
 	public MPRRange updateInterval;
     private final ResourceLocation nextTickTag;

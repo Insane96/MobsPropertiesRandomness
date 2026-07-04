@@ -27,8 +27,8 @@ import java.util.stream.Collectors;
 
 @JsonAdapter(MPRBossBarProperty.Serializer.class)
 public class MPRBossBarProperty extends MPRProperty {
-    public static final ResourceLocation BOSS_BAR_VISIBILITY_RANGE = MPR.location("boss_bar_visibility_range");
-    public static final ResourceLocation BOSS_BAR_ID = MPR.location("boss_bar_uuid");
+    public static final ResourceLocation BOSS_BAR_VISIBILITY_RANGE = MPR.id("boss_bar_visibility_range");
+    public static final ResourceLocation BOSS_BAR_ID = MPR.id("boss_bar_uuid");
 
     public BossEvent.BossBarColor color;
     public BossEvent.BossBarOverlay type;
@@ -50,7 +50,7 @@ public class MPRBossBarProperty extends MPRProperty {
                 || ModNBTData.contains(living, BOSS_BAR_ID))
             return false;
         MinecraftServer server = living.getServer();
-        ResourceLocation bossBarId = MPR.location(living.getId() + "_" + living.getRandom().nextInt(Integer.MAX_VALUE));
+        ResourceLocation bossBarId = MPR.id(living.getId() + "_" + living.getRandom().nextInt(Integer.MAX_VALUE));
         CustomBossEvent bossEvent = server.getCustomBossEvents().create(bossBarId, living.getDisplayName());
         bossEvent.setColor(this.color);
         bossEvent.setOverlay(this.type);

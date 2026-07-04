@@ -37,7 +37,7 @@ public class MPRCommand {
     private static final SimpleCommandExceptionType INVALID_POSITION = new SimpleCommandExceptionType(Component.translatable("commands.summon.invalidPosition"));
 
     public static final SuggestionProvider<CommandSourceStack> PRESETS = SuggestionProviders.register(
-            MPR.location("summonable_presets"),
+            MPR.id("summonable_presets"),
             (context, builder)
                     -> SharedSuggestionProvider.suggestResource(MPRMobsPresetReloadListener.PRESETS.keySet().stream(), builder)
     );

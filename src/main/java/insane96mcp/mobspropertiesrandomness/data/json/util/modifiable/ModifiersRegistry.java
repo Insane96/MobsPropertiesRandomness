@@ -11,7 +11,7 @@ public class ModifiersRegistry {
 
     /// Use you own namespace
     private static void register(String id, Class<? extends MPRModifier> clazz) {
-        MODIFIERS.put(MPR.location(id), clazz);
+        MODIFIERS.put(MPR.id(id), clazz);
     }
 
     public static Class<? extends MPRModifier> get(ResourceLocation id) {

@@ -21,7 +21,7 @@ import java.util.List;
 
 @JsonAdapter(MPREffectImmunityProperty.Serializer.class)
 public class MPREffectImmunityProperty extends MPRProperty {
-    private static final ResourceLocation EFFECT_IMMUNITY = MPR.location("effect_immunity");
+    private static final ResourceLocation EFFECT_IMMUNITY = MPR.id("effect_immunity");
 
     //TODO Why isn't this a list of MobEffects?
     public List<ResourceLocation> mobEffects;

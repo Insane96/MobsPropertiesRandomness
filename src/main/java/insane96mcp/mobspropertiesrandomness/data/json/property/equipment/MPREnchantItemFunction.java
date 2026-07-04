@@ -36,9 +36,9 @@ import java.util.stream.Stream;
 @JsonAdapter(MPREnchantItemFunction.Serializer.class)
 public abstract class MPREnchantItemFunction extends MPRItemFunction {
     public static final Map<ResourceLocation, Class<? extends MPREnchantItemFunction>> TYPES = Map.of(
-        MPR.location("single"), SingleEnchantment.class,
-        MPR.location("random"), RandomEnchantment.class,
-        MPR.location("with_levels"), WithLevel.class
+        MPR.id("single"), SingleEnchantment.class,
+        MPR.id("random"), RandomEnchantment.class,
+        MPR.id("with_levels"), WithLevel.class
     );
 
     @Nullable

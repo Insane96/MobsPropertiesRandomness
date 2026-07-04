@@ -11,7 +11,7 @@ public class ItemFunctionsRegistry {
 
     /// Use you own namespace
     private static void register(String id, Class<? extends MPRItemFunction> clazz) {
-        FUNCTIONS.put(MPR.location(id), clazz);
+        FUNCTIONS.put(MPR.id(id), clazz);
     }
 
     public static Class<? extends MPRItemFunction> get(ResourceLocation id) {

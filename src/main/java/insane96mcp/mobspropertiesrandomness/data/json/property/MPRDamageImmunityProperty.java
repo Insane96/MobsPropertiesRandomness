@@ -25,8 +25,8 @@ import java.util.List;
 
 @JsonAdapter(MPRDamageImmunityProperty.Serializer.class)
 public class MPRDamageImmunityProperty extends MPRProperty {
-    private static final ResourceLocation DAMAGE_IMMUNITY = MPR.location("damage_type_immunity");
-    private static final ResourceLocation DAMAGE_TAG_IMMUNITY = MPR.location("damage_type_tag_immunity");
+    private static final ResourceLocation DAMAGE_IMMUNITY = MPR.id("damage_type_immunity");
+    private static final ResourceLocation DAMAGE_TAG_IMMUNITY = MPR.id("damage_type_tag_immunity");
 
     @Nullable
     private final List<ResourceKey<DamageType>> damageTypes;

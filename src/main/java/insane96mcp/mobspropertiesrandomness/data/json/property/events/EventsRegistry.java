@@ -12,7 +12,7 @@ public class EventsRegistry {
 
     /// Use you own namespace
     private static void register(String id, Class<? extends MPREvent> clazz) {
-        EVENTS.put(MPR.location(id), clazz);
+        EVENTS.put(MPR.id(id), clazz);
     }
 
     public static Class<? extends MPREvent> get(ResourceLocation id) {

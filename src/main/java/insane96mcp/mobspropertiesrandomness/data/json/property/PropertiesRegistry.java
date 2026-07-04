@@ -13,7 +13,7 @@ public class PropertiesRegistry {
 
     /// Use your own namespace
     private static void register(String id, Class<? extends MPRProperty> clazz) {
-        PROPERTIES.put(MPR.location(id), clazz);
+        PROPERTIES.put(MPR.id(id), clazz);
     }
 
     public static Class<? extends MPRProperty> get(ResourceLocation id) {

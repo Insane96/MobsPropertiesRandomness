@@ -56,7 +56,7 @@ public class MPR
     public static ILModConfig CONFIG;
 
     public MPR(IEventBus modEventBus, ModContainer modContainer) {
-        CONFIG = new ILModConfig(location("main"), "Single Module", ModConfig.Type.COMMON, modEventBus, MPR.class.getClassLoader());
+        CONFIG = new ILModConfig(id("main"), "Single Module", ModConfig.Type.COMMON, modEventBus, MPR.class.getClassLoader());
         modContainer.registerConfig(ModConfig.Type.COMMON, CONFIG.spec);
         modEventBus.addListener(this::preInit);
         NeoForge.EVENT_BUS.register(this);
@@ -90,7 +90,7 @@ public class MPR
         MPRLogger.debug("Initialized!");
     }
 
-    public static ResourceLocation location(String path) {
+    public static ResourceLocation id(String path) {
         return ResourceLocation.fromNamespaceAndPath(MOD_ID, path);
     }
 

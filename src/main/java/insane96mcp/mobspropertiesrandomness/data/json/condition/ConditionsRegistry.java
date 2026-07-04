@@ -11,7 +11,7 @@ public class ConditionsRegistry {
 
     /// Use you own namespace
     private static void register(String id, Class<? extends MPRCondition> clazz) {
-        CONDITIONS.put(MPR.location(id), clazz);
+        CONDITIONS.put(MPR.id(id), clazz);
     }
 
     public static Class<? extends MPRCondition> get(ResourceLocation id) {
