@@ -8,6 +8,7 @@ import insane96mcp.mobspropertiesrandomness.data.json.MPRProperties;
 import insane96mcp.mobspropertiesrandomness.data.json.property.events.MPREvent;
 import insane96mcp.mobspropertiesrandomness.data.json.property.preset.MPRPresetsProperty;
 import insane96mcp.mobspropertiesrandomness.data.json.property.preset.MPRWeightedPreset;
+import insane96mcp.mobspropertiesrandomness.util.MPRChatNotifier;
 import insane96mcp.mobspropertiesrandomness.util.MPRLogger;
 import net.minecraft.resources.FileToIdConverter;
 import net.minecraft.resources.ResourceLocation;
@@ -27,6 +28,7 @@ public class MPRMobsPresetReloadListener extends SimplePreparableReloadListener<
 	public static final Map<ResourceLocation, MPRProperties> PRESETS = new HashMap<>();
 	public static final MPRMobsPresetReloadListener INSTANCE;
 	private static final Gson GSON;
+	private static int errorCount;
 	private final String directory;
 
 	public MPRMobsPresetReloadListener() {
@@ -40,6 +42,7 @@ public class MPRMobsPresetReloadListener extends SimplePreparableReloadListener<
 
 	@Override
 	protected @NotNull Map<ResourceLocation, JsonElement> prepare(@NotNull ResourceManager resourceManager, @NotNull ProfilerFiller profilerFiller) {
+		errorCount = 0;
 		Map<ResourceLocation, JsonElement> map = new HashMap<>();
 		scanDirectory(resourceManager, this.directory, GSON, map);
 		return map;
@@ -61,6 +64,7 @@ public class MPRMobsPresetReloadListener extends SimplePreparableReloadListener<
 			}
 			catch (Exception exception) {
 				MPRLogger.error("Error loading Preset %s: %s", key, exception.getMessage());
+				errorCount++;
 			}
 		}
 
@@ -84,9 +88,11 @@ public class MPRMobsPresetReloadListener extends SimplePreparableReloadListener<
 			}
 			catch (JsonSyntaxException e) {
 				MPRLogger.error("Parsing error loading Preset %s: %s", entry.getKey(), e.getMessage());
+				errorCount++;
 			}
 			catch (Exception e) {
 				MPRLogger.error("Failed loading Preset %s: %s", entry.getKey(), e.getMessage());
+				errorCount++;
 			}
 		}
         PRESETS.forEach((id, preset) -> preset.getProperties()
@@ -98,6 +104,9 @@ public class MPRMobsPresetReloadListener extends SimplePreparableReloadListener<
                 }));
 
 		//Logger.info("Loaded %s Presets", PRESETS.size());
+
+		if (errorCount > 0)
+			MPRChatNotifier.notifyOps(errorCount + " error(s) loading Presets, check logs/MobsPropertiesRandomness.log for details.");
 	}
 
 	@Nullable

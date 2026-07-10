@@ -1,3 +1,6 @@
+## 6.1.3.0
+* Added message to chat when reloading something fails
+
 ## 6.1.2.0
 * Inverted how `priority` on mobs works.
 

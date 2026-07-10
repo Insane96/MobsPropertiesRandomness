@@ -7,6 +7,7 @@ import insane96mcp.mobspropertiesrandomness.MPR;
 import insane96mcp.mobspropertiesrandomness.data.json.MPRMob;
 import insane96mcp.mobspropertiesrandomness.data.json.property.preset.MPRPresetsProperty;
 import insane96mcp.mobspropertiesrandomness.data.json.property.preset.MPRWeightedPreset;
+import insane96mcp.mobspropertiesrandomness.util.MPRChatNotifier;
 import insane96mcp.mobspropertiesrandomness.util.MPRLogger;
 import net.minecraft.resources.FileToIdConverter;
 import net.minecraft.resources.ResourceLocation;
@@ -25,6 +26,7 @@ public class MPRMobReloadListener extends SimplePreparableReloadListener<Map<Res
 	public static List<MPRMob> MPR_MOBS = new ArrayList<>();
 	public static final MPRMobReloadListener INSTANCE;
 	private static final Gson GSON;
+	private static int errorCount;
 	private final String directory;
 
 	public MPRMobReloadListener() {
@@ -38,6 +40,7 @@ public class MPRMobReloadListener extends SimplePreparableReloadListener<Map<Res
 
 	@Override
 	protected @NotNull Map<ResourceLocation, JsonElement> prepare(@NotNull ResourceManager resourceManager, @NotNull ProfilerFiller profilerFiller) {
+		errorCount = 0;
 		Map<ResourceLocation, JsonElement> map = new HashMap<>();
 		scanDirectory(resourceManager, this.directory, GSON, map);
 		return map;
@@ -58,6 +61,7 @@ public class MPRMobReloadListener extends SimplePreparableReloadListener<Map<Res
 			}
 			catch (IllegalArgumentException | IOException | JsonParseException exception) {
 				MPRLogger.error("Error loading Mob %s: %s", key, exception.getMessage());
+				errorCount++;
 			}
 		}
 
@@ -83,6 +87,7 @@ public class MPRMobReloadListener extends SimplePreparableReloadListener<Map<Res
 				for (StackTraceElement s : e.getStackTrace())
 					sb.append("\n").append(s.toString());
 				MPRLogger.error(sb.toString());
+				errorCount++;
 			}
 		}
         MPR_MOBS.forEach(mob -> mob.getProperties()
@@ -95,5 +100,8 @@ public class MPRMobReloadListener extends SimplePreparableReloadListener<Map<Res
 		MPR_MOBS.sort(Comparator.comparing(mob -> mob.priority));
 
 		MPRLogger.info("Loaded %s Mob(s)", MPR_MOBS.size());
+
+		if (errorCount > 0)
+			MPRChatNotifier.notifyOps(errorCount + " error(s) loading Mobs, check logs/MobsPropertiesRandomness.log for details.");
 	}
 }

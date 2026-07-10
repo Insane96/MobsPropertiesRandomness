@@ -2,6 +2,7 @@ package insane96mcp.mobspropertiesrandomness.data;
 
 import com.google.gson.Gson;
 import com.google.gson.JsonElement;
+import insane96mcp.mobspropertiesrandomness.util.MPRChatNotifier;
 import insane96mcp.mobspropertiesrandomness.util.MPRLogger;
 import net.minecraft.resources.FileToIdConverter;
 import net.minecraft.resources.ResourceLocation;
@@ -32,15 +33,19 @@ public class MPRRawPresetLoader extends SimplePreparableReloadListener<Map<Resou
             new MPRRawPresetLoader("mobs_properties_randomness/presets/functions", FUNCTION_PRESETS);
 
     private final String directory;
+    private final String label;
     private final Map<ResourceLocation, JsonElement> target;
+    private int errorCount;
 
     private MPRRawPresetLoader(String directory, Map<ResourceLocation, JsonElement> target) {
         this.directory = directory;
+        this.label = directory.substring(directory.lastIndexOf('/') + 1);
         this.target = target;
     }
 
     @Override
     protected @NotNull Map<ResourceLocation, JsonElement> prepare(@NotNull ResourceManager resourceManager, @NotNull ProfilerFiller profilerFiller) {
+        errorCount = 0;
         Map<ResourceLocation, JsonElement> map = new HashMap<>();
         FileToIdConverter converter = FileToIdConverter.json(this.directory);
 
@@ -54,6 +59,7 @@ public class MPRRawPresetLoader extends SimplePreparableReloadListener<Map<Resou
                     throw new IllegalStateException("Duplicate data file with ID " + id);
             } catch (Exception e) {
                 MPRLogger.error("Error loading preset %s: %s", key, e.getMessage());
+                errorCount++;
             }
         }
         return map;
@@ -63,5 +69,8 @@ public class MPRRawPresetLoader extends SimplePreparableReloadListener<Map<Resou
     protected void apply(@NotNull Map<ResourceLocation, JsonElement> map, @NotNull ResourceManager resourceManager, @NotNull ProfilerFiller profilerFiller) {
         this.target.clear();
         this.target.putAll(map);
+
+        if (errorCount > 0)
+            MPRChatNotifier.notifyOps(errorCount + " error(s) loading " + label + " presets, check logs/MobsPropertiesRandomness.log for details.");
     }
 }
