@@ -92,7 +92,7 @@ public class MPRMobReloadListener extends SimplePreparableReloadListener<Map<Res
                     }
                 }));
 
-		MPR_MOBS.sort(Comparator.comparing(mob -> mob.priority, Comparator.reverseOrder()));
+		MPR_MOBS.sort(Comparator.comparing(mob -> mob.priority));
 
 		MPRLogger.info("Loaded %s Mob(s)", MPR_MOBS.size());
 	}

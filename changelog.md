@@ -1,3 +1,6 @@
+## 6.1.2.0
+* Inverted how `priority` on mobs works.
+
 ## 6.1.1.1
 * Fixed biome condition not working
 

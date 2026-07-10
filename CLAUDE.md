@@ -29,7 +29,7 @@ The mod is a **data-driven mob modifier**: data packs define JSON files that des
 Two reload listeners fire in order on `/reload` or world join:
 
 1. `MPRPresetReloadListener` — loads `mobs_properties_randomness/presets/**/*.json` into `PRESETS: Map<ResourceLocation, MPRProperties>`
-2. `MPRMobReloadListener` — loads `mobs_properties_randomness/mobs/**/*.json` into `MPR_MOBS: List<MPRMob>` (sorted by priority descending)
+2. `MPRMobReloadListener` — loads `mobs_properties_randomness/mobs/**/*.json` into `MPR_MOBS: List<MPRMob>` (sorted by priority ascending)
 
 Both listeners use the GSON instance built in `MPR.createGson()`, which registers all type adapters. The registry access (needed for codec-based deserialization) is stored at reload time via `AddReloadListenerEvent`.
 
@@ -54,7 +54,7 @@ Every concrete type has a `Serializer` static inner class implementing `JsonDese
 ### Mob application pipeline
 
 Triggered by `EntityJoinLevelEvent` in `MPRBase`:
-1. Iterate `MPR_MOBS` sorted by priority (highest first, applied last → wins)
+1. Iterate `MPR_MOBS` sorted by priority (lowest first, highest applied last → wins)
 2. For each mob: check entity type match and mob-level conditions, then call `property.tryApply(entity)` on each property
 3. Each property checks its own conditions before calling `apply()`
 4. Entity is marked `PROCESSED` via `ModNBTData` to prevent re-application
