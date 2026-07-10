@@ -70,7 +70,6 @@ public class MPRRawPresetLoader extends SimplePreparableReloadListener<Map<Resou
         this.target.clear();
         this.target.putAll(map);
 
-        if (errorCount > 0)
-            MPRChatNotifier.notifyOps(errorCount + " error(s) loading " + label + " presets, check logs/MobsPropertiesRandomness.log for details.");
+        MPRChatNotifier.reportIssues(label + " presets", errorCount, 0);
     }
 }

@@ -21,11 +21,13 @@ import insane96mcp.mobspropertiesrandomness.data.json.util.PlayerMode;
 import insane96mcp.mobspropertiesrandomness.data.json.util.modifiable.MPRRange;
 import insane96mcp.mobspropertiesrandomness.data.json.util.modifiable.ModifiersRegistry;
 import insane96mcp.mobspropertiesrandomness.data.serializer.*;
+import insane96mcp.mobspropertiesrandomness.util.MPRChatNotifier;
 import insane96mcp.mobspropertiesrandomness.util.MPRLogger;
 import insane96mcp.mobspropertiesrandomness.util.SerializerUtils;
 import net.minecraft.commands.CommandBuildContext;
 import net.minecraft.commands.CommandSourceStack;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.BossEvent;
 import net.minecraft.world.Difficulty;
 import net.minecraft.world.entity.EquipmentSlot;
@@ -43,6 +45,7 @@ import net.neoforged.fml.event.lifecycle.FMLCommonSetupEvent;
 import net.neoforged.neoforge.common.NeoForge;
 import net.neoforged.neoforge.event.AddReloadListenerEvent;
 import net.neoforged.neoforge.event.RegisterCommandsEvent;
+import net.neoforged.neoforge.event.entity.player.PlayerEvent;
 import org.slf4j.Logger;
 
 import javax.annotation.Nullable;
@@ -76,6 +79,12 @@ public class MPR
         event.addListener(MPRRawPresetLoader.FUNCTION_LOADER);
         event.addListener(MPRMobsPresetReloadListener.INSTANCE);
         event.addListener(MPRMobReloadListener.INSTANCE);
+    }
+
+    @SubscribeEvent
+    public void onPlayerLoggedIn(PlayerEvent.PlayerLoggedInEvent event) {
+        if (event.getEntity() instanceof ServerPlayer serverPlayer)
+            MPRChatNotifier.notifyJoiningOp(serverPlayer);
     }
 
     @SubscribeEvent

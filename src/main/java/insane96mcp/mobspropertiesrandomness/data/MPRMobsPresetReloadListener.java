@@ -72,6 +72,7 @@ public class MPRMobsPresetReloadListener extends SimplePreparableReloadListener<
 
 	@Override
 	protected void apply(@NotNull Map<ResourceLocation, JsonElement> map, @NotNull ResourceManager resourceManager, @NotNull ProfilerFiller profilerFiller) {
+		MPRLogger.consumeWarningCount();
 		PRESETS.clear();
 		for (var entry : map.entrySet()) {
 			try {
@@ -105,8 +106,7 @@ public class MPRMobsPresetReloadListener extends SimplePreparableReloadListener<
 
 		//Logger.info("Loaded %s Presets", PRESETS.size());
 
-		if (errorCount > 0)
-			MPRChatNotifier.notifyOps(errorCount + " error(s) loading Presets, check logs/MobsPropertiesRandomness.log for details.");
+		MPRChatNotifier.reportIssues("Presets", errorCount, MPRLogger.consumeWarningCount());
 	}
 
 	@Nullable

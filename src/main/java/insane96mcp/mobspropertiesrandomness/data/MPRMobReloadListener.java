@@ -69,6 +69,7 @@ public class MPRMobReloadListener extends SimplePreparableReloadListener<Map<Res
 
 	@Override
 	protected void apply(@NotNull Map<ResourceLocation, JsonElement> map, @NotNull ResourceManager resourceManager, @NotNull ProfilerFiller profilerFiller) {
+		MPRLogger.consumeWarningCount();
 		MPR_MOBS.clear();
 		for (var entry : map.entrySet()) {
 			try {
@@ -101,7 +102,6 @@ public class MPRMobReloadListener extends SimplePreparableReloadListener<Map<Res
 
 		MPRLogger.info("Loaded %s Mob(s)", MPR_MOBS.size());
 
-		if (errorCount > 0)
-			MPRChatNotifier.notifyOps(errorCount + " error(s) loading Mobs, check logs/MobsPropertiesRandomness.log for details.");
+		MPRChatNotifier.reportIssues("Mobs", errorCount, MPRLogger.consumeWarningCount());
 	}
 }

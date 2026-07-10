@@ -6,9 +6,11 @@ import java.io.*;
 import java.nio.charset.StandardCharsets;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.concurrent.atomic.AtomicInteger;
 
 public class MPRLogger {
     private static Writer writer;
+    private static final AtomicInteger warningCount = new AtomicInteger();
 
 	public static void init(String filePath) {
         File logFile = new File(filePath);
@@ -40,7 +42,13 @@ public class MPRLogger {
 	}
 
 	public static void warn(String message, Object... params) {
+		warningCount.incrementAndGet();
 		log(LogType.WARN, message, params);
+	}
+
+	/** Returns the number of warnings logged since the last call, resetting the counter to 0. */
+	public static int consumeWarningCount() {
+		return warningCount.getAndSet(0);
 	}
 
 	public static void error(String message, Object... params) {
