@@ -33,8 +33,8 @@ public class MPRBase extends Feature {
 
 	@Config(description = "If true creeper lingering clouds size changes based off their explosion radius.")
 	public static Boolean betterCreeperLingering = true;
-	@Config
-	public static Boolean verboseLog = false;
+	@Config(description = "If true, warnings will be displayed in chat when reloading data packs. Useful when developing a data pack.")
+	public static Boolean warningsChat = false;
 
 	@SubscribeEvent(priority = EventPriority.LOWEST)
 	public void onEntityJoinLevelLowest(EntityJoinLevelEvent event) {

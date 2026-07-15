@@ -1,3 +1,6 @@
+## 6.1.3.1
+* Disabled warning message when reloading by default
+
 ## 6.1.3.0
 * Added message to chat when reloading generates errors or warnings
 

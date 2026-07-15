@@ -1,7 +1,5 @@
 package insane96mcp.mobspropertiesrandomness.util;
 
-import insane96mcp.mobspropertiesrandomness.feature.MPRBase;
-
 import java.io.*;
 import java.nio.charset.StandardCharsets;
 import java.text.SimpleDateFormat;
@@ -31,9 +29,6 @@ public class MPRLogger {
 	}
 
 	public static void debug(String message, Object... params) {
-		if (!MPRBase.verboseLog)
-			return;
-
 		log(LogType.DEBUG, message, params);
 	}
 

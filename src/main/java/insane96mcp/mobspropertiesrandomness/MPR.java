@@ -96,7 +96,6 @@ public class MPR
 
     public void preInit(FMLCommonSetupEvent event) {
         MPRLogger.init("logs/MobsPropertiesRandomness.log");
-        MPRLogger.debug("Initialized!");
     }
 
     public static ResourceLocation id(String path) {

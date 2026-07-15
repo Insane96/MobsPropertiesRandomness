@@ -1,5 +1,6 @@
 package insane96mcp.mobspropertiesrandomness.util;
 
+import insane96mcp.mobspropertiesrandomness.feature.MPRBase;
 import net.minecraft.ChatFormatting;
 import net.minecraft.network.chat.Component;
 import net.minecraft.server.MinecraftServer;
@@ -13,6 +14,9 @@ public class MPRChatNotifier {
 	private static final Map<String, String> PENDING_ISSUES = new LinkedHashMap<>();
 
 	public static void reportIssues(String source, int errorCount, int warningCount) {
+		if (!MPRBase.warningsChat)
+			warningCount = 0;
+
 		if (errorCount <= 0 && warningCount <= 0) {
 			PENDING_ISSUES.remove(source);
 			return;
