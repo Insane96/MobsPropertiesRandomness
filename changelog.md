@@ -1,3 +1,6 @@
+## Upcoming
+* Updated for latest InsaneLib
+
 ## 6.1.3.1
 * Disabled warning message when reloading by default
 

@@ -2,7 +2,7 @@ package insane96mcp.mobspropertiesrandomness.data.json.property;
 
 import com.google.gson.*;
 import com.google.gson.annotations.JsonAdapter;
-import insane96mcp.insanelib.module.base.TagsFeature;
+import insane96mcp.insanelib.module.base.NbtTags;
 import insane96mcp.mobspropertiesrandomness.data.json.condition.MPRCondition;
 import insane96mcp.mobspropertiesrandomness.data.json.util.modifiable.MPRRange;
 import net.minecraft.util.GsonHelper;
@@ -22,7 +22,7 @@ public class MPRExperienceMultiplierProperty extends MPRProperty {
 
     @Override
     public boolean apply(LivingEntity living) {
-        TagsFeature.setExperienceMultiplier(this.experienceMultiplier.getDoubleBetween(living), living);
+        NbtTags.setExperienceMultiplier(this.experienceMultiplier.getDoubleBetween(living), living);
         return true;
     }
 
