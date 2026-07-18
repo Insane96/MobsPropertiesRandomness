@@ -1,4 +1,4 @@
-## Upcoming
+## 6.1.3.2
 * Updated for latest InsaneLib
 
 ## 6.1.3.1
