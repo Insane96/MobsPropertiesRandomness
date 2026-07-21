@@ -16,7 +16,7 @@ No test suite exists (`src/test/` is absent). Testing is done by running the gam
 ## Stack
 
 - **Minecraft 1.21.1** via **NeoForge 21.1.219**
-- **InsaneLib 2.0.0.4-alpha** — utility library by the same author; provides `MPRModifiable`, `MPRModifier`, `IWeightedRandom`, `ModNBTData`, and the config builder
+- **InsaneLib 2.4.21.0** — utility library by the same author; provides `MPRModifiable`, `MPRModifier`, `IWeightedRandom`, `ModNBTData`, and the config builder
 - **Java 21**, Parchment mappings
 - **GSON** for all JSON deserialization (not Minecraft's codec system, except in `MPRSetComponentFunction` where both are used)
 
@@ -26,12 +26,17 @@ The mod is a **data-driven mob modifier**: data packs define JSON files that des
 
 ### Data loading pipeline
 
-Two reload listeners fire in order on `/reload` or world join:
+Five reload listeners fire in order on `/reload` or world join (registered in `MPR.onAddReloadListener`):
 
-1. `MPRPresetReloadListener` — loads `mobs_properties_randomness/presets/**/*.json` into `PRESETS: Map<ResourceLocation, MPRProperties>`
-2. `MPRMobReloadListener` — loads `mobs_properties_randomness/mobs/**/*.json` into `MPR_MOBS: List<MPRMob>` (sorted by priority ascending)
+1. `MPRRawPresetLoader.MODIFIER_LOADER` — loads `mobs_properties_randomness/presets/modifiers/**/*.json` into raw `MODIFIER_PRESETS`
+2. `MPRRawPresetLoader.CONDITION_LOADER` — loads `mobs_properties_randomness/presets/conditions/**/*.json` into raw `CONDITION_PRESETS`
+3. `MPRRawPresetLoader.FUNCTION_LOADER` — loads `mobs_properties_randomness/presets/functions/**/*.json` into raw `FUNCTION_PRESETS`
+4. `MPRMobsPresetReloadListener` — loads `mobs_properties_randomness/presets/mobs/**/*.json` into `PRESETS: Map<ResourceLocation, MPRProperties>`
+5. `MPRMobReloadListener` — loads `mobs_properties_randomness/mobs/**/*.json` into `MPR_MOBS: List<MPRMob>` (sorted by priority ascending)
 
-Both listeners use the GSON instance built in `MPR.createGson()`, which registers all type adapters. The registry access (needed for codec-based deserialization) is stored at reload time via `AddReloadListenerEvent`.
+Listeners 1-3 run first because condition/modifier/item-function JSON can reference a `"preset"` by id, resolved against these raw maps during deserialization (see `MPRCondition.deserializeList` / `MPRModifier.deserializeList`).
+
+All listeners use the GSON instance built in `MPR.createGson()`, which registers all type adapters. The registry access (needed for codec-based deserialization) is stored at reload time via `AddReloadListenerEvent`.
 
 ### Registry pattern
 
@@ -82,13 +87,13 @@ Numeric values in JSON can be either a plain number or `{"min": x, "max": y}` (r
 ## Key file locations
 
 - `MPR.java` — mod entry point, GSON setup, registry initialization
-- `data/MPRMobReloadListener.java` / `MPRPresetReloadListener.java` — data pack loading
+- `data/MPRMobReloadListener.java` / `MPRMobsPresetReloadListener.java` / `MPRRawPresetLoader.java` — data pack loading
 - `data/json/MPRMob.java` — top-level mob definition
 - `data/json/condition/MPRCondition.java` — condition base class
 - `data/json/property/MPRProperty.java` — property base class
 - `data/json/property/equipment/` — item functions and equipment property
 - `data/json/util/modifiable/MPRRange.java` — randomizable numeric value
-- `module/base/feature/MPRBase.java` — main event listener (mob application trigger)
+- `feature/MPRBase.java` — main event listener (mob application trigger)
 - `src/main/resources/example_data_pack/` — reference data pack showing JSON format
 
 ## Data Pack Structure

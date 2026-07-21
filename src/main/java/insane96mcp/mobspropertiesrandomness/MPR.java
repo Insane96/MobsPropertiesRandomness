@@ -20,7 +20,8 @@ import insane96mcp.mobspropertiesrandomness.data.json.util.NBTType;
 import insane96mcp.mobspropertiesrandomness.data.json.util.PlayerMode;
 import insane96mcp.mobspropertiesrandomness.data.json.util.modifiable.MPRRange;
 import insane96mcp.mobspropertiesrandomness.data.json.util.modifiable.ModifiersRegistry;
-import insane96mcp.mobspropertiesrandomness.data.serializer.*;
+import insane96mcp.mobspropertiesrandomness.data.serializer.NameEnumSerializer;
+import insane96mcp.mobspropertiesrandomness.data.serializer.StrictEnumDeserializer;
 import insane96mcp.mobspropertiesrandomness.util.MPRChatNotifier;
 import insane96mcp.mobspropertiesrandomness.util.MPRLogger;
 import insane96mcp.mobspropertiesrandomness.util.SerializerUtils;
@@ -113,13 +114,13 @@ public class MPR
 
     public static Gson createGson() {
         GsonBuilder gsonBuilder = new GsonBuilder()
-                .registerTypeAdapter(EquipmentSlot.class, new EquipmentSlotSerializer())
+                .registerTypeAdapter(EquipmentSlot.class, new NameEnumSerializer<>("EquipmentSlot", EquipmentSlot::byName, EquipmentSlot::getName))
                 .registerTypeAdapter(AttributeModifier.Operation.class, new AttributeModifierOperationSerializer())
-                .registerTypeAdapter(BossEvent.BossBarColor.class, new BossBarColorSerializer())
-                .registerTypeAdapter(BossEvent.BossBarOverlay.class, new BossBarOverlaySerializer())
-                .registerTypeAdapter(Difficulty.class, new DifficultySerializer())
-                .registerTypeAdapter(LightLayer.class, new LightLayerSerializer())
-                .registerTypeAdapter(MobSpawnType.class, new MobSpawnTypeSerializer())
+                .registerTypeAdapter(BossEvent.BossBarColor.class, new NameEnumSerializer<>("BossBarColor", BossEvent.BossBarColor::byName, BossEvent.BossBarColor::getName))
+                .registerTypeAdapter(BossEvent.BossBarOverlay.class, new NameEnumSerializer<>("BossBarOverlay", BossEvent.BossBarOverlay::byName, BossEvent.BossBarOverlay::getName))
+                .registerTypeAdapter(Difficulty.class, new NameEnumSerializer<>("Difficulty", Difficulty::byName, Difficulty::getKey))
+                .registerTypeAdapter(LightLayer.class, new NameEnumSerializer<>("LightLayer", n -> LightLayer.valueOf(n.toUpperCase()), l -> l.toString().toLowerCase()))
+                .registerTypeAdapter(MobSpawnType.class, new NameEnumSerializer<>("MobSpawnType", n -> MobSpawnType.valueOf(n.toUpperCase()), t -> t.name().toLowerCase()))
                 .registerTypeAdapter(NBTType.class, new StrictEnumDeserializer<>(NBTType.class))
                 .registerTypeAdapter(EquipmentSlotGroup.class, new StrictEnumDeserializer<>(EquipmentSlotGroup.class))
                 .registerTypeAdapter(PlayerMode.class, new StrictEnumDeserializer<>(PlayerMode.class))
