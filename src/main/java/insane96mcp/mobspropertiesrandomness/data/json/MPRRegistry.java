@@ -10,6 +10,7 @@ import java.util.Map;
 public class MPRRegistry<T> {
     private final Map<ResourceLocation, Class<? extends T>> entries = new HashMap<>();
 
+    /// Use your own namespace
     public void register(String id, Class<? extends T> clazz) {
         entries.put(MPR.id(id), clazz);
     }
