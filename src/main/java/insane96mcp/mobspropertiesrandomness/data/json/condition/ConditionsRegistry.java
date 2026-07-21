@@ -40,6 +40,7 @@ public class ConditionsRegistry {
         register("effect", MPREffectCondition.class);
         register("equipment", MPREquipmentCondition.class);
         register("hardcore", MPRHardcoreCondition.class);
+        register("has_owner", MPRHasOwnerCondition.class);
         register("has_target", MPRHasTargetCondition.class);
         register("health", MPRHealthCondition.class);
         register("is_baby", MPRBabyCondition.class);
