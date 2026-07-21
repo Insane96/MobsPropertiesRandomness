@@ -37,7 +37,7 @@ public class MPRProperty extends MPRConditionable {
     public static MPRProperty deserialize(JsonElement element, JsonDeserializationContext context) {
         JsonObject jObjectProperty = element.getAsJsonObject();
         ResourceLocation propertyId = MPR.locationFrom(GsonHelper.getAsString(jObjectProperty, "property"));
-        Type propertyType = PropertiesRegistry.get(propertyId);
+        Type propertyType = PropertiesRegistry.REGISTRY.get(propertyId);
         if (propertyType == null) {
             MPRLogger.warn("property %s does not exist. Skipping".formatted(propertyId));
             return null;

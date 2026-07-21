@@ -37,7 +37,7 @@ public abstract class MPRCondition {
 
     public JsonObject endSerialization(JsonObject jObject) {
         //noinspection DataFlowIssue
-        jObject.addProperty("condition", ConditionsRegistry.get(this.getClass()).toString());
+        jObject.addProperty("condition", ConditionsRegistry.REGISTRY.getId(this.getClass()).toString());
         if (this.inverted)
             jObject.addProperty("inverted", true);
         return jObject;
@@ -73,7 +73,7 @@ public abstract class MPRCondition {
                 continue;
             }
             ResourceLocation conditionId = MPR.locationFrom(GsonHelper.getAsString(jObj, "condition"));
-            Type conditionType = ConditionsRegistry.get(conditionId);
+            Type conditionType = ConditionsRegistry.REGISTRY.get(conditionId);
             if (conditionType == null) {
                 MPRLogger.warn("condition %s does not exist. Skipping".formatted(conditionId));
                 continue;

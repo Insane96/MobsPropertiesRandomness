@@ -53,7 +53,7 @@ public abstract class MPRItemFunction extends MPRConditionable {
                 continue;
             }
             ResourceLocation itemFunctionId = MPR.locationFrom(GsonHelper.getAsString(jObj, "function"));
-            Type itemFunctionType = ItemFunctionsRegistry.get(itemFunctionId);
+            Type itemFunctionType = ItemFunctionsRegistry.REGISTRY.get(itemFunctionId);
             if (itemFunctionType == null) {
                 MPRLogger.warn("item function %s does not exist. Skipping".formatted(itemFunctionId));
                 continue;

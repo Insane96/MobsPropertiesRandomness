@@ -83,7 +83,7 @@ public abstract class MPREvent extends MPRConditionable {
     }
 
     public static ResourceLocation getId(Class<? extends MPREvent> clazz) {
-        ResourceLocation eventId = EventsRegistry.getId(clazz);
+        ResourceLocation eventId = EventsRegistry.REGISTRY.getId(clazz);
         if (eventId == null)
             return null;
         return ResourceLocation.parse(eventId.getNamespace() + ":" + "events/" + eventId.getPath());
@@ -109,7 +109,7 @@ public abstract class MPREvent extends MPRConditionable {
     public static MPREvent deserialize(JsonElement json, JsonDeserializationContext context) throws JsonParseException {
         JsonObject jObjectProperty = json.getAsJsonObject();
         ResourceLocation eventId = MPR.locationFrom(GsonHelper.getAsString(jObjectProperty, "event"));
-        Type eventType = EventsRegistry.get(eventId);
+        Type eventType = EventsRegistry.REGISTRY.get(eventId);
         if (eventType == null) {
             MPRLogger.warn("event %s does not exist. Skipping".formatted(eventId));
             return null;
