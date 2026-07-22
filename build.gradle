@@ -17,6 +17,7 @@ repositories {
         name = "Modrinth"
         url = "https://api.modrinth.com/maven"
     }
+    mavenLocal()
 }
 
 base {
@@ -103,6 +104,8 @@ neoForge.ideSyncTask generateModMetadata
 publishing {
     publications {
         register('mavenJava', MavenPublication) {
+            groupId = 'maven.modrinth'
+            artifactId = mod_id
             from components.java
         }
     }
