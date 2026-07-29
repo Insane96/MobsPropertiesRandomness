@@ -1,3 +1,6 @@
+# 6.1.4.1
+* Fixed `play_sound` not working if played from a player
+
 # 6.1.4.0
 * Added `has_owner` condition
 

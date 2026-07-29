@@ -29,7 +29,7 @@ public class MPRPlaySoundProperty extends MPRProperty {
 
     @Override
     public boolean apply(LivingEntity living) {
-        living.playSound(this.sound, (float) this.volume.getDoubleBetween(living), (float) this.pitch.getDoubleBetween(living));
+        living.level().playSound(null, living.blockPosition(), sound, living.getSoundSource(), (float) this.volume.getDoubleBetween(living), (float) this.pitch.getDoubleBetween(living));
         return true;
     }
 
