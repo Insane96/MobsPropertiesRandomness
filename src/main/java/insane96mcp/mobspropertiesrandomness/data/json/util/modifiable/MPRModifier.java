@@ -70,7 +70,7 @@ public abstract class MPRModifier extends MPRConditionable {
                 continue;
             }
             ResourceLocation modifierId = MPR.locationFrom(GsonHelper.getAsString(jObj, "modifier"));
-            Type modifierType = ModifiersRegistry.REGISTRY.get(modifierId);
+            Type modifierType = ModifiersRegistry.get(modifierId);
             if (modifierType == null) {
                 MPRLogger.warn("modifier %s does not exist. Skipping".formatted(modifierId));
                 continue;

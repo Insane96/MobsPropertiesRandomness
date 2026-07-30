@@ -1,9 +1,19 @@
 package insane96mcp.mobspropertiesrandomness.data.json.condition;
 
 import insane96mcp.mobspropertiesrandomness.data.json.MPRRegistry;
+import insane96mcp.mobspropertiesrandomness.event.MPRRegisterEvent;
+import net.minecraft.resources.ResourceLocation;
+import net.neoforged.neoforge.common.NeoForge;
+import org.jetbrains.annotations.Nullable;
 
+/// Registry of {@link MPRCondition} types.
+///
+/// To register your own condition type from another mod, subscribe to {@link MPRRegisterEvent}, check for
+/// {@link MPRRegisterEvent.Type#CONDITION}, and call {@link MPRRegisterEvent#register} with your own mod's
+/// namespace. This registry's own entries (and the `mobspropertiesrandomness` namespace) are always locked
+/// before the event fires, so registering in response to it is safe regardless of mod load order.
 public class ConditionsRegistry {
-    public static final MPRRegistry<MPRCondition> REGISTRY = new MPRRegistry<>();
+    private static final MPRRegistry<MPRCondition> REGISTRY = new MPRRegistry<>(MPRCondition.class);
 
     public static void init() {
         REGISTRY.register("advancement", MPRAdvancementCondition.class);
@@ -39,5 +49,17 @@ public class ConditionsRegistry {
         //    REGISTRY.register("game_stage", MPRGameStageCondition.class);
         //if (ModList.get().isLoaded("sereneseasons"))
         //    REGISTRY.register("season", MPRSeasonCondition.class);
+        REGISTRY.lockMprNamespace();
+        NeoForge.EVENT_BUS.post(new MPRRegisterEvent(MPRRegisterEvent.Type.CONDITION, REGISTRY));
+    }
+
+    @Nullable
+    static Class<? extends MPRCondition> get(ResourceLocation id) {
+        return REGISTRY.get(id);
+    }
+
+    @Nullable
+    static ResourceLocation getId(Class<? extends MPRCondition> clazz) {
+        return REGISTRY.getId(clazz);
     }
 }

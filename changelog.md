@@ -1,3 +1,8 @@
+# 6.1.5.0
+## Technical
+* Changed how Registries work
+  * Now requires an event to register properties, conditions, etc
+
 # 6.1.4.1
 * Fixed `play_sound` not working if played from a player
 

@@ -64,12 +64,6 @@ public class MPR
         modContainer.registerConfig(ModConfig.Type.COMMON, CONFIG.spec);
         modEventBus.addListener(this::preInit);
         NeoForge.EVENT_BUS.register(this);
-
-        ConditionsRegistry.init();
-        PropertiesRegistry.init();
-        ItemFunctionsRegistry.init();
-        ModifiersRegistry.init();
-        EventsRegistry.init();
     }
 
     @SubscribeEvent(priority = EventPriority.LOW)
@@ -97,6 +91,12 @@ public class MPR
 
     public void preInit(FMLCommonSetupEvent event) {
         MPRLogger.init("logs/MobsPropertiesRandomness.log");
+
+        ConditionsRegistry.init();
+        PropertiesRegistry.init();
+        ItemFunctionsRegistry.init();
+        ModifiersRegistry.init();
+        EventsRegistry.init();
     }
 
     public static ResourceLocation id(String path) {
