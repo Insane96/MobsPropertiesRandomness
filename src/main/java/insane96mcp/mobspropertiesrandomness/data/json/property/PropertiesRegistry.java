@@ -1,47 +1,59 @@
 package insane96mcp.mobspropertiesrandomness.data.json.property;
 
-import insane96mcp.mobspropertiesrandomness.data.json.MPRRegistry;
+import insane96mcp.mobspropertiesrandomness.MPR;
 import insane96mcp.mobspropertiesrandomness.data.json.property.equipment.MPREquipmentProperty;
 import insane96mcp.mobspropertiesrandomness.data.json.property.preset.MPRPresetsProperty;
-import insane96mcp.mobspropertiesrandomness.event.MPRRegisterEvent;
+import net.minecraft.core.Registry;
+import net.minecraft.resources.ResourceKey;
 import net.minecraft.resources.ResourceLocation;
-import net.neoforged.neoforge.common.NeoForge;
+import net.neoforged.bus.api.IEventBus;
+import net.neoforged.neoforge.registries.NewRegistryEvent;
+import net.neoforged.neoforge.registries.RegisterEvent;
+import net.neoforged.neoforge.registries.RegistryBuilder;
 import org.jetbrains.annotations.Nullable;
 
 /// Registry of {@link MPRProperty} types.
 ///
-/// To register your own property type from another mod, subscribe to {@link MPRRegisterEvent}, check for
-/// {@link MPRRegisterEvent.Type#PROPERTY}, and call {@link MPRRegisterEvent#register} with your own mod's
-/// namespace. This registry's own entries (and the `mobspropertiesrandomness` namespace) are always locked
-/// before the event fires, so registering in response to it is safe regardless of mod load order.
+/// To register your own property type from another mod, use {@link #REGISTRY_KEY} with a {@code RegisterEvent}
+/// (or a {@code DeferredRegister}) on your mod's event bus, exactly like registering any other NeoForge registry
+/// entry (e.g. blocks or items).
 public class PropertiesRegistry {
-    private static final MPRRegistry<MPRProperty> REGISTRY = new MPRRegistry<>(MPRProperty.class);
+    public static final ResourceKey<Registry<Class<? extends MPRProperty>>> REGISTRY_KEY =
+            ResourceKey.createRegistryKey(MPR.id("properties"));
 
-    public static void init() {
-        REGISTRY.register("attribute_modifier", MPRAttributeModifierProperty.class);
-        REGISTRY.register("boss_bar", MPRBossBarProperty.class);
-        REGISTRY.register("custom_name", MPRCustomNameProperty.class);
-        REGISTRY.register("despawn", MPRDespawnProperty.class);
-        REGISTRY.register("damage", MPRDamageProperty.class);
-        REGISTRY.register("damage_immunity", MPRDamageImmunityProperty.class);
-        REGISTRY.register("effect_immunity", MPREffectImmunityProperty.class);
-        REGISTRY.register("equipment", MPREquipmentProperty.class);
-        REGISTRY.register("experience_multiplier", MPRExperienceMultiplierProperty.class);
-        REGISTRY.register("event", MPREventProperty.class);
-        REGISTRY.register("fire", MPRFireProperty.class);
-        REGISTRY.register("freeze", MPRFreezeProperty.class);
-        REGISTRY.register("function", MPRFunctionProperty.class);
-        REGISTRY.register("heal", MPRHealProperty.class);
-        REGISTRY.register("loot_table", MPRLootTableProperty.class);
-        REGISTRY.register("nbt", MPRNBTProperty.class);
-        REGISTRY.register("potion_effect", MPRPotionEffectProperty.class);
-        REGISTRY.register("play_sound", MPRPlaySoundProperty.class);
-        REGISTRY.register("presets", MPRPresetsProperty.class);
-        REGISTRY.register("raw_nbt", MPRRawNBTProperty.class);
-        REGISTRY.register("silent", MPRSilentProperty.class);
-        REGISTRY.register("team", MPRTeamProperty.class);
-        REGISTRY.lockMprNamespace();
-        NeoForge.EVENT_BUS.post(new MPRRegisterEvent(MPRRegisterEvent.Type.PROPERTY, REGISTRY));
+    private static final Registry<Class<? extends MPRProperty>> REGISTRY =
+            new RegistryBuilder<>(REGISTRY_KEY).create();
+
+    public static void init(IEventBus modEventBus) {
+        modEventBus.addListener((NewRegistryEvent event) -> event.register(REGISTRY));
+        modEventBus.addListener(PropertiesRegistry::registerDefaults);
+    }
+
+    private static void registerDefaults(RegisterEvent event) {
+        event.register(REGISTRY_KEY, helper -> {
+            helper.register(MPR.id("attribute_modifier"), MPRAttributeModifierProperty.class);
+            helper.register(MPR.id("boss_bar"), MPRBossBarProperty.class);
+            helper.register(MPR.id("custom_name"), MPRCustomNameProperty.class);
+            helper.register(MPR.id("despawn"), MPRDespawnProperty.class);
+            helper.register(MPR.id("damage"), MPRDamageProperty.class);
+            helper.register(MPR.id("damage_immunity"), MPRDamageImmunityProperty.class);
+            helper.register(MPR.id("effect_immunity"), MPREffectImmunityProperty.class);
+            helper.register(MPR.id("equipment"), MPREquipmentProperty.class);
+            helper.register(MPR.id("experience_multiplier"), MPRExperienceMultiplierProperty.class);
+            helper.register(MPR.id("event"), MPREventProperty.class);
+            helper.register(MPR.id("fire"), MPRFireProperty.class);
+            helper.register(MPR.id("freeze"), MPRFreezeProperty.class);
+            helper.register(MPR.id("function"), MPRFunctionProperty.class);
+            helper.register(MPR.id("heal"), MPRHealProperty.class);
+            helper.register(MPR.id("loot_table"), MPRLootTableProperty.class);
+            helper.register(MPR.id("nbt"), MPRNBTProperty.class);
+            helper.register(MPR.id("potion_effect"), MPRPotionEffectProperty.class);
+            helper.register(MPR.id("play_sound"), MPRPlaySoundProperty.class);
+            helper.register(MPR.id("presets"), MPRPresetsProperty.class);
+            helper.register(MPR.id("raw_nbt"), MPRRawNBTProperty.class);
+            helper.register(MPR.id("silent"), MPRSilentProperty.class);
+            helper.register(MPR.id("team"), MPRTeamProperty.class);
+        });
     }
 
     @Nullable
@@ -51,6 +63,6 @@ public class PropertiesRegistry {
 
     @Nullable
     static ResourceLocation getId(Class<? extends MPRProperty> clazz) {
-        return REGISTRY.getId(clazz);
+        return REGISTRY.getKey(clazz);
     }
 }

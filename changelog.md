@@ -1,3 +1,7 @@
+# Upcoming
+## Technical
+* Properties, Conditions etc are now registry objects, like blocks and items
+
 # 6.1.5.2
 ## Technical
 * Fixed events being posted too early, not working

@@ -1,28 +1,40 @@
 package insane96mcp.mobspropertiesrandomness.data.json.property.equipment;
 
-import insane96mcp.mobspropertiesrandomness.data.json.MPRRegistry;
-import insane96mcp.mobspropertiesrandomness.event.MPRRegisterEvent;
+import insane96mcp.mobspropertiesrandomness.MPR;
+import net.minecraft.core.Registry;
+import net.minecraft.resources.ResourceKey;
 import net.minecraft.resources.ResourceLocation;
-import net.neoforged.neoforge.common.NeoForge;
+import net.neoforged.bus.api.IEventBus;
+import net.neoforged.neoforge.registries.NewRegistryEvent;
+import net.neoforged.neoforge.registries.RegisterEvent;
+import net.neoforged.neoforge.registries.RegistryBuilder;
 import org.jetbrains.annotations.Nullable;
 
 /// Registry of {@link MPRItemFunction} types.
 ///
-/// To register your own item function type from another mod, subscribe to {@link MPRRegisterEvent}, check for
-/// {@link MPRRegisterEvent.Type#ITEM_FUNCTION}, and call {@link MPRRegisterEvent#register} with your own mod's
-/// namespace. This registry's own entries (and the `mobspropertiesrandomness` namespace) are always locked
-/// before the event fires, so registering in response to it is safe regardless of mod load order.
+/// To register your own item function type from another mod, use {@link #REGISTRY_KEY} with a {@code RegisterEvent}
+/// (or a {@code DeferredRegister}) on your mod's event bus, exactly like registering any other NeoForge registry
+/// entry (e.g. blocks or items).
 public class ItemFunctionsRegistry {
-    private static final MPRRegistry<MPRItemFunction> REGISTRY = new MPRRegistry<>(MPRItemFunction.class);
+    public static final ResourceKey<Registry<Class<? extends MPRItemFunction>>> REGISTRY_KEY =
+            ResourceKey.createRegistryKey(MPR.id("item_functions"));
 
-    public static void init() {
-        REGISTRY.register("set_count", MPRSetCountItemFunction.class);
-        REGISTRY.register("set_drop_chance", MPRSetDropChanceItemFunction.class);
-        REGISTRY.register("set_component", MPRSetComponentFunction.class);
-        REGISTRY.register("add_attribute_modifier", MPRAttributeModifierItemFunction.class);
-        REGISTRY.register("enchant", MPREnchantItemFunction.class);
-        REGISTRY.lockMprNamespace();
-        NeoForge.EVENT_BUS.post(new MPRRegisterEvent(MPRRegisterEvent.Type.ITEM_FUNCTION, REGISTRY));
+    private static final Registry<Class<? extends MPRItemFunction>> REGISTRY =
+            new RegistryBuilder<>(REGISTRY_KEY).create();
+
+    public static void init(IEventBus modEventBus) {
+        modEventBus.addListener((NewRegistryEvent event) -> event.register(REGISTRY));
+        modEventBus.addListener(ItemFunctionsRegistry::registerDefaults);
+    }
+
+    private static void registerDefaults(RegisterEvent event) {
+        event.register(REGISTRY_KEY, helper -> {
+            helper.register(MPR.id("set_count"), MPRSetCountItemFunction.class);
+            helper.register(MPR.id("set_drop_chance"), MPRSetDropChanceItemFunction.class);
+            helper.register(MPR.id("set_component"), MPRSetComponentFunction.class);
+            helper.register(MPR.id("add_attribute_modifier"), MPRAttributeModifierItemFunction.class);
+            helper.register(MPR.id("enchant"), MPREnchantItemFunction.class);
+        });
     }
 
     @Nullable
@@ -32,6 +44,6 @@ public class ItemFunctionsRegistry {
 
     @Nullable
     static ResourceLocation getId(Class<? extends MPRItemFunction> clazz) {
-        return REGISTRY.getId(clazz);
+        return REGISTRY.getKey(clazz);
     }
 }

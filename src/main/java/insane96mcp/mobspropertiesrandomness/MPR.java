@@ -47,7 +47,6 @@ import net.neoforged.neoforge.common.NeoForge;
 import net.neoforged.neoforge.event.AddReloadListenerEvent;
 import net.neoforged.neoforge.event.RegisterCommandsEvent;
 import net.neoforged.neoforge.event.entity.player.PlayerEvent;
-import net.neoforged.neoforge.event.server.ServerAboutToStartEvent;
 import org.slf4j.Logger;
 
 import javax.annotation.Nullable;
@@ -60,13 +59,17 @@ public class MPR
 
     public static ILModConfig CONFIG;
 
-    private boolean registriesInitialized = false;
-
     public MPR(IEventBus modEventBus, ModContainer modContainer) {
         CONFIG = new ILModConfig(id("main"), "Single Module", ModConfig.Type.COMMON, modEventBus, MPR.class.getClassLoader());
         modContainer.registerConfig(ModConfig.Type.COMMON, CONFIG.spec);
         modEventBus.addListener(this::onCommonSetup);
         NeoForge.EVENT_BUS.register(this);
+
+        ConditionsRegistry.init(modEventBus);
+        PropertiesRegistry.init(modEventBus);
+        ItemFunctionsRegistry.init(modEventBus);
+        ModifiersRegistry.init(modEventBus);
+        EventsRegistry.init(modEventBus);
     }
 
     @SubscribeEvent(priority = EventPriority.LOW)
@@ -94,24 +97,6 @@ public class MPR
 
     public void onCommonSetup(FMLCommonSetupEvent event) {
         MPRLogger.init("logs/MobsPropertiesRandomness.log");
-    }
-
-    /// {@link NeoForge#EVENT_BUS} is only started (i.e. actually delivers posted events) after all FML lifecycle
-    /// events (including {@code FMLLoadCompleteEvent}) have fired, so this is the earliest point at which posting
-    /// {@link insane96mcp.mobspropertiesrandomness.event.MPRRegisterEvent} on it is safe. It fires before the server
-    /// begins loading anything (in particular before {@link AddReloadListenerEvent}), and once per server start, so
-    /// it's guarded to only initialize the registries once per game session.
-    @SubscribeEvent
-    public void onServerAboutToStart(ServerAboutToStartEvent event) {
-        if (registriesInitialized)
-            return;
-        registriesInitialized = true;
-
-        ConditionsRegistry.init();
-        PropertiesRegistry.init();
-        ItemFunctionsRegistry.init();
-        ModifiersRegistry.init();
-        EventsRegistry.init();
     }
 
     public static ResourceLocation id(String path) {

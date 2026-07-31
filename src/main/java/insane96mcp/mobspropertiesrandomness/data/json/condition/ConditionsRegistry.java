@@ -1,56 +1,68 @@
 package insane96mcp.mobspropertiesrandomness.data.json.condition;
 
-import insane96mcp.mobspropertiesrandomness.data.json.MPRRegistry;
-import insane96mcp.mobspropertiesrandomness.event.MPRRegisterEvent;
+import insane96mcp.mobspropertiesrandomness.MPR;
+import net.minecraft.core.Registry;
+import net.minecraft.resources.ResourceKey;
 import net.minecraft.resources.ResourceLocation;
-import net.neoforged.neoforge.common.NeoForge;
+import net.neoforged.bus.api.IEventBus;
+import net.neoforged.neoforge.registries.NewRegistryEvent;
+import net.neoforged.neoforge.registries.RegisterEvent;
+import net.neoforged.neoforge.registries.RegistryBuilder;
 import org.jetbrains.annotations.Nullable;
 
 /// Registry of {@link MPRCondition} types.
 ///
-/// To register your own condition type from another mod, subscribe to {@link MPRRegisterEvent}, check for
-/// {@link MPRRegisterEvent.Type#CONDITION}, and call {@link MPRRegisterEvent#register} with your own mod's
-/// namespace. This registry's own entries (and the `mobspropertiesrandomness` namespace) are always locked
-/// before the event fires, so registering in response to it is safe regardless of mod load order.
+/// To register your own condition type from another mod, use {@link #REGISTRY_KEY} with a {@code RegisterEvent}
+/// (or a {@code DeferredRegister}) on your mod's event bus, exactly like registering any other NeoForge registry
+/// entry (e.g. blocks or items).
 public class ConditionsRegistry {
-    private static final MPRRegistry<MPRCondition> REGISTRY = new MPRRegistry<>(MPRCondition.class);
+    public static final ResourceKey<Registry<Class<? extends MPRCondition>>> REGISTRY_KEY =
+            ResourceKey.createRegistryKey(MPR.id("conditions"));
 
-    public static void init() {
-        REGISTRY.register("advancement", MPRAdvancementCondition.class);
-        REGISTRY.register("biome", MPRBiomeCondition.class);
-        REGISTRY.register("block_in", MPRBlockInCondition.class);
-        REGISTRY.register("block_on", MPRBlockOnCondition.class);
-        REGISTRY.register("chance", MPRChanceCondition.class);
-        REGISTRY.register("day_time", MPRDayTimeCondition.class);
-        REGISTRY.register("deepness", MPRDeepnessCondition.class);
-        REGISTRY.register("difficulty", MPRDifficultyCondition.class);
-        REGISTRY.register("dimension", MPRDimensionCondition.class);
-        REGISTRY.register("distance_from_spawn", MPRDistanceFromSpawnCondition.class);
-        REGISTRY.register("effect", MPREffectCondition.class);
-        REGISTRY.register("equipment", MPREquipmentCondition.class);
-        REGISTRY.register("hardcore", MPRHardcoreCondition.class);
-        REGISTRY.register("has_owner", MPRHasOwnerCondition.class);
-        REGISTRY.register("has_target", MPRHasTargetCondition.class);
-        REGISTRY.register("health", MPRHealthCondition.class);
-        REGISTRY.register("is_baby", MPRBabyCondition.class);
-        REGISTRY.register("light_level", MPRLightLevelCondition.class);
-        REGISTRY.register("mod_loaded", MPRModLoadedCondition.class);
-        REGISTRY.register("moon_phase", MPRMoonPhaseCondition.class);
-        REGISTRY.register("nbt", MPRNBTCondition.class);
-        REGISTRY.register("or", MPROrCondition.class);
-        REGISTRY.register("score", MPRScoreCondition.class);
-        REGISTRY.register("spawn_type", MPRSpawnTypeCondition.class);
-        REGISTRY.register("structure", MPRStructureCondition.class);
-        REGISTRY.register("tag", MPRTagCondition.class);
-        REGISTRY.register("temperature", MPRTemperatureCondition.class);
-        REGISTRY.register("time_played", MPRTimePlayedCondition.class);
-        REGISTRY.register("weather", MPRWeatherCondition.class);
-        //if (ModList.get().isLoaded("gamestages"))
-        //    REGISTRY.register("game_stage", MPRGameStageCondition.class);
-        //if (ModList.get().isLoaded("sereneseasons"))
-        //    REGISTRY.register("season", MPRSeasonCondition.class);
-        REGISTRY.lockMprNamespace();
-        NeoForge.EVENT_BUS.post(new MPRRegisterEvent(MPRRegisterEvent.Type.CONDITION, REGISTRY));
+    private static final Registry<Class<? extends MPRCondition>> REGISTRY =
+            new RegistryBuilder<>(REGISTRY_KEY).create();
+
+    public static void init(IEventBus modEventBus) {
+        modEventBus.addListener((NewRegistryEvent event) -> event.register(REGISTRY));
+        modEventBus.addListener(ConditionsRegistry::registerDefaults);
+    }
+
+    private static void registerDefaults(RegisterEvent event) {
+        event.register(REGISTRY_KEY, helper -> {
+            helper.register(MPR.id("advancement"), MPRAdvancementCondition.class);
+            helper.register(MPR.id("biome"), MPRBiomeCondition.class);
+            helper.register(MPR.id("block_in"), MPRBlockInCondition.class);
+            helper.register(MPR.id("block_on"), MPRBlockOnCondition.class);
+            helper.register(MPR.id("chance"), MPRChanceCondition.class);
+            helper.register(MPR.id("day_time"), MPRDayTimeCondition.class);
+            helper.register(MPR.id("deepness"), MPRDeepnessCondition.class);
+            helper.register(MPR.id("difficulty"), MPRDifficultyCondition.class);
+            helper.register(MPR.id("dimension"), MPRDimensionCondition.class);
+            helper.register(MPR.id("distance_from_spawn"), MPRDistanceFromSpawnCondition.class);
+            helper.register(MPR.id("effect"), MPREffectCondition.class);
+            helper.register(MPR.id("equipment"), MPREquipmentCondition.class);
+            helper.register(MPR.id("hardcore"), MPRHardcoreCondition.class);
+            helper.register(MPR.id("has_owner"), MPRHasOwnerCondition.class);
+            helper.register(MPR.id("has_target"), MPRHasTargetCondition.class);
+            helper.register(MPR.id("health"), MPRHealthCondition.class);
+            helper.register(MPR.id("is_baby"), MPRBabyCondition.class);
+            helper.register(MPR.id("light_level"), MPRLightLevelCondition.class);
+            helper.register(MPR.id("mod_loaded"), MPRModLoadedCondition.class);
+            helper.register(MPR.id("moon_phase"), MPRMoonPhaseCondition.class);
+            helper.register(MPR.id("nbt"), MPRNBTCondition.class);
+            helper.register(MPR.id("or"), MPROrCondition.class);
+            helper.register(MPR.id("score"), MPRScoreCondition.class);
+            helper.register(MPR.id("spawn_type"), MPRSpawnTypeCondition.class);
+            helper.register(MPR.id("structure"), MPRStructureCondition.class);
+            helper.register(MPR.id("tag"), MPRTagCondition.class);
+            helper.register(MPR.id("temperature"), MPRTemperatureCondition.class);
+            helper.register(MPR.id("time_played"), MPRTimePlayedCondition.class);
+            helper.register(MPR.id("weather"), MPRWeatherCondition.class);
+            //if (ModList.get().isLoaded("gamestages"))
+            //    helper.register(MPR.id("game_stage"), MPRGameStageCondition.class);
+            //if (ModList.get().isLoaded("sereneseasons"))
+            //    helper.register(MPR.id("season"), MPRSeasonCondition.class);
+        });
     }
 
     @Nullable
@@ -60,6 +72,6 @@ public class ConditionsRegistry {
 
     @Nullable
     static ResourceLocation getId(Class<? extends MPRCondition> clazz) {
-        return REGISTRY.getId(clazz);
+        return REGISTRY.getKey(clazz);
     }
 }
