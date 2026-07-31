@@ -51,6 +51,8 @@ public class PropertiesRegistry {
             helper.register(MPR.id("play_sound"), MPRPlaySoundProperty.class);
             helper.register(MPR.id("presets"), MPRPresetsProperty.class);
             helper.register(MPR.id("raw_nbt"), MPRRawNBTProperty.class);
+            helper.register(MPR.id("remove_attribute_modifiers"), MPRRemoveAttributeModifiersProperty.class);
+            helper.register(MPR.id("remove_potion_effects"), MPRRemovePotionEffectsProperty.class);
             helper.register(MPR.id("silent"), MPRSilentProperty.class);
             helper.register(MPR.id("team"), MPRTeamProperty.class);
         });

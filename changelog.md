@@ -1,4 +1,6 @@
 # Upcoming
+* Added `remove_potion_effects` and `remove_attribute_modifiers` properties
+
 ## Technical
 * Properties, Conditions etc are now registry objects, like blocks and items
 
