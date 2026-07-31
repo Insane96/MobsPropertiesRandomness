@@ -43,6 +43,7 @@ import net.neoforged.fml.ModContainer;
 import net.neoforged.fml.common.Mod;
 import net.neoforged.fml.config.ModConfig;
 import net.neoforged.fml.event.lifecycle.FMLCommonSetupEvent;
+import net.neoforged.fml.event.lifecycle.FMLLoadCompleteEvent;
 import net.neoforged.neoforge.common.NeoForge;
 import net.neoforged.neoforge.event.AddReloadListenerEvent;
 import net.neoforged.neoforge.event.RegisterCommandsEvent;
@@ -62,7 +63,8 @@ public class MPR
     public MPR(IEventBus modEventBus, ModContainer modContainer) {
         CONFIG = new ILModConfig(id("main"), "Single Module", ModConfig.Type.COMMON, modEventBus, MPR.class.getClassLoader());
         modContainer.registerConfig(ModConfig.Type.COMMON, CONFIG.spec);
-        modEventBus.addListener(this::preInit);
+        modEventBus.addListener(this::onCommonSetup);
+        modEventBus.addListener(this::onLoadComplete);
         NeoForge.EVENT_BUS.register(this);
     }
 
@@ -89,9 +91,11 @@ public class MPR
         MPRCommand.register(dispatcher, context);
     }
 
-    public void preInit(FMLCommonSetupEvent event) {
+    public void onCommonSetup(FMLCommonSetupEvent event) {
         MPRLogger.init("logs/MobsPropertiesRandomness.log");
+    }
 
+    public void onLoadComplete(FMLLoadCompleteEvent event) {
         ConditionsRegistry.init();
         PropertiesRegistry.init();
         ItemFunctionsRegistry.init();
