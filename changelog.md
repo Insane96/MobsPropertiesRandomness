@@ -1,3 +1,7 @@
+# 6.1.5.2
+## Technical
+* Fixed events being posted too early, not working
+
 # 6.1.5.1
 ## Technical
 * Fixed events being posted too early, not working
