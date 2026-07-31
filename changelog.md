@@ -1,4 +1,4 @@
-# Upcoming
+# 6.1.6.0
 * Added `remove_potion_effects` and `remove_attribute_modifiers` properties
 
 ## Technical
