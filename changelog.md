@@ -1,3 +1,6 @@
+# 6.1.6.1
+* Fixed On Hit events not checking for conditions before applying the damage multiplier
+
 # 6.1.6.0
 * Added `remove_potion_effects` and `remove_attribute_modifiers` properties
 

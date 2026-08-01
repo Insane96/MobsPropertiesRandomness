@@ -49,6 +49,16 @@ public abstract class MPREvent extends MPRConditionable {
     protected boolean tryExecute(LivingEntity living, @Nullable LivingEntity other) {
         if (!MPRCondition.conditionsApply(this.conditions, living))
             return false;
+        return execute(living, other);
+    }
+
+    /**
+     * Executes the event without checking its conditions.
+     * Used by events that need to check conditions once and reuse the result for both their
+     * own logic (e.g. damage modifiers) and the apply_properties, to avoid double-rolling
+     * chance-based conditions.
+     */
+    protected boolean execute(LivingEntity living, @Nullable LivingEntity other) {
         LivingEntity target = this.target == Target.THIS ? living : other;
         if (target == null)
             return false;

@@ -26,7 +26,7 @@ public class MPRDeathEvent extends MPREvent {
 		this.cancelDeath = cancelDeath;
 	}
 
-	/// returns true if the death should be cancelled
+	/// returns true if the death should be canceled and execution runs
 	public boolean death(LivingEntity entity, @Nullable LivingEntity other, DamageSource source, boolean isDirectDamage) {
 		if (!this.hurtData.shouldApply(source, isDirectDamage))
 			return false;

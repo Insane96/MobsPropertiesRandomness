@@ -39,6 +39,9 @@ public abstract class MPROnHitEvent extends MPREvent {
 				|| living.isDeadOrDying())
 			return;
 
+		if (!MPRCondition.conditionsApply(this.conditions, living))
+			return;
+
 		if (this.damageAmount != null
 				&& (amount < this.damageAmount.getMin(living) || amount > this.damageAmount.getMax(living)))
 			return;
@@ -58,7 +61,7 @@ public abstract class MPROnHitEvent extends MPREvent {
 				return;
 		}
 
-		this.tryExecute(living, other);
+		this.execute(living, other);
 	}
 
 	public static void onHit(LivingDamageEvent.Pre event) {
