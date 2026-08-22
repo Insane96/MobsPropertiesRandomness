@@ -35,6 +35,8 @@ public class MPRBase extends Feature {
 	public static Boolean betterCreeperLingering = true;
 	@Config(description = "If true, warnings will be displayed in chat when reloading data packs. Useful when developing a data pack.")
 	public static Boolean warningsChat = false;
+	@Config(description = "If true, the full stack trace will be logged when a mob/preset/etc fails to load. Should be enabled when the dev asks to, to trace bugs.")
+	public static Boolean logStacktraceOnError = false;
 
 	@SubscribeEvent(priority = EventPriority.LOWEST)
 	public void onEntityJoinLevelLowest(EntityJoinLevelEvent event) {

@@ -1,3 +1,7 @@
+# 6.1.7.0
+* Stack traces are now hidden from errors in logs by default and can be enabled with a data pack
+  * Basically an error should show up much cleaner in the log
+
 # 6.1.6.1
 * Fixed On Hit events not checking for conditions before applying the damage multiplier
 

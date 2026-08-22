@@ -7,6 +7,7 @@ import insane96mcp.mobspropertiesrandomness.MPR;
 import insane96mcp.mobspropertiesrandomness.data.json.MPRMob;
 import insane96mcp.mobspropertiesrandomness.data.json.property.preset.MPRPresetsProperty;
 import insane96mcp.mobspropertiesrandomness.data.json.property.preset.MPRWeightedPreset;
+import insane96mcp.mobspropertiesrandomness.feature.MPRBase;
 import insane96mcp.mobspropertiesrandomness.util.MPRChatNotifier;
 import insane96mcp.mobspropertiesrandomness.util.MPRLogger;
 import net.minecraft.resources.FileToIdConverter;
@@ -85,8 +86,10 @@ public class MPRMobReloadListener extends SimplePreparableReloadListener<Map<Res
 			}
 			catch (Exception e) {
 				StringBuilder sb = new StringBuilder("Failed loading Mob " + entry.getKey() + ": " + e.getMessage());
-				for (StackTraceElement s : e.getStackTrace())
-					sb.append("\n").append(s.toString());
+				if (MPRBase.logStacktraceOnError) {
+					for (StackTraceElement s : e.getStackTrace())
+						sb.append("\n").append(s.toString());
+				}
 				MPRLogger.error(sb.toString());
 				errorCount++;
 			}
