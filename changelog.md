@@ -1,5 +1,8 @@
+# 6.1.7.1
+* Fixed weather condition "thunder" not working
+
 # 6.1.7.0
-* Stack traces are now hidden from errors in logs by default and can be enabled with a data pack
+* Stack traces are now hidden from errors in logs by default and can be enabled with a config option
   * Basically an error should show up much cleaner in the log
 
 # 6.1.6.1

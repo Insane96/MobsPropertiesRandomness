@@ -44,7 +44,7 @@ public class MPRWeatherCondition extends MPRCondition {
         CLEAR,
         @SerializedName("rain")
         RAIN,
-        @SerializedName("snow")
+        @SerializedName("thunder")
         THUNDER
     }
 }
