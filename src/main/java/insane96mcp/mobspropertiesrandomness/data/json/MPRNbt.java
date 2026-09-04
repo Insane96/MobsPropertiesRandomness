@@ -70,7 +70,7 @@ public class MPRNbt {
         switch (this.type) {
             case DOUBLE -> target.putDouble(key, this.value.getDoubleBetween(living));
             case INTEGER -> target.putInt(key, this.value.getIntBetween(living));
-            case BOOLEAN -> target.putBoolean(key, living.getRandom().nextFloat() < this.value.getDoubleBetween(living));
+            case BOOLEAN -> target.putBoolean(key, this.value.getIntBetween(living) != 0);
             case STRING -> target.putString(key, this.stringValue);
         }
     }

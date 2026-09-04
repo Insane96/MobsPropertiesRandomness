@@ -1,3 +1,9 @@
+# 6.1.7.2
+* Fixed `health_left` check in `damaged`/`attack` events being inverted (was triggering outside the specified range instead of inside)
+* Fixed `flat_health_left` in `damaged`/`attack` events using percentage by default and flat health when enabled, instead of the other way around
+* Fixed `nbt` property with `boolean` type using a random chance instead of setting a `true`/`false` value
+* Fixed `potion_effect`'s stackable `amplifier`/`duration` discarding the previously stacked value when a `cap` was set, instead of summing then clamping to the cap
+
 # 6.1.7.1
 * Fixed weather condition "thunder" not working
 

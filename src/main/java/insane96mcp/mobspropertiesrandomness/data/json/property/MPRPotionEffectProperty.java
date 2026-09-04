@@ -115,18 +115,20 @@ public class MPRPotionEffectProperty extends MPRProperty {
             double value = this.value.getDoubleBetween(living);
             if (!this.stack)
                 return value;
+            double stacked = value + originalValue;
             if (this.cap != MPRRange.UNLIMITED)
-                return Mth.clamp(value, this.cap.getMin(living), this.cap.getMax(living));
-            return value + originalValue;
+                return Mth.clamp(stacked, this.cap.getMin(living), this.cap.getMax(living));
+            return stacked;
         }
 
         public int getStackedIntValue(LivingEntity living, int originalValue) {
             int value = this.value.getIntBetween(living);
             if (!this.stack)
                 return value;
+            int stacked = value + originalValue;
             if (this.cap != MPRRange.UNLIMITED)
-                return Mth.clamp(value, (int) this.cap.getMin(living), (int) this.cap.getMax(living));
-            return value + originalValue;
+                return Mth.clamp(stacked, (int) this.cap.getMin(living), (int) this.cap.getMax(living));
+            return stacked;
         }
 
         public static class Serializer implements JsonDeserializer<Stackable>, JsonSerializer<Stackable> {
