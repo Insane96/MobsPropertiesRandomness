@@ -13,7 +13,7 @@
         {
             "property": "potion_effect",
             "effect": "minecraft:invisibility",
-            "hide_particles": true
+            "show_particles": false
         },
         {
             "property": "attribute_modifier",

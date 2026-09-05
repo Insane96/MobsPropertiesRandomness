@@ -23,9 +23,19 @@ public class MPRProperty extends MPRConditionable {
 
     /// Checks for conditions and applies the property
     public boolean tryApply(LivingEntity livingEntity) {
-        if (!MPRCondition.conditionsApply(this.conditions, livingEntity))
+        return tryApply(livingEntity, livingEntity, null);
+    }
+
+    /**
+     * Checks for conditions and applies the property to {@code applyTarget}. Conditions are evaluated
+     * against {@code self}/{@code other} (the event owner and its counterpart) rather than against
+     * {@code applyTarget}, so a condition's {@code this}/{@code other} target keeps its meaning regardless
+     * of which of the two entities the property actually gets applied to.
+     */
+    public boolean tryApply(LivingEntity applyTarget, LivingEntity self, @Nullable LivingEntity other) {
+        if (!MPRCondition.conditionsApply(this.conditions, self, other))
             return false;
-        return apply(livingEntity);
+        return apply(applyTarget);
     }
 
     /// Applies the property

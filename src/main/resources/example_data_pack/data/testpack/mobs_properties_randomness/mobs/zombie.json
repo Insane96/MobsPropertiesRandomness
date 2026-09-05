@@ -68,7 +68,7 @@
         },
         {
             "property": "experience_multiplier",
-            "multiplier": 100,
+            "multiplier": 10,
             "conditions": [
                 {
                     "condition": "day_time",
@@ -98,7 +98,7 @@
         },
         {
             "property": "nbt",
-            "path": "powered",
+            "path": "CanBreakDoors",
             "type": "boolean",
             "value": 1
         },
@@ -293,6 +293,50 @@
                     "effect": "minecraft:speed",
                     "amplifier": 4,
                     "duration": 1
+                }
+            ]
+        },
+        {
+            "property": "event",
+            "event": "attack",
+            "id": "test:weakness_if_victim_has_totem",
+            "conditions": [
+                {
+                    "condition": "equipment",
+                    "target": "other",
+                    "slot": "offhand",
+                    "items": "minecraft:totem_of_undying"
+                }
+            ],
+            "target": "this",
+            "apply_properties": [
+                {
+                    "property": "potion_effect",
+                    "effect": "minecraft:weakness",
+                    "amplifier": 0,
+                    "duration": 100
+                }
+            ]
+        },
+        {
+            "property": "event",
+            "event": "attack",
+            "id": "test:burn_victim_if_zombie_holds_diamond_sword",
+            "target": "other",
+            "apply_properties": [
+                {
+                    "property": "potion_effect",
+                    "effect": "minecraft:weakness",
+                    "amplifier": 0,
+                    "duration": 100,
+                    "conditions": [
+                        {
+                            "condition": "equipment",
+                            "target": "this",
+                            "slot": "mainhand",
+                            "items": "minecraft:diamond_sword"
+                        }
+                    ]
                 }
             ]
         }

@@ -39,7 +39,7 @@ public abstract class MPROnHitEvent extends MPREvent {
 				|| living.isDeadOrDying())
 			return;
 
-		if (!MPRCondition.conditionsApply(this.conditions, living))
+		if (!MPRCondition.conditionsApply(this.conditions, living, other))
 			return;
 
 		if (this.damageAmount != null

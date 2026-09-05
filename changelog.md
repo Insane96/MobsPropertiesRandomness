@@ -1,3 +1,10 @@
+# 6.1.9.0
+* Added `target` field to conditions
+  * Defaults to `"this"`, used in events to decide which entity to check the conditions against.  
+    Before, you couldn't check for conditions on `"other"` while applying properties to `"this"`. Now you can.  
+    E.g., you can now apply an effect to `"this"` if the attacker (`"other"`) has a certain item.  
+    This propagates to inner conditions too, so in `apply_properties`, nested modifiers, etc. you can decide to check conditions against `"this"` or `"other"`
+
 # 6.1.8.0
 * Added `days_passed` condition
 
