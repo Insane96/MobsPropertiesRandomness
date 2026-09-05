@@ -35,6 +35,7 @@ public class ConditionsRegistry {
             helper.register(MPR.id("block_on"), MPRBlockOnCondition.class);
             helper.register(MPR.id("chance"), MPRChanceCondition.class);
             helper.register(MPR.id("day_time"), MPRDayTimeCondition.class);
+            helper.register(MPR.id("days_passed"), MPRDaysPassedCondition.class);
             helper.register(MPR.id("deepness"), MPRDeepnessCondition.class);
             helper.register(MPR.id("difficulty"), MPRDifficultyCondition.class);
             helper.register(MPR.id("dimension"), MPRDimensionCondition.class);

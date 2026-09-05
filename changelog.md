@@ -1,3 +1,6 @@
+# 6.1.8.0
+* Added `days_passed` condition
+
 # 6.1.7.2
 * Fixed `health_left` check in `damaged`/`attack` events being inverted (was triggering outside the specified range instead of inside)
 * Fixed `flat_health_left` in `damaged`/`attack` events using percentage by default and flat health when enabled, instead of the other way around

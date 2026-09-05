@@ -18,6 +18,7 @@ import java.util.List;
 
 @JsonAdapter(MPRStructureCondition.Serializer.class)
 public class MPRStructureCondition extends MPRCondition {
+    //TODO Allow tags
     List<ResourceKey<Structure>> structures;
 
     public MPRStructureCondition(List<ResourceKey<Structure>> structures, boolean inverted) {
