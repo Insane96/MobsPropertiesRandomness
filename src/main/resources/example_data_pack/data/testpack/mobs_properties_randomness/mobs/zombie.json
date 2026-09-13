@@ -339,6 +339,34 @@
                     ]
                 }
             ]
+        },
+        {
+            "property": "event",
+            "event": "attack",
+            "id": "test:speed_this_weaken_other",
+            "conditions": [
+                {
+                    "condition": "chance",
+                    "chance": 0.5
+                }
+            ],
+            "target": "this",
+            "apply_properties": [
+                {
+                    "property": "potion_effect",
+                    "target": "this",
+                    "effect": "minecraft:speed",
+                    "amplifier": 0,
+                    "duration": 5
+                },
+                {
+                    "property": "potion_effect",
+                    "target": "other",
+                    "effect": "minecraft:weakness",
+                    "amplifier": 0,
+                    "duration": 5
+                }
+            ]
         }
     ]
 }

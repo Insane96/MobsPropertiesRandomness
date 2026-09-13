@@ -1,3 +1,9 @@
+# Upcoming
+* Added `target` field to properties inside `apply_properties`
+  * Defaults to the event's own `target` if omitted, so existing data packs behave the same.  
+    When set, it overrides where that specific property is applied, independently of the event's `target` and of the other properties in the same `apply_properties` list.  
+    E.g., a single event with a 50% chance can now apply one property to `"this"` and another to `"other"` at the same time.
+
 # 6.1.9.0
 * Added `target` field to conditions
   * Defaults to `"this"`, used in events to decide which entity to check the conditions against.  

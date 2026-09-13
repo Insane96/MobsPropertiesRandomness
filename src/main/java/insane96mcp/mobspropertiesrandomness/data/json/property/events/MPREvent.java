@@ -59,21 +59,19 @@ public abstract class MPREvent extends MPRConditionable {
      * chance-based conditions.
      */
     protected boolean execute(LivingEntity living, @Nullable LivingEntity other) {
-        LivingEntity applyTarget = this.target == Target.THIS ? living : other;
-        if (applyTarget == null)
-            return false;
-        tryApplyProperty(applyTarget, living, other);
+        tryApplyProperty(living, other);
         return true;
     }
 
     /**
-     * Applies this event's properties to {@code applyTarget}. Each property's own conditions are checked
-     * against the fixed {@code living}/{@code other} pair (the event owner and its counterpart), regardless
-     * of which of the two {@code applyTarget} actually is.
+     * Applies this event's properties to {@code living}/{@code other} (the event owner and its counterpart),
+     * whichever this event's own {@link #target} resolves to, unless a property specifies its own
+     * {@link MPRProperty#target}, in which case that one overrides it - letting different properties in the
+     * same list independently target either entity.
      */
-    public void tryApplyProperty(LivingEntity applyTarget, LivingEntity living, @Nullable LivingEntity other) {
+    public void tryApplyProperty(LivingEntity living, @Nullable LivingEntity other) {
         for (MPRProperty applyProperty : this.applyProperties)
-            applyProperty.tryApply(applyTarget, living, other);
+            applyProperty.tryApply(this.target, living, other);
     }
 
     public static <T extends MPREvent> List<T> getEvents(LivingEntity living, Class<T> typeId) {

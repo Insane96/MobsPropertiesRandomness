@@ -4,6 +4,7 @@ import com.google.gson.*;
 import com.google.gson.annotations.JsonAdapter;
 import insane96mcp.mobspropertiesrandomness.data.json.condition.MPRCondition;
 import insane96mcp.mobspropertiesrandomness.data.json.property.events.MPREvent;
+import insane96mcp.mobspropertiesrandomness.data.json.property.events.Target;
 import net.minecraft.world.entity.LivingEntity;
 import org.jetbrains.annotations.Nullable;
 
@@ -28,7 +29,11 @@ public class MPREventProperty extends MPRProperty {
     }
 
     @Override
-    public boolean tryApply(LivingEntity applyTarget, LivingEntity self, @Nullable LivingEntity other) {
+    public boolean tryApply(Target eventTarget, LivingEntity living, @Nullable LivingEntity other) {
+        Target resolvedTarget = this.target != null ? this.target : eventTarget;
+        LivingEntity applyTarget = resolvedTarget == Target.THIS ? living : other;
+        if (applyTarget == null)
+            return false;
         return this.apply(applyTarget);
     }
 
