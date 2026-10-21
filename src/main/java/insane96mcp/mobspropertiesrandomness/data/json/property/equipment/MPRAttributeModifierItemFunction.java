@@ -53,7 +53,7 @@ public class MPRAttributeModifierItemFunction extends MPRItemFunction {
         public JsonElement serialize(MPRAttributeModifierItemFunction src, Type typeOfSrc, JsonSerializationContext context) {
             JsonObject jObject = context.serialize(src.attributeModifier).getAsJsonObject();
             if (src.equipmentSlotGroup != null)
-                jObject.addProperty("slots", src.equipmentSlotGroup.name());
+                jObject.add("slots", context.serialize(src.equipmentSlotGroup));
             return src.endSerialization(jObject, context);
         }
     }

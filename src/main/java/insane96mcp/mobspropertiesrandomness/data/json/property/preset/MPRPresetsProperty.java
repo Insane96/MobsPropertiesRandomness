@@ -3,11 +3,9 @@ package insane96mcp.mobspropertiesrandomness.data.json.property.preset;
 import com.google.gson.*;
 import com.google.gson.annotations.JsonAdapter;
 import com.google.gson.annotations.SerializedName;
-import insane96mcp.insanelib.core.ModNBTData;
 import insane96mcp.insanelib.util.weightedrandom.WeightedRandom;
 import insane96mcp.mobspropertiesrandomness.data.json.condition.MPRCondition;
 import insane96mcp.mobspropertiesrandomness.data.json.property.MPRProperty;
-import insane96mcp.mobspropertiesrandomness.feature.MPRBase;
 import insane96mcp.mobspropertiesrandomness.util.SerializerUtils;
 import net.minecraft.util.GsonHelper;
 import net.minecraft.world.entity.LivingEntity;
@@ -32,10 +30,10 @@ public class MPRPresetsProperty extends MPRProperty {
 
     @Override
     public boolean apply(LivingEntity living) {
-        if (ModNBTData.contains(living, MPRBase.PRESET))
-            return false;
         if (this.applyAll) {
             List<MPRWeightedPreset> items = this.getPresets(living);
+            if (items.isEmpty())
+                return false;
             items.forEach(weightedPreset -> weightedPreset.tryApply(living));
             return true;
         }

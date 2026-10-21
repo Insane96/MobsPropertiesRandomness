@@ -33,8 +33,8 @@ public class MPRDeathEvent extends MPREvent {
 			return false;
 
 		boolean cancel = this.cancelDeath && !source.is(DamageTypeTags.BYPASSES_INVULNERABILITY);
-		//Set the health before applying the properties, so they can change it (e.g. heal)
-		if (cancel)
+		//Set the health before applying the properties, so they can change it (e.g. heal). Not if a previous death event already restored it
+		if (cancel && entity.getHealth() <= 0f)
 			entity.setHealth(0.01f);
 		this.execute(entity, other);
 		return cancel;

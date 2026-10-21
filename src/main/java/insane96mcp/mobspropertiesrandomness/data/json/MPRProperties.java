@@ -51,7 +51,7 @@ public class MPRProperties extends MPRConditionable {
      * - before: the presets are applied before the other properties<br>
      * - after: the presets are applied after the other properties
      */
-    private void applyProperties(Predicate<MPRProperty> applier) {
+    protected void applyProperties(Predicate<MPRProperty> applier) {
         boolean exclusiveApplied = false;
         for (MPRProperty property : this.properties) {
             if (property instanceof MPRPresetsProperty presets && presets.mode != MPRPresetsProperty.Mode.AFTER

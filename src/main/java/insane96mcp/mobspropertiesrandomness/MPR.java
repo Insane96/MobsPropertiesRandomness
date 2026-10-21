@@ -122,12 +122,12 @@ public class MPR
                 .registerTypeAdapter(LightLayer.class, new NameEnumSerializer<>("LightLayer", n -> LightLayer.valueOf(n.toUpperCase()), l -> l.toString().toLowerCase()))
                 .registerTypeAdapter(MobSpawnType.class, new NameEnumSerializer<>("MobSpawnType", n -> MobSpawnType.valueOf(n.toUpperCase()), t -> t.name().toLowerCase()))
                 .registerTypeAdapter(NBTType.class, new StrictEnumDeserializer<>(NBTType.class))
-                .registerTypeAdapter(EquipmentSlotGroup.class, new StrictEnumDeserializer<>(EquipmentSlotGroup.class))
+                .registerTypeAdapter(EquipmentSlotGroup.class, new NameEnumSerializer<>("EquipmentSlotGroup", n -> EquipmentSlotGroup.valueOf(n.toUpperCase()), EquipmentSlotGroup::getSerializedName))
                 .registerTypeAdapter(PlayerMode.class, new StrictEnumDeserializer<>(PlayerMode.class))
                 .registerTypeAdapter(MPRChangeTargetEvent.ChangeType.class, new StrictEnumDeserializer<>(MPRChangeTargetEvent.ChangeType.class))
                 .registerTypeAdapter(MPRWeatherCondition.Weather.class, new StrictEnumDeserializer<>(MPRWeatherCondition.Weather.class))
                 .registerTypeAdapter(MPRRange.Bias.class, new StrictEnumDeserializer<>(MPRRange.Bias.class))
-                .registerTypeAdapter(EventPriority.class, new StrictEnumDeserializer<>(EventPriority.class));
+                .registerTypeAdapter(EventPriority.class, new NameEnumSerializer<>("EventPriority", n -> EventPriority.valueOf(n.toUpperCase()), p -> p.name().toLowerCase()));
         //if (ModList.get().isLoaded("sereneseasons"))
         //    gsonBuilder.registerTypeAdapter(Season.SubSeason.class, new SubSeasonSerializer());
         return gsonBuilder.create();

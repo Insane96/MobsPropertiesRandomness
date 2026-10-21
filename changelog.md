@@ -54,6 +54,9 @@ Event presets
 * `/mpr summon` now fails with an unknown preset, instead of summoning a normal mob, and uses the local difficulty of the summon position instead of the command source's one
 * Mobs with the same `priority` are now always applied in the same order (sorted by file id)
 * Minor performance improvement for `damage_immunity`
+* `slots` in `add_attribute_modifier` item functions and `event_priority` are now lowercase like the other values (e.g. `"mainhand"`, `"highest"`). Uppercase values still work
+* Fixed `presets` inside a preset never being applied when the preset was applied via preset nbt (e.g. `/mpr summon`)
+* Fixed a `death` event with `cancel_death` overriding the health healed by a previous `death` event of the same mob
 
 # 6.1.10.0
 * Added `target` field to properties inside `apply_properties`

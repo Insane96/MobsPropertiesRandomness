@@ -1,0 +1,788 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>MPR JSON Generator</title>
+<style>
+:root {
+  --bg: #f6f7f9; --panel: #ffffff; --panel2: #f1f3f6; --border: #d9dde3; --text: #1d2330; --muted: #6a7384;
+  --accent: #3b6fd8; --accent-soft: #e6eefc; --danger: #c93c3c; --danger-soft: #fbeaea; --ok: #2f8a4c;
+  --code-bg: #10141c; --code-text: #d7dde8;
+  --k-condition: #8a5cd1; --k-property: #2f8a4c; --k-function: #c27a12; --k-modifier: #2b86b8; --k-obj: #6a7384;
+}
+@media (prefers-color-scheme: dark) {
+  :root {
+    --bg: #12151b; --panel: #1a1e26; --panel2: #222733; --border: #313847; --text: #e3e7ee; --muted: #8e97a8;
+    --accent: #6d9bff; --accent-soft: #233150; --danger: #ff7a7a; --danger-soft: #3a2224; --ok: #6fd08e;
+    --code-bg: #0b0e13; --code-text: #d7dde8;
+  }
+}
+* { box-sizing: border-box; }
+[hidden] { display: none !important; }
+html, body { margin: 0; background: var(--bg); color: var(--text); font: 14px/1.4 system-ui, -apple-system, "Segoe UI", sans-serif; }
+header { display: flex; flex-wrap: wrap; gap: 12px; align-items: center; padding: 10px 16px; background: var(--panel); border-bottom: 1px solid var(--border); position: sticky; top: 0; z-index: 5; }
+header h1 { font-size: 16px; margin: 0 12px 0 0; }
+header label { display: flex; gap: 6px; align-items: center; color: var(--muted); }
+main { display: grid; grid-template-columns: minmax(0, 1fr) minmax(320px, 40%); gap: 16px; padding: 16px; align-items: start; }
+@media (max-width: 900px) { main { grid-template-columns: 1fr; } #outPanel { position: static !important; max-height: none !important; } }
+#editor { min-width: 0; }
+#outPanel { position: sticky; top: 64px; max-height: calc(100vh - 80px); display: flex; flex-direction: column; gap: 8px; min-width: 0; }
+#out { flex: 1; overflow: auto; margin: 0; padding: 12px; background: var(--code-bg); color: var(--code-text); border-radius: 8px; font: 12.5px/1.45 ui-monospace, Consolas, monospace; white-space: pre; min-height: 200px; }
+#path { font: 12px ui-monospace, Consolas, monospace; color: var(--muted); word-break: break-all; }
+#issues { font-size: 12.5px; }
+#issues.ok { color: var(--ok); }
+#issues ul { margin: 4px 0 0; padding-left: 18px; color: var(--danger); max-height: 140px; overflow: auto; }
+input, select, textarea, button { font: inherit; color: var(--text); }
+input[type=text], input[type=number], select, textarea { background: var(--panel); border: 1px solid var(--border); border-radius: 5px; padding: 4px 7px; min-width: 0; }
+input[type=number] { width: 110px; }
+input[type=text] { width: 100%; max-width: 360px; }
+textarea { width: 100%; min-height: 70px; font: 12.5px ui-monospace, Consolas, monospace; }
+.invalid { border-color: var(--danger) !important; background: var(--danger-soft) !important; }
+button { background: var(--panel2); border: 1px solid var(--border); border-radius: 5px; padding: 4px 10px; cursor: pointer; }
+button:hover { border-color: var(--accent); }
+button.primary { background: var(--accent); border-color: var(--accent); color: #fff; }
+button.icon { padding: 2px 7px; font-size: 12px; }
+button.add { color: var(--accent); background: transparent; border-style: dashed; }
+.fields { display: flex; flex-direction: column; gap: 6px; }
+.row { display: grid; grid-template-columns: 170px minmax(0, 1fr); gap: 10px; align-items: start; }
+.row > .lbl { padding-top: 5px; font-weight: 500; overflow-wrap: anywhere; }
+.row > .lbl .req { color: var(--danger); }
+.row > .lbl .help { display: block; font-weight: 400; font-size: 11.5px; color: var(--muted); }
+@media (max-width: 560px) { .row { grid-template-columns: 1fr; gap: 2px; } }
+.inline { display: flex; flex-wrap: wrap; gap: 6px; align-items: center; }
+.muted { color: var(--muted); font-size: 12px; }
+.card { border: 1px solid var(--border); border-left: 4px solid var(--k-obj); border-radius: 6px; background: var(--panel); }
+.card.k-condition { border-left-color: var(--k-condition); }
+.card.k-property { border-left-color: var(--k-property); }
+.card.k-function { border-left-color: var(--k-function); }
+.card.k-modifier { border-left-color: var(--k-modifier); }
+.card > .head { display: flex; gap: 6px; align-items: center; padding: 5px 8px; background: var(--panel2); border-radius: 0 6px 0 0; }
+.card > .head .kind { font-size: 11px; text-transform: uppercase; letter-spacing: .04em; color: var(--muted); }
+.card > .head .spacer { flex: 1; }
+.card > .body { padding: 8px 10px 10px; display: flex; flex-direction: column; gap: 6px; }
+.card.collapsed > .body { display: none; }
+.card .desc { font-size: 12px; color: var(--muted); }
+.list { display: flex; flex-direction: column; gap: 6px; width: 100%; }
+.sub { border-left: 2px solid var(--border); padding-left: 10px; margin-top: 4px; display: flex; flex-direction: column; gap: 6px; }
+.section { background: var(--panel); border: 1px solid var(--border); border-radius: 8px; padding: 14px; }
+.checks { display: flex; flex-wrap: wrap; gap: 4px 12px; }
+.checks label { display: flex; gap: 4px; align-items: center; }
+dialog { border: 1px solid var(--border); border-radius: 8px; background: var(--panel); color: var(--text); width: min(700px, 92vw); }
+dialog::backdrop { background: rgba(0,0,0,.4); }
+dialog textarea { min-height: 300px; }
+</style>
+</head>
+<body>
+<header>
+  <h1>MPR JSON Generator</h1>
+  <label>File type
+    <select id="fileType"></select>
+  </label>
+  <label>Namespace <input type="text" id="ns" value="mypack" style="width:120px"></label>
+  <label>Name <input type="text" id="name" value="my_file" style="width:160px"></label>
+  <button id="btnImport">Import JSON…</button>
+  <button id="btnNew">New</button>
+</header>
+<main>
+  <div id="editor"></div>
+  <div id="outPanel">
+    <div id="path"></div>
+    <div class="inline">
+      <button class="primary" id="btnCopy">Copy</button>
+      <button id="btnDownload">Download</button>
+      <span id="copied" class="muted"></span>
+    </div>
+    <div id="issues"></div>
+    <pre id="out"></pre>
+  </div>
+</main>
+
+<dialog id="importDlg">
+  <h3 style="margin-top:0">Import JSON</h3>
+  <p class="muted">Paste an existing file or pick one from disk. The file type is detected automatically.</p>
+  <input type="file" id="importFile" accept=".json,application/json">
+  <textarea id="importText" placeholder="{ ... }"></textarea>
+  <div id="importErr" class="muted" style="color:var(--danger)"></div>
+  <div class="inline" style="justify-content:flex-end;margin-top:8px">
+    <button id="importCancel">Cancel</button>
+    <button class="primary" id="importOk">Import</button>
+  </div>
+</dialog>
+
+<datalist id="dl-entities"></datalist>
+<datalist id="dl-effects"></datalist>
+<datalist id="dl-attributes"></datalist>
+<datalist id="dl-damage_types"></datalist>
+<datalist id="dl-dimensions"></datalist>
+<datalist id="dl-enchantments"></datalist>
+<datalist id="dl-items"></datalist>
+
+<script>
+"use strict";
+
+/* ===================== Suggestions ===================== */
+const mc = s => s.split(" ").map(x => x.startsWith("#") ? "#minecraft:" + x.slice(1) : "minecraft:" + x);
+const SUGGEST = {
+  entities: mc("zombie husk drowned zombie_villager skeleton stray bogged wither_skeleton creeper spider cave_spider enderman witch slime magma_cube blaze ghast piglin piglin_brute zombified_piglin hoglin zoglin pillager vindicator evoker illusioner ravager vex phantom guardian elder_guardian shulker silverfish endermite breeze warden wither ender_dragon iron_golem wolf villager #skeletons #zombies #raiders #illager #undead #arthropod"),
+  effects: mc("speed slowness haste mining_fatigue strength instant_health instant_damage jump_boost nausea regeneration resistance fire_resistance water_breathing invisibility blindness night_vision hunger weakness poison wither health_boost absorption saturation glowing levitation luck unluck slow_falling conduit_power dolphins_grace bad_omen hero_of_the_village darkness trial_omen raid_omen wind_charged weaving oozing infested"),
+  attributes: mc("generic.armor generic.armor_toughness generic.attack_damage generic.attack_knockback generic.attack_speed generic.burning_time generic.explosion_knockback_resistance generic.fall_damage_multiplier generic.flying_speed generic.follow_range generic.gravity generic.jump_strength generic.knockback_resistance generic.luck generic.max_absorption generic.max_health generic.movement_efficiency generic.movement_speed generic.oxygen_bonus generic.safe_fall_distance generic.scale generic.step_height generic.water_movement_efficiency zombie.spawn_reinforcements"),
+  damage_types: mc("generic generic_kill in_fire on_fire lava hot_floor fall drown magic indirect_magic mob_attack mob_projectile arrow trident explosion player_explosion fireball freeze wither thorns starve cactus sweet_berry_bush lightning_bolt sonic_boom out_of_world #is_fire #is_projectile #is_explosion #is_fall #is_drowning #is_freezing #is_lightning #bypasses_armor #bypasses_invulnerability"),
+  dimensions: mc("overworld the_nether the_end"),
+  enchantments: mc("protection fire_protection blast_protection projectile_protection feather_falling thorns respiration aqua_affinity depth_strider frost_walker soul_speed swift_sneak unbreaking mending sharpness smite bane_of_arthropods knockback fire_aspect looting sweeping_edge efficiency silk_touch fortune power punch flame infinity quick_charge multishot piercing loyalty riptide channeling impaling density breach wind_burst luck_of_the_sea lure binding_curse vanishing_curse"),
+  items: mc("air iron_sword diamond_sword netherite_sword iron_axe bow crossbow trident shield iron_helmet iron_chestplate iron_leggings iron_boots diamond_helmet diamond_chestplate diamond_leggings diamond_boots netherite_helmet netherite_chestplate netherite_leggings netherite_boots leather_helmet golden_helmet chainmail_helmet carved_pumpkin totem_of_undying"),
+};
+for (const [k, list] of Object.entries(SUGGEST)) {
+  const dl = document.getElementById("dl-" + k);
+  for (const v of list) dl.append(new Option(v));
+}
+
+/* ===================== Schema =====================
+ * Field types:
+ *  str, text, int, num, bool(def), enum(o), range (MPRRange), mval (MPRModifiableValue), stack (Stackable),
+ *  strs (string list; single: collapse 1 element to a string), enums (multi-select o), json (raw JSON),
+ *  conds / props / funcs / mods (typed lists), objs (list of `of` sub-objects),
+ *  switch (discriminator k with `cases` -> fields, flattened into the same object)
+ */
+const R = (k, o = {}) => ({ k, t: "range", ...o });
+const MV = (k, o = {}) => ({ k, t: "mval", ...o });
+const B = (k, o = {}) => ({ k, t: "bool", ...o });
+const S = (k, o = {}) => ({ k, t: "str", ...o });
+const E = (k, o, x = {}) => ({ k, t: "enum", o, ...x });
+const CONDS = { k: "conditions", t: "conds" };
+const PLAYER = E("player", ["nearest", "any"], { help: "Default: nearest" });
+const ATTR_MOD = [
+  S("attribute", { req: true, dl: "attributes" }),
+  S("id", { req: true, ph: "mypack:my_modifier", help: "Modifier id (resource location)" }),
+  R("amount", { req: true }),
+  E("operation", ["add_value", "add_multiplied_base", "add_multiplied_total"], { req: true }),
+];
+const NBT = [
+  S("path", { req: true, ph: "CanBreakDoors" }),
+  E("type", ["double", "integer", "boolean", "string"], { req: true }),
+  R("value", { help: "Required for numeric types" }),
+  S("string_value", { help: "Required for type string" }),
+];
+const nbtCheck = o => o.type === "string" ? (o.string_value == null ? "string_value is required for string type" : null)
+  : (o.type && o.value == null ? "value is required for numeric types" : null);
+const HURT = [
+  S("damage_type", { dl: "damage_types", help: "Damage type id or #tag" }),
+  E("direct_indirect", ["direct", "indirect"]),
+  B("require_entity", { help: "Only when damage was caused by a living entity" }),
+];
+const ON_HIT = [
+  R("damage_amount"),
+  R("damage_modifier"),
+  E("damage_modifier_operation", ["add", "multiply"], { help: "Required if damage_modifier is set" }),
+  R("health_left"),
+  B("flat_health_left"),
+  ...HURT,
+];
+const onHitCheck = o => o.damage_modifier != null && !o.damage_modifier_operation ? "damage_modifier_operation is required when damage_modifier is set" : null;
+const EV_ID = S("id", { req: true, ph: "mypack:my_event", help: "Unique event id" });
+const EV_TARGET = E("target", ["this", "other"], { req: true, init: "this", help: "Who apply_properties are applied to" });
+const APPLY = { k: "apply_properties", t: "props" };
+
+const EVENTS = {
+  tick: { d: "Runs apply_properties every update_interval ticks.", f: [EV_ID, R("update_interval", { req: true, help: "Ticks" }), APPLY] },
+  attack: { d: "When this mob attacks another entity.", f: [EV_ID, EV_TARGET, ...ON_HIT, APPLY], check: onHitCheck },
+  damaged: { d: "When this mob is damaged.", f: [EV_ID, EV_TARGET, ...ON_HIT, APPLY], check: onHitCheck },
+  death: { d: "When this mob dies.", f: [EV_ID, EV_TARGET, B("cancel_death"), ...HURT, APPLY] },
+  kill: { d: "When this mob kills an entity.", f: [EV_ID, EV_TARGET, ...HURT, APPLY] },
+  change_target: { d: "When this mob's target changes.", f: [EV_ID, EV_TARGET, E("type", ["new_target", "switch_target", "lost_target"], { req: true }), APPLY] },
+};
+
+const ENCHANT_TYPES = {
+  single: [S("enchantment", { req: true, dl: "enchantments" }), R("lvl"), B("allow_incompatible")],
+  random: [B("allow_curses", { def: true }), B("allow_treasure", { def: true }), { k: "enchantments", t: "strs", dl: "enchantments", help: "Pool to pick from (empty = any)" }, R("lvl"), B("allow_incompatible")],
+  with_levels: [B("allow_curses", { def: true }), B("allow_treasure", { def: true }), R("lvl", { req: true, help: "Enchanting levels" }), B("allow_incompatible")],
+};
+
+const CONDITIONS = {
+  advancement: { d: "A player has the advancements.", f: [{ k: "advancements", t: "strs", req: true }, PLAYER] },
+  biome: { d: "Mob is in one of the biomes (id or #tag).", f: [{ k: "biomes", t: "strs", req: true, ph: "minecraft:plains or #minecraft:is_forest" }] },
+  block_in: { d: "Mob is inside one of the blocks.", f: [{ k: "blocks", t: "strs", req: true }] },
+  block_on: { d: "Mob is standing on one of the blocks.", f: [{ k: "blocks", t: "strs", req: true }] },
+  chance: { d: "Random chance (0-1).", f: [MV("chance", { req: true })] },
+  day_time: { d: "Day time in ticks (0-24000).", f: [R("day_time", { req: true })] },
+  days_passed: { d: "Days passed in the world.", f: [R("days", { req: true })] },
+  deepness: { d: "Y level of the mob.", f: [R("y", { req: true }), B("sea_level_relative")] },
+  difficulty: { d: "World difficulty.", f: [{ k: "difficulties", t: "enums", o: ["peaceful", "easy", "normal", "hard"], req: true }] },
+  dimension: { d: "Mob is in one of the dimensions.", f: [{ k: "dimensions", t: "strs", req: true, dl: "dimensions" }] },
+  distance_from_spawn: { d: "Distance from world spawn.", f: [R("distance", { req: true })] },
+  effect: { d: "Mob has the effect.", f: [S("effect", { req: true, dl: "effects" }), R("amplifier")] },
+  equipment: { d: "Mob has one of the items in the slot.", f: [E("slot", ["mainhand", "offhand", "head", "chest", "legs", "feet", "body"], { req: true }), { k: "items", t: "strs", single: true, req: true, dl: "items", help: "Item ids, or a single #tag" }] },
+  hardcore: { d: "World is in hardcore.", f: [] },
+  has_owner: { d: "Mob is tamed / has an owner.", f: [] },
+  has_target: { d: "Mob has a target (optionally within distance).", f: [R("distance")] },
+  health: { d: "Mob health.", f: [R("health", { req: true })] },
+  in_combat: { d: "Mob was in combat in the last seconds.", f: [MV("seconds")] },
+  is_baby: { d: "Mob is a baby.", f: [] },
+  light_level: { d: "Light level at the mob.", f: [R("light_level", { req: true }), E("type", ["sky", "block"], { help: "Empty = combined light" })] },
+  mod_loaded: { d: "A mod is loaded.", f: [S("mod_id", { req: true })] },
+  moon_phase: { d: "Current moon phase.", f: [{ k: "phases", t: "enums", req: true, o: ["full_moon", "waning_gibbous", "last_quarter", "waning_crescent", "new_moon", "waxing_crescent", "first_quarter", "waxing_gibbous"] }] },
+  nbt: { d: "Mob NBT value.", f: NBT, check: nbtCheck },
+  or: { d: "At least one of the conditions applies.", f: [{ k: "conditions", t: "conds", req: true }] },
+  score: { d: "Scoreboard value.", f: [S("objective", { req: true }), R("value", { req: true }), S("player", { help: "Player name; empty = the mob" })] },
+  spawn_type: { d: "How the mob was spawned.", f: [{ k: "spawn_types", t: "enums", req: true, o: ["natural", "chunk_generation", "spawner", "structure", "breeding", "mob_summoned", "jockey", "event", "conversion", "reinforcement", "triggered", "bucket", "spawn_egg", "command", "dispenser", "patrol", "trial_spawner"] }] },
+  structure: { d: "Mob is in one of the structures.", f: [{ k: "structures", t: "strs", req: true, ph: "minecraft:fortress" }] },
+  tag: { d: "Mob has one of the entity (scoreboard) tags.", f: [{ k: "tags", t: "strs", req: true }] },
+  temperature: { d: "Biome temperature.", f: [R("temperature", { req: true })] },
+  time_played: { d: "Hours played by the player.", f: [R("hours_played", { req: true }), PLAYER] },
+  weather: { d: "Current weather. Thunderstorms count as rain too, so \"rain\" is also true during a thunderstorm.", f: [E("weather", ["clear", "rain", "thunder"], { req: true })] },
+};
+
+const MODIFIERS = {
+  difficulty: { d: "Value per difficulty.", f: [R("easy"), R("normal"), R("hard")] },
+  deepness: { d: "Scales with depth below starting_y.", f: [MV("starting_amount"), R("amount_per_step", { req: true }), MV("step", { req: true }), MV("starting_y", { req: true })] },
+  time_played: { d: "Scales with hours played.", f: [R("amount_per_hours", { req: true }), MV("hours", { req: true }), MV("cap"), E("mode", ["average", "sum", "nearest"], { req: true })] },
+  distance_from_spawn: { d: "Scales with distance from spawn.", f: [R("amount_per_blocks", { req: true }), MV("blocks", { req: true }), MV("shift"), MV("cap")] },
+  condition: { d: "Applies value if the conditions apply.", f: [R("value", { req: true })] },
+};
+
+const FUNCTIONS = {
+  set_count: { d: "Sets the stack count.", f: [R("count", { req: true })] },
+  set_drop_chance: { d: "Sets the drop chance (0-1, >1 = drops without durability loss).", f: [MV("drop_chance", { req: true })] },
+  set_component: { d: "Sets data components. Use {\"#range\": <range>} anywhere to randomize a number.", f: [{ k: "components", t: "json", req: true, ph: '{\n  "minecraft:custom_name": "\\"Name\\""\n}' }] },
+  add_attribute_modifier: { d: "Adds an attribute modifier to the item.", f: [E("slots", ["any", "mainhand", "offhand", "hand", "feet", "legs", "chest", "head", "armor", "body"]), ...ATTR_MOD] },
+  enchant: { d: "Enchants the item.", f: [{ k: "type", t: "switch", cases: ENCHANT_TYPES }] },
+};
+
+const PROPERTIES = {
+  attribute_modifier: { d: "Adds an attribute modifier.", f: ATTR_MOD },
+  boss_bar: { d: "Shows a boss bar.", f: [E("color", ["pink", "blue", "red", "green", "yellow", "purple", "white"], { req: true }), E("type", ["progress", "notched_6", "notched_10", "notched_12", "notched_20"], { req: true }), B("darken_screen"), { k: "range", t: "int", help: "Default 48" }] },
+  custom_name: { d: "Sets/changes the name. At least one list required.", f: [{ k: "overrides", t: "strs" }, { k: "prefixes", t: "strs" }, { k: "suffixes", t: "strs" }],
+    check: o => [o.overrides, o.prefixes, o.suffixes].some(x => x != null && x.length) ? null : "custom_name needs overrides, prefixes or suffixes" },
+  damage: { d: "Damages the mob.", f: [R("amount", { req: true }), S("damage_type", { dl: "damage_types", help: "Default generic_kill" })] },
+  damage_immunity: { d: "Makes the mob immune to damage types.", f: [{ k: "damage_types", t: "strs", dl: "damage_types" }, S("damage_type_tag", { help: "Without #" }), B("remove", { help: "Removes immunity instead" })] },
+  despawn: { d: "Removes the mob.", f: [] },
+  effect_immunity: { d: "Makes the mob immune to effects.", f: [{ k: "effects", t: "strs", req: true, dl: "effects" }, B("remove")] },
+  equipment: { d: "Equips an item (weighted) in a slot.", f: [E("slot", ["mainhand", "offhand", "head", "chest", "legs", "feet", "body"], { req: true }), { k: "items", t: "objs", of: "item" }, { k: "loot_tables", t: "objs", of: "loot_table" }, { k: "functions", t: "funcs", help: "Applied to any chosen item" }] },
+  event: { d: "Registers an event that triggers properties.", noTarget: true, f: [{ k: "event", t: "switch", cases: Object.fromEntries(Object.entries(EVENTS).map(([k, v]) => [k, v.f])), checks: Object.fromEntries(Object.entries(EVENTS).map(([k, v]) => [k, v.check])) }] },
+  experience_multiplier: { d: "Multiplies dropped experience.", f: [R("multiplier", { req: true })] },
+  fire: { d: "Sets the mob on fire.", f: [R("seconds_on_fire", { req: true }), B("additive")] },
+  freeze: { d: "Freezes the mob.", f: [R("seconds_frozen", { req: true }), B("additive")] },
+  function: { d: "Runs a datapack function as the mob.", f: [S("function", { req: true, ph: "mypack:my_function" })] },
+  heal: { d: "Heals the mob.", f: [R("amount", { req: true })] },
+  loot_table: { d: "Adds a weighted loot table to drops.", f: [{ k: "loot_tables", t: "objs", of: "loot_table", req: true }] },
+  nbt: { d: "Sets a NBT value.", f: NBT, check: nbtCheck },
+  play_sound: { d: "Plays a sound at the mob.", f: [S("sound", { req: true, ph: "minecraft:entity.wither.spawn" }), R("volume"), R("pitch")] },
+  potion_effect: { d: "Applies a potion effect.", f: [S("effect", { req: true, dl: "effects" }), { k: "amplifier", t: "stack", help: "Default 0 (level I)" }, { k: "duration", t: "stack", help: "Ticks; default infinite" }, B("ambient"), B("show_particles", { def: true }), B("show_icon", { def: true })] },
+  presets: { d: "Applies one (or all) of the mob presets.", f: [
+    E("mode", ["exclusive", "before", "after"], { help: "When presets are applied relative to the other properties", od: {
+      "": "Default (exclusive): presets are applied first; the other properties of the mob/preset are applied only if no preset was applied",
+      exclusive: "Presets are applied first; the other properties of the mob/preset are applied only if no preset was applied",
+      before: "Presets are applied before the other properties of the mob/preset",
+      after: "Presets are applied after the other properties of the mob/preset",
+    } }),
+    B("apply_all", { help: "Apply every valid preset instead of a weighted random one" }),
+    { k: "presets", t: "objs", of: "preset", req: true }] },
+  raw_nbt: { d: "Merges raw SNBT into the mob.", f: [{ k: "nbt", t: "text", req: true, ph: "{Glowing:1b}" }] },
+  remove_attribute_modifiers: { d: "Removes attribute modifiers by id.", f: [S("attribute", { req: true, dl: "attributes" }), { k: "modifier_ids", t: "strs", req: true }] },
+  remove_potion_effects: { d: "Removes effects (empty = all).", f: [{ k: "effects", t: "strs", dl: "effects" }] },
+  silent: { d: "Makes the mob silent.", f: [] },
+  team: { d: "Adds the mob to a team.", f: [S("team", { req: true })] },
+};
+
+const KINDS = {
+  condition: { disc: "condition", types: CONDITIONS, preset: true,
+    common: [B("inverted"), E("target", ["this", "other"], { help: "Only meaningful in events" })] },
+  property: { disc: "property", types: PROPERTIES, preset: false,
+    common: [E("target", ["this", "other"], { help: "Only meaningful in apply_properties; overrides the event target" }), CONDS] },
+  function: { disc: "function", types: FUNCTIONS, preset: true, common: [CONDS] },
+  modifier: { disc: "modifier", types: MODIFIERS, preset: true,
+    common: [E("operation", ["add", "multiply"], { req: true, init: "add" }), CONDS] },
+};
+const LIST_KIND = { conds: "condition", props: "property", funcs: "function", mods: "modifier" };
+
+const SUBS = {
+  item: { title: "Item", f: [S("item", { req: true, dl: "items", help: "minecraft:air = empty slot" }), MV("weight", { help: "Default 1" }), { k: "functions", t: "funcs" }, CONDS] },
+  loot_table: { title: "Loot table", f: [S("loot_table", { req: true, ph: "minecraft:chests/simple_dungeon" }), MV("weight", { help: "Default 1" }), CONDS] },
+  preset: { title: "Preset", f: [S("preset", { req: true, ph: "mypack:my_preset" }), MV("weight", { help: "Default 1" }), CONDS] },
+};
+
+const FILE_TYPES = {
+  mob: { label: "Mob", folder: "mobs", array: false,
+    f: [S("target", { req: true, dl: "entities", help: "Entity id or #tag" }), { k: "priority", t: "int", help: "Higher = applied later (wins)" },
+      E("event_priority", ["highest", "high", "normal", "low", "lowest"], { help: "Default low" }), CONDS, { k: "properties", t: "props" }] },
+  mob_preset: { label: "Mob preset", folder: "presets/mobs", array: false, f: [CONDS, { k: "properties", t: "props" }] },
+  condition_preset: { label: "Condition preset", folder: "presets/conditions", array: "condition" },
+  modifier_preset: { label: "Modifier preset", folder: "presets/modifiers", array: "modifier" },
+  function_preset: { label: "Function preset", folder: "presets/functions", array: "function" },
+};
+
+/* ===================== DOM helpers ===================== */
+function h(tag, attrs = {}, ...kids) {
+  const e = document.createElement(tag);
+  for (const [k, v] of Object.entries(attrs)) {
+    if (v === undefined || v === null || v === false) continue;
+    if (k === "class") e.className = v;
+    else if (k === "text") e.textContent = v;
+    else if (k.startsWith("on")) e.addEventListener(k.slice(2), v);
+    else if (k === "value") e.value = v;
+    else if (k === "checked") e.checked = v;
+    else e.setAttribute(k, v === true ? "" : v);
+  }
+  for (const c of kids.flat()) if (c !== null && c !== undefined && c !== false) e.append(c);
+  return e;
+}
+const RAW = new WeakSet(); // objects from the raw JSON editor: never pruned
+const COLLAPSED = new WeakSet();
+const stripNs = id => typeof id === "string" ? id.replace(/^mobs_properties_randomness:/, "") : id;
+const isEmpty = v => v === undefined || v === null || v === "" || (Array.isArray(v) && v.length === 0);
+const toArr = v => v === undefined || v === null ? [] : Array.isArray(v) ? v : [v];
+
+/* ===================== Widgets =====================
+ * Every widget receives (field, value, set). set(v) stores the value (undefined = removed) and propagates.
+ */
+function fits(f, v) {
+  if (v === undefined) return true;
+  switch (f.t) {
+    case "str": case "text": case "enum": return typeof v === "string";
+    case "int": case "num": return typeof v === "number";
+    case "bool": return typeof v === "boolean";
+    case "range": {
+      if (typeof v === "number") return true;
+      if (!v || typeof v !== "object" || Array.isArray(v)) return false;
+      const min = "min" in v ? v.min : v.value;
+      return (min === undefined || typeof min === "number") && (v.max === undefined || typeof v.max === "number")
+        && (v.modifiers === undefined || Array.isArray(v.modifiers));
+    }
+    case "mval": return typeof v === "number" || (v && typeof v === "object" && !Array.isArray(v) && typeof v.value === "number");
+    case "stack": return typeof v === "number" || (v && typeof v === "object" && !Array.isArray(v));
+    case "strs": case "enums": return toArr(v).every(x => typeof x === "string");
+    case "conds": case "props": case "funcs": case "mods": return Array.isArray(v) && v.every(x => x && typeof x === "object");
+    case "objs": return toArr(v).every(x => x && typeof x === "object" && !Array.isArray(x));
+    default: return true;
+  }
+}
+
+function widget(f, v, set) {
+  if (!fits(f, v)) return rawW(f, v, set, "Value can't be shown by the editor, edit it as raw JSON:");
+  switch (f.t) {
+    case "str": return h("input", { type: "text", value: v ?? "", placeholder: f.ph, list: f.dl ? "dl-" + f.dl : null, oninput: e => set(e.target.value || undefined) });
+    case "text": return h("textarea", { placeholder: f.ph, value: v ?? "", oninput: e => set(e.target.value || undefined) });
+    case "int": case "num": return numInput(v, set, f.t === "int", f.ph);
+    case "bool": {
+      const def = !!f.def;
+      return h("label", { class: "inline" }, h("input", { type: "checkbox", checked: v ?? def, onchange: e => set(e.target.checked === def ? undefined : e.target.checked) }), h("span", { class: "muted", text: def ? "(default on)" : "" }));
+    }
+    case "enum": {
+      // f.od: optional per-option descriptions, shown below the select for the selected value
+      const desc = f.od ? h("div", { class: "muted" }) : null;
+      const showDesc = () => { if (desc) desc.textContent = f.od[sel.value] ?? ""; };
+      const sel = h("select", { onchange: e => { showDesc(); set(e.target.value || undefined); } }, h("option", { value: "", text: f.req ? "— select —" : "— default —" }), f.o.map(o => h("option", { value: o, text: o })));
+      if (v !== undefined && !f.o.includes(v)) sel.append(h("option", { value: v, text: v + " (unknown)" }));
+      sel.value = v ?? "";
+      if (!desc) return sel;
+      showDesc();
+      return h("div", { style: "width:100%" }, sel, desc);
+    }
+    case "range": return rangeW(v, set);
+    case "mval": return mvalW(v, set);
+    case "stack": return stackW(v, set);
+    case "strs": return strsW(f, v, set);
+    case "enums": return enumsW(f, v, set);
+    case "json": return rawW(f, v, set);
+    case "conds": case "props": case "funcs": case "mods": return listW(LIST_KIND[f.t], v, set);
+    case "objs": return objsW(f, v, set);
+  }
+  return h("span", { text: "?" + f.t });
+}
+
+function numInput(v, set, int, ph) {
+  return h("input", { type: "number", step: int ? "1" : "any", value: v ?? "", placeholder: ph,
+    oninput: e => set(e.target.value === "" || isNaN(e.target.valueAsNumber) ? undefined : (int ? Math.trunc(e.target.valueAsNumber) : e.target.valueAsNumber)) });
+}
+
+function rawW(f, v, set, note) {
+  if (v && typeof v === "object") RAW.add(v);
+  const ta = h("textarea", { placeholder: f.ph, value: v === undefined ? "" : JSON.stringify(v, null, 2) });
+  ta.addEventListener("input", () => {
+    if (ta.value.trim() === "") { ta.classList.remove("invalid"); set(undefined); return; }
+    try {
+      const p = JSON.parse(ta.value);
+      if (p && typeof p === "object") RAW.add(p);
+      ta.classList.remove("invalid");
+      set(p);
+    } catch { ta.classList.add("invalid"); }
+  });
+  return note ? h("div", {}, h("div", { class: "muted", text: note }), ta) : ta;
+}
+
+/** Modifiers + round, shared by range and modifiable value */
+function advancedBox(st, commit, extra) {
+  const hasAdv = st.round !== undefined || st.modifiers.length || (extra && extra.has());
+  const box = h("div", { class: "sub" });
+  box.hidden = !hasAdv;
+  if (extra) box.append(extra.el);
+  box.append(h("div", { class: "inline" }, h("span", { class: "muted", text: "round (decimals)" }), numInput(st.round, v => { st.round = v; commit(); }, true)));
+  box.append(h("div", { class: "muted", text: "modifiers" }), listW("modifier", st.modifiers, () => commit()));
+  const btn = h("button", { class: "icon", title: "Modifiers / rounding" + (extra ? " / bias" : ""), text: hasAdv ? "−adv" : "+adv",
+    onclick: () => { box.hidden = !box.hidden; btn.textContent = box.hidden ? "+adv" : "−adv"; } });
+  return { box, btn };
+}
+
+function rangeW(v, set) {
+  const st = typeof v === "number" ? { min: v, modifiers: [] }
+    : v ? { min: "min" in v ? v.min : v.value, useValue: !("min" in v), max: v.max, bias: v.bias, round: v.round, modifiers: v.modifiers ?? [] }
+    : { modifiers: [] };
+  const commit = () => {
+    if (st.max === undefined && st.bias === undefined && st.round === undefined && !st.modifiers.length) { set(st.min); return; }
+    const o = {};
+    if (st.max === undefined && st.useValue !== false) o.value = st.min; else o.min = st.min;
+    o.max = st.max; o.bias = st.bias; o.round = st.round; o.modifiers = st.modifiers;
+    set(o);
+  };
+  const biasSel = h("select", { onchange: e => { st.bias = e.target.value || undefined; commit(); } },
+    h("option", { value: "", text: "none" }), ["min", "max", "middle"].map(b => h("option", { value: b, text: b })));
+  biasSel.value = st.bias && st.bias !== "none" ? st.bias : "";
+  const extra = { has: () => st.bias !== undefined, el: h("div", { class: "inline" }, h("span", { class: "muted", text: "bias" }), biasSel) };
+  const adv = advancedBox(st, commit, extra);
+  return h("div", { style: "width:100%" },
+    h("div", { class: "inline" },
+      numInput(st.min, x => { st.min = x; commit(); }, false, "value / min"),
+      h("span", { class: "muted", text: "→" }),
+      numInput(st.max, x => { st.max = x; if (x !== undefined) st.useValue = false; commit(); }, false, "max (opt.)"),
+      adv.btn),
+    adv.box);
+}
+
+function mvalW(v, set) {
+  const st = typeof v === "number" ? { value: v, modifiers: [] } : v ? { value: v.value, round: v.round, modifiers: v.modifiers ?? [] } : { modifiers: [] };
+  const commit = () => {
+    if (st.round === undefined && !st.modifiers.length) set(st.value);
+    else set({ value: st.value, round: st.round, modifiers: st.modifiers });
+  };
+  const adv = advancedBox(st, commit);
+  return h("div", { style: "width:100%" }, h("div", { class: "inline" }, numInput(st.value, x => { st.value = x; commit(); }, false, "value"), adv.btn), adv.box);
+}
+
+function stackW(v, set) {
+  // Like the Java Stackable deserializer: any object with "value" is the wrapper, otherwise it's the range itself
+  const wrapped = v && typeof v === "object" && "value" in v;
+  const st = wrapped ? { value: v.value, stack: v.stack, cap: v.cap } : { value: v };
+  const commit = () => {
+    // A range object using the "value" key must be wrapped, or that key would be read as the wrapper's
+    if (!st.stack && st.cap === undefined && !(st.value && typeof st.value === "object" && "value" in st.value)) set(st.value);
+    else set({ value: st.value, stack: st.stack || undefined, cap: st.cap });
+  };
+  return h("div", { style: "width:100%" },
+    rangeW(st.value, x => { st.value = x; commit(); }),
+    h("div", { class: "inline", style: "margin-top:4px" },
+      h("label", { class: "inline" }, h("input", { type: "checkbox", checked: !!st.stack, onchange: e => { st.stack = e.target.checked; commit(); } }), "stack with existing"),
+      h("span", { class: "muted", text: "cap" }),
+      numInput(typeof st.cap === "number" ? st.cap : undefined, x => { st.cap = x; commit(); }, false, "cap (opt.)")));
+}
+
+function strsW(f, v, set) {
+  const arr = [...toArr(v)];
+  const wrap = h("div", { class: "list" });
+  const commit = () => {
+    const a = arr.filter(s => s !== "");
+    set(a.length === 0 ? undefined : (f.single && a.length === 1 ? a[0] : [...a]));
+  };
+  const render = () => {
+    wrap.replaceChildren(
+      ...arr.map((s, i) => h("div", { class: "inline" },
+        h("input", { type: "text", value: s, placeholder: f.ph, list: f.dl ? "dl-" + f.dl : null, oninput: e => { arr[i] = e.target.value; commit(); } }),
+        h("button", { class: "icon", text: "✕", title: "Remove", onclick: () => { arr.splice(i, 1); render(); commit(); } }))),
+      h("div", {}, h("button", { class: "add icon", text: "+ add", onclick: () => { arr.push(""); render(); wrap.querySelectorAll("input")[arr.length - 1]?.focus(); } })));
+  };
+  if (!arr.length) arr.push("");
+  render();
+  return wrap;
+}
+
+function enumsW(f, v, set) {
+  const sel = new Set(toArr(v));
+  const opts = [...f.o, ...[...sel].filter(x => !f.o.includes(x))];
+  return h("div", { class: "checks" }, opts.map(o => h("label", {},
+    h("input", { type: "checkbox", checked: sel.has(o), onchange: e => { e.target.checked ? sel.add(o) : sel.delete(o); set(sel.size ? opts.filter(x => sel.has(x)) : undefined); } }), o)));
+}
+
+/* ----- typed lists (conditions / properties / functions / modifiers) ----- */
+function newItem(kind, type) {
+  const K = KINDS[kind];
+  if (type === "#preset") return { preset: "" };
+  const o = { [K.disc]: type };
+  initFields(o, K.types[type]?.f ?? []);
+  initFields(o, commonFields(kind, type));
+  return o;
+}
+function initFields(o, fields) {
+  for (const f of fields) {
+    if (f.k in o) continue;
+    if (f.t === "switch") {
+      const first = Object.keys(f.cases)[0];
+      o[f.k] = first;
+      initFields(o, f.cases[first]);
+    } else o[f.k] = f.init;
+  }
+}
+function commonFields(kind, type) {
+  const K = KINDS[kind];
+  return K.types[type]?.noTarget ? K.common.filter(f => f.k !== "target") : K.common;
+}
+function itemType(kind, o) {
+  const K = KINDS[kind];
+  if (K.preset && o.preset !== undefined && o[K.disc] === undefined) return "#preset";
+  return stripNs(o[K.disc]);
+}
+
+function listW(kind, v, set) {
+  const arr = v ?? [];
+  const K = KINDS[kind];
+  const wrap = h("div", { class: "list" });
+  const types = Object.keys(K.types);
+  const render = () => {
+    wrap.replaceChildren(...arr.map((_, i) => itemCard(kind, arr, i, render, () => set(arr))));
+    const addSel = h("select", { onchange: e => { if (!e.target.value) return; arr.push(newItem(kind, e.target.value)); render(); set(arr); } },
+      h("option", { value: "", text: `+ add ${kind}…` }), types.map(t => h("option", { value: t, text: t })),
+      K.preset ? h("option", { value: "#preset", text: `preset (reference a ${kind} preset)` }) : null);
+    addSel.classList.add("add");
+    wrap.append(h("div", {}, addSel));
+  };
+  render();
+  return wrap;
+}
+
+function itemCard(kind, arr, i, rerender, onCh) {
+  const K = KINDS[kind];
+  const o = arr[i];
+  const type = itemType(kind, o);
+  const def = K.types[type];
+  const sel = h("select", { onchange: e => { arr[i] = newItem(kind, e.target.value); rerender(); onCh(); } },
+    Object.keys(K.types).map(t => h("option", { value: t, text: t })),
+    K.preset ? h("option", { value: "#preset", text: "preset" }) : null);
+  if (type !== "#preset" && !def) sel.append(h("option", { value: type, text: `${type} (unknown)` }));
+  sel.value = type;
+  const move = d => { const j = i + d; if (j < 0 || j >= arr.length) return; [arr[i], arr[j]] = [arr[j], arr[i]]; rerender(); onCh(); };
+  const card = h("div", { class: "card k-" + kind + (COLLAPSED.has(o) ? " collapsed" : "") });
+  const toggle = h("button", { class: "icon", text: COLLAPSED.has(o) ? "▸" : "▾", title: "Collapse",
+    onclick: () => { COLLAPSED.has(o) ? COLLAPSED.delete(o) : COLLAPSED.add(o); card.classList.toggle("collapsed"); toggle.textContent = COLLAPSED.has(o) ? "▸" : "▾"; } });
+  card.append(h("div", { class: "head" }, toggle, h("span", { class: "kind", text: kind }), sel, h("span", { class: "spacer" }),
+    h("button", { class: "icon", text: "↑", title: "Move up", onclick: () => move(-1) }),
+    h("button", { class: "icon", text: "↓", title: "Move down", onclick: () => move(1) }),
+    h("button", { class: "icon", text: "⧉", title: "Duplicate", onclick: () => { arr.splice(i + 1, 0, structuredClone(o)); rerender(); onCh(); } }),
+    h("button", { class: "icon", text: "✕", title: "Remove", onclick: () => { arr.splice(i, 1); rerender(); onCh(); } })));
+  let body;
+  if (type === "#preset") body = [h("div", { class: "desc", text: `Inlines the ${kind}s of a ${kind} preset (presets/${kind}s/).` }), renderFields(o, [S("preset", { req: true, ph: "mypack:my_preset" })], onCh)];
+  else if (!def) body = [rawW({}, o, x => { if (x && typeof x === "object") { arr[i] = x; onCh(); } }, "Unknown type, edit as raw JSON:")];
+  else body = [def.d ? h("div", { class: "desc", text: def.d }) : null, renderFields(o, [...def.f, ...commonFields(kind, type)], onCh)];
+  card.append(h("div", { class: "body" }, body));
+  return card;
+}
+
+/* ----- sub-object lists (items, loot tables, presets) ----- */
+function objsW(f, v, set) {
+  const arr = [...toArr(v)];
+  const sub = SUBS[f.of];
+  const wrap = h("div", { class: "list" });
+  const commit = () => set(arr.length ? arr : undefined);
+  const render = () => {
+    wrap.replaceChildren(...arr.map((o, i) => h("div", { class: "card" },
+      h("div", { class: "head" }, h("span", { class: "kind", text: sub.title + " #" + (i + 1) }), h("span", { class: "spacer" }),
+        h("button", { class: "icon", text: "⧉", title: "Duplicate", onclick: () => { arr.splice(i + 1, 0, structuredClone(o)); render(); commit(); } }),
+        h("button", { class: "icon", text: "✕", title: "Remove", onclick: () => { arr.splice(i, 1); render(); commit(); } })),
+      h("div", { class: "body" }, renderFields(o, sub.f, commit)))),
+      h("div", {}, h("button", { class: "add icon", text: "+ add " + sub.title.toLowerCase(), onclick: () => { const o = {}; initFields(o, sub.f); arr.push(o); render(); commit(); } })));
+  };
+  render();
+  return wrap;
+}
+
+/* ----- switch (discriminator flattened in the same object) ----- */
+function switchW(obj, f, onCh) {
+  const box = h("div", { class: "fields" });
+  const sub = h("div", { class: "fields" });
+  const cur = stripNs(obj[f.k]);
+  const sel = h("select", { onchange: e => {
+      for (const x of f.cases[stripNs(obj[f.k])] ?? []) delete obj[x.k];
+      obj[f.k] = e.target.value;
+      initFields(obj, f.cases[e.target.value]);
+      renderSub(); onCh();
+    } }, Object.keys(f.cases).map(c => h("option", { value: c, text: c })));
+  if (cur !== undefined && !f.cases[cur]) sel.append(h("option", { value: cur, text: cur + " (unknown)" }));
+  sel.value = cur ?? "";
+  const renderSub = () => sub.replaceChildren(renderFields(obj, f.cases[stripNs(obj[f.k])] ?? [], onCh));
+  box.append(row(f, sel), sub);
+  renderSub();
+  return box;
+}
+
+function row(f, w) {
+  return h("div", { class: "row" },
+    h("div", { class: "lbl" }, f.k, f.req ? h("span", { class: "req", text: " *" }) : null, f.help ? h("span", { class: "help", text: f.help }) : null),
+    h("div", { class: "inline" }, w));
+}
+
+function renderFields(obj, fields, onCh) {
+  const box = h("div", { class: "fields" });
+  for (const f of fields) {
+    if (f.t === "switch") { box.append(switchW(obj, f, onCh)); continue; }
+    box.append(row(f, widget(f, obj[f.k], v => { obj[f.k] = v; onCh(); })));
+  }
+  return box;
+}
+
+/* ===================== Validation ===================== */
+function validateFields(o, fields, path, out, checks) {
+  for (const f of fields) {
+    const v = o[f.k];
+    const p = path + "." + f.k;
+    if (f.t === "switch") {
+      const c = stripNs(v);
+      if (!f.cases[c]) { out.push(`${p}: unknown "${v}"`); continue; }
+      validateFields(o, f.cases[c], path, out);
+      const msg = f.checks?.[c]?.(o);
+      if (msg) out.push(`${path}: ${msg}`);
+      continue;
+    }
+    if (f.req && isEmpty(v)) { out.push(`${p} is required`); continue; }
+    if (v === undefined) continue;
+    if (LIST_KIND[f.t] && Array.isArray(v)) v.forEach((it, i) => validateItem(LIST_KIND[f.t], it, `${p}[${i}]`, out));
+    else if (f.t === "objs") toArr(v).forEach((it, i) => validateFields(it, SUBS[f.of].f, `${p}[${i}]`, out));
+    else if ((f.t === "range" || f.t === "mval") && v && typeof v === "object") {
+      if (f.t === "range" && v.min === undefined && v.value === undefined) out.push(`${p}: missing value/min`);
+      if (f.t === "mval" && v.value === undefined) out.push(`${p}: missing value`);
+      toArr(v.modifiers).forEach((it, i) => validateItem("modifier", it, `${p}.modifiers[${i}]`, out));
+    }
+  }
+}
+function validateItem(kind, o, path, out) {
+  const type = itemType(kind, o);
+  if (type === "#preset") { if (isEmpty(o.preset)) out.push(`${path}.preset is required`); return; }
+  const def = KINDS[kind].types[type];
+  if (!def) { out.push(`${path}: unknown ${kind} "${o[KINDS[kind].disc]}"`); return; }
+  validateFields(o, [...def.f, ...commonFields(kind, type)], `${path}(${type})`, out);
+  const msg = def.check?.(o);
+  if (msg) out.push(`${path}(${type}): ${msg}`);
+}
+
+/* ===================== State & output ===================== */
+let fileType = "mob";
+let root = null;
+const $ = id => document.getElementById(id);
+
+function prune(v) {
+  if (v && typeof v === "object" && RAW.has(v)) return v;
+  if (Array.isArray(v)) { const a = v.map(prune).filter(x => x !== undefined); return a.length ? a : undefined; }
+  if (v && typeof v === "object") {
+    const o = {};
+    for (const [k, x] of Object.entries(v)) { const p = prune(x); if (p !== undefined) o[k] = p; }
+    return Object.keys(o).length ? o : undefined;
+  }
+  return v === "" || v === null ? undefined : v;
+}
+
+function outJson() {
+  const ft = FILE_TYPES[fileType];
+  return JSON.stringify(prune(root) ?? (ft.array ? [] : {}), null, 2);
+}
+
+function fileName() { return ($("name").value.trim() || "my_file").replace(/\.json$/i, "") + ".json"; }
+
+function changed() {
+  const ft = FILE_TYPES[fileType];
+  $("out").textContent = outJson();
+  $("path").textContent = `data/${$("ns").value.trim() || "mypack"}/mobs_properties_randomness/${ft.folder}/${fileName()}`;
+  const issues = [];
+  if (ft.array) root.forEach((it, i) => validateItem(ft.array, it, `[${i}]`, issues));
+  else validateFields(root, ft.f, "$", issues);
+  const box = $("issues");
+  box.className = issues.length ? "" : "ok";
+  box.replaceChildren(issues.length ? h("div", {}, h("strong", { text: `${issues.length} issue(s)` }), h("ul", {}, issues.map(s => h("li", { text: s })))) : "✓ No issues found");
+  try { localStorage.setItem("mpr-gen", JSON.stringify({ fileType, root, ns: $("ns").value, name: $("name").value })); } catch {}
+}
+
+function renderEditor() {
+  const ft = FILE_TYPES[fileType];
+  const ed = $("editor");
+  ed.replaceChildren();
+  const sec = h("div", { class: "section" });
+  if (ft.array) sec.append(h("div", { class: "desc muted", style: "margin-bottom:8px", text: `A ${ft.label.toLowerCase()} is a JSON array of ${ft.array}s, referenced with {"preset": "namespace:path"}.` }), listW(ft.array, root, () => changed()));
+  else sec.append(renderFields(root, ft.f, changed));
+  ed.append(sec);
+  changed();
+}
+
+function newRoot(type) {
+  const ft = FILE_TYPES[type];
+  if (ft.array) return [];
+  const o = {};
+  initFields(o, ft.f);
+  return o;
+}
+
+function setFileType(type, data) {
+  fileType = type;
+  $("fileType").value = type;
+  root = data ?? newRoot(type);
+  renderEditor();
+}
+
+function detectType(data) {
+  if (Array.isArray(data)) {
+    const first = data.find(x => x && typeof x === "object") ?? {};
+    if ("modifier" in first) return "modifier_preset";
+    if ("function" in first) return "function_preset";
+    return "condition_preset";
+  }
+  return "target" in data ? "mob" : "mob_preset";
+}
+
+/* ===================== Init ===================== */
+for (const [k, v] of Object.entries(FILE_TYPES)) $("fileType").append(h("option", { value: k, text: `${v.label}  (${v.folder}/)` }));
+$("fileType").addEventListener("change", e => {
+  if (!isEmpty(prune(root)) && !confirmReset()) { e.target.value = fileType; return; }
+  setFileType(e.target.value);
+});
+function confirmReset() { return window.confirm("Discard the current content?"); }
+$("ns").addEventListener("input", changed);
+$("name").addEventListener("input", changed);
+$("btnNew").addEventListener("click", () => { if (isEmpty(prune(root)) || confirmReset()) setFileType(fileType); });
+$("btnCopy").addEventListener("click", async () => {
+  try { await navigator.clipboard.writeText(outJson()); $("copied").textContent = "Copied!"; }
+  catch { $("copied").textContent = "Copy failed, select the text manually"; }
+  setTimeout(() => $("copied").textContent = "", 1500);
+});
+$("btnDownload").addEventListener("click", () => {
+  const a = h("a", { href: URL.createObjectURL(new Blob([outJson() + "\n"], { type: "application/json" })), download: fileName() });
+  a.click();
+  setTimeout(() => URL.revokeObjectURL(a.href), 1000);
+});
+
+const dlg = $("importDlg");
+$("btnImport").addEventListener("click", () => { $("importErr").textContent = ""; $("importText").value = ""; $("importFile").value = ""; dlg.showModal(); });
+$("importCancel").addEventListener("click", () => dlg.close());
+$("importFile").addEventListener("change", async e => {
+  const file = e.target.files[0];
+  if (!file) return;
+  $("importText").value = await file.text();
+  $("name").value = file.name.replace(/\.json$/i, "");
+});
+$("importOk").addEventListener("click", () => {
+  let data;
+  try { data = JSON.parse($("importText").value); }
+  catch (err) { $("importErr").textContent = "Invalid JSON: " + err.message; return; }
+  if (!data || typeof data !== "object") { $("importErr").textContent = "Expected a JSON object or array"; return; }
+  dlg.close();
+  setFileType(detectType(data), data);
+});
+
+(() => {
+  try {
+    const saved = JSON.parse(localStorage.getItem("mpr-gen"));
+    if (saved && FILE_TYPES[saved.fileType]) {
+      $("ns").value = saved.ns ?? "mypack";
+      $("name").value = saved.name ?? "my_file";
+      setFileType(saved.fileType, saved.root);
+      return;
+    }
+  } catch {}
+  setFileType("mob");
+})();
+</script>
+</body>
+</html>

@@ -2,9 +2,12 @@ package insane96mcp.mobspropertiesrandomness.data.json;
 
 import com.google.gson.*;
 import com.google.gson.annotations.JsonAdapter;
+import insane96mcp.insanelib.core.ModNBTData;
 import insane96mcp.insanelib.data.ObjTag;
 import insane96mcp.mobspropertiesrandomness.data.json.condition.MPRCondition;
 import insane96mcp.mobspropertiesrandomness.data.json.property.MPRProperty;
+import insane96mcp.mobspropertiesrandomness.data.json.property.preset.MPRPresetsProperty;
+import insane96mcp.mobspropertiesrandomness.feature.MPRBase;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.util.GsonHelper;
 import net.minecraft.world.entity.EntityType;
@@ -33,6 +36,15 @@ public class MPRMob extends MPRProperties {
         if (!this.target.matches(living.getType()))
             return;
         super.tryApply(living);
+    }
+
+    @Override
+    public void apply(LivingEntity living) {
+        //Mobs with a preset nbt (e.g. summoned with /mpr summon) already got their preset, so the mob's presets are skipped
+        if (ModNBTData.contains(living, MPRBase.PRESET))
+            applyProperties(property -> !(property instanceof MPRPresetsProperty) && property.tryApply(living));
+        else
+            super.apply(living);
     }
 
     public static class Serializer implements JsonDeserializer<MPRMob>, JsonSerializer<MPRMob> {
