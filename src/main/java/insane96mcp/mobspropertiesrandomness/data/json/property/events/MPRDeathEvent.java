@@ -26,12 +26,18 @@ public class MPRDeathEvent extends MPREvent {
 		this.cancelDeath = cancelDeath;
 	}
 
-	/// returns true if the death should be canceled and execution runs
+	/// returns true if the death should be canceled
 	public boolean death(LivingEntity entity, @Nullable LivingEntity other, DamageSource source, boolean isDirectDamage) {
-		if (!this.hurtData.shouldApply(source, isDirectDamage))
+		if (!this.hurtData.shouldApply(source, isDirectDamage)
+				|| !MPRCondition.conditionsApply(this.conditions, entity, other))
 			return false;
 
-		return this.tryExecute(entity, other) && this.cancelDeath;
+		boolean cancel = this.cancelDeath && !source.is(DamageTypeTags.BYPASSES_INVULNERABILITY);
+		//Set the health before applying the properties, so they can change it (e.g. heal)
+		if (cancel)
+			entity.setHealth(0.01f);
+		this.execute(entity, other);
+		return cancel;
 	}
 
 	public static void onDeath(LivingDeathEvent event) {
@@ -41,11 +47,8 @@ public class MPRDeathEvent extends MPREvent {
 
 		List<MPRDeathEvent> events = getEvents(living, MPRDeathEvent.class);
 		for (MPRDeathEvent deathEvent : events) {
-			if (deathEvent.death(living, killer, event.getSource(), event.getSource().getDirectEntity() == event.getSource().getEntity())
-					&& !event.getSource().is(DamageTypeTags.BYPASSES_INVULNERABILITY)) {
+			if (deathEvent.death(living, killer, event.getSource(), event.getSource().getDirectEntity() == event.getSource().getEntity()))
 				event.setCanceled(true);
-				living.setHealth(0.01f);
-			}
 		}
 	}
 

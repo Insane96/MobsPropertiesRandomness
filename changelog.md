@@ -16,6 +16,8 @@ Event presets
 * Fixed `boss_bar` disappearing forever when the mob was unloaded (e.g. chunk unload, server restart, dimension change)
 * Fixed every mob being healed to max health when spawning, even if no property changed its max health (e.g. ignoring `Health` set by `/summon` or spawners)
   * `attribute_modifier` properties on max health now keep the mob's health percentage instead (also when applied by events)
+* Fixed `death` events with `cancel_death` overriding the health set by their `apply_properties` (e.g. `heal`), always leaving the mob at 0.01 health
+* Fixed `kill` events triggering even if the victim's death was canceled
 
 # 6.1.10.0
 * Added `target` field to properties inside `apply_properties`

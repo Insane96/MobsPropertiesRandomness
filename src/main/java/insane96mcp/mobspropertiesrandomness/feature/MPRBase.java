@@ -116,6 +116,11 @@ public class MPRBase extends Feature {
 	@SubscribeEvent
 	public void onLivingDeath(LivingDeathEvent event) {
 		MPRDeathEvent.onDeath(event);
+	}
+
+	//Lowest priority, so it's not called if the death has been canceled (by death events or other mods)
+	@SubscribeEvent(priority = EventPriority.LOWEST)
+	public void onLivingDeathLowest(LivingDeathEvent event) {
 		MPRKillEvent.onKill(event);
 	}
 
