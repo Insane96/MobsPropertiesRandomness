@@ -1,4 +1,4 @@
-# Upcoming
+# 6.2.0.0
 * Added event presets, in `data/<namespace>/mobs_properties_randomness/presets/events/`
   * An event preset contains a single event (the same JSON of an `event` property, without `"property": "event"`). `id` is optional and defaults to the preset id
   * Reference it with `{"property": "event", "preset": "namespace:path"}`. The property can still have its own `conditions` and `target`
