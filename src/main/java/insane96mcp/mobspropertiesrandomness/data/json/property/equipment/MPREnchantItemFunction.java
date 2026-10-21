@@ -292,7 +292,7 @@ public abstract class MPREnchantItemFunction extends MPRItemFunction {
                 return new WithLevel(
                         GsonHelper.getAsBoolean(jObject, "allow_curses", true),
                         GsonHelper.getAsBoolean(jObject, "allow_treasure", true),
-                        deserializeLvl(jObject, context),
+                        GsonHelper.getAsObject(jObject, "lvl", context, MPRRange.class),
                         deserializeAllowIncompatible(jObject),
                         MPRConditionable.deserializeList(jObject, context)
                 );

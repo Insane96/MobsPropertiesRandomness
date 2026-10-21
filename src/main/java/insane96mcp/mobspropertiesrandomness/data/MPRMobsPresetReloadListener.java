@@ -23,6 +23,7 @@ import org.jetbrains.annotations.Nullable;
 import java.io.Reader;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Set;
 
 public class MPRMobsPresetReloadListener extends SimplePreparableReloadListener<Map<ResourceLocation, JsonElement>> {
 	public static final Map<ResourceLocation, MPRProperties> PRESETS = new HashMap<>();
@@ -50,7 +51,6 @@ public class MPRMobsPresetReloadListener extends SimplePreparableReloadListener<
 
 	public static void scanDirectory(ResourceManager resourceManager, String directory, Gson gson, Map<ResourceLocation, JsonElement> map) {
 		FileToIdConverter filetoidconverter = FileToIdConverter.json(directory);
-		MPREvent.LOADED_EVENTS.clear();
 
 		for (Map.Entry<ResourceLocation, Resource> entry : filetoidconverter.listMatchingResources(resourceManager).entrySet()) {
 			ResourceLocation key = entry.getKey();
@@ -74,7 +74,10 @@ public class MPRMobsPresetReloadListener extends SimplePreparableReloadListener<
 	protected void apply(@NotNull Map<ResourceLocation, JsonElement> map, @NotNull ResourceManager resourceManager, @NotNull ProfilerFiller profilerFiller) {
 		MPRLogger.consumeWarningCount();
 		PRESETS.clear();
+		MPREvent.LOADED_EVENTS.clear();
 		for (var entry : map.entrySet()) {
+			//Events of a preset that fails to load must not stay registered
+			Set<ResourceLocation> loadedEvents = Set.copyOf(MPREvent.LOADED_EVENTS.keySet());
 			try {
 				ResourceLocation name = entry.getKey();
 				MPRLogger.info("Loading Preset %s", entry.getKey());
@@ -88,10 +91,12 @@ public class MPRMobsPresetReloadListener extends SimplePreparableReloadListener<
 				PRESETS.put(name, preset);
 			}
 			catch (JsonSyntaxException e) {
+				MPREvent.LOADED_EVENTS.keySet().retainAll(loadedEvents);
 				MPRLogger.error("Parsing error loading Preset %s: %s", entry.getKey(), e.getMessage());
 				errorCount++;
 			}
 			catch (Exception e) {
+				MPREvent.LOADED_EVENTS.keySet().retainAll(loadedEvents);
 				MPRLogger.error("Failed loading Preset %s: %s", entry.getKey(), e.getMessage());
 				errorCount++;
 			}

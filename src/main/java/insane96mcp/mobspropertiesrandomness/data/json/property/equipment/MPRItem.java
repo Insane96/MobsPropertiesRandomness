@@ -52,6 +52,8 @@ public class MPRItem extends MPRConditionable implements IWeightedRandom {
                 || !MPRCondition.conditionsApply(this.conditions, entity))
             return null;
         this._weight = (int) this.modifiableWeight.getValue(entity);
+        if (this._weight <= 0)
+            return null;
 
         return this;
     }

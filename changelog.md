@@ -6,6 +6,10 @@ Event presets
 * Fixed mobs with preset nbt (e.g. summoned with `/mpr summon`) re-applying the preset every time they were loaded (chunk reload, server restart, dimension change)
 * Events with an `id` already used by another event now fail to load, instead of being silently ignored
 * Fixed an event triggering multiple times when applied more than once to the same mob
+* Fixed events not triggering while data packs were reloading, and a possible crash during `/reload`
+* Fixed events still triggering on existing mobs after their mob/preset file failed to load on `/reload`
+* Fixed a crash when all the items in `equipment` had a weight of 0 or less. Items with a weight of 0 or less are now never picked
+* `lvl` is now required in `enchant` item functions with `type: with_levels`. Before, omitting it crashed the game when the item was generated
 
 # 6.1.10.0
 * Added `target` field to properties inside `apply_properties`
