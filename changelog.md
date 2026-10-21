@@ -10,6 +10,8 @@ Event presets
 * Fixed events still triggering on existing mobs after their mob/preset file failed to load on `/reload`
 * Fixed a crash when all the items in `equipment` had a weight of 0 or less. Items with a weight of 0 or less are now never picked
 * `lvl` is now required in `enchant` item functions with `type: with_levels`. Before, omitting it crashed the game when the item was generated
+* Fixed `distance_from_spawn` modifier with `operation: multiply` setting the value to 0 at world spawn. It now works as documented: `value * (1 + increase)`
+* Fixed `deepness` modifier with `operation: multiply` and no `starting_amount` setting the value to 0 above `starting_y`. `starting_amount` now defaults to 1 with `multiply` (still 0 with `add`)
 
 # 6.1.10.0
 * Added `target` field to properties inside `apply_properties`

@@ -41,7 +41,7 @@ public class MPRDistanceFromSpawnModifier extends MPRModifier {
         double modifier = (distance / this.blocks.getValue(living)) * this.amountPerBlocks.getDoubleBetween(living);
         if (this.cap != null)
             modifier = Math.min(modifier, this.cap.getValue(living));
-        return modifier;
+        return modifier + this.getNoModifier();
     }
 
     public static class Serializer implements JsonDeserializer<MPRDistanceFromSpawnModifier>, JsonSerializer<MPRDistanceFromSpawnModifier> {

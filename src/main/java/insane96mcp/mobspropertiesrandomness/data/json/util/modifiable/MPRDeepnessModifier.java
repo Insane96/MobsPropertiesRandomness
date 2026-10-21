@@ -31,8 +31,8 @@ public class MPRDeepnessModifier extends MPRModifier {
         double modifier = (Math.max(this.startingY.getValue(living) - living.blockPosition().getY(), 0)
                 / this.step.getValue(living))
                 * this.amountPerStep.getDoubleBetween(living);
-        if (this.startingAmount != null)
-            modifier += this.startingAmount.getValue(living);
+        //If omitted, starts from the value that leaves the modified value unchanged (0 for add, 1 for multiply)
+        modifier += this.startingAmount != null ? this.startingAmount.getValue(living) : this.getNoModifier();
         return modifier;
     }
 
