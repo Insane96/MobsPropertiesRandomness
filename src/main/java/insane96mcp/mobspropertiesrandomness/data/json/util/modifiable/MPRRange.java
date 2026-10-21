@@ -3,6 +3,7 @@ package insane96mcp.mobspropertiesrandomness.data.json.util.modifiable;
 import com.google.gson.*;
 import com.google.gson.annotations.JsonAdapter;
 import com.google.gson.annotations.SerializedName;
+import insane96mcp.insanelib.util.MathHelper;
 import net.minecraft.util.GsonHelper;
 import net.minecraft.util.Mth;
 import net.minecraft.util.RandomSource;
@@ -58,16 +59,52 @@ public class MPRRange extends MPRModifiable {
 	}
 
 	/**
-	 * Returns a random double value between min and max
+	 * Returns a random double value between min and max, rounded to {@link #round} decimal places if set
 	 */
 	public double getDoubleBetween(LivingEntity entity) {
+		if (this.round == null) {
+			double min = this.getMin(entity);
+			double max = this.getMax(entity);
+			if (min > max)
+				return min;
+			return this.roll(entity.level().random, min, max);
+		}
+		return this.getRoundedBetween(entity, this.round);
+	}
+
+	/**
+	 * Returns a random int value between min and max (both inclusive), each with the same chance (if bias is none)
+	 */
+	public int getIntBetween(LivingEntity entity) {
+		return (int) this.getRoundedBetween(entity, 0);
+	}
+
+	/**
+	 * Returns a random value between min and max rounded to the specified decimal places.<br>
+	 * The range is extended by half a step on both sides before rolling, so the values at the edges have the same chance as the others
+	 * (e.g. with min 1, max 5 and 0 decimal places, rolls between 0.5 and 5.5, so 1 and 5 have the same chance as 2, 3 and 4).
+	 */
+	private double getRoundedBetween(LivingEntity entity, int places) {
 		RandomSource random = entity.level().random;
 		double min = this.getMin(entity);
 		double max = this.getMax(entity);
 		if (min > max)
-			return min;
-        if (this.bias == Bias.NONE)
-            return Mth.nextDouble(random, min, max);
+			return MathHelper.round(min, places);
+		double scale = Math.pow(10, places);
+		//Lowest and highest rounded values (in steps) inside the range
+		long lowest = (long) Math.ceil(min * scale - 1e-9);
+		long highest = (long) Math.floor(max * scale + 1e-9);
+		//No rounded value inside the range
+		if (lowest > highest)
+			return MathHelper.round(this.roll(random, min, max), places);
+		double halfStep = 0.5d / scale;
+		long rolled = Math.round(this.roll(random, lowest / scale - halfStep, highest / scale + halfStep) * scale);
+		return Mth.clamp(rolled, lowest, highest) / scale;
+	}
+
+	private double roll(RandomSource random, double min, double max) {
+		if (this.bias == Bias.NONE)
+			return Mth.nextDouble(random, min, max);
 		if (this.bias == Bias.MIDDLE)
 			return random.triangle((min + max) / 2.0, (max - min) / 2.0);
 		//If MIN or MAX
@@ -76,13 +113,6 @@ public class MPRRange extends MPRModifiable {
 		return this.bias == Bias.MIN
 				? min + biased * (max - min)
 				: max - biased * (max - min);
-	}
-
-	/**
-	 * Returns a random int value between min and max
-	 */
-	public int getIntBetween(LivingEntity entity) {
-		return (int) this.getDoubleBetween(entity);
 	}
 
 	public boolean isBetween(LivingEntity entity, double value) {
