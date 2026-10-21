@@ -46,6 +46,7 @@ public class ConditionsRegistry {
             helper.register(MPR.id("has_owner"), MPRHasOwnerCondition.class);
             helper.register(MPR.id("has_target"), MPRHasTargetCondition.class);
             helper.register(MPR.id("health"), MPRHealthCondition.class);
+            helper.register(MPR.id("in_combat"), MPRInCombatCondition.class);
             helper.register(MPR.id("is_baby"), MPRBabyCondition.class);
             helper.register(MPR.id("light_level"), MPRLightLevelCondition.class);
             helper.register(MPR.id("mod_loaded"), MPRModLoadedCondition.class);

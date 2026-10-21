@@ -1,3 +1,7 @@
+# Upcoming
+* Added `in_combat` condition
+  * An entity is considered in combat if it has been attacked by or has attacked another entity within the specified `seconds`.
+
 # 6.1.10.0
 * Added `target` field to properties inside `apply_properties`
   * Defaults to the event's own `target` if omitted, so existing data packs behave the same.  
