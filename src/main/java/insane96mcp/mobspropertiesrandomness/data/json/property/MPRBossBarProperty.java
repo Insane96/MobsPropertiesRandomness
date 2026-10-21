@@ -73,6 +73,15 @@ public class MPRBossBarProperty extends MPRProperty {
         }
     }
 
+    public static void removeAllPlayers(Entity entity) {
+        if (entity.getServer() == null
+                || !(entity instanceof LivingEntity living))
+            return;
+        CustomBossEvent bossEvent = getBarFromEntity(living);
+        if (bossEvent != null)
+            bossEvent.removeAllPlayers();
+    }
+
     public static void removePlayer(Entity entity, Player player) {
         if (player.level().isClientSide
                 || !(entity instanceof LivingEntity livingEntity)

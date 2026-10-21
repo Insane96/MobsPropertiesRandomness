@@ -128,8 +128,13 @@ public class MPRBase extends Feature {
 
 	@SubscribeEvent
 	public void onEntityLeaveLevel(EntityLeaveLevelEvent event) {
-        if (event.getEntity().getRemovalReason() != null)
-		    MPRBossBarProperty.removeBar(event.getEntity());
+		if (event.getEntity().getRemovalReason() == null)
+			return;
+		//Only remove the bar if the entity is gone for good (killed/discarded). When unloaded or changing dimension, keep it so it's found again on reload
+		if (event.getEntity().getRemovalReason().shouldDestroy())
+			MPRBossBarProperty.removeBar(event.getEntity());
+		else
+			MPRBossBarProperty.removeAllPlayers(event.getEntity());
 	}
 
 	@SubscribeEvent
