@@ -8,6 +8,7 @@ import insane96mcp.mobspropertiesrandomness.util.MPRLogger;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.ai.attributes.AttributeInstance;
+import net.minecraft.world.entity.ai.attributes.Attributes;
 
 import java.lang.reflect.Type;
 import java.util.List;
@@ -35,7 +36,11 @@ public class MPRAttributeModifierProperty extends MPRProperty {
             return false;
         }
 
+        //Keep the same health percentage when max health changes
+        float healthRatio = living.getHealth() / living.getMaxHealth();
         attributeInstance.addPermanentModifier(this.attributeModifier.getModifier(living));
+        if (this.attributeModifier.attribute.is(Attributes.MAX_HEALTH))
+            living.setHealth(living.getMaxHealth() * healthRatio);
         return true;
     }
 

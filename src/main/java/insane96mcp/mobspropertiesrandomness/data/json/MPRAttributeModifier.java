@@ -11,9 +11,7 @@ import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.GsonHelper;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.ai.attributes.Attribute;
-import net.minecraft.world.entity.ai.attributes.AttributeInstance;
 import net.minecraft.world.entity.ai.attributes.AttributeModifier;
-import net.minecraft.world.entity.ai.attributes.Attributes;
 
 import javax.annotation.Nullable;
 import java.lang.reflect.Type;
@@ -38,13 +36,6 @@ public class MPRAttributeModifier {
 
     public AttributeModifier getModifier(LivingEntity living) {
         return new AttributeModifier(this.id, this.amount.getDoubleBetween(living), this.operation);
-    }
-
-    public static void fixHealth(LivingEntity entity) {
-        AttributeInstance attributeInstance = entity.getAttribute(Attributes.MAX_HEALTH);
-        if (attributeInstance != null)
-            entity.setHealth((float) attributeInstance.getValue());
-        entity.setHealth((float) entity.getAttributeValue(Attributes.MAX_HEALTH));
     }
 
     public static class Serializer implements JsonDeserializer<MPRAttributeModifier>, JsonSerializer<MPRAttributeModifier> {

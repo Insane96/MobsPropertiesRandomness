@@ -13,6 +13,9 @@ Event presets
 * Fixed `distance_from_spawn` modifier with `operation: multiply` setting the value to 0 at world spawn. It now works as documented: `value * (1 + increase)`
 * Fixed `deepness` modifier with `operation: multiply` and no `starting_amount` setting the value to 0 above `starting_y`. `starting_amount` now defaults to 1 with `multiply` (still 0 with `add`)
 * Fixed `time_played` modifier with `operation: multiply` always doubling the value. With `multiply`, `cap` now limits only the increase (e.g. `cap: 0.5` = up to +50%) and `mode: average` no longer averages the base 1 too
+* Fixed `boss_bar` disappearing forever when the mob was unloaded (e.g. chunk unload, server restart, dimension change)
+* Fixed every mob being healed to max health when spawning, even if no property changed its max health (e.g. ignoring `Health` set by `/summon` or spawners)
+  * `attribute_modifier` properties on max health now keep the mob's health percentage instead (also when applied by events)
 
 # 6.1.10.0
 * Added `target` field to properties inside `apply_properties`

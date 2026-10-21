@@ -5,7 +5,6 @@ import insane96mcp.insanelib.core.feature.Feature;
 import insane96mcp.insanelib.core.feature.LoadFeature;
 import insane96mcp.insanelib.core.feature.config.Config;
 import insane96mcp.mobspropertiesrandomness.MPR;
-import insane96mcp.mobspropertiesrandomness.data.json.MPRAttributeModifier;
 import insane96mcp.mobspropertiesrandomness.data.json.MPRMob;
 import insane96mcp.mobspropertiesrandomness.data.json.MPRProperties;
 import insane96mcp.mobspropertiesrandomness.data.json.property.MPRBossBarProperty;
@@ -86,7 +85,6 @@ public class MPRBase extends Feature {
 			//Removed only now so that `presets` properties of MPR mobs keep being skipped during this join
 			ModNBTData.remove(livingEntity, PRESET);
 		}
-		MPRAttributeModifier.fixHealth(livingEntity);
 	}
 
 	public static void tryApplyPresetFromNBT(LivingEntity living) {
