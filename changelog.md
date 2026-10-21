@@ -3,6 +3,10 @@ Event presets
 # Upcoming
 * Added `in_combat` condition
   * An entity is considered in combat if it has been attacked by or has attacked another entity within the specified `seconds`.
+* Implemented `mode` in `presets` properties (as in v4/v5)
+  * `exclusive` (default): presets are applied first, and the other properties of the mob/preset are applied only if no preset was applied
+  * `before`: presets are applied before the other properties
+  * `after`: presets are applied after the other properties
 * **Breaking**: `time_played` condition and modifier now use hours instead of minutes
   * `minutes_played` has been renamed to `hours_played`, `minutes` to `hours` and `amount_per_minutes` to `amount_per_hours`. E.g. `"minutes_played": {"min": 60}` must now be `"hours_played": {"min": 1}`
 * Fixed mobs with preset nbt (e.g. summoned with `/mpr summon`) re-applying the preset every time they were loaded (chunk reload, server restart, dimension change)
@@ -37,6 +41,19 @@ Event presets
 * `nbt` is now required in `raw_nbt` properties. Before, omitting it crashed the game when the property was applied
 * Fixed `presets` properties nested in other properties (e.g. in events' `apply_properties`) being silently ignored
 * Fixed a possible failure of the whole `/reload` when an error message contained a `%` character
+* Fixed several JSON serializers writing missing or wrong fields
+* Fixed `equipment` items emptied by their functions (e.g. `set_count` to 0) clearing the slot instead of keeping the current item. Only `minecraft:air` clears the slot now
+* `enchant` item function fixes
+  * `random` and `single` now check compatibility with the enchantments already stored in enchanted books
+  * `with_levels` now excludes curses/treasure (if disabled) before picking the enchantments, instead of picking them and then discarding them, resulting in fewer enchantments
+  * `with_levels` now respects `allow_incompatible` with the enchantments already on the item
+* Condition, modifier and function preset references (`{"preset": "..."}`) with other fields (e.g. `inverted`, `target`) now fail to load instead of silently ignoring them
+* Fixed exploding creepers having effects longer than 30 minutes (and infinite ones) removed from themselves (e.g. not triggering on death effects like Oozing) and excluded from the lingering cloud even with `betterCreeperLingering` disabled. Now they're only excluded from the cloud, and only when the config is enabled
+* `structure` condition now reports non-existing structures when loading, instead of sending a message in chat every time a mob is checked
+* Documented that `weather: rain` is also true during thunderstorms
+* `/mpr summon` now fails with an unknown preset, instead of summoning a normal mob, and uses the local difficulty of the summon position instead of the command source's one
+* Mobs with the same `priority` are now always applied in the same order (sorted by file id)
+* Minor performance improvement for `damage_immunity`
 
 # 6.1.10.0
 * Added `target` field to properties inside `apply_properties`

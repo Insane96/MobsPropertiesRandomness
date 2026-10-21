@@ -43,7 +43,7 @@ public class MPREffectCondition extends MPRCondition {
         @Override
         public JsonElement serialize(MPREffectCondition src, Type typeOfSrc, JsonSerializationContext context) {
             JsonObject jObject = new JsonObject();
-			SerializerUtils.serializeRegistryObject(src.effect, Registries.MOB_EFFECT);
+			jObject.add("effect", SerializerUtils.serializeRegistryObject(src.effect, Registries.MOB_EFFECT));
 			if (src.amplifier != DEFAULT_AMPLIFIER_RANGE)
 				jObject.add("amplifier", context.serialize(src.amplifier));
             return src.endSerialization(jObject);

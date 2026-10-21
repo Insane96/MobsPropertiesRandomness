@@ -124,6 +124,11 @@ public class MPRRange extends MPRModifiable {
         return obj instanceof MPRRange range && this.min.equals(range.min) && this.max.equals(range.max) && this.bias == range.bias && this.modifiers.equals(range.modifiers) && Objects.equals(this.round, range.round);
     }
 
+    @Override
+    public int hashCode() {
+        return Objects.hash(this.min, this.max, this.bias, this.modifiers, this.round);
+    }
+
     public static class Serializer implements JsonSerializer<MPRRange>, JsonDeserializer<MPRRange> {
 		@Override
 		public MPRRange deserialize(JsonElement json, Type typeOfT, JsonDeserializationContext context) throws JsonParseException {
@@ -161,6 +166,8 @@ public class MPRRange extends MPRModifiable {
 			jObject.add("min", context.serialize(src.min));
 			if (!Objects.equals(src.min, src.max))
 				jObject.add("max", context.serialize(src.max));
+			if (src.bias != Bias.NONE)
+				jObject.add("bias", context.serialize(src.bias));
 			return src.endSerialization(jObject, context);
 		}
 	}

@@ -2,6 +2,7 @@ package insane96mcp.mobspropertiesrandomness.command;
 
 import com.mojang.brigadier.CommandDispatcher;
 import com.mojang.brigadier.exceptions.CommandSyntaxException;
+import com.mojang.brigadier.exceptions.DynamicCommandExceptionType;
 import com.mojang.brigadier.exceptions.SimpleCommandExceptionType;
 import com.mojang.brigadier.suggestion.SuggestionProvider;
 import insane96mcp.insanelib.core.ModNBTData;
@@ -35,6 +36,7 @@ public class MPRCommand {
     private static final SimpleCommandExceptionType ERROR_FAILED = new SimpleCommandExceptionType(Component.translatable("commands.summon.failed"));
     private static final SimpleCommandExceptionType ERROR_DUPLICATE_UUID = new SimpleCommandExceptionType(Component.translatable("commands.summon.failed.uuid"));
     private static final SimpleCommandExceptionType INVALID_POSITION = new SimpleCommandExceptionType(Component.translatable("commands.summon.invalidPosition"));
+    private static final DynamicCommandExceptionType UNKNOWN_PRESET = new DynamicCommandExceptionType(preset -> Component.literal("Unknown preset " + preset));
 
     public static final SuggestionProvider<CommandSourceStack> PRESETS = SuggestionProviders.register(
             MPR.id("summonable_presets"),
@@ -58,6 +60,8 @@ public class MPRCommand {
     }
 
     public static Entity createEntity(CommandSourceStack source, ResourceLocation preset, Holder.Reference<EntityType<?>> pType, Vec3 pPos, CompoundTag pTag, boolean pRandomizeProperties) throws CommandSyntaxException {
+        if (!MPRMobsPresetReloadListener.PRESETS.containsKey(preset))
+            throw UNKNOWN_PRESET.create(preset);
         BlockPos blockpos = BlockPos.containing(pPos);
         if (!Level.isInSpawnableBounds(blockpos)) {
             throw INVALID_POSITION.create();
@@ -74,7 +78,7 @@ public class MPRCommand {
             } else {
                 if (pRandomizeProperties && entity instanceof Mob mob) {
                     //noinspection deprecation,OverrideOnly
-                    mob.finalizeSpawn(source.getLevel(), source.getLevel().getCurrentDifficultyAt(BlockPos.containing(source.getPosition())), MobSpawnType.COMMAND, null);
+                    mob.finalizeSpawn(source.getLevel(), source.getLevel().getCurrentDifficultyAt(blockpos), MobSpawnType.COMMAND, null);
                 }
 
                 ModNBTData.put(entity, MPRBase.PRESET, preset.toString());

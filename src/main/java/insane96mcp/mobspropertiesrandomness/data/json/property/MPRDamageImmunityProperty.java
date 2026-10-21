@@ -67,12 +67,10 @@ public class MPRDamageImmunityProperty extends MPRProperty {
             return false;
 
         if (ModNBTData.contains(living, DAMAGE_IMMUNITY)) {
-            ListTag listTag = ModNBTData.getList(living, DAMAGE_IMMUNITY, CompoundTag.TAG_STRING);
-            for (int i = 0; i < listTag.size(); ++i) {
-                ResourceKey<DamageType> damageType = ResourceKey.create(Registries.DAMAGE_TYPE, ResourceLocation.parse(listTag.getString(i)));
-                if (damageSource.is(damageType))
-                    return true;
-            }
+            //Compared as strings, to avoid parsing every id on each damage
+            String damageTypeId = damageSource.typeHolder().unwrapKey().map(key -> key.location().toString()).orElse(null);
+            if (damageTypeId != null && ModNBTData.getList(living, DAMAGE_IMMUNITY, CompoundTag.TAG_STRING).contains(StringTag.valueOf(damageTypeId)))
+                return true;
         }
         if (ModNBTData.contains(living, DAMAGE_TAG_IMMUNITY)) {
             TagKey<DamageType> damageTypeTag = TagKey.create(Registries.DAMAGE_TYPE, ResourceLocation.parse(ModNBTData.get(living, DAMAGE_TAG_IMMUNITY, String.class)));
@@ -113,7 +111,9 @@ public class MPRDamageImmunityProperty extends MPRProperty {
         public JsonElement serialize(MPRDamageImmunityProperty src, Type typeOfSrc, JsonSerializationContext context) {
             JsonObject jObject = new JsonObject();
             if (src.damageTypes != null && !src.damageTypes.isEmpty()) {
-                //TODO
+                JsonArray jArray = new JsonArray();
+                src.damageTypes.forEach(damageType -> jArray.add(damageType.location().toString()));
+                jObject.add("damage_types", jArray);
             }
             if (src.damageTypeTag != null)
                 jObject.addProperty("damage_type_tag", src.damageTypeTag.location().toString());

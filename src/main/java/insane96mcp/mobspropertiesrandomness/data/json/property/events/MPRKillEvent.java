@@ -55,8 +55,8 @@ public class MPRKillEvent extends MPREvent {
 		@Override
 		public JsonElement serialize(MPRKillEvent src, Type typeOfSrc, JsonSerializationContext context) {
 			JsonObject jObject = new JsonObject();
-			jObject.add("hurt_data", context.serialize(src.hurtData));
-			return src.endSerialization(jObject, context, false);
+			src.hurtData.serialize(jObject, context);
+			return src.endSerialization(jObject, context, true);
 		}
 	}
 }

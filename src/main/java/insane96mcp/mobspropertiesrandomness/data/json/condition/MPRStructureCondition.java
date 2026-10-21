@@ -2,9 +2,9 @@ package insane96mcp.mobspropertiesrandomness.data.json.condition;
 
 import com.google.gson.*;
 import com.google.gson.annotations.JsonAdapter;
-import insane96mcp.mobspropertiesrandomness.MPR;
+import insane96mcp.mobspropertiesrandomness.util.MPRLogger;
+import insane96mcp.mobspropertiesrandomness.util.SerializerUtils;
 import net.minecraft.core.registries.Registries;
-import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerLevel;
@@ -31,12 +31,9 @@ public class MPRStructureCondition extends MPRCondition {
         for (ResourceKey<Structure> structure : this.structures) {
             StructureManager structureManager = ((ServerLevel) living.level()).structureManager();
             Structure s = structureManager.registryAccess().registryOrThrow(Registries.STRUCTURE).get(structure);
-            if (s == null) {
-                MPR.LOGGER.warn("No structure found with id {}. Ignored", structure.location());
-                if (living.getServer() != null)
-                    living.getServer().sendSystemMessage(Component.literal("No structure found with id " + structure.location()));
+            //Missing structures are reported when loading
+            if (s == null)
                 continue;
-            }
             if (structureManager.getStructureAt(living.blockPosition(), s).isValid())
                 return true;
         }
@@ -53,6 +50,10 @@ public class MPRStructureCondition extends MPRCondition {
             List<ResourceKey<Structure>> structures = new ArrayList<>();
             for (JsonElement jsonElement : aStructures) {
                 ResourceKey<Structure> rk = ResourceKey.create(Registries.STRUCTURE, ResourceLocation.parse(jsonElement.getAsString()));
+                if (SerializerUtils.REGISTRY_ACCESS != null && !SerializerUtils.REGISTRY_ACCESS.registryOrThrow(Registries.STRUCTURE).containsKey(rk)) {
+                    MPRLogger.warn("No structure found with id %s. Ignored", rk.location());
+                    continue;
+                }
                 structures.add(rk);
             }
             return new MPRStructureCondition(structures, MPRCondition.deserializeInverted(jObject));

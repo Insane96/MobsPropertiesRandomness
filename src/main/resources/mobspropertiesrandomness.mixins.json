@@ -4,7 +4,6 @@
     "compatibilityLevel": "JAVA_21",
     "mixins": [
         "CreeperEntityMixin",
-        "LivingEntityMixin",
         "accessor.BiomeAccessor",
         "accessor.DamageSourcesAccessor",
         "accessor.MobAccessor"

@@ -70,7 +70,7 @@ public class MPRChangeTargetEvent extends MPREvent {
 		public JsonElement serialize(MPRChangeTargetEvent src, Type typeOfSrc, JsonSerializationContext context) {
 			JsonObject jObject = new JsonObject();
 			jObject.add("type", context.serialize(src.changeType));
-			return src.endSerialization(jObject, context, false);
+			return src.endSerialization(jObject, context, true);
 		}
 	}
 

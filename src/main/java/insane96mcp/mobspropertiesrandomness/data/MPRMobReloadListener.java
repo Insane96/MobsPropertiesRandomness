@@ -56,8 +56,7 @@ public class MPRMobReloadListener extends SimplePreparableReloadListener<Map<Res
 
 			try (Reader reader = entry.getValue().openAsReader()) {
 				JsonElement jsonElement = GsonHelper.fromJson(gson, reader, JsonElement.class);
-				JsonElement duplicated = map.put(id, jsonElement);
-				if (duplicated != null)
+				if (map.putIfAbsent(id, jsonElement) != null)
 					throw new IllegalStateException("Duplicate data file ignored with ID " + id);
 			}
 			catch (IllegalArgumentException | IOException | JsonParseException exception) {
@@ -72,7 +71,8 @@ public class MPRMobReloadListener extends SimplePreparableReloadListener<Map<Res
 	protected void apply(@NotNull Map<ResourceLocation, JsonElement> map, @NotNull ResourceManager resourceManager, @NotNull ProfilerFiller profilerFiller) {
 		MPRLogger.consumeWarningCount();
 		MPR_MOBS.clear();
-		for (var entry : map.entrySet()) {
+		//Sorted by id, so mobs with the same priority are always applied in the same order (the sort by priority is stable)
+		for (var entry : new TreeMap<>(map).entrySet()) {
 			//Events and presets of a mob that fails to load must not stay registered
 			Set<ResourceLocation> loadedEvents = Set.copyOf(MPREvent.LOADED_EVENTS.keySet());
 			int unresolvedPresets = MPRWeightedPreset.unresolvedMarker();

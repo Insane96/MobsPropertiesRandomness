@@ -138,8 +138,10 @@ public class MPREquipmentProperty extends MPRProperty {
 
         @Override
         public JsonElement serialize(MPREquipmentProperty src, Type typeOfSrc, JsonSerializationContext context) {
-            JsonObject jObject = context.serialize(src.functions).getAsJsonObject();
+            JsonObject jObject = new JsonObject();
             jObject.add("slot", context.serialize(src.slot));
+            if (!src.functions.isEmpty())
+                jObject.add("functions", SerializerUtils.serializeList(src.functions, context));
             jObject.add("items", SerializerUtils.serializeList(src.items, context));
             jObject.add("loot_tables", SerializerUtils.serializeList(src.lootTables, context));
             return src.endSerialization(jObject, context);

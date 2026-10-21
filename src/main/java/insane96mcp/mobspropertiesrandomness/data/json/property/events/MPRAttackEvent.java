@@ -52,8 +52,8 @@ public class MPRAttackEvent extends MPROnHitEvent {
         @Override
         public JsonElement serialize(MPROnHitEvent src, java.lang.reflect.Type typeOfSrc, JsonSerializationContext context) {
             JsonObject jObject = new JsonObject();
-
-            return src.endSerialization(jObject, context, false);
+            src.serializeOnHit(jObject, context);
+            return src.endSerialization(jObject, context, true);
         }
     }
 }

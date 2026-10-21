@@ -1,5 +1,7 @@
 package insane96mcp.mobspropertiesrandomness.data.json.property.events;
 
+import com.google.gson.JsonObject;
+import com.google.gson.JsonSerializationContext;
 import insane96mcp.mobspropertiesrandomness.data.json.condition.MPRCondition;
 import insane96mcp.mobspropertiesrandomness.data.json.property.MPRProperty;
 import insane96mcp.mobspropertiesrandomness.data.json.util.modifiable.MPRModifier;
@@ -65,6 +67,20 @@ public abstract class MPROnHitEvent extends MPREvent {
 
 		event.setNewDamage(newDamage);
 		this.execute(living, other);
+	}
+
+	public void serializeOnHit(JsonObject jObject, JsonSerializationContext context) {
+		if (this.damageAmount != null)
+			jObject.add("damage_amount", context.serialize(this.damageAmount));
+		if (this.damageModifier != null) {
+			jObject.add("damage_modifier", context.serialize(this.damageModifier));
+			jObject.add("damage_modifier_operation", context.serialize(this.damageModifierOperation));
+		}
+		if (this.healthLeft != null)
+			jObject.add("health_left", context.serialize(this.healthLeft));
+		if (this.flatHealthLeft)
+			jObject.addProperty("flat_health_left", true);
+		this.hurtData.serialize(jObject, context);
 	}
 
 	public static void onHit(LivingDamageEvent.Pre event) {

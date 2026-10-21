@@ -43,6 +43,9 @@ public abstract class MPRItemFunction extends MPRConditionable {
             JsonObject jObj = jsonElement.getAsJsonObject();
             if (jObj.has("preset")) {
                 ResourceLocation id = MPR.locationFrom(GsonHelper.getAsString(jObj, "preset"));
+                //A preset is a list, so other fields (e.g. inverted, target) can't be applied to it
+                if (jObj.size() > 1)
+                    throw new JsonParseException("Function preset reference '%s' can only contain the 'preset' field".formatted(id));
                 if (!resolving.add(id))
                     throw new JsonParseException("Circular function preset reference: '%s'".formatted(id));
                 JsonElement preset = MPRRawPresetLoader.FUNCTION_PRESETS.get(id);

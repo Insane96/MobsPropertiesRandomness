@@ -57,9 +57,8 @@ public class MPRMobsPresetReloadListener extends SimplePreparableReloadListener<
 
 			try (Reader reader = entry.getValue().openAsReader()) {
 				JsonElement jsonElement = GsonHelper.fromJson(gson, reader, JsonElement.class);
-				JsonElement duplicated = map.put(id, jsonElement);
-				if (duplicated != null)
-					throw new IllegalStateException("Duplicate data file with ID " + id);
+				if (map.putIfAbsent(id, jsonElement) != null)
+					throw new IllegalStateException("Duplicate data file ignored with ID " + id);
 			}
 			catch (Exception exception) {
 				MPRLogger.error("Error loading Preset %s: %s", key, exception.getMessage());

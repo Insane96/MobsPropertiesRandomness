@@ -35,6 +35,11 @@ public class MPRModifiableValue extends MPRModifiable {
         return obj instanceof MPRModifiableValue modifiableValue && this.value.equals(modifiableValue.value) && this.modifiers.equals(modifiableValue.modifiers) && Objects.equals(this.round, modifiableValue.round);
     }
 
+    @Override
+    public int hashCode() {
+        return Objects.hash(this.value, this.modifiers, this.round);
+    }
+
     public static class Serializer implements JsonSerializer<MPRModifiableValue>, JsonDeserializer<MPRModifiableValue> {
 		@Override
 		public MPRModifiableValue deserialize(JsonElement json, Type typeOfT, JsonDeserializationContext context) throws JsonParseException {

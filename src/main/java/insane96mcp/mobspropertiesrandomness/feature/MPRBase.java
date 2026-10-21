@@ -15,7 +15,6 @@ import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.LivingEntity;
 import net.neoforged.bus.api.EventPriority;
 import net.neoforged.bus.api.SubscribeEvent;
-import net.neoforged.neoforge.event.ItemAttributeModifierEvent;
 import net.neoforged.neoforge.event.entity.EntityJoinLevelEvent;
 import net.neoforged.neoforge.event.entity.EntityLeaveLevelEvent;
 import net.neoforged.neoforge.event.entity.living.*;
@@ -159,11 +158,6 @@ public class MPRBase extends Feature {
 	@SubscribeEvent
 	public void onStopTracking(PlayerEvent.StopTracking event) {
 		MPRBossBarProperty.removePlayer(event.getTarget(), event.getEntity());
-	}
-
-	@SubscribeEvent
-	public void onItemAttributeModifierEvent(ItemAttributeModifierEvent event) {
-
 	}
 
 	public static boolean isBetterCreeperLingeringEnabled() {

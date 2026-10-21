@@ -30,7 +30,7 @@ public class MPRItem extends MPRConditionable implements IWeightedRandom {
     public List<MPRItemFunction> functions;
 
     private boolean valid = true;
-    private boolean setEmpty = true;
+    private boolean setEmpty = false;
 
     public MPRItem(Item item, MPRModifiableValue modifiableWeight, List<MPRItemFunction> functions, List<MPRCondition> conditions) {
         super(conditions);
@@ -92,8 +92,10 @@ public class MPRItem extends MPRConditionable implements IWeightedRandom {
 
         @Override
         public JsonElement serialize(MPRItem src, Type typeOfSrc, JsonSerializationContext context) {
-            JsonObject jObject = context.serialize(src.functions).getAsJsonObject();
+            JsonObject jObject = new JsonObject();
             jObject.add("item", SerializerUtils.serializeRegistryObject(src.item, Registries.ITEM));
+            if (!src.functions.isEmpty())
+                jObject.add("functions", SerializerUtils.serializeList(src.functions, context));
             jObject.add("weight", context.serialize(src.modifiableWeight));
             return src.endSerialization(jObject, context);
         }

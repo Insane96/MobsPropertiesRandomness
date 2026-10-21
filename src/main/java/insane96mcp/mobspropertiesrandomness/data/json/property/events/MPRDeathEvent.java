@@ -69,10 +69,10 @@ public class MPRDeathEvent extends MPREvent {
 		@Override
 		public JsonElement serialize(MPRDeathEvent src, Type typeOfSrc, JsonSerializationContext context) {
 			JsonObject jObject = new JsonObject();
-			jObject.add("hurt_data", context.serialize(src.hurtData));
+			src.hurtData.serialize(jObject, context);
 			if (src.cancelDeath)
 				jObject.addProperty("cancel_death", true);
-			return src.endSerialization(jObject, context, false);
+			return src.endSerialization(jObject, context, true);
 		}
 	}
 }

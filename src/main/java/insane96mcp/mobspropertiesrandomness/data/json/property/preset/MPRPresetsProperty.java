@@ -19,7 +19,6 @@ import java.util.List;
 
 @JsonAdapter(MPRPresetsProperty.Serializer.class)
 public class MPRPresetsProperty extends MPRProperty {
-    //TODO Actually implement this
     public Mode mode;
     public Boolean applyAll;
     public List<MPRWeightedPreset> weightedPresets;

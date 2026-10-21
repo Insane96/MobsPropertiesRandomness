@@ -41,7 +41,7 @@ public class MPROrCondition extends MPRCondition {
         @Override
         public JsonElement serialize(MPROrCondition src, Type typeOfSrc, JsonSerializationContext context) {
             JsonObject jObject = new JsonObject();
-
+            jObject.add("conditions", context.serialize(src.conditions));
             return src.endSerialization(jObject);
         }
     }

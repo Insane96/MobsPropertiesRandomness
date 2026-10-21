@@ -53,6 +53,7 @@ public class MPRDamageProperty extends MPRProperty {
         public JsonElement serialize(MPRDamageProperty src, Type typeOfSrc, JsonSerializationContext context) {
             JsonObject jObject = new JsonObject();
             jObject.add("amount", context.serialize(src.amount));
+            jObject.addProperty("damage_type", src.damageType.location().toString());
             return src.endSerialization(jObject, context);
         }
     }

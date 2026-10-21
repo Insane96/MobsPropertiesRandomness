@@ -10,8 +10,6 @@ import insane96mcp.mobspropertiesrandomness.util.MPRLogger;
 import insane96mcp.mobspropertiesrandomness.util.SerializerUtils;
 import net.minecraft.core.Holder;
 import net.minecraft.core.Registry;
-import net.minecraft.core.component.DataComponentType;
-import net.minecraft.core.component.DataComponents;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.tags.EnchantmentTags;
@@ -19,7 +17,6 @@ import net.minecraft.util.GsonHelper;
 import net.minecraft.util.Mth;
 import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.entity.LivingEntity;
-import net.minecraft.world.item.EnchantedBookItem;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.item.enchantment.Enchantment;
@@ -57,26 +54,6 @@ public abstract class MPREnchantItemFunction extends MPRItemFunction {
         int minLevel = this.level != null ? (int) this.level.getMin(entity) : enchantment.value().getMinLevel();
         int maxLevel = this.level != null ? (int) this.level.getMax(entity) : enchantment.value().getMaxLevel();
         return Mth.nextInt(entity.level().random, minLevel, maxLevel);
-    }
-
-    private static void removeEnchantmentFromItemStack(ItemStack stack, Holder<Enchantment> enchantment) {
-        DataComponentType<ItemEnchantments> componentType =
-                stack.getItem() instanceof EnchantedBookItem
-                        ? DataComponents.STORED_ENCHANTMENTS
-                        : DataComponents.ENCHANTMENTS;
-
-        ItemEnchantments enchantments = stack.get(componentType);
-        if (enchantments == null || enchantments.isEmpty())
-            return;
-
-        ItemEnchantments.Mutable mutable = new ItemEnchantments.Mutable(enchantments);
-        mutable.removeIf(holder -> holder.equals(enchantment));
-
-        ItemEnchantments updated = mutable.toImmutable();
-        if (updated.isEmpty())
-            stack.remove(componentType);
-        else
-            stack.set(componentType, updated);
     }
 
     @Nullable
@@ -137,7 +114,8 @@ public abstract class MPREnchantItemFunction extends MPRItemFunction {
         protected boolean apply(LivingEntity living, ItemStack stack, EquipmentSlot slot) {
             if (this.enchantment == null)
                 return false;
-            ItemEnchantments itemEnchantments = stack.getOrDefault(DataComponents.ENCHANTMENTS, ItemEnchantments.EMPTY);
+            //Stored enchantments for enchanted books
+            ItemEnchantments itemEnchantments = EnchantmentHelper.getEnchantmentsForCrafting(stack);
             //noinspection ConstantConditions can't be null as it's checked to exist when the data is reloaded
             boolean canApply = this.allowIncompatible || EnchantmentHelper.isEnchantmentCompatible(itemEnchantments.keySet(), this.enchantment);
             if (!canApply)
@@ -186,7 +164,8 @@ public abstract class MPREnchantItemFunction extends MPRItemFunction {
 
         @Override
         protected boolean apply(LivingEntity living, ItemStack stack, EquipmentSlot slot) {
-            ItemEnchantments itemEnchantments = stack.getOrDefault(DataComponents.ENCHANTMENTS, ItemEnchantments.EMPTY);
+            //Stored enchantments for enchanted books
+            ItemEnchantments itemEnchantments = EnchantmentHelper.getEnchantmentsForCrafting(stack);
 
             boolean isBook = stack.getItem() == Items.ENCHANTED_BOOK;
 
@@ -197,7 +176,7 @@ public abstract class MPREnchantItemFunction extends MPRItemFunction {
                     .filter(enchantmentHolder -> {
                         Enchantment enchantment = enchantmentHolder.value();
 
-                        // Check discoverable, curse, treasure
+                        // Check curse, treasure and enchantments whitelist
                         if ((enchantmentHolder.is(EnchantmentTags.CURSE) && !allowCurses)
                                 || (enchantmentHolder.is(EnchantmentTags.TREASURE) && !allowTreasure)
                                 || (!this.enchantments.isEmpty() && !this.enchantments.contains(enchantmentHolder)))
@@ -267,7 +246,14 @@ public abstract class MPREnchantItemFunction extends MPRItemFunction {
             int lvl = Math.max(1, getLvl(living, null));
             Registry<Enchantment> enchantmentRegistry = living.level().registryAccess().registryOrThrow(Registries.ENCHANTMENT);
 
+            //Stored enchantments for enchanted books
+            ItemEnchantments itemEnchantments = EnchantmentHelper.getEnchantmentsForCrafting(stack);
+
+            //Filtered before selecting, so excluded enchantments don't take the place of valid ones
             Stream<Holder<Enchantment>> enchantmentStream = enchantmentRegistry.holders()
+                    .filter(holder -> (allowCurses || !holder.is(EnchantmentTags.CURSE))
+                            && (allowTreasure || !holder.is(EnchantmentTags.TREASURE))
+                            && (this.allowIncompatible || EnchantmentHelper.isEnchantmentCompatible(itemEnchantments.keySet(), holder)))
                     .map(holder -> holder);
 
             List<EnchantmentInstance> list = EnchantmentHelper.selectEnchantment(
@@ -276,12 +262,8 @@ public abstract class MPREnchantItemFunction extends MPRItemFunction {
                     lvl,
                     enchantmentStream
             );
-            for (EnchantmentInstance instance : list) {
-                if ((instance.enchantment.is(EnchantmentTags.CURSE) && !allowCurses)
-                        || (instance.enchantment.is(EnchantmentTags.TREASURE) && !allowTreasure))
-                    continue;
+            for (EnchantmentInstance instance : list)
                 stack.enchant(instance.enchantment, instance.level);
-            }
             return true;
         }
 

@@ -5,10 +5,12 @@ import com.google.gson.annotations.JsonAdapter;
 import insane96mcp.mobspropertiesrandomness.data.json.condition.MPRCondition;
 import insane96mcp.mobspropertiesrandomness.data.json.condition.MPRConditionable;
 import insane96mcp.mobspropertiesrandomness.data.json.property.MPRProperty;
+import insane96mcp.mobspropertiesrandomness.data.json.property.preset.MPRPresetsProperty;
 import net.minecraft.world.entity.LivingEntity;
 
 import java.lang.reflect.Type;
 import java.util.List;
+import java.util.function.Predicate;
 
 @JsonAdapter(MPRProperties.Serializer.class)
 public class MPRProperties extends MPRConditionable {
@@ -33,16 +35,39 @@ public class MPRProperties extends MPRConditionable {
      * Applies all properties checking each property condition
      */
     public void apply(LivingEntity living) {
-        for (MPRProperty property : this.properties)
-            property.tryApply(living);
+        applyProperties(property -> property.tryApply(living));
     }
 
     /**
      * Applies all properties ignoring conditions
      */
     public void forceApply(LivingEntity living) {
-        for (MPRProperty property : this.properties)
-            property.apply(living);
+        applyProperties(property -> property.apply(living));
+    }
+
+    /**
+     * Applies the properties respecting {@code presets} properties' mode:<br>
+     * - exclusive: the presets are applied first, and the other properties are applied only if no preset was applied<br>
+     * - before: the presets are applied before the other properties<br>
+     * - after: the presets are applied after the other properties
+     */
+    private void applyProperties(Predicate<MPRProperty> applier) {
+        boolean exclusiveApplied = false;
+        for (MPRProperty property : this.properties) {
+            if (property instanceof MPRPresetsProperty presets && presets.mode != MPRPresetsProperty.Mode.AFTER
+                    && applier.test(property) && presets.mode == MPRPresetsProperty.Mode.EXCLUSIVE)
+                exclusiveApplied = true;
+        }
+        if (!exclusiveApplied) {
+            for (MPRProperty property : this.properties) {
+                if (!(property instanceof MPRPresetsProperty))
+                    applier.test(property);
+            }
+        }
+        for (MPRProperty property : this.properties) {
+            if (property instanceof MPRPresetsProperty presets && presets.mode == MPRPresetsProperty.Mode.AFTER)
+                applier.test(property);
+        }
     }
 
     public List<MPRProperty> getProperties() {

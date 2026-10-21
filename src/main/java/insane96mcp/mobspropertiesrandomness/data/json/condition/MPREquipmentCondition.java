@@ -81,7 +81,10 @@ public class MPREquipmentCondition extends MPRCondition {
 		public JsonElement serialize(MPREquipmentCondition src, Type typeOfSrc, JsonSerializationContext context) {
 			JsonObject jObject = new JsonObject();
 			jObject.add("slot", context.serialize(src.slot));
-			jObject.add("items", SerializerUtils.serializeRegistryObjectList(jObject, src.items, context, Registries.ITEM));
+			if (src.itemTag != null)
+				jObject.addProperty("items", "#" + src.itemTag.location());
+			else if (src.items != null)
+				jObject.add("items", SerializerUtils.serializeRegistryObjectList(jObject, src.items, context, Registries.ITEM));
 			return src.endSerialization(jObject);
 		}
 	}

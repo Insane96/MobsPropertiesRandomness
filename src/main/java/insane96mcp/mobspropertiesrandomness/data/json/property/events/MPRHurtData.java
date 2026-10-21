@@ -3,6 +3,7 @@ package insane96mcp.mobspropertiesrandomness.data.json.property.events;
 import com.google.gson.JsonDeserializationContext;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParseException;
+import com.google.gson.JsonSerializationContext;
 import com.google.gson.annotations.SerializedName;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.resources.ResourceKey;
@@ -45,6 +46,18 @@ public class MPRHurtData {
             return false;
 
         return true;
+    }
+
+    /// Hurt data fields are written directly in the event object, the same way they are read
+    public void serialize(JsonObject jObject, JsonSerializationContext context) {
+        if (this.directIndirect != null)
+            jObject.add("direct_indirect", context.serialize(this.directIndirect));
+        if (this.damageType != null)
+            jObject.addProperty("damage_type", this.damageType.location().toString());
+        else if (this.damageTypeTag != null)
+            jObject.addProperty("damage_type", "#" + this.damageTypeTag.location());
+        if (this.requireEntity)
+            jObject.addProperty("require_entity", true);
     }
 
     public static MPRHurtData deserialize(JsonObject json, JsonDeserializationContext context) throws JsonParseException {

@@ -17,6 +17,7 @@ public class MPRWeatherCondition extends MPRCondition {
         this.weather = weather;
     }
 
+    /// Thundering implies raining, so RAIN is also true during a thunderstorm
     @Override
     protected boolean conditionCheck(LivingEntity living) {
         return living.level().isRaining() && this.weather == Weather.RAIN

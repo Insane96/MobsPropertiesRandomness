@@ -62,7 +62,7 @@ public class MPRTimePlayedCondition extends MPRCondition {
         public JsonElement serialize(MPRTimePlayedCondition src, Type typeOfSrc, JsonSerializationContext context) {
             JsonObject jObject = new JsonObject();
             jObject.add("hours_played", context.serialize(src.hoursPlayed));
-            jObject.add("player", context.serialize(src.hoursPlayed));
+            jObject.add("player", context.serialize(src.mode));
             return src.endSerialization(jObject);
         }
     }
