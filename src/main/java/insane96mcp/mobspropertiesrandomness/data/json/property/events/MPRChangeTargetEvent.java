@@ -9,6 +9,7 @@ import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.GsonHelper;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.Mob;
+import net.minecraft.world.entity.ai.memory.MemoryModuleType;
 import net.neoforged.neoforge.event.entity.living.LivingChangeTargetEvent;
 import org.jetbrains.annotations.Nullable;
 
@@ -42,10 +43,15 @@ public class MPRChangeTargetEvent extends MPREvent {
 	}
 
 	public static void onTargetChange(LivingChangeTargetEvent event) {
-		Mob mob = (Mob) event.getEntity();
+		if (!(event.getEntity() instanceof Mob mob))
+			return;
+		//Brain based mobs (e.g. piglins, hoglins) store the target in the brain, not in Mob#target
+		LivingEntity oldTarget = event.getTargetType() == LivingChangeTargetEvent.LivingTargetType.BEHAVIOR_TARGET
+				? mob.getBrain().getMemory(MemoryModuleType.ATTACK_TARGET).orElse(null)
+				: mob.getTarget();
 		List<MPRChangeTargetEvent> events = getEvents(mob, MPRChangeTargetEvent.class);
 		for (MPRChangeTargetEvent switchTargetEvent : events)
-			switchTargetEvent.switchTarget(mob, event.getNewAboutToBeSetTarget(), mob.getTarget());
+			switchTargetEvent.switchTarget(mob, event.getNewAboutToBeSetTarget(), oldTarget);
 	}
 
 	public static class Serializer implements JsonDeserializer<MPRChangeTargetEvent>, JsonSerializer<MPRChangeTargetEvent> {
