@@ -11,6 +11,7 @@ import net.minecraft.tags.TagKey;
 import net.minecraft.util.GsonHelper;
 import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.damagesource.DamageType;
+import net.minecraft.world.entity.LivingEntity;
 import org.jetbrains.annotations.Nullable;
 
 public class MPRHurtData {
@@ -20,14 +21,20 @@ public class MPRHurtData {
     private final ResourceKey<DamageType> damageType;
     @Nullable
     private final TagKey<DamageType> damageTypeTag;
+    /// If true, the damage must have been caused by a living entity (e.g. ignores fall damage, lava, /kill, etc.)
+    private final boolean requireEntity;
 
-    public MPRHurtData(@Nullable DirectIndirect directIndirect, @Nullable ResourceKey<DamageType> damageType, @Nullable TagKey<DamageType> damageTypeTag) {
+    public MPRHurtData(@Nullable DirectIndirect directIndirect, @Nullable ResourceKey<DamageType> damageType, @Nullable TagKey<DamageType> damageTypeTag, boolean requireEntity) {
         this.directIndirect = directIndirect;
         this.damageType = damageType;
         this.damageTypeTag = damageTypeTag;
+        this.requireEntity = requireEntity;
     }
 
     public boolean shouldApply(DamageSource source, boolean isDirectDamage) {
+        if (this.requireEntity && !(source.getEntity() instanceof LivingEntity))
+            return false;
+
         if (this.directIndirect != null
             && ((isDirectDamage && this.directIndirect == DirectIndirect.INDIRECT)
             || (!isDirectDamage && this.directIndirect == DirectIndirect.DIRECT)))
@@ -57,7 +64,8 @@ public class MPRHurtData {
         return new MPRHurtData(
                 GsonHelper.getAsObject(json, "direct_indirect", null, context, DirectIndirect.class),
                 damageType,
-                damageTypeTag
+                damageTypeTag,
+                GsonHelper.getAsBoolean(json, "require_entity", false)
         );
     }
 

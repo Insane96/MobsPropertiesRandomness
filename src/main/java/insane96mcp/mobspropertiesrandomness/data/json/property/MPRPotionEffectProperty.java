@@ -41,14 +41,18 @@ public class MPRPotionEffectProperty extends MPRProperty {
     public boolean apply(LivingEntity living) {
         if (this.mobEffect == null)
             return false;
-        int currentDuration = 0, currentLevel = 0;
-        if (living.getEffect(this.mobEffect) != null) {
-            //noinspection DataFlowIssue
-            currentDuration = living.getEffect(this.mobEffect).getDuration();
-            //noinspection DataFlowIssue
-            currentLevel = living.getEffect(this.mobEffect).getAmplifier() + 1;
+        //Duration is in seconds, while the effect's duration is in ticks
+        double currentDuration = 0;
+        int currentLevel = 0;
+        boolean currentInfinite = false;
+        MobEffectInstance currentEffect = living.getEffect(this.mobEffect);
+        if (currentEffect != null) {
+            currentInfinite = currentEffect.isInfiniteDuration();
+            currentDuration = currentEffect.getDuration() / 20d;
+            currentLevel = currentEffect.getAmplifier() + 1;
         }
-        double duration = this.duration.getStackedValue(living, currentDuration);
+        //Stacking on an infinite effect keeps it infinite
+        double duration = this.duration.stack && currentInfinite ? -1 : this.duration.getStackedValue(living, currentDuration);
         MobEffectInstance effectInstance = new MobEffectInstance(this.mobEffect, (int) (duration == -1 ? -1 : duration * 20d), this.amplifier.getStackedIntValue(living, currentLevel) - 1, this.ambient, this.showParticles, this.showIcon);
         living.addEffect(effectInstance);
         return true;

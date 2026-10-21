@@ -3,6 +3,8 @@ Event presets
 # Upcoming
 * Added `in_combat` condition
   * An entity is considered in combat if it has been attacked by or has attacked another entity within the specified `seconds`.
+* **Breaking**: `time_played` condition and modifier now use hours instead of minutes
+  * `minutes_played` has been renamed to `hours_played`, `minutes` to `hours` and `amount_per_minutes` to `amount_per_hours`. E.g. `"minutes_played": {"min": 60}` must now be `"hours_played": {"min": 1}`
 * Fixed mobs with preset nbt (e.g. summoned with `/mpr summon`) re-applying the preset every time they were loaded (chunk reload, server restart, dimension change)
 * Events with an `id` already used by another event now fail to load, instead of being silently ignored
 * Fixed an event triggering multiple times when applied more than once to the same mob
@@ -18,6 +20,10 @@ Event presets
   * `attribute_modifier` properties on max health now keep the mob's health percentage instead (also when applied by events)
 * Fixed `death` events with `cancel_death` overriding the health set by their `apply_properties` (e.g. `heal`), always leaving the mob at 0.01 health
 * Fixed `kill` events triggering even if the victim's death was canceled
+* `death` events now also trigger when the mob dies without a killer (e.g. fall damage, lava, `/kill`). Before, they only triggered if the mob was killed by a living entity
+  * Added `require_entity` to `death`, `kill`, `attack` and `damaged` events (defaults to `false`)  
+    If true, the event triggers only if the damage was caused by a living entity. Set it to `true` in `death` events to get the old behavior
+* Fixed `potion_effect` with stackable `duration` mixing ticks and seconds, resulting in way longer effects (e.g. 10s left + 5s gave 205s instead of 15s). Stacking on an infinite effect now keeps it infinite
 
 # 6.1.10.0
 * Added `target` field to properties inside `apply_properties`
