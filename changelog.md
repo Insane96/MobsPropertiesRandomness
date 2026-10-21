@@ -1,6 +1,7 @@
 # Upcoming
 * Added `in_combat` condition
   * An entity is considered in combat if it has been attacked by or has attacked another entity within the specified `seconds`.
+* Fixed mobs with preset nbt (e.g. summoned with `/mpr summon`) re-applying the preset every time they were loaded (chunk reload, server restart, dimension change)
 
 # 6.1.10.0
 * Added `target` field to properties inside `apply_properties`

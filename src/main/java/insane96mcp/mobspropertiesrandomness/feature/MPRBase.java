@@ -70,22 +70,22 @@ public class MPRBase extends Feature {
 		if (!(event.getEntity() instanceof LivingEntity livingEntity))
 			return;
 
-		if (eventPriority.equals(EventPriority.HIGHEST))
-			tryApplyPresetFromNBT(livingEntity);
-
 		if (ModNBTData.get(livingEntity, PROCESSED, Boolean.class))
 			return;
 
-		if (MPR_MOBS.isEmpty())
-			return;
+		if (eventPriority.equals(EventPriority.HIGHEST))
+			tryApplyPresetFromNBT(livingEntity);
 
 		for (MPRMob mprMob : MPR_MOBS) {
 			if (mprMob.eventPriority == eventPriority)
 				mprMob.tryApply(livingEntity);
 		}
 
-		if (eventPriority == EventPriority.LOWEST)
+		if (eventPriority == EventPriority.LOWEST) {
 			ModNBTData.put(livingEntity, PROCESSED, true);
+			//Removed only now so that `presets` properties of MPR mobs keep being skipped during this join
+			ModNBTData.remove(livingEntity, PRESET);
+		}
 		MPRAttributeModifier.fixHealth(livingEntity);
 	}
 
