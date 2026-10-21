@@ -310,7 +310,7 @@
                     "property": "potion_effect",
                     "effect": "minecraft:weakness",
                     "amplifier": 0,
-                    "duration": 100,
+                    "duration": 5,
                     "conditions": [
                         {
                             "condition": "equipment",
