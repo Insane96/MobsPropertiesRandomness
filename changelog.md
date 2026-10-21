@@ -12,6 +12,7 @@ Event presets
 * `lvl` is now required in `enchant` item functions with `type: with_levels`. Before, omitting it crashed the game when the item was generated
 * Fixed `distance_from_spawn` modifier with `operation: multiply` setting the value to 0 at world spawn. It now works as documented: `value * (1 + increase)`
 * Fixed `deepness` modifier with `operation: multiply` and no `starting_amount` setting the value to 0 above `starting_y`. `starting_amount` now defaults to 1 with `multiply` (still 0 with `add`)
+* Fixed `time_played` modifier with `operation: multiply` always doubling the value. With `multiply`, `cap` now limits only the increase (e.g. `cap: 0.5` = up to +50%) and `mode: average` no longer averages the base 1 too
 
 # 6.1.10.0
 * Added `target` field to properties inside `apply_properties`

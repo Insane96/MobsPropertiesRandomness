@@ -31,17 +31,17 @@ public class MPRTimePlayedModifier extends MPRModifier {
     @Override
     protected double getModifier(LivingEntity living) {
         List<ServerPlayer> players = new ArrayList<>();
-        double modifier = this.getNoModifier();
+        double modifier = 0d;
         if (this.mode == Mode.NEAREST) {
             ServerPlayer nearestPlayer = (ServerPlayer) living.level().getNearestPlayer(living, 128d);
             if (nearestPlayer == null)
-                return modifier;
+                return this.getNoModifier();
             players.add(nearestPlayer);
         }
         else {
             players = living.level().getEntitiesOfClass(ServerPlayer.class, living.getBoundingBox().inflate(128d));
             if (players.isEmpty())
-                return modifier;
+                return this.getNoModifier();
         }
         for (ServerPlayer player : players) {
             int ticksPlayed = player.getStats().getValue(Stats.CUSTOM.get(Stats.PLAY_TIME));
