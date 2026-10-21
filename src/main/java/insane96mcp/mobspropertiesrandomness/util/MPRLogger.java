@@ -19,9 +19,12 @@ public class MPRLogger {
 		}
 	}
 
-	public static void log(LogType logType, String message, Object... params) {
+	public static synchronized void log(LogType logType, String message, Object... params) {
+		//Format only if there are params, so messages already formatted (that might contain '%') are logged as they are
+		if (params.length > 0)
+			message = String.format(message, params);
 		try {
-			writer.write(String.format("[%s] [%s] %s %s", new SimpleDateFormat("HH:mm:ss").format(new Date()), logType, String.format(message, params), System.lineSeparator()));
+			writer.write(String.format("[%s] [%s] %s %s", new SimpleDateFormat("HH:mm:ss").format(new Date()), logType, message, System.lineSeparator()));
 			writer.flush();
 		} catch (IOException e) {
 			throw new RuntimeException(e);

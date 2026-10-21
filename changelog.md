@@ -34,6 +34,9 @@ Event presets
 * Fixed `round` in ranges (e.g. `{"min": 1, "max": 5, "round": 0}`) being ignored. It now rounds the final random value, with every possible value having the same chance
 * Fixed integer ranges (e.g. `potion_effect` `amplifier`, `set_count`, `nbt` with `integer`/`boolean` type) almost never rolling the `max` value (e.g. an amplifier of `{"min": 1, "max": 3}` gave 1 or 2, a boolean `nbt` with `{"min": 0, "max": 1}` was always false)
 * Fixed `change_target` events not detecting the previous target of brain based mobs (e.g. piglins, hoglins), making `new_target` trigger on every target change and `switch_target` never trigger
+* `nbt` is now required in `raw_nbt` properties. Before, omitting it crashed the game when the property was applied
+* Fixed `presets` properties nested in other properties (e.g. in events' `apply_properties`) being silently ignored
+* Fixed a possible failure of the whole `/reload` when an error message contained a `%` character
 
 # 6.1.10.0
 * Added `target` field to properties inside `apply_properties`

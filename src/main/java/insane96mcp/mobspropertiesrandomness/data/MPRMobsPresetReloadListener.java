@@ -6,7 +6,6 @@ import com.google.gson.JsonSyntaxException;
 import insane96mcp.mobspropertiesrandomness.MPR;
 import insane96mcp.mobspropertiesrandomness.data.json.MPRProperties;
 import insane96mcp.mobspropertiesrandomness.data.json.property.events.MPREvent;
-import insane96mcp.mobspropertiesrandomness.data.json.property.preset.MPRPresetsProperty;
 import insane96mcp.mobspropertiesrandomness.data.json.property.preset.MPRWeightedPreset;
 import insane96mcp.mobspropertiesrandomness.util.MPRChatNotifier;
 import insane96mcp.mobspropertiesrandomness.util.MPRLogger;
@@ -75,9 +74,11 @@ public class MPRMobsPresetReloadListener extends SimplePreparableReloadListener<
 		MPRLogger.consumeWarningCount();
 		PRESETS.clear();
 		MPREvent.LOADED_EVENTS.clear();
+		MPRWeightedPreset.discardSince(0);
 		for (var entry : map.entrySet()) {
-			//Events of a preset that fails to load must not stay registered
+			//Events and presets of a preset that fails to load must not stay registered
 			Set<ResourceLocation> loadedEvents = Set.copyOf(MPREvent.LOADED_EVENTS.keySet());
+			int unresolvedPresets = MPRWeightedPreset.unresolvedMarker();
 			try {
 				ResourceLocation name = entry.getKey();
 				MPRLogger.info("Loading Preset %s", entry.getKey());
@@ -92,22 +93,19 @@ public class MPRMobsPresetReloadListener extends SimplePreparableReloadListener<
 			}
 			catch (JsonSyntaxException e) {
 				MPREvent.LOADED_EVENTS.keySet().retainAll(loadedEvents);
+				MPRWeightedPreset.discardSince(unresolvedPresets);
 				MPRLogger.error("Parsing error loading Preset %s: %s", entry.getKey(), e.getMessage());
 				errorCount++;
 			}
 			catch (Exception e) {
 				MPREvent.LOADED_EVENTS.keySet().retainAll(loadedEvents);
+				MPRWeightedPreset.discardSince(unresolvedPresets);
 				MPRLogger.error("Failed loading Preset %s: %s", entry.getKey(), e.getMessage());
 				errorCount++;
 			}
 		}
-        PRESETS.forEach((id, preset) -> preset.getProperties()
-                .forEach(property -> {
-                    if (property instanceof MPRPresetsProperty mprPresetsProperty) {
-                        MPRLogger.info("Resolving presets-in-presets for %s", id);
-                        mprPresetsProperty.weightedPresets.forEach(MPRWeightedPreset::resolve);
-                    }
-                }));
+        //Resolved after all the presets are loaded, so presets can reference each other (also in nested properties, e.g. events)
+        MPRWeightedPreset.resolveAll();
 
 		//Logger.info("Loaded %s Presets", PRESETS.size());
 

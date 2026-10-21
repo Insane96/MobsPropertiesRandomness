@@ -6,7 +6,6 @@ import com.google.gson.JsonParseException;
 import insane96mcp.mobspropertiesrandomness.MPR;
 import insane96mcp.mobspropertiesrandomness.data.json.MPRMob;
 import insane96mcp.mobspropertiesrandomness.data.json.property.events.MPREvent;
-import insane96mcp.mobspropertiesrandomness.data.json.property.preset.MPRPresetsProperty;
 import insane96mcp.mobspropertiesrandomness.data.json.property.preset.MPRWeightedPreset;
 import insane96mcp.mobspropertiesrandomness.feature.MPRBase;
 import insane96mcp.mobspropertiesrandomness.util.MPRChatNotifier;
@@ -74,8 +73,9 @@ public class MPRMobReloadListener extends SimplePreparableReloadListener<Map<Res
 		MPRLogger.consumeWarningCount();
 		MPR_MOBS.clear();
 		for (var entry : map.entrySet()) {
-			//Events of a mob that fails to load must not stay registered
+			//Events and presets of a mob that fails to load must not stay registered
 			Set<ResourceLocation> loadedEvents = Set.copyOf(MPREvent.LOADED_EVENTS.keySet());
+			int unresolvedPresets = MPRWeightedPreset.unresolvedMarker();
 			try {
 				ResourceLocation name = entry.getKey();
 				MPRLogger.info("Loading Mob %s", entry.getKey());
@@ -89,6 +89,7 @@ public class MPRMobReloadListener extends SimplePreparableReloadListener<Map<Res
 			}
 			catch (Exception e) {
 				MPREvent.LOADED_EVENTS.keySet().retainAll(loadedEvents);
+				MPRWeightedPreset.discardSince(unresolvedPresets);
 				StringBuilder sb = new StringBuilder("Failed loading Mob " + entry.getKey() + ": " + e.getMessage());
 				if (MPRBase.logStacktraceOnError) {
 					for (StackTraceElement s : e.getStackTrace())
@@ -98,12 +99,8 @@ public class MPRMobReloadListener extends SimplePreparableReloadListener<Map<Res
 				errorCount++;
 			}
 		}
-        MPR_MOBS.forEach(mob -> mob.getProperties()
-                .forEach(property -> {
-                    if (property instanceof MPRPresetsProperty mprPresetsProperty) {
-                        mprPresetsProperty.weightedPresets.forEach(MPRWeightedPreset::resolve);
-                    }
-                }));
+        //Resolves also presets nested in properties (e.g. events)
+        MPRWeightedPreset.resolveAll();
 
 		MPR_MOBS.sort(Comparator.comparing(mob -> mob.priority));
 

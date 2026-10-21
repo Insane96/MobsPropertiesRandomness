@@ -15,6 +15,7 @@ import net.minecraft.world.entity.LivingEntity;
 
 import javax.annotation.Nullable;
 import java.lang.reflect.Type;
+import java.util.ArrayList;
 import java.util.List;
 
 @JsonAdapter(MPRWeightedPreset.Serializer.class)
@@ -25,10 +26,14 @@ public class MPRWeightedPreset extends MPRConditionable implements IWeightedRand
     private final MPRModifiableValue modifiableWeight;
     private int _weight;
 
+    /// Weighted presets deserialized but not yet resolved. Contains every weighted preset, also the ones nested in events
+    private static final List<MPRWeightedPreset> UNRESOLVED = new ArrayList<>();
+
     public MPRWeightedPreset(ResourceLocation presetId, MPRModifiableValue modifiableWeight, List<MPRCondition> conditions) {
         super(conditions);
         this.presetId = presetId;
         this.modifiableWeight = modifiableWeight;
+        UNRESOLVED.add(this);
     }
 
     @Nullable
@@ -62,6 +67,22 @@ public class MPRWeightedPreset extends MPRConditionable implements IWeightedRand
         this.properties = MPRMobsPresetReloadListener.PRESETS.get(this.presetId);
         if (this.properties == null)
             MPRLogger.warn("Preset %s does not exist. Ignoring", this.presetId);
+    }
+
+    /// Resolves all the weighted presets deserialized since the last call
+    public static void resolveAll() {
+        UNRESOLVED.forEach(MPRWeightedPreset::resolve);
+        UNRESOLVED.clear();
+    }
+
+    /// Returns a marker to pass to {@link #discardSince(int)}
+    public static int unresolvedMarker() {
+        return UNRESOLVED.size();
+    }
+
+    /// Discards the weighted presets deserialized after the marker was taken (e.g. from a file that failed to load)
+    public static void discardSince(int marker) {
+        UNRESOLVED.subList(marker, UNRESOLVED.size()).clear();
     }
 
     public static class Serializer implements JsonSerializer<MPRWeightedPreset>, JsonDeserializer<MPRWeightedPreset> {

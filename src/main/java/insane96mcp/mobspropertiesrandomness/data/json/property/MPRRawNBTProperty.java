@@ -33,7 +33,7 @@ public class MPRRawNBTProperty extends MPRProperty {
         @Override
         public MPRRawNBTProperty deserialize(JsonElement json, Type typeOfT, JsonDeserializationContext context) throws JsonParseException {
             JsonObject jObject = json.getAsJsonObject();
-            return new MPRRawNBTProperty(MPRNbt.deserialize(GsonHelper.getAsString(jObject, "nbt", null)), MPRCondition.deserializeConditions(jObject, context));
+            return new MPRRawNBTProperty(MPRNbt.deserialize(GsonHelper.getAsString(jObject, "nbt")), MPRCondition.deserializeConditions(jObject, context));
         }
 
         @Override
