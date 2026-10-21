@@ -32,8 +32,9 @@ public abstract class MPREvent extends MPRConditionable {
         this.id = id;
         this.target = target;
         this.applyProperties = applyProperties;
-        if (!LOADED_EVENTS.containsKey(id))
-            LOADED_EVENTS.put(id, this);
+        if (LOADED_EVENTS.containsKey(id))
+            throw new JsonParseException("An event with id %s already exists".formatted(id));
+        LOADED_EVENTS.put(id, this);
     }
 
     public boolean apply(LivingEntity living) {
@@ -41,7 +42,10 @@ public abstract class MPREvent extends MPRConditionable {
         if (eventId == null)
             return false;
         ListTag list = ModNBTData.getList(living, eventId, CompoundTag.TAG_STRING);
-        list.add(StringTag.valueOf(id.toString()));
+        StringTag idTag = StringTag.valueOf(id.toString());
+        if (list.contains(idTag))
+            return false;
+        list.add(idTag);
         ModNBTData.put(living, eventId, list);
         return true;
     }
