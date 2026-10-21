@@ -46,21 +46,24 @@ public abstract class MPROnHitEvent extends MPREvent {
 				&& (amount < this.damageAmount.getMin(living) || amount > this.damageAmount.getMax(living)))
 			return;
 
+		float newDamage = event.getNewDamage();
 		if (this.damageModifier != null) {
 			if (this.damageModifierOperation == MPRModifier.Operation.ADD)
-				event.setNewDamage((float) (event.getNewDamage() + this.damageModifier.getDoubleBetween(living)));
+				newDamage = (float) (newDamage + this.damageModifier.getDoubleBetween(living));
 			else
-				event.setNewDamage((float) (event.getNewDamage() * this.damageModifier.getDoubleBetween(living)));
+				newDamage = (float) (newDamage * this.damageModifier.getDoubleBetween(living));
 		}
 
+		//Checked before changing the damage, so the damage isn't modified if health_left is not satisfied
 		if (this.healthLeft != null) {
-			float healthLeft = living.getHealth() - event.getNewDamage();
+			float healthLeft = living.getHealth() - newDamage;
 			if (!flatHealthLeft)
 				healthLeft /= living.getMaxHealth();
 			if (!this.healthLeft.isBetween(living, healthLeft))
 				return;
 		}
 
+		event.setNewDamage(newDamage);
 		this.execute(living, other);
 	}
 

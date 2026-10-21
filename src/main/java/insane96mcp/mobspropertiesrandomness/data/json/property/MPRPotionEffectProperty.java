@@ -77,7 +77,7 @@ public class MPRPotionEffectProperty extends MPRProperty {
             boolean showParticles = GsonHelper.getAsBoolean(jObject, "show_particles", true);
             boolean showIcon = GsonHelper.getAsBoolean(jObject, "show_icon", true);
 
-            if (ambient && showParticles)
+            if (ambient && !showParticles)
                 MPRLogger.warn("Particles are hidden, but ambient is enabled for %s. Ambient doesn't work if particles are hidden.".formatted(mobEffect));
 
             return new MPRPotionEffectProperty(mobEffect, amplifier, duration, ambient, showParticles, showIcon, MPRCondition.deserializeConditions(jObject, context));

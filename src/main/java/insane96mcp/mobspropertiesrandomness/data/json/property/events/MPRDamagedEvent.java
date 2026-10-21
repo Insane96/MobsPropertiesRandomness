@@ -31,12 +31,11 @@ public class MPRDamagedEvent extends MPROnHitEvent {
 
 		LivingEntity other = source.getEntity() instanceof LivingEntity le ? le : null;
 		boolean directHit = source.getDirectEntity() == source.getEntity();
-		float amount = event.getNewDamage();
 
         //Get on hit events of the damaged entity
          List<MPRDamagedEvent> events = getEvents(mob, MPRDamagedEvent.class);
         for (MPRDamagedEvent damagedEvent : events)
-            damagedEvent.hit(event, mob, other, source, amount, directHit);
+            damagedEvent.hit(event, mob, other, source, event.getNewDamage(), directHit);
     }
 
     public static class Serializer implements JsonDeserializer<MPROnHitEvent>, JsonSerializer<MPROnHitEvent> {

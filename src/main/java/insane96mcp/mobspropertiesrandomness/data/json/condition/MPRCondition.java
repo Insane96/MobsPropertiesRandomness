@@ -36,7 +36,15 @@ public abstract class MPRCondition {
         LivingEntity entity = this.target == Target.OTHER ? other : self;
         if (entity == null)
             return tryInvert(false);
-        return tryInvert(conditionCheck(entity));
+        return tryInvert(conditionCheck(entity, self, other));
+    }
+
+    /**
+     * Same as {@link #conditionCheck(LivingEntity)}, but also receives the original {@code self} and {@code other}.
+     * Override it for conditions that need to pass them down to inner conditions.
+     */
+    protected boolean conditionCheck(LivingEntity living, LivingEntity self, @Nullable LivingEntity other) {
+        return conditionCheck(living);
     }
 
     protected abstract boolean conditionCheck(LivingEntity living);

@@ -11,6 +11,7 @@ import net.minecraft.world.entity.LivingEntity;
 
 import java.lang.reflect.Type;
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.List;
 
 @JsonAdapter(MPRTimePlayedCondition.Serializer.class)
@@ -39,7 +40,8 @@ public class MPRTimePlayedCondition extends MPRCondition {
                 return false;
         }
 
-        int ticksPlayed = players.get(0).getStats().getValue(Stats.CUSTOM.get(Stats.PLAY_TIME));
+        ServerPlayer nearestPlayer = players.stream().min(Comparator.comparingDouble(p -> p.distanceToSqr(living))).get();
+        int ticksPlayed = nearestPlayer.getStats().getValue(Stats.CUSTOM.get(Stats.PLAY_TIME));
         double playerHours = ticksPlayed / 20d / 60d / 60d;
         return this.hoursPlayed.isBetween(living, playerHours);
     }

@@ -24,6 +24,13 @@ Event presets
   * Added `require_entity` to `death`, `kill`, `attack` and `damaged` events (defaults to `false`)  
     If true, the event triggers only if the damage was caused by a living entity. Set it to `true` in `death` events to get the old behavior
 * Fixed `potion_effect` with stackable `duration` mixing ticks and seconds, resulting in way longer effects (e.g. 10s left + 5s gave 205s instead of 15s). Stacking on an infinite effect now keeps it infinite
+* Fixed `potion_effect` warning about `ambient` with hidden particles showing when particles were visible instead
+* Fixed conditions with `target: other` inside an `or` condition always failing
+* Fixed `score` condition creating a score entry in the scoreboard for every mob checked. Mobs without a score now don't satisfy the condition
+* Fixed `time_played` condition with `player: any` checking a random player in range instead of the nearest
+* Fixed `day_time` condition losing precision in long-lived worlds
+* Fixed `attack`/`damaged` events modifying the damage even when `health_left` was not satisfied
+* Fixed `damaged` events reading an outdated damage amount when multiple `damaged` events modify the damage
 
 # 6.1.10.0
 * Added `target` field to properties inside `apply_properties`

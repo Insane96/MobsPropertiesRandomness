@@ -7,7 +7,7 @@ import net.minecraft.server.MinecraftServer;
 import net.minecraft.util.GsonHelper;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.scores.Objective;
-import net.minecraft.world.scores.ScoreAccess;
+import net.minecraft.world.scores.ReadOnlyScoreInfo;
 import net.minecraft.world.scores.ScoreHolder;
 
 import javax.annotation.Nullable;
@@ -37,9 +37,11 @@ public class MPRScoreCondition extends MPRCondition {
             return false;
         ScoreHolder scoreHolder = this.player != null ? ScoreHolder.forNameOnly(this.player) : living;
 
-        ScoreAccess score = server.getScoreboard().getOrCreatePlayerScore(scoreHolder, objective);
+        ReadOnlyScoreInfo score = server.getScoreboard().getPlayerScoreInfo(scoreHolder, objective);
+        if (score == null)
+            return false;
 
-        return this.value.isBetween(living, score.get());
+        return this.value.isBetween(living, score.value());
     }
 
     public static class Serializer implements JsonDeserializer<MPRScoreCondition>, JsonSerializer<MPRScoreCondition> {

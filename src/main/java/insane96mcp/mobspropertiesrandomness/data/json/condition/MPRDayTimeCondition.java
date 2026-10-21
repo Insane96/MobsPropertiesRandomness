@@ -19,7 +19,7 @@ public class MPRDayTimeCondition extends MPRCondition {
 
     @Override
     protected boolean conditionCheck(LivingEntity living) {
-        return this.dayTime.isBetween(living, living.level().getDayTime() % 24000f);
+        return this.dayTime.isBetween(living, living.level().getDayTime() % 24000L);
     }
 
     public static class Serializer implements JsonDeserializer<MPRDayTimeCondition>, JsonSerializer<MPRDayTimeCondition> {

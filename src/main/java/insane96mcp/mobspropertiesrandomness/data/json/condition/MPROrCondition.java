@@ -4,6 +4,7 @@ import com.google.gson.*;
 import com.google.gson.annotations.JsonAdapter;
 import net.minecraft.world.entity.LivingEntity;
 
+import javax.annotation.Nullable;
 import java.lang.reflect.Type;
 import java.util.List;
 
@@ -17,12 +18,17 @@ public class MPROrCondition extends MPRCondition {
     }
 
     @Override
-    protected boolean conditionCheck(LivingEntity living) {
+    protected boolean conditionCheck(LivingEntity living, LivingEntity self, @Nullable LivingEntity other) {
         for (MPRCondition condition : this.conditions) {
-            if (condition.conditionApplies(living))
+            if (condition.conditionApplies(self, other))
                 return true;
         }
         return false;
+    }
+
+    @Override
+    protected boolean conditionCheck(LivingEntity living) {
+        return conditionCheck(living, living, null);
     }
 
     public static class Serializer implements JsonDeserializer<MPROrCondition>, JsonSerializer<MPROrCondition> {
