@@ -192,6 +192,16 @@ const EVENTS = {
   change_target: { d: "When this mob's target changes.", f: [EV_ID, EV_TARGET, E("type", ["new_target", "switch_target", "lost_target"], { req: true }), APPLY] },
 };
 
+const EV_PRESET_ID = S("id", { ph: "mypack:my_event", help: "Unique event id, defaults to the preset id" });
+// The event switch of event properties (withPreset: can also reference an event preset) and of event preset files (id is optional)
+function eventSwitch(withPreset) {
+  const cases = Object.fromEntries(Object.entries(EVENTS).map(([k, v]) => [k, withPreset ? v.f : v.f.map(f => f === EV_ID ? EV_PRESET_ID : f)]));
+  // Unlike inline events, a preset reference has no event "target", so "target" is the property's one (who the event is registered to)
+  if (withPreset) cases["#preset"] = [S("preset", { req: true, ph: "mypack:my_event", help: "Event preset (presets/events/)" }),
+    E("target", ["this", "other"], { help: "Only meaningful in apply_properties: the entity the event is registered to" })];
+  return { k: "event", t: "switch", preset: withPreset, cases, checks: Object.fromEntries(Object.entries(EVENTS).map(([k, v]) => [k, v.check])) };
+}
+
 const ENCHANT_TYPES = {
   single: [S("enchantment", { req: true, dl: "enchantments" }), R("lvl"), B("allow_incompatible")],
   random: [B("allow_curses", { def: true }), B("allow_treasure", { def: true }), { k: "enchantments", t: "strs", dl: "enchantments", help: "Pool to pick from (empty = any)" }, R("lvl"), B("allow_incompatible")],
@@ -258,7 +268,7 @@ const PROPERTIES = {
   despawn: { d: "Removes the mob.", f: [] },
   effect_immunity: { d: "Makes the mob immune to effects.", f: [{ k: "effects", t: "strs", req: true, dl: "effects" }, B("remove")] },
   equipment: { d: "Equips an item (weighted) in a slot.", f: [E("slot", ["mainhand", "offhand", "head", "chest", "legs", "feet", "body"], { req: true }), { k: "items", t: "objs", of: "item" }, { k: "loot_tables", t: "objs", of: "loot_table" }, { k: "functions", t: "funcs", help: "Applied to any chosen item" }] },
-  event: { d: "Registers an event that triggers properties.", noTarget: true, f: [{ k: "event", t: "switch", cases: Object.fromEntries(Object.entries(EVENTS).map(([k, v]) => [k, v.f])), checks: Object.fromEntries(Object.entries(EVENTS).map(([k, v]) => [k, v.check])) }] },
+  event: { d: "Registers an event that triggers properties.", noTarget: true, f: [eventSwitch(true)] },
   experience_multiplier: { d: "Multiplies dropped experience.", f: [R("multiplier", { req: true })] },
   fire: { d: "Sets the mob on fire.", f: [R("seconds_on_fire", { req: true }), B("additive")] },
   freeze: { d: "Freezes the mob.", f: [R("seconds_frozen", { req: true }), B("additive")] },
@@ -309,6 +319,7 @@ const FILE_TYPES = {
   condition_preset: { label: "Condition preset", folder: "presets/conditions", array: "condition" },
   modifier_preset: { label: "Modifier preset", folder: "presets/modifiers", array: "modifier" },
   function_preset: { label: "Function preset", folder: "presets/functions", array: "function" },
+  event_preset: { label: "Event preset", folder: "presets/events", array: false, f: [eventSwitch(false)] },
 };
 
 /* ===================== DOM helpers ===================== */
@@ -593,19 +604,25 @@ function objsW(f, v, set) {
 }
 
 /* ----- switch (discriminator flattened in the same object) ----- */
+// "#preset" when the switch allows a preset reference ({"preset": "..."} without the discriminator)
+function switchCase(obj, f) {
+  if (f.preset && obj[f.k] === undefined && obj.preset !== undefined) return "#preset";
+  return stripNs(obj[f.k]);
+}
 function switchW(obj, f, onCh) {
   const box = h("div", { class: "fields" });
   const sub = h("div", { class: "fields" });
-  const cur = stripNs(obj[f.k]);
+  const cur = switchCase(obj, f);
   const sel = h("select", { onchange: e => {
-      for (const x of f.cases[stripNs(obj[f.k])] ?? []) delete obj[x.k];
-      obj[f.k] = e.target.value;
+      for (const x of f.cases[switchCase(obj, f)] ?? []) delete obj[x.k];
+      if (e.target.value === "#preset") { delete obj[f.k]; obj.preset = ""; }
+      else obj[f.k] = e.target.value;
       initFields(obj, f.cases[e.target.value]);
       renderSub(); onCh();
-    } }, Object.keys(f.cases).map(c => h("option", { value: c, text: c })));
+    } }, Object.keys(f.cases).map(c => h("option", { value: c, text: c === "#preset" ? "preset (reference a preset)" : c })));
   if (cur !== undefined && !f.cases[cur]) sel.append(h("option", { value: cur, text: cur + " (unknown)" }));
   sel.value = cur ?? "";
-  const renderSub = () => sub.replaceChildren(renderFields(obj, f.cases[stripNs(obj[f.k])] ?? [], onCh));
+  const renderSub = () => sub.replaceChildren(renderFields(obj, f.cases[switchCase(obj, f)] ?? [], onCh));
   box.append(row(f, sel), sub);
   renderSub();
   return box;
@@ -632,7 +649,7 @@ function validateFields(o, fields, path, out, checks) {
     const v = o[f.k];
     const p = path + "." + f.k;
     if (f.t === "switch") {
-      const c = stripNs(v);
+      const c = switchCase(o, f);
       if (!f.cases[c]) { out.push(`${p}: unknown "${v}"`); continue; }
       validateFields(o, f.cases[c], path, out);
       const msg = f.checks?.[c]?.(o);
@@ -729,6 +746,7 @@ function detectType(data) {
     if ("function" in first) return "function_preset";
     return "condition_preset";
   }
+  if ("event" in data) return "event_preset";
   return "target" in data ? "mob" : "mob_preset";
 }
 

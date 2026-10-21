@@ -76,6 +76,8 @@ public class MPRProperty extends MPRConditionable {
             return null;
         }
         MPRProperty property = context.deserialize(jObjectProperty, propertyType);
+        if (property == null)
+            return null;
         property.target = GsonHelper.getAsObject(jObjectProperty, "target", null, context, Target.class);
         return property;
     }

@@ -1,0 +1,20 @@
+{
+    "event": "attack",
+    "conditions": [
+        {
+            "condition": "equipment",
+            "target": "other",
+            "slot": "offhand",
+            "items": "minecraft:totem_of_undying"
+        }
+    ],
+    "target": "this",
+    "apply_properties": [
+        {
+            "property": "potion_effect",
+            "effect": "minecraft:weakness",
+            "amplifier": 0,
+            "duration": 100
+        }
+    ]
+}

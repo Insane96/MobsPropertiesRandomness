@@ -73,6 +73,7 @@ public class MPRMobsPresetReloadListener extends SimplePreparableReloadListener<
 		MPRLogger.consumeWarningCount();
 		PRESETS.clear();
 		MPREvent.LOADED_EVENTS.clear();
+		MPREvent.PRESET_EVENTS.clear();
 		MPRWeightedPreset.discardSince(0);
 		for (var entry : map.entrySet()) {
 			//Events and presets of a preset that fails to load must not stay registered

@@ -78,6 +78,7 @@ public class MPR
         event.addListener(MPRRawPresetLoader.MODIFIER_LOADER);
         event.addListener(MPRRawPresetLoader.CONDITION_LOADER);
         event.addListener(MPRRawPresetLoader.FUNCTION_LOADER);
+        event.addListener(MPRRawPresetLoader.EVENT_LOADER);
         event.addListener(MPRMobsPresetReloadListener.INSTANCE);
         event.addListener(MPRMobReloadListener.INSTANCE);
     }

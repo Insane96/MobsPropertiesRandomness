@@ -298,25 +298,7 @@
         },
         {
             "property": "event",
-            "event": "attack",
-            "id": "test:weakness_if_victim_has_totem",
-            "conditions": [
-                {
-                    "condition": "equipment",
-                    "target": "other",
-                    "slot": "offhand",
-                    "items": "minecraft:totem_of_undying"
-                }
-            ],
-            "target": "this",
-            "apply_properties": [
-                {
-                    "property": "potion_effect",
-                    "effect": "minecraft:weakness",
-                    "amplifier": 0,
-                    "duration": 100
-                }
-            ]
+            "preset": "testpack:weakness_if_victim_has_totem"
         },
         {
             "property": "event",

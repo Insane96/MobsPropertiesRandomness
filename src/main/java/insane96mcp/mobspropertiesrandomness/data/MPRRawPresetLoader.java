@@ -24,6 +24,7 @@ public class MPRRawPresetLoader extends SimplePreparableReloadListener<Map<Resou
     public static final Map<ResourceLocation, JsonElement> MODIFIER_PRESETS = new HashMap<>();
     public static final Map<ResourceLocation, JsonElement> CONDITION_PRESETS = new HashMap<>();
     public static final Map<ResourceLocation, JsonElement> FUNCTION_PRESETS = new HashMap<>();
+    public static final Map<ResourceLocation, JsonElement> EVENT_PRESETS = new HashMap<>();
 
     public static final MPRRawPresetLoader MODIFIER_LOADER =
             new MPRRawPresetLoader("mobs_properties_randomness/presets/modifiers", MODIFIER_PRESETS);
@@ -31,6 +32,8 @@ public class MPRRawPresetLoader extends SimplePreparableReloadListener<Map<Resou
             new MPRRawPresetLoader("mobs_properties_randomness/presets/conditions", CONDITION_PRESETS);
     public static final MPRRawPresetLoader FUNCTION_LOADER =
             new MPRRawPresetLoader("mobs_properties_randomness/presets/functions", FUNCTION_PRESETS);
+    public static final MPRRawPresetLoader EVENT_LOADER =
+            new MPRRawPresetLoader("mobs_properties_randomness/presets/events", EVENT_PRESETS);
 
     private final String directory;
     private final String label;

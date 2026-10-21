@@ -26,15 +26,16 @@ The mod is a **data-driven mob modifier**: data packs define JSON files that des
 
 ### Data loading pipeline
 
-Five reload listeners fire in order on `/reload` or world join (registered in `MPR.onAddReloadListener`):
+Six reload listeners fire in order on `/reload` or world join (registered in `MPR.onAddReloadListener`):
 
 1. `MPRRawPresetLoader.MODIFIER_LOADER` — loads `mobs_properties_randomness/presets/modifiers/**/*.json` into raw `MODIFIER_PRESETS`
 2. `MPRRawPresetLoader.CONDITION_LOADER` — loads `mobs_properties_randomness/presets/conditions/**/*.json` into raw `CONDITION_PRESETS`
 3. `MPRRawPresetLoader.FUNCTION_LOADER` — loads `mobs_properties_randomness/presets/functions/**/*.json` into raw `FUNCTION_PRESETS`
-4. `MPRMobsPresetReloadListener` — loads `mobs_properties_randomness/presets/mobs/**/*.json` into `PRESETS: Map<ResourceLocation, MPRProperties>`
-5. `MPRMobReloadListener` — loads `mobs_properties_randomness/mobs/**/*.json` into `MPR_MOBS: List<MPRMob>` (sorted by priority ascending)
+4. `MPRRawPresetLoader.EVENT_LOADER` — loads `mobs_properties_randomness/presets/events/**/*.json` (one event object each) into raw `EVENT_PRESETS`
+5. `MPRMobsPresetReloadListener` — loads `mobs_properties_randomness/presets/mobs/**/*.json` into `PRESETS: Map<ResourceLocation, MPRProperties>`
+6. `MPRMobReloadListener` — loads `mobs_properties_randomness/mobs/**/*.json` into `MPR_MOBS: List<MPRMob>` (sorted by priority ascending)
 
-Listeners 1-3 run first because condition/modifier/item-function JSON can reference a `"preset"` by id, resolved against these raw maps during deserialization (see `MPRCondition.deserializeList` / `MPRModifier.deserializeList`).
+Listeners 1-4 run first because condition/modifier/item-function/event JSON can reference a `"preset"` by id, resolved against these raw maps during deserialization (see `MPRCondition.deserializeList` / `MPRModifier.deserializeList`). Event presets (`{"property": "event", "preset": "..."}`) are deserialized once per reload and the instance is shared via `MPREvent.PRESET_EVENTS` (event ids must be unique).
 
 All listeners use the GSON instance built in `MPR.createGson()`, which registers all type adapters. The registry access (needed for codec-based deserialization) is stored at reload time via `AddReloadListenerEvent`.
 

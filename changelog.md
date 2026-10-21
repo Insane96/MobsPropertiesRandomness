@@ -1,6 +1,8 @@
-Event presets
-
 # Upcoming
+* Added event presets, in `data/<namespace>/mobs_properties_randomness/presets/events/`
+  * An event preset contains a single event (the same JSON of an `event` property, without `"property": "event"`). `id` is optional and defaults to the preset id
+  * Reference it with `{"property": "event", "preset": "namespace:path"}`. The property can still have its own `conditions` and `target`
+  * Every reference shares the same event, so the preset can be used by multiple mobs/presets without id conflicts
 * Added `in_combat` condition
   * An entity is considered in combat if it has been attacked by or has attacked another entity within the specified `seconds`.
 * Implemented `mode` in `presets` properties (as in v4/v5)
@@ -10,6 +12,7 @@ Event presets
 * **Breaking**: `time_played` condition and modifier now use hours instead of minutes
   * `minutes_played` has been renamed to `hours_played`, `minutes` to `hours` and `amount_per_minutes` to `amount_per_hours`. E.g. `"minutes_played": {"min": 60}` must now be `"hours_played": {"min": 1}`
 * Fixed mobs with preset nbt (e.g. summoned with `/mpr summon`) re-applying the preset every time they were loaded (chunk reload, server restart, dimension change)
+* Fixed a crash when an `event` property had an unknown event type. The property is now skipped with a warning, like unknown properties
 * Events with an `id` already used by another event now fail to load, instead of being silently ignored
 * Fixed an event triggering multiple times when applied more than once to the same mob
 * Fixed events not triggering while data packs were reloading, and a possible crash during `/reload`

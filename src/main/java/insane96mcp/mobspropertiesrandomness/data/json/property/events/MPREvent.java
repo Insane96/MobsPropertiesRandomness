@@ -3,6 +3,7 @@ package insane96mcp.mobspropertiesrandomness.data.json.property.events;
 import com.google.gson.*;
 import insane96mcp.insanelib.core.ModNBTData;
 import insane96mcp.mobspropertiesrandomness.MPR;
+import insane96mcp.mobspropertiesrandomness.data.MPRRawPresetLoader;
 import insane96mcp.mobspropertiesrandomness.data.json.condition.MPRCondition;
 import insane96mcp.mobspropertiesrandomness.data.json.condition.MPRConditionable;
 import insane96mcp.mobspropertiesrandomness.data.json.property.MPRProperty;
@@ -16,12 +17,13 @@ import net.minecraft.world.entity.LivingEntity;
 
 import javax.annotation.Nullable;
 import java.lang.reflect.Type;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
+import java.util.*;
 
 public abstract class MPREvent extends MPRConditionable {
     public static final HashMap<ResourceLocation, MPREvent> LOADED_EVENTS = new HashMap<>();
+    /// Events deserialized from event presets, by preset id
+    public static final HashMap<ResourceLocation, MPREvent> PRESET_EVENTS = new HashMap<>();
+    private static final Set<ResourceLocation> RESOLVING_PRESETS = new HashSet<>();
 
     public ResourceLocation id;
     public Target target;
@@ -128,6 +130,36 @@ public abstract class MPREvent extends MPRConditionable {
             return null;
         }
         return context.deserialize(jObjectProperty, eventType);
+    }
+
+    /**
+     * Returns the event of the event preset {@code presetId}, deserializing it the first time it's referenced.
+     * The same instance is shared by every reference, as events are identified by their (unique) id.
+     * If the preset has no {@code id}, the preset id is used.
+     */
+    public static MPREvent fromPreset(ResourceLocation presetId, JsonDeserializationContext context) throws JsonParseException {
+        MPREvent cached = PRESET_EVENTS.get(presetId);
+        //If the file that first referenced the preset failed to load, its events have been unregistered, so the preset must be deserialized again
+        if (cached != null && LOADED_EVENTS.get(cached.id) == cached)
+            return cached;
+        JsonElement preset = MPRRawPresetLoader.EVENT_PRESETS.get(presetId);
+        if (preset == null)
+            throw new JsonParseException("Event preset '%s' not found".formatted(presetId));
+        if (!RESOLVING_PRESETS.add(presetId))
+            throw new JsonParseException("Circular event preset reference: '%s'".formatted(presetId));
+        try {
+            JsonObject jObject = preset.getAsJsonObject().deepCopy();
+            if (!jObject.has("id"))
+                jObject.addProperty("id", presetId.toString());
+            MPREvent event = deserialize(jObject, context);
+            if (event == null)
+                throw new JsonParseException("Event preset '%s' has an invalid event".formatted(presetId));
+            PRESET_EVENTS.put(presetId, event);
+            return event;
+        }
+        finally {
+            RESOLVING_PRESETS.remove(presetId);
+        }
     }
 
     public static List<MPREvent> deserializeList(JsonObject jObject, String memberName, JsonDeserializationContext context) {
