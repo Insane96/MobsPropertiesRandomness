@@ -3,18 +3,18 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>MPR JSON Generator</title>
+<title>MPR Data Pack Generator</title>
 <style>
 :root {
   --bg: #f6f7f9; --panel: #ffffff; --panel2: #f1f3f6; --border: #d9dde3; --text: #1d2330; --muted: #6a7384;
-  --accent: #3b6fd8; --accent-soft: #e6eefc; --danger: #c93c3c; --danger-soft: #fbeaea; --ok: #2f8a4c;
+  --accent: #3b6fd8; --accent-soft: #e6eefc; --danger: #c93c3c; --danger-soft: #fbeaea; --ok: #2f8a4c; --warn: #b7791f;
   --code-bg: #10141c; --code-text: #d7dde8;
   --k-condition: #8a5cd1; --k-property: #2f8a4c; --k-function: #c27a12; --k-modifier: #2b86b8; --k-obj: #6a7384;
 }
 @media (prefers-color-scheme: dark) {
   :root {
     --bg: #12151b; --panel: #1a1e26; --panel2: #222733; --border: #313847; --text: #e3e7ee; --muted: #8e97a8;
-    --accent: #6d9bff; --accent-soft: #233150; --danger: #ff7a7a; --danger-soft: #3a2224; --ok: #6fd08e;
+    --accent: #6d9bff; --accent-soft: #233150; --danger: #ff7a7a; --danger-soft: #3a2224; --ok: #6fd08e; --warn: #e0b252;
     --code-bg: #0b0e13; --code-text: #d7dde8;
   }
 }
@@ -24,15 +24,42 @@ html, body { margin: 0; background: var(--bg); color: var(--text); font: 14px/1.
 header { display: flex; flex-wrap: wrap; gap: 12px; align-items: center; padding: 10px 16px; background: var(--panel); border-bottom: 1px solid var(--border); position: sticky; top: 0; z-index: 5; }
 header h1 { font-size: 16px; margin: 0 12px 0 0; }
 header label { display: flex; gap: 6px; align-items: center; color: var(--muted); }
-main { display: grid; grid-template-columns: minmax(0, 1fr) minmax(320px, 40%); gap: 16px; padding: 16px; align-items: start; }
-@media (max-width: 900px) { main { grid-template-columns: 1fr; } #outPanel { position: static !important; max-height: none !important; } }
-#editor { min-width: 0; }
+main { --files-w: 220px; --out-w: minmax(320px, 36%); display: grid; grid-template-columns: var(--files-w) minmax(0, 1fr) var(--out-w); gap: 16px; padding: 16px; align-items: start; }
+main.files-collapsed { --files-w: 38px; }
+main.out-collapsed { --out-w: 38px; }
+@media (max-width: 1100px) { main { grid-template-columns: var(--files-w) minmax(0, 1fr); --files-w: 200px; } main.files-collapsed { --files-w: 38px; } #outPanel { grid-column: 1 / -1; position: static !important; max-height: none !important; } }
+@media (max-width: 700px) { main, main.files-collapsed { grid-template-columns: 1fr; } #filesPanel { position: static !important; max-height: none !important; } }
+#editor { min-width: 0; display: flex; flex-direction: column; gap: 12px; }
+#filesPanel { position: sticky; top: 64px; max-height: calc(100vh - 80px); overflow: auto; padding: 8px; min-width: 0; }
+#files { display: flex; flex-direction: column; gap: 10px; margin-top: 8px; }
+.phead { display: flex; gap: 8px; align-items: center; }
+#outPanel .phead { justify-content: space-between; }
+#outBody { display: flex; flex-direction: column; gap: 8px; min-height: 0; flex: 1; }
+main.files-collapsed #filesPanel .pbody, main.files-collapsed #filesPanel .ptitle,
+main.out-collapsed #outPanel .pbody, main.out-collapsed #outPanel .ptitle { display: none; }
+#info { position: fixed; right: 16px; bottom: 16px; z-index: 10; }
+#infoBtn { width: 28px; height: 28px; padding: 0; border-radius: 50%; font: italic 600 15px/1 Georgia, serif; background: var(--panel); box-shadow: 0 1px 4px rgba(0,0,0,.15); }
+#infoPop { display: none; position: absolute; right: 0; bottom: 36px; width: max-content; max-width: calc(100vw - 32px); background: var(--panel); border: 1px solid var(--border); border-radius: 8px; padding: 10px 12px; box-shadow: 0 4px 16px rgba(0,0,0,.18); font-size: 12.5px; }
+#info:hover #infoPop, #info.open #infoPop { display: block; }
+#infoPop table { border-collapse: collapse; }
+#infoPop td { padding: 2px 0; }
+#infoPop td + td { padding-left: 14px; font-family: ui-monospace, Consolas, monospace; }
+.fgroup .fhead { display: flex; align-items: center; justify-content: space-between; font-size: 11px; text-transform: uppercase; letter-spacing: .04em; color: var(--muted); margin-bottom: 2px; }
+.fitem { display: flex; width: 100%; gap: 6px; align-items: center; text-align: left; background: transparent; border-color: transparent; padding: 3px 6px; font: 12px ui-monospace, Consolas, monospace; }
+.fitem .fname { flex: 1; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.fitem.cur { background: var(--accent-soft); border-color: var(--accent); }
+.badge { background: var(--danger); color: #fff; border-radius: 9px; padding: 0 6px; font: 11px system-ui, sans-serif; }
+.badge.warn { background: var(--warn); }
+.btnlike { display: inline-block; background: var(--panel2); border: 1px solid var(--border); border-radius: 5px; padding: 4px 10px; cursor: pointer; }
+.btnlike:hover { border-color: var(--accent); }
+#status { color: var(--muted); font-size: 12px; }
 #outPanel { position: sticky; top: 64px; max-height: calc(100vh - 80px); display: flex; flex-direction: column; gap: 8px; min-width: 0; }
 #out { flex: 1; overflow: auto; margin: 0; padding: 12px; background: var(--code-bg); color: var(--code-text); border-radius: 8px; font: 12.5px/1.45 ui-monospace, Consolas, monospace; white-space: pre; min-height: 200px; }
 #path { font: 12px ui-monospace, Consolas, monospace; color: var(--muted); word-break: break-all; }
 #issues { font-size: 12.5px; }
 #issues.ok { color: var(--ok); }
 #issues ul { margin: 4px 0 0; padding-left: 18px; color: var(--danger); max-height: 140px; overflow: auto; }
+#issues li.warn { color: var(--warn); }
 input, select, textarea, button { font: inherit; color: var(--text); }
 input[type=text], input[type=number], select, textarea { background: var(--panel); border: 1px solid var(--border); border-radius: 5px; padding: 4px 7px; min-width: 0; }
 input[type=number] { width: 110px; }
@@ -75,38 +102,65 @@ dialog textarea { min-height: 300px; }
 </head>
 <body>
 <header>
-  <h1>MPR JSON Generator</h1>
-  <label>File type
-    <select id="fileType"></select>
-  </label>
-  <label>Namespace <input type="text" id="ns" value="mypack" style="width:120px"></label>
-  <label>Name <input type="text" id="name" value="my_file" style="width:160px"></label>
-  <button id="btnImport">Import JSON…</button>
-  <button id="btnNew">New</button>
+  <h1>MPR Data Pack Generator</h1>
+  <button id="btnImport">Import…</button>
+  <button class="primary" id="btnExport">Export .zip</button>
+  <button id="btnNew">New pack</button>
+  <span id="status"></span>
 </header>
 <main>
+  <aside id="filesPanel" class="section">
+    <div class="phead"><button class="icon" id="filesToggle" title="Collapse the file list">◂</button><strong class="ptitle">Files</strong></div>
+    <div id="files" class="pbody"></div>
+  </aside>
   <div id="editor"></div>
   <div id="outPanel">
+    <div class="phead"><strong class="ptitle">JSON</strong><button class="icon" id="outToggle" title="Collapse the JSON panel">▸</button></div>
+    <div class="pbody" id="outBody">
     <div id="path"></div>
     <div class="inline">
       <button class="primary" id="btnCopy">Copy</button>
-      <button id="btnDownload">Download</button>
+      <button id="btnDownload">Download file</button>
       <span id="copied" class="muted"></span>
     </div>
     <div id="issues"></div>
     <pre id="out"></pre>
+    </div>
   </div>
 </main>
 
+<dialog id="exportDlg">
+  <h3 style="margin-top:0">Export data pack</h3>
+  <div class="fields">
+    <div class="row"><div class="lbl">Pack name<span class="help">Name of the .zip file</span></div><div class="inline"><input type="text" id="packName"></div></div>
+    <div class="row"><div class="lbl">Description<span class="help">Shown in the data pack list (pack.mcmeta)</span></div><div class="inline"><input type="text" id="packDesc"></div></div>
+  </div>
+  <div id="exportIssues" class="muted" style="color:var(--danger);margin-top:8px"></div>
+  <div class="inline" style="justify-content:flex-end;margin-top:8px">
+    <button id="exportCancel">Cancel</button>
+    <button class="primary" id="exportOk">Export .zip</button>
+  </div>
+</dialog>
+
+<div id="info">
+  <button id="infoBtn" aria-label="Generator version" aria-expanded="false">i</button>
+  <div id="infoPop" role="tooltip"></div>
+</div>
+
 <dialog id="importDlg">
-  <h3 style="margin-top:0">Import JSON</h3>
-  <p class="muted">Paste an existing file or pick one from disk. The file type is detected automatically.</p>
-  <input type="file" id="importFile" accept=".json,application/json">
+  <h3 style="margin-top:0">Import</h3>
+  <p class="muted">Adds files to the pack: a data pack .zip, a data pack folder or single .json files. Files are placed by their path
+    (<code>&lt;namespace&gt;/mobs_properties_randomness/…</code>), loose .json files are detected by content. Files with the same id are replaced.</p>
+  <div class="inline">
+    <label class="btnlike">Zip / JSON files… <input type="file" id="importFiles" accept=".json,.zip,application/json,application/zip" multiple hidden></label>
+    <label class="btnlike">Folder… <input type="file" id="importDir" webkitdirectory hidden></label>
+  </div>
+  <p class="muted">Or paste a single file:</p>
   <textarea id="importText" placeholder="{ ... }"></textarea>
   <div id="importErr" class="muted" style="color:var(--danger)"></div>
   <div class="inline" style="justify-content:flex-end;margin-top:8px">
     <button id="importCancel">Cancel</button>
-    <button class="primary" id="importOk">Import</button>
+    <button class="primary" id="importOk">Add pasted file</button>
   </div>
 </dialog>
 
@@ -197,7 +251,7 @@ const EV_PRESET_ID = S("id", { ph: "mypack:my_event", help: "Unique event id, de
 function eventSwitch(withPreset) {
   const cases = Object.fromEntries(Object.entries(EVENTS).map(([k, v]) => [k, withPreset ? v.f : v.f.map(f => f === EV_ID ? EV_PRESET_ID : f)]));
   // Unlike inline events, a preset reference has no event "target", so "target" is the property's one (who the event is registered to)
-  if (withPreset) cases["#preset"] = [S("preset", { req: true, ph: "mypack:my_event", help: "Event preset (presets/events/)" }),
+  if (withPreset) cases["#preset"] = [S("preset", { req: true, ph: "mypack:my_event", help: "Event preset (presets/events/)", ref: "event_preset" }),
     E("target", ["this", "other"], { help: "Only meaningful in apply_properties: the entity the event is registered to" })];
   return { k: "event", t: "switch", preset: withPreset, cases, checks: Object.fromEntries(Object.entries(EVENTS).map(([k, v]) => [k, v.check])) };
 }
@@ -294,6 +348,117 @@ const PROPERTIES = {
   team: { d: "Adds the mob to a team.", f: [S("team", { req: true })] },
 };
 
+/* ===================== Types added by other mods =====================
+ * Registered by the mods in the MPR registries with their own namespace (e.g. "enhancedai:data").
+ * VERSIONS lists the mod versions this generator is up to date with.
+ */
+const VERSIONS = { "Mobs Properties Randomness": "6.2.0.0", "Enhanced AI": "4.2.5.0", "Stamina": "2.1.0.0" };
+
+// Enhanced AI data (EAIData) usable by enhancedai:data / enhancedai:change_data: feature -> key -> type (array = enum values)
+const EAI_FEATURES = {
+  actual_blindness: { blindness_range_multiplier: "double" },
+  air_steal: { stolen_ticks: "int" },
+  allied_monsters: { allied_monsters: "bool" },
+  animal_scared_attack: { attack_movement_speed_mod: "double", flee_distance_far: "int", flee_distance_near: "int", flee_speed_far: "double", flee_speed_near: "double", horizontal_flee_distance: "int", hostile: "bool", neutral: "bool", player_scared: "bool", vertical_flee_distance: "int" },
+  animals_panic: { panic_speed_mod: "double" },
+  avoid_explosions: { can_run_from_explosions: "bool", can_run_from_tnt: "bool", flee_speed_far: "double", flee_speed_near: "double" },
+  better_drowned_swim_up: { leap_push_ticks: "int" },
+  biting_mobs: { chance: "double", damage: "double" },
+  blaze_attack: { charge_time: "int", fireballs_per_shot: "int", fireballs_shot: "int", inaccuracy: "int", recharge_time: "int", time_between_fireballs: "int" },
+  climbing: { can_climb_ladders: "bool", can_climb_walls: "bool" },
+  creeper_launch: { inaccuracy: "double", launch: "bool", particles: "bool" },
+  creeper_swell: { angry: "bool", beta_left_strafe: "bool", beta_strafe: "bool", blow_up_on_death: ["NO", "CHARGED_ONLY", "YES"], breach: "bool", breach_horizontal_range: "double", explosion_sound: "string", force_explode: "bool", ignore_walls: "bool", walking_fuse: "bool", walking_fuse_speed_modifier: "double" },
+  dark_art: { dark_arts: "bool" },
+  disable_falling_swelling: { disable_falling_swelling: "bool" },
+  drowning_targets: { drowning_targets: "bool" },
+  falling_shockwave: { damage_per_block: "double", horizontal_base_range: "double", horizontal_range_per_block: "double", jump_cooldown: "int", jump_strength: "double", knockup_strength_ratio: "double", min_fall_distance: "int", vertical_base_range: "double", vertical_range_per_block: "double" },
+  fire_immune_ticks: { fire_immune_ticks: "int" },
+  fisher_mobs: { attack_range: "double", cooldown: "int", fish_range: "double", force_reel_in: "int", hook_hands_chance: "double", inaccuracy: "int", reel_in_ticks: "int" },
+  flee_target: { attack_when_avoiding: "bool", avoid_target: "bool", flee_distance_far: "int", flee_distance_near: "int", flee_speed_far: "double", flee_speed_near: "double" },
+  ghast_shooting: { attack_cooldown: "int", fireballs_shot: "int", shoot_when_not_seen: "bool" },
+  item_disruption: { chance: "double", cooldown: "int" },
+  jump: { can_jump: "bool" },
+  leaders: { charge_per_spawn: "double", leader: "bool" },
+  miner_mobs: { dimension_whitelist: "list", max_target_distance: "int", max_y: "int", miner: "bool", offhand: "bool", time_to_break_multiplier: "double", tool_requirement: ["NONE", "ANY_TOOL", "CORRECT_TOOL_FOR_REQUIRED", "CORRECT_TOOL_FOR_ANY_BLOCK"] },
+  not_tempted_animals: { not_tempted: "bool" },
+  open_doors: { can_open_doors: "bool" },
+  panic_on_fire: { panic_on_fire: "bool" },
+  parkour: { can_parkour: "bool" },
+  patrol: { patrol: "bool", pos: "block_pos", range: "double" },
+  pearler_mobs: { inaccuracy: "int" },
+  pick_up_and_throw: { can_pick_up: "string", cooldown: "int", max_distance_to_throw: "int", min_distance_to_pick_up: "int", speed_modifier_to_pick_up: "double" },
+  pillager_shoot: { inaccuracy: "double", shooting_cooldown: "int", shooting_range: "int" },
+  random_stroll: { random_stroll_chance_multiplier: "double" },
+  riding: { can_mount: "string" },
+  shulker_attack: { base_attack_speed: "int", extra_attack_speed: "int" },
+  shulker_bullets: { levitation_amplifier: "int", levitation_duration: "int" },
+  silverfish_merge_with_stone: { chance_to_merge_with_stone: "int" },
+  silverfish_wake_up_friends: { chance_to_stop_waking_up_friends: "int", horizontal_wake_up_range: "int", ticks_after_hurt_to_wake_up_friends: "int", vertical_wake_up_range: "int" },
+  skeleton_flee_target: { attack_when_avoiding: "bool", avoid_target: "bool", flee_distance_far: "int", flee_distance_near: "int", flee_speed_far: "double", flee_speed_near: "double" },
+  skeleton_shoot: { bow_charge_ticks: "int", inaccuracy: "double", shooting_cooldown: "int", shooting_range: "int", strafe: "bool" },
+  slime_jump_delay: { jump_delay_max: "int", jump_delay_min: "int" },
+  snow_golems_damaging_snowballs: { damage: "double" },
+  snow_golems_freezing_snowballs: { stack: "bool", ticks: "int" },
+  sprint: { can_sprint: "bool" },
+  sun_resistant_drowned: { ticks: "int" },
+  targeting: { alert_range: "int", can_be_alerted: "bool", hurt_by_prefer_players: "bool", hurt_by_prevent_infighting: "bool", max_visited_nodes_multiplier: "double", must_sense_target: "bool", target_chance: "int", unsensed_forget_ticks: "int" },
+  "teleport_anti-cheese": { use_teleport_anti_cheese: "bool" },
+  teleport_to_target: { can_teleport: "string" },
+  thirsty_witches: { custom_drink_distance_safe: "double", fire_resistance_chance: "double", healing_chance: "double", healing_threshold: "double", milk_chance: "double", strong_healing_threshold: "double", water_breathing_chance: "double" },
+  tnt_like_creepers: { tnt_like: "bool" },
+  vehicle_anti_cheese: { break_vehicle: "bool", prevent_riding: "bool" },
+  villager_attacking: { attack_below_reputation: "int", fights_back_enemies: "bool", speed_multiplier: "double" },
+  warden_darkness_range: { range: "int" },
+  warden_listen_range: { range: "int" },
+  warden_sonic_boom_range: { range: "int" },
+  web_thrower: { apply_speed: "bool", cooldown: "int", damage: "double", destroy_web_after: "int", distance_max: "double", distance_min: "double", place_web_on_block_hit: "bool", place_web_on_entity_hit: "bool", poisonous_web: "bool", "slowness/amplifier": "int", "slowness/duration": "int", "slowness/enable": "bool", "slowness/max_slowness_amplifier": "int", "slowness/stack_amplifier": "bool", web_thrower: "bool" },
+  witch_potion_throwing: { apprentice: "bool", attack_cooldown: "int", attack_range: "int", inaccuracy: "double", invisibility_health_threshold: "double", lingering_chance: "double", use_slow_fall: "bool" },
+};
+const EAI_DATA = Object.fromEntries(Object.entries(EAI_FEATURES).flatMap(([f, keys]) => Object.entries(keys).map(([k, t]) => [`enhancedai:${f}/${k}`, t])));
+document.body.append(h("datalist", { id: "dl-eai_data" }, Object.entries(EAI_DATA).map(([id, t]) => h("option", { value: id, text: Array.isArray(t) ? "enum" : t }))));
+const eaiHint = t => Array.isArray(t) ? `Enum: string_value one of ${t.join(", ")}`
+  : { bool: "Boolean: value (1 = true, 0 = false) or string_value true / false", int: "Integer: value", double: "Decimal number: value",
+    string: "Text: string_value", list: "List of strings: string_value, comma separated", block_pos: "Position: string_value x,y,z" }[t] ?? t;
+function eaiCheck(o) {
+  if (o.value == null && o.string_value == null) return "value or string_value is required";
+  const t = EAI_DATA[o.data];
+  if (!o.data) return null;
+  if (t === undefined) return `${WARN}unknown Enhanced AI data "${o.data}"`;
+  const numeric = ["bool", "int", "double"].includes(t);
+  if (o.value != null && !numeric) return `${o.data} is not a number, use string_value`;
+  const s = o.string_value;
+  if (s == null || o.value != null) return null;
+  const bad = Array.isArray(t) ? !t.includes(s) : t === "bool" ? !/^(true|false)$/i.test(s) : t === "int" ? !/^-?\d+$/.test(s.trim())
+    : t === "double" ? s.trim() === "" || isNaN(Number(s)) : t === "block_pos" ? !/^\s*-?\d+\s*,\s*-?\d+\s*,\s*-?\d+\s*$/.test(s) : false;
+  return bad ? `invalid string_value for ${o.data} (${eaiHint(t)})` : null;
+}
+const EAI_DATA_FIELDS = [{ k: "data", t: "eaidata", req: true }, R("value", { help: "For boolean / number data" }), S("string_value", { help: "For any data (enums, lists, positions, text)" })];
+
+const MOD_TYPES = {
+  "Enhanced AI": {
+    condition: {
+      "enhancedai:is_leader": { d: "Mob is a leader (Enhanced AI Leaders feature).", f: [] },
+      "enhancedai:data": { d: "Checks an Enhanced AI data value of the mob. value checks a range, string_value an exact value.", f: EAI_DATA_FIELDS, check: eaiCheck },
+    },
+    property: {
+      "enhancedai:change_data": { d: "Sets an Enhanced AI data value of the mob.", f: EAI_DATA_FIELDS, check: eaiCheck },
+    },
+  },
+  "Stamina": {
+    condition: {
+      "stamina:stamina": { d: "Player stamina. Only players pass, so use it in events with target \"other\".", f: [R("range", { req: true, help: "Fraction of max stamina (0-1), or flat amount if flat" }), B("flat")] },
+    },
+    property: {
+      "stamina:set": { d: "Sets the player stamina. Only applies to players (events with target \"other\").", f: [R("range", { req: true, help: "Fraction of max stamina (0-1), or flat amount if flat" }), B("flat")] },
+      "stamina:add": { d: "Adds (or consumes, if negative) player stamina. Only applies to players (events with target \"other\").", f: [R("amount", { req: true, help: "Fraction of max stamina, or flat amount if flat" }), B("flat")] },
+    },
+  },
+};
+const KIND_TYPES = { condition: CONDITIONS, property: PROPERTIES, function: FUNCTIONS, modifier: MODIFIERS };
+for (const [mod, kinds] of Object.entries(MOD_TYPES))
+  for (const [kind, types] of Object.entries(kinds))
+    for (const [id, def] of Object.entries(types)) KIND_TYPES[kind][id] = { ...def, mod };
+
 const KINDS = {
   condition: { disc: "condition", types: CONDITIONS, preset: true,
     common: [B("inverted"), E("target", ["this", "other"], { help: "Only meaningful in events" })] },
@@ -304,11 +469,13 @@ const KINDS = {
     common: [E("operation", ["add", "multiply"], { req: true, init: "add" }), CONDS] },
 };
 const LIST_KIND = { conds: "condition", props: "property", funcs: "function", mods: "modifier" };
+// The {"preset": "..."} reference of condition / function / modifier lists
+const presetRef = kind => S("preset", { req: true, ph: "mypack:my_preset", ref: kind + "_preset" });
 
 const SUBS = {
   item: { title: "Item", f: [S("item", { req: true, dl: "items", help: "minecraft:air = empty slot" }), MV("weight", { help: "Default 1" }), { k: "functions", t: "funcs" }, CONDS] },
   loot_table: { title: "Loot table", f: [S("loot_table", { req: true, ph: "minecraft:chests/simple_dungeon" }), MV("weight", { help: "Default 1" }), CONDS] },
-  preset: { title: "Preset", f: [S("preset", { req: true, ph: "mypack:my_preset" }), MV("weight", { help: "Default 1" }), CONDS] },
+  preset: { title: "Preset", f: [S("preset", { req: true, ph: "mypack:my_preset", ref: "mob_preset" }), MV("weight", { help: "Default 1" }), CONDS] },
 };
 
 const FILE_TYPES = {
@@ -349,7 +516,7 @@ const toArr = v => v === undefined || v === null ? [] : Array.isArray(v) ? v : [
 function fits(f, v) {
   if (v === undefined) return true;
   switch (f.t) {
-    case "str": case "text": case "enum": return typeof v === "string";
+    case "str": case "text": case "enum": case "eaidata": return typeof v === "string";
     case "int": case "num": return typeof v === "number";
     case "bool": return typeof v === "boolean";
     case "range": {
@@ -371,7 +538,8 @@ function fits(f, v) {
 function widget(f, v, set) {
   if (!fits(f, v)) return rawW(f, v, set, "Value can't be shown by the editor, edit it as raw JSON:");
   switch (f.t) {
-    case "str": return h("input", { type: "text", value: v ?? "", placeholder: f.ph, list: f.dl ? "dl-" + f.dl : null, oninput: e => set(e.target.value || undefined) });
+    case "str": if (f.ref) return refW(f, v, set);
+      return h("input", { type: "text", value: v ?? "", placeholder: f.ph, list: f.dl ? "dl-" + f.dl : null, oninput: e => set(e.target.value || undefined) });
     case "text": return h("textarea", { placeholder: f.ph, value: v ?? "", oninput: e => set(e.target.value || undefined) });
     case "int": case "num": return numInput(v, set, f.t === "int", f.ph);
     case "bool": {
@@ -395,6 +563,7 @@ function widget(f, v, set) {
     case "strs": return strsW(f, v, set);
     case "enums": return enumsW(f, v, set);
     case "json": return rawW(f, v, set);
+    case "eaidata": return eaiDataW(v, set);
     case "conds": case "props": case "funcs": case "mods": return listW(LIST_KIND[f.t], v, set);
     case "objs": return objsW(f, v, set);
   }
@@ -404,6 +573,34 @@ function widget(f, v, set) {
 function numInput(v, set, int, ph) {
   return h("input", { type: "number", step: int ? "1" : "any", value: v ?? "", placeholder: ph,
     oninput: e => set(e.target.value === "" || isNaN(e.target.valueAsNumber) ? undefined : (int ? Math.trunc(e.target.valueAsNumber) : e.target.valueAsNumber)) });
+}
+
+/** Reference to another file of the pack (f.ref = file type): suggests its ids and opens / creates the referenced file */
+function refW(f, v, set) {
+  const btn = h("button", { class: "icon" });
+  const inp = h("input", { type: "text", value: v ?? "", placeholder: f.ph, list: "dl-ref-" + f.ref, oninput: e => { set(e.target.value.trim() || undefined); upd(); } });
+  const upd = () => {
+    const found = findFile(f.ref, inp.value);
+    btn.hidden = !inp.value.trim();
+    btn.textContent = found ? "→ open" : "+ create";
+    btn.title = found ? "Open the referenced file" : `Create the ${FILE_TYPES[f.ref].label.toLowerCase()} in this pack`;
+  };
+  btn.addEventListener("click", () => {
+    const [ns, name] = fullId(inp.value).split(":");
+    selectFile(findFile(f.ref, inp.value) ?? addFile(f.ref, ns, name));
+  });
+  upd();
+  return h("div", { class: "inline", style: "width:100%" }, inp, btn);
+}
+
+/** Enhanced AI data id, with suggestions and the type of the chosen data */
+function eaiDataW(v, set) {
+  const hint = h("div", { class: "muted" });
+  const upd = id => { hint.textContent = !id ? "" : EAI_DATA[id] === undefined ? "Unknown data" : eaiHint(EAI_DATA[id]); };
+  const inp = h("input", { type: "text", value: v ?? "", list: "dl-eai_data", placeholder: "enhancedai:miner_mobs/miner",
+    oninput: e => { const id = e.target.value.trim(); set(id || undefined); upd(id); } });
+  upd(v);
+  return h("div", { style: "width:100%" }, inp, hint);
 }
 
 function rawW(f, v, set, note) {
@@ -516,6 +713,7 @@ function enumsW(f, v, set) {
 function newItem(kind, type) {
   const K = KINDS[kind];
   if (type === "#preset") return { preset: "" };
+  if (type === "#custom") return { [K.disc]: "" };
   const o = { [K.disc]: type };
   initFields(o, K.types[type]?.f ?? []);
   initFields(o, commonFields(kind, type));
@@ -541,16 +739,26 @@ function itemType(kind, o) {
   return stripNs(o[K.disc]);
 }
 
+/** Options of the type selects: MPR types, then a group per mod, then preset / custom */
+function typeOptions(kind) {
+  const K = KINDS[kind];
+  const own = [], mods = {};
+  for (const [t, d] of Object.entries(K.types)) d.mod ? (mods[d.mod] ??= []).push(t) : own.push(t);
+  const opt = t => h("option", { value: t, text: t });
+  return [...own.map(opt),
+    ...Object.entries(mods).map(([m, ts]) => h("optgroup", { label: m }, ts.map(opt))),
+    h("optgroup", { label: "Other" },
+      K.preset ? h("option", { value: "#preset", text: `preset (reference a ${kind} preset)` }) : null,
+      h("option", { value: "#custom", text: "custom (type from another mod)" }))];
+}
+
 function listW(kind, v, set) {
   const arr = v ?? [];
-  const K = KINDS[kind];
   const wrap = h("div", { class: "list" });
-  const types = Object.keys(K.types);
   const render = () => {
     wrap.replaceChildren(...arr.map((_, i) => itemCard(kind, arr, i, render, () => set(arr))));
     const addSel = h("select", { onchange: e => { if (!e.target.value) return; arr.push(newItem(kind, e.target.value)); render(); set(arr); } },
-      h("option", { value: "", text: `+ add ${kind}…` }), types.map(t => h("option", { value: t, text: t })),
-      K.preset ? h("option", { value: "#preset", text: `preset (reference a ${kind} preset)` }) : null);
+      h("option", { value: "", text: `+ add ${kind}…` }), typeOptions(kind));
     addSel.classList.add("add");
     wrap.append(h("div", {}, addSel));
   };
@@ -563,11 +771,8 @@ function itemCard(kind, arr, i, rerender, onCh) {
   const o = arr[i];
   const type = itemType(kind, o);
   const def = K.types[type];
-  const sel = h("select", { onchange: e => { arr[i] = newItem(kind, e.target.value); rerender(); onCh(); } },
-    Object.keys(K.types).map(t => h("option", { value: t, text: t })),
-    K.preset ? h("option", { value: "#preset", text: "preset" }) : null);
-  if (type !== "#preset" && !def) sel.append(h("option", { value: type, text: `${type} (unknown)` }));
-  sel.value = type;
+  const sel = h("select", { onchange: e => { arr[i] = newItem(kind, e.target.value); rerender(); onCh(); } }, typeOptions(kind));
+  sel.value = type !== "#preset" && !def ? "#custom" : type;
   const move = d => { const j = i + d; if (j < 0 || j >= arr.length) return; [arr[i], arr[j]] = [arr[j], arr[i]]; rerender(); onCh(); };
   const card = h("div", { class: "card k-" + kind + (COLLAPSED.has(o) ? " collapsed" : "") });
   const toggle = h("button", { class: "icon", text: COLLAPSED.has(o) ? "▸" : "▾", title: "Collapse",
@@ -578,11 +783,25 @@ function itemCard(kind, arr, i, rerender, onCh) {
     h("button", { class: "icon", text: "⧉", title: "Duplicate", onclick: () => { arr.splice(i + 1, 0, structuredClone(o)); rerender(); onCh(); } }),
     h("button", { class: "icon", text: "✕", title: "Remove", onclick: () => { arr.splice(i, 1); rerender(); onCh(); } })));
   let body;
-  if (type === "#preset") body = [h("div", { class: "desc", text: `Inlines the ${kind}s of a ${kind} preset (presets/${kind}s/).` }), renderFields(o, [S("preset", { req: true, ph: "mypack:my_preset" })], onCh)];
-  else if (!def) body = [rawW({}, o, x => { if (x && typeof x === "object") { arr[i] = x; onCh(); } }, "Unknown type, edit as raw JSON:")];
-  else body = [def.d ? h("div", { class: "desc", text: def.d }) : null, renderFields(o, [...def.f, ...commonFields(kind, type)], onCh)];
+  if (type === "#preset") body = [h("div", { class: "desc", text: `Inlines the ${kind}s of a ${kind} preset (presets/${kind}s/).` }), renderFields(o, [presetRef(kind)], onCh)];
+  else if (!def) body = [h("div", { class: "desc", text: `A ${kind} the generator doesn't know (e.g. from another mod): its fields are written as raw JSON.` }), customFields(kind, o, onCh)];
+  else body = [def.d ? h("div", { class: "desc", text: (def.mod ? `[${def.mod}] ` : "") + def.d }) : null, renderFields(o, [...def.f, ...commonFields(kind, type)], onCh)];
   card.append(h("div", { class: "body" }, body));
   return card;
+}
+
+/** Unknown type: its id plus the other fields as a raw JSON object */
+function customFields(kind, o, onCh) {
+  const disc = KINDS[kind].disc;
+  const rest = Object.fromEntries(Object.entries(o).filter(([k]) => k !== disc));
+  return h("div", { class: "fields" },
+    row({ k: kind, req: true, help: "Namespaced id, e.g. modid:my_" + kind }, h("input", { type: "text", value: o[disc] ?? "", placeholder: "modid:my_" + kind,
+      oninput: e => { o[disc] = e.target.value.trim(); onCh(); } })),
+    row({ k: "fields", help: "Every other field, as a JSON object" }, rawW({ ph: '{\n  "conditions": []\n}' }, Object.keys(rest).length ? rest : undefined, x => {
+      for (const k of Object.keys(o)) if (k !== disc) delete o[k];
+      if (x && typeof x === "object" && !Array.isArray(x)) Object.assign(o, x);
+      onCh();
+    })));
 }
 
 /* ----- sub-object lists (items, loot tables, presets) ----- */
@@ -658,6 +877,7 @@ function validateFields(o, fields, path, out, checks) {
     }
     if (f.req && isEmpty(v)) { out.push(`${p} is required`); continue; }
     if (v === undefined) continue;
+    if (f.ref && typeof v === "string" && !findFile(f.ref, v)) out.push(`${WARN}${p}: ${FILE_TYPES[f.ref].label.toLowerCase()} "${v}" is not in this pack`);
     if (LIST_KIND[f.t] && Array.isArray(v)) v.forEach((it, i) => validateItem(LIST_KIND[f.t], it, `${p}[${i}]`, out));
     else if (f.t === "objs") toArr(v).forEach((it, i) => validateFields(it, SUBS[f.of].f, `${p}[${i}]`, out));
     else if ((f.t === "range" || f.t === "mval") && v && typeof v === "object") {
@@ -669,18 +889,58 @@ function validateFields(o, fields, path, out, checks) {
 }
 function validateItem(kind, o, path, out) {
   const type = itemType(kind, o);
-  if (type === "#preset") { if (isEmpty(o.preset)) out.push(`${path}.preset is required`); return; }
+  if (type === "#preset") { validateFields(o, [presetRef(kind)], path, out); return; }
   const def = KINDS[kind].types[type];
-  if (!def) { out.push(`${path}: unknown ${kind} "${o[KINDS[kind].disc]}"`); return; }
+  if (!def) {
+    const id = o[KINDS[kind].disc];
+    if (isEmpty(id)) out.push(`${path}: ${kind} id is required`);
+    else if (typeof id !== "string" || !id.includes(":") || id.startsWith("mobs_properties_randomness:")) out.push(`${path}: unknown ${kind} "${id}"`);
+    else out.push(`${WARN}${path}: ${kind} "${id}" is from another mod, its fields are not checked`);
+    return;
+  }
   validateFields(o, [...def.f, ...commonFields(kind, type)], `${path}(${type})`, out);
   const msg = def.check?.(o);
-  if (msg) out.push(`${path}(${type}): ${msg}`);
+  if (msg) out.push(msg.startsWith(WARN) ? `${WARN}${path}(${type}): ${msg.slice(WARN.length)}` : `${path}(${type}): ${msg}`);
 }
 
-/* ===================== State & output ===================== */
-let fileType = "mob";
-let root = null;
+/* ===================== Pack state ===================== */
+// A pack file: { type: FILE_TYPES key, ns, name (path inside the type folder, without .json), root }
+const PACK_FORMAT = 48; // 1.21 - 1.21.1
+const NS_RE = /^[a-z0-9_.-]+$/;
+const PATH_RE = /^[a-z0-9_.-]+(\/[a-z0-9_.-]+)*$/;
+const WARN = "⚠ ";
+const newPack = () => ({ name: "my_pack", description: "Mobs Properties Randomness data pack", files: [] });
+let pack = newPack();
+let cur = null;
 const $ = id => document.getElementById(id);
+// New files use the namespace of the file being edited
+const defaultNs = () => cur && NS_RE.test(cur.ns) ? cur.ns : "mypack";
+
+// Like MPR.locationFrom: ids without a namespace belong to mobs_properties_randomness
+const fullId = s => { s = (s ?? "").trim(); return s.includes(":") ? s : "mobs_properties_randomness:" + s; };
+const fileId = f => `${f.ns}:${f.name}`;
+const findFile = (type, id) => { const full = fullId(id); return pack.files.find(f => f.type === type && fileId(f) === full); };
+const filePath = f => `data/${f.ns}/mobs_properties_randomness/${FILE_TYPES[f.type].folder}/${f.name}.json`;
+const errCount = issues => issues.filter(s => !s.startsWith(WARN)).length;
+
+function newRoot(type) {
+  const ft = FILE_TYPES[type];
+  if (ft.array) return [];
+  const o = {};
+  initFields(o, ft.f);
+  return o;
+}
+function uniqueName(type, ns, base) {
+  let n = base, i = 2;
+  while (pack.files.some(f => f.type === type && f.ns === ns && f.name === n)) n = `${base}_${i++}`;
+  return n;
+}
+function addFile(type, ns = defaultNs(), name = "new_" + type, root = newRoot(type)) {
+  const f = { type, ns, name: uniqueName(type, ns, name), root };
+  pack.files.push(f);
+  return f;
+}
+function selectFile(f) { cur = f; renderEditor(); }
 
 function prune(v) {
   if (v && typeof v === "object" && RAW.has(v)) return v;
@@ -693,50 +953,101 @@ function prune(v) {
   return v === "" || v === null ? undefined : v;
 }
 
-function outJson() {
-  const ft = FILE_TYPES[fileType];
-  return JSON.stringify(prune(root) ?? (ft.array ? [] : {}), null, 2);
+function outJson(f) {
+  return JSON.stringify(prune(f.root) ?? (FILE_TYPES[f.type].array ? [] : {}), null, 2);
 }
 
-function fileName() { return ($("name").value.trim() || "my_file").replace(/\.json$/i, "") + ".json"; }
+function validateFile(f) {
+  const ft = FILE_TYPES[f.type];
+  const out = [];
+  if (!NS_RE.test(f.ns)) out.push("Invalid namespace (allowed: a-z 0-9 _ . -)");
+  if (!PATH_RE.test(f.name)) out.push("Invalid name (allowed: a-z 0-9 _ . - and / for sub folders)");
+  if (pack.files.some(o => o !== f && o.type === f.type && fileId(o) === fileId(f))) out.push(`Another ${ft.label.toLowerCase()} has the id ${fileId(f)}`);
+  if (ft.array) f.root.forEach((it, i) => validateItem(ft.array, it, `[${i}]`, out));
+  else validateFields(f.root, ft.f, "$", out);
+  return out;
+}
+
+/* ===================== Rendering ===================== */
+function renderFiles() {
+  $("files").replaceChildren(...Object.entries(FILE_TYPES).map(([t, ft]) => {
+    const files = pack.files.filter(f => f.type === t).sort((a, b) => fileId(a).localeCompare(fileId(b)));
+    return h("div", { class: "fgroup" },
+      h("div", { class: "fhead" }, h("span", { text: ft.label + "s" }),
+        h("button", { class: "icon add", text: "+", title: "New " + ft.label.toLowerCase(), onclick: () => selectFile(addFile(t)) })),
+      files.map(f => {
+        const errs = errCount(f.issues ?? []), warns = (f.issues?.length ?? 0) - errs;
+        return h("button", { class: "fitem" + (f === cur ? " cur" : ""), title: filePath(f), onclick: () => selectFile(f) },
+          h("span", { class: "fname", text: fileId(f) }),
+          errs ? h("span", { class: "badge", text: errs, title: `${errs} issue(s)` }) : warns ? h("span", { class: "badge warn", text: warns, title: `${warns} warning(s)` }) : null);
+      }));
+  }));
+}
+
+// Datalists of the ids that can be referenced, per preset file type
+const REF_TYPES = Object.keys(FILE_TYPES).filter(t => t !== "mob");
+for (const t of REF_TYPES) document.body.append(h("datalist", { id: "dl-ref-" + t }));
+let refKey = null;
+function refreshRefLists() {
+  const key = JSON.stringify(REF_TYPES.map(t => pack.files.filter(f => f.type === t).map(fileId)));
+  if (key === refKey) return;
+  refKey = key;
+  for (const t of REF_TYPES) $("dl-ref-" + t).replaceChildren(...pack.files.filter(f => f.type === t).map(f => new Option(fileId(f))));
+}
+
+function save() {
+  try {
+    localStorage.setItem("mpr-gen-pack", JSON.stringify({ name: pack.name, description: pack.description, current: pack.files.indexOf(cur),
+      files: pack.files.map(({ type, ns, name, root }) => ({ type, ns, name, root })) }));
+  } catch {}
+}
 
 function changed() {
-  const ft = FILE_TYPES[fileType];
-  $("out").textContent = outJson();
-  $("path").textContent = `data/${$("ns").value.trim() || "mypack"}/mobs_properties_randomness/${ft.folder}/${fileName()}`;
-  const issues = [];
-  if (ft.array) root.forEach((it, i) => validateItem(ft.array, it, `[${i}]`, issues));
-  else validateFields(root, ft.f, "$", issues);
+  for (const f of pack.files) f.issues = validateFile(f);
+  $("out").textContent = outJson(cur);
+  $("path").textContent = filePath(cur);
+  $("fileId").textContent = fileId(cur);
+  const issues = cur.issues;
+  const errs = errCount(issues), warns = issues.length - errs;
   const box = $("issues");
   box.className = issues.length ? "" : "ok";
-  box.replaceChildren(issues.length ? h("div", {}, h("strong", { text: `${issues.length} issue(s)` }), h("ul", {}, issues.map(s => h("li", { text: s })))) : "✓ No issues found");
-  try { localStorage.setItem("mpr-gen", JSON.stringify({ fileType, root, ns: $("ns").value, name: $("name").value })); } catch {}
+  box.replaceChildren(issues.length ? h("div", {},
+    h("strong", { text: [errs && `${errs} issue(s)`, warns && `${warns} warning(s)`].filter(Boolean).join(", ") }),
+    h("ul", {}, issues.map(s => h("li", { class: s.startsWith(WARN) ? "warn" : null, text: s })))) : "✓ No issues found");
+  renderFiles();
+  refreshRefLists();
+  save();
 }
 
 function renderEditor() {
-  const ft = FILE_TYPES[fileType];
-  const ed = $("editor");
-  ed.replaceChildren();
+  const f = cur;
+  const ft = FILE_TYPES[f.type];
+  const typeSel = h("select", { onchange: e => {
+      if (!isEmpty(prune(f.root)) && !confirmReset()) { e.target.value = f.type; return; }
+      f.type = e.target.value;
+      f.root = newRoot(f.type);
+      renderEditor();
+    } }, Object.entries(FILE_TYPES).map(([k, v]) => h("option", { value: k, text: `${v.label}  (${v.folder}/)` })));
+  typeSel.value = f.type;
+  const head = h("div", { class: "section fields" },
+    row({ k: "file type" }, typeSel),
+    row({ k: "namespace" }, h("input", { type: "text", value: f.ns, oninput: e => { f.ns = e.target.value.trim(); changed(); } })),
+    row({ k: "name", help: "Path inside the folder, / for sub folders" },
+      h("input", { type: "text", value: f.name, oninput: e => { f.name = e.target.value.trim().replace(/\.json$/i, ""); changed(); } })),
+    h("div", { class: "inline" },
+      h("span", { class: "muted" }, f.type !== "mob" ? "Referenced as " : "Id ", h("code", { id: "fileId" })),
+      h("span", { style: "flex:1" }),
+      h("button", { text: "Duplicate", onclick: () => selectFile(addFile(f.type, f.ns, f.name + "_copy", structuredClone(f.root))) }),
+      h("button", { text: "Delete", onclick: () => {
+        if (!isEmpty(prune(f.root)) && !window.confirm(`Delete ${fileId(f)}?`)) return;
+        pack.files.splice(pack.files.indexOf(f), 1);
+        selectFile(pack.files[0] ?? addFile("mob"));
+      } })));
   const sec = h("div", { class: "section" });
-  if (ft.array) sec.append(h("div", { class: "desc muted", style: "margin-bottom:8px", text: `A ${ft.label.toLowerCase()} is a JSON array of ${ft.array}s, referenced with {"preset": "namespace:path"}.` }), listW(ft.array, root, () => changed()));
-  else sec.append(renderFields(root, ft.f, changed));
-  ed.append(sec);
+  if (ft.array) sec.append(h("div", { class: "desc muted", style: "margin-bottom:8px", text: `A ${ft.label.toLowerCase()} is a JSON array of ${ft.array}s, referenced with {"preset": "namespace:path"}.` }), listW(ft.array, f.root, () => changed()));
+  else sec.append(renderFields(f.root, ft.f, changed));
+  $("editor").replaceChildren(head, sec);
   changed();
-}
-
-function newRoot(type) {
-  const ft = FILE_TYPES[type];
-  if (ft.array) return [];
-  const o = {};
-  initFields(o, ft.f);
-  return o;
-}
-
-function setFileType(type, data) {
-  fileType = type;
-  $("fileType").value = type;
-  root = data ?? newRoot(type);
-  renderEditor();
 }
 
 function detectType(data) {
@@ -750,35 +1061,191 @@ function detectType(data) {
   return "target" in data ? "mob" : "mob_preset";
 }
 
+/* ===================== Zip ===================== */
+const CRC_TABLE = (() => {
+  const t = new Uint32Array(256);
+  for (let n = 0; n < 256; n++) { let c = n; for (let k = 0; k < 8; k++) c = c & 1 ? 0xEDB88320 ^ (c >>> 1) : c >>> 1; t[n] = c >>> 0; }
+  return t;
+})();
+const crc32 = bytes => { let c = 0xFFFFFFFF; for (const b of bytes) c = CRC_TABLE[(c ^ b) & 0xFF] ^ (c >>> 8); return (c ^ 0xFFFFFFFF) >>> 0; };
+
+/** Uncompressed zip of [{path, text}] */
+function zip(entries) {
+  const enc = new TextEncoder();
+  const parts = [], central = [];
+  let off = 0;
+  for (const e of entries) {
+    const name = enc.encode(e.path), data = enc.encode(e.text), crc = crc32(data);
+    const lh = new DataView(new ArrayBuffer(30));
+    lh.setUint32(0, 0x04034b50, true); lh.setUint16(4, 20, true); lh.setUint16(6, 0x0800, true); lh.setUint16(12, 0x21, true);
+    lh.setUint32(14, crc, true); lh.setUint32(18, data.length, true); lh.setUint32(22, data.length, true); lh.setUint16(26, name.length, true);
+    const ch = new DataView(new ArrayBuffer(46));
+    ch.setUint32(0, 0x02014b50, true); ch.setUint16(4, 20, true); ch.setUint16(6, 20, true); ch.setUint16(8, 0x0800, true); ch.setUint16(14, 0x21, true);
+    ch.setUint32(16, crc, true); ch.setUint32(20, data.length, true); ch.setUint32(24, data.length, true); ch.setUint16(28, name.length, true); ch.setUint32(42, off, true);
+    parts.push(lh, name, data);
+    central.push(ch, name);
+    off += 30 + name.length + data.length;
+  }
+  const size = central.reduce((s, x) => s + x.byteLength, 0);
+  const end = new DataView(new ArrayBuffer(22));
+  end.setUint32(0, 0x06054b50, true); end.setUint16(8, entries.length, true); end.setUint16(10, entries.length, true);
+  end.setUint32(12, size, true); end.setUint32(16, off, true);
+  return new Blob([...parts, ...central, end], { type: "application/zip" });
+}
+
+/** [{path, text}] of a zip (stored or deflated entries) */
+async function unzip(buf) {
+  const dv = new DataView(buf), dec = new TextDecoder();
+  let e = buf.byteLength - 22;
+  while (e >= 0 && dv.getUint32(e, true) !== 0x06054b50) e--;
+  if (e < 0) throw new Error("not a zip file");
+  const out = [];
+  let p = dv.getUint32(e + 16, true);
+  for (let i = dv.getUint16(e + 10, true); i > 0; i--) {
+    if (dv.getUint32(p, true) !== 0x02014b50) throw new Error("corrupted zip");
+    const method = dv.getUint16(p + 10, true), size = dv.getUint32(p + 20, true), off = dv.getUint32(p + 42, true);
+    const nl = dv.getUint16(p + 28, true);
+    const path = dec.decode(new Uint8Array(buf, p + 46, nl));
+    p += 46 + nl + dv.getUint16(p + 30, true) + dv.getUint16(p + 32, true);
+    if (path.endsWith("/") || (method !== 0 && method !== 8)) continue;
+    let data = new Uint8Array(buf, off + 30 + dv.getUint16(off + 26, true) + dv.getUint16(off + 28, true), size);
+    if (method === 8) data = new Uint8Array(await new Response(new Blob([data]).stream().pipeThrough(new DecompressionStream("deflate-raw"))).arrayBuffer());
+    out.push({ path, text: dec.decode(data) });
+  }
+  return out;
+}
+
+function download(blob, name) {
+  const a = h("a", { href: URL.createObjectURL(blob), download: name });
+  a.click();
+  setTimeout(() => URL.revokeObjectURL(a.href), 1000);
+}
+
+/* ===================== Import ===================== */
+const MPR_PATH_RE = /(?:^|\/)([^/]+)\/mobs_properties_randomness\/(.+)\.json$/;
+function typeFromFolder(rest) {
+  for (const [k, ft] of Object.entries(FILE_TYPES)) if (rest.startsWith(ft.folder + "/")) return [k, rest.slice(ft.folder.length + 1)];
+  return null;
+}
+
+async function readEntries(fileList) {
+  const out = [];
+  for (const file of fileList) {
+    if (/\.zip$/i.test(file.name)) out.push(...await unzip(await file.arrayBuffer()));
+    else if (/\.(json|mcmeta)$/i.test(file.name)) out.push({ path: file.webkitRelativePath || file.name, text: await file.text() });
+  }
+  return out;
+}
+
+/** Adds the entries to the pack (replacing the files with the same id), returns a summary */
+function importEntries(entries, packName) {
+  // Importing into an untouched pack replaces it
+  const fresh = pack.files.every(f => isEmpty(prune(f.root)));
+  if (fresh) { pack.files = []; if (packName) pack.name = packName; }
+  const errors = [];
+  let first = null, count = 0, skipped = 0;
+  for (const e of entries) {
+    if (/(^|\/)pack\.mcmeta$/.test(e.path)) {
+      try { const d = JSON.parse(e.text).pack?.description; if (fresh && typeof d === "string") pack.description = d; } catch {}
+      continue;
+    }
+    let type, ns, name;
+    const m = e.path.match(MPR_PATH_RE);
+    if (m) {
+      const t = typeFromFolder(m[2]);
+      if (!t) { skipped++; continue; }
+      ns = m[1];
+      [type, name] = t;
+    } else if (!e.path.includes("/")) { ns = defaultNs(); name = e.path.replace(/\.json$/i, "").toLowerCase(); }
+    else { skipped++; continue; }
+    let data;
+    try { data = JSON.parse(e.text); } catch (err) { errors.push(`${e.path}: ${err.message}`); continue; }
+    if (!data || typeof data !== "object") { errors.push(`${e.path}: expected a JSON object or array`); continue; }
+    type ??= detectType(data);
+    if (!!FILE_TYPES[type].array !== Array.isArray(data)) { errors.push(`${e.path}: expected a JSON ${FILE_TYPES[type].array ? "array" : "object"}`); continue; }
+    const existing = pack.files.find(f => f.type === type && f.ns === ns && f.name === name);
+    if (existing) existing.root = data;
+    const f = existing ?? addFile(type, ns, name, data);
+    first ??= f;
+    count++;
+  }
+  if (!pack.files.length) addFile("mob");
+  selectFile(first ?? (pack.files.includes(cur) ? cur : pack.files[0]));
+  return { count, skipped, errors };
+}
+
+function setStatus(text) {
+  $("status").textContent = text;
+  clearTimeout(setStatus.t);
+  setStatus.t = setTimeout(() => $("status").textContent = "", 6000);
+}
+function reportImport(r) {
+  setStatus(`Imported ${r.count} file(s)` + (r.skipped ? `, ${r.skipped} not MPR file(s) skipped` : "") + (r.errors.length ? `, ${r.errors.length} error(s): ${r.errors.join("; ")}` : ""));
+}
+
 /* ===================== Init ===================== */
-for (const [k, v] of Object.entries(FILE_TYPES)) $("fileType").append(h("option", { value: k, text: `${v.label}  (${v.folder}/)` }));
-$("fileType").addEventListener("change", e => {
-  if (!isEmpty(prune(root)) && !confirmReset()) { e.target.value = fileType; return; }
-  setFileType(e.target.value);
-});
+// Collapsible side panels, remembered per browser
+for (const [btnId, cls, open, closed] of [["filesToggle", "files-collapsed", "◂", "▸"], ["outToggle", "out-collapsed", "▸", "◂"]]) {
+  const main = document.querySelector("main"), btn = $(btnId);
+  const apply = c => { main.classList.toggle(cls, c); btn.textContent = c ? closed : open; btn.title = (c ? "Expand" : "Collapse") + btn.title.replace(/^\w+/, ""); };
+  try { apply(localStorage.getItem("mpr-gen-" + cls) === "1"); } catch {}
+  btn.addEventListener("click", () => {
+    const c = !main.classList.contains(cls);
+    apply(c);
+    try { localStorage.setItem("mpr-gen-" + cls, c ? "1" : "0"); } catch {}
+  });
+}
+
+$("infoPop").append(h("div", { style: "margin-bottom:6px", text: "Generator up to date with:" }),
+  h("table", {}, Object.entries(VERSIONS).map(([m, v]) => h("tr", {}, h("td", { text: m }), h("td", { text: v })))));
+// Hover on desktop, tap on touch screens
+$("infoBtn").addEventListener("click", e => { e.stopPropagation(); $("infoBtn").setAttribute("aria-expanded", $("info").classList.toggle("open")); });
+document.addEventListener("click", e => { if (!$("info").contains(e.target)) { $("info").classList.remove("open"); $("infoBtn").setAttribute("aria-expanded", "false"); } });
+
 function confirmReset() { return window.confirm("Discard the current content?"); }
-$("ns").addEventListener("input", changed);
-$("name").addEventListener("input", changed);
-$("btnNew").addEventListener("click", () => { if (isEmpty(prune(root)) || confirmReset()) setFileType(fileType); });
+$("packName").addEventListener("input", e => { pack.name = e.target.value.trim(); save(); });
+$("packDesc").addEventListener("input", e => { pack.description = e.target.value; save(); });
+$("btnNew").addEventListener("click", () => {
+  if (pack.files.some(f => !isEmpty(prune(f.root))) && !window.confirm("Discard the whole pack?")) return;
+  pack = newPack();
+  selectFile(addFile("mob"));
+});
 $("btnCopy").addEventListener("click", async () => {
-  try { await navigator.clipboard.writeText(outJson()); $("copied").textContent = "Copied!"; }
+  try { await navigator.clipboard.writeText(outJson(cur)); $("copied").textContent = "Copied!"; }
   catch { $("copied").textContent = "Copy failed, select the text manually"; }
   setTimeout(() => $("copied").textContent = "", 1500);
 });
-$("btnDownload").addEventListener("click", () => {
-  const a = h("a", { href: URL.createObjectURL(new Blob([outJson() + "\n"], { type: "application/json" })), download: fileName() });
-  a.click();
-  setTimeout(() => URL.revokeObjectURL(a.href), 1000);
+$("btnDownload").addEventListener("click", () => download(new Blob([outJson(cur) + "\n"], { type: "application/json" }), cur.name.split("/").pop() + ".json"));
+const exportDlg = $("exportDlg");
+$("btnExport").addEventListener("click", () => {
+  $("packName").value = pack.name;
+  $("packDesc").value = pack.description;
+  const bad = pack.files.filter(f => errCount(f.issues ?? []));
+  const errs = bad.reduce((s, f) => s + errCount(f.issues), 0);
+  $("exportIssues").textContent = errs ? `The pack has ${errs} issue(s) in ${bad.map(fileId).join(", ")}: it can be exported, but Minecraft will fail to load those files.` : "";
+  exportDlg.showModal();
+});
+$("exportCancel").addEventListener("click", () => exportDlg.close());
+$("exportOk").addEventListener("click", () => {
+  exportDlg.close();
+  const entries = [{ path: "pack.mcmeta", text: JSON.stringify({ pack: { pack_format: PACK_FORMAT, description: pack.description } }, null, 2) + "\n" },
+    ...pack.files.map(f => ({ path: filePath(f), text: outJson(f) + "\n" }))];
+  download(zip(entries), (pack.name || "mpr_pack") + ".zip");
 });
 
 const dlg = $("importDlg");
-$("btnImport").addEventListener("click", () => { $("importErr").textContent = ""; $("importText").value = ""; $("importFile").value = ""; dlg.showModal(); });
+$("btnImport").addEventListener("click", () => { $("importErr").textContent = ""; $("importText").value = ""; $("importFiles").value = ""; $("importDir").value = ""; dlg.showModal(); });
 $("importCancel").addEventListener("click", () => dlg.close());
-$("importFile").addEventListener("change", async e => {
-  const file = e.target.files[0];
-  if (!file) return;
-  $("importText").value = await file.text();
-  $("name").value = file.name.replace(/\.json$/i, "");
+for (const id of ["importFiles", "importDir"]) $(id).addEventListener("change", async e => {
+  const files = [...e.target.files];
+  if (!files.length) return;
+  try {
+    const entries = await readEntries(files);
+    // The pack name of a zip / folder: its file / root folder name
+    const packName = id === "importDir" ? files[0].webkitRelativePath.split("/")[0] : files.length === 1 && /\.zip$/i.test(files[0].name) ? files[0].name.replace(/\.zip$/i, "") : null;
+    dlg.close();
+    reportImport(importEntries(entries, packName));
+  } catch (err) { $("importErr").textContent = "Import failed: " + err.message; }
 });
 $("importOk").addEventListener("click", () => {
   let data;
@@ -786,20 +1253,25 @@ $("importOk").addEventListener("click", () => {
   catch (err) { $("importErr").textContent = "Invalid JSON: " + err.message; return; }
   if (!data || typeof data !== "object") { $("importErr").textContent = "Expected a JSON object or array"; return; }
   dlg.close();
-  setFileType(detectType(data), data);
+  const type = detectType(data);
+  selectFile(addFile(type, defaultNs(), "imported_" + type, data));
 });
 
 (() => {
+  let current = 0;
   try {
-    const saved = JSON.parse(localStorage.getItem("mpr-gen"));
-    if (saved && FILE_TYPES[saved.fileType]) {
-      $("ns").value = saved.ns ?? "mypack";
-      $("name").value = saved.name ?? "my_file";
-      setFileType(saved.fileType, saved.root);
-      return;
+    const saved = JSON.parse(localStorage.getItem("mpr-gen-pack"));
+    if (saved && Array.isArray(saved.files)) {
+      pack = { ...newPack(), ...saved, files: saved.files.filter(f => FILE_TYPES[f.type])
+        .map(f => ({ ...f, root: f.root && typeof f.root === "object" && Array.isArray(f.root) === !!FILE_TYPES[f.type].array ? f.root : newRoot(f.type) })) };
+      current = saved.current;
+    } else {
+      // Single file saved by the previous version of the generator
+      const old = JSON.parse(localStorage.getItem("mpr-gen"));
+      if (old && FILE_TYPES[old.fileType] && old.root) pack.files.push({ type: old.fileType, ns: old.ns || "mypack", name: old.name || "my_file", root: old.root });
     }
   } catch {}
-  setFileType("mob");
+  selectFile(pack.files[current] ?? pack.files[0] ?? addFile("mob"));
 })();
 </script>
 </body>
