@@ -171,6 +171,8 @@ dialog textarea { min-height: 300px; }
 <datalist id="dl-dimensions"></datalist>
 <datalist id="dl-enchantments"></datalist>
 <datalist id="dl-items"></datalist>
+<datalist id="dl-trim_materials"></datalist>
+<datalist id="dl-trim_patterns"></datalist>
 
 <script>
 "use strict";
@@ -185,6 +187,8 @@ const SUGGEST = {
   dimensions: mc("overworld the_nether the_end"),
   enchantments: mc("protection fire_protection blast_protection projectile_protection feather_falling thorns respiration aqua_affinity depth_strider frost_walker soul_speed swift_sneak unbreaking mending sharpness smite bane_of_arthropods knockback fire_aspect looting sweeping_edge efficiency silk_touch fortune power punch flame infinity quick_charge multishot piercing loyalty riptide channeling impaling density breach wind_burst luck_of_the_sea lure binding_curse vanishing_curse"),
   items: mc("air iron_sword diamond_sword netherite_sword iron_axe bow crossbow trident shield iron_helmet iron_chestplate iron_leggings iron_boots diamond_helmet diamond_chestplate diamond_leggings diamond_boots netherite_helmet netherite_chestplate netherite_leggings netherite_boots leather_helmet golden_helmet chainmail_helmet carved_pumpkin totem_of_undying"),
+  trim_materials: mc("amethyst copper diamond emerald gold iron lapis netherite quartz redstone"),
+  trim_patterns: mc("bolt coast dune eye flow host raiser rib sentry shaper silence snout spire tide vex ward wayfinder wild"),
 };
 for (const [k, list] of Object.entries(SUGGEST)) {
   const dl = document.getElementById("dl-" + k);
@@ -310,6 +314,7 @@ const FUNCTIONS = {
   set_component: { d: "Sets data components. Use {\"#range\": <range>} anywhere to randomize a number.", f: [{ k: "components", t: "json", req: true, ph: '{\n  "minecraft:custom_name": "\\"Name\\""\n}' }] },
   add_attribute_modifier: { d: "Adds an attribute modifier to the item.", f: [E("slots", ["any", "mainhand", "offhand", "hand", "feet", "legs", "chest", "head", "armor", "body"]), ...ATTR_MOD] },
   enchant: { d: "Enchants the item.", f: [{ k: "type", t: "switch", cases: ENCHANT_TYPES }] },
+  armor_trim: { d: "Applies a random armor trim (only on trimmable armor).", f: [{ k: "materials", t: "strs", dl: "trim_materials", help: "Pool to pick from (empty = any)" }, { k: "patterns", t: "strs", dl: "trim_patterns", help: "Pool to pick from (empty = any)" }, B("show_in_tooltip", { def: true })] },
 };
 
 const PROPERTIES = {

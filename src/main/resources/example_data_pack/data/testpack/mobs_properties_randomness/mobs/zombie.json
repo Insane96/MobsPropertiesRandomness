@@ -153,6 +153,10 @@
                             "type": "single",
                             "enchantment": "minecraft:protection",
                             "lvl": 4
+                        },
+                        {
+                            "function": "armor_trim",
+                            "materials": ["minecraft:diamond", "minecraft:emerald"]
                         }
                     ]
                 }

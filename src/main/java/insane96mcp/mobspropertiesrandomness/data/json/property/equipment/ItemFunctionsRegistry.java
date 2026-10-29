@@ -34,6 +34,7 @@ public class ItemFunctionsRegistry {
             helper.register(MPR.id("set_component"), MPRSetComponentFunction.class);
             helper.register(MPR.id("add_attribute_modifier"), MPRAttributeModifierItemFunction.class);
             helper.register(MPR.id("enchant"), MPREnchantItemFunction.class);
+            helper.register(MPR.id("armor_trim"), MPRArmorTrimItemFunction.class);
         });
     }
 

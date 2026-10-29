@@ -1,3 +1,7 @@
+# 6.2.1.0
+* Added `armor_trim` item function
+  * Applies a random trim to trimmable armor, picking `material` from `materials` and `pattern` from `patterns` (both optional lists, if missing or empty any registered one can be picked). `show_in_tooltip` defaults to true
+
 # 6.2.0.0
 * Added event presets, in `data/<namespace>/mobs_properties_randomness/presets/events/`
   * An event preset contains a single event (the same JSON of an `event` property, without `"property": "event"`). `id` is optional and defaults to the preset id
